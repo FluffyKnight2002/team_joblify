@@ -24,22 +24,35 @@ public class JobPost implements Serializable {
     private long id;
 
     @Column(nullable = false)
-    private int expectedNumber;
+    private int requiredVacancies;
 
     @Column(nullable = false)
-    private int actualNumber;
+    private int hiredVacancies;
 
     @Column(columnDefinition ="longtext", nullable = false)
     private String description;
 
     @Column(columnDefinition ="longtext", nullable = false)
-    private String requirement;
+    private String requirements;
 
     @Column(columnDefinition ="longtext", nullable = false)
-    private String responsibility;
+    private String responsibilities;
 
-    @Column(length = 15)
-    private String workHour;
+    @Column(columnDefinition ="longtext", nullable = false)
+    private String preferences;
+
+    @Column(length = 20, nullable = false)
+    private String workingDay;
+
+    @Column(length = 15, nullable = false)
+    private String workingHour;
+
+    @Column(length = 75, nullable = false)
+    private String jobLocation;
+
+    @Column(length = 10, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
 
     @Column(nullable = false)
     private Date openDate;
@@ -47,8 +60,8 @@ public class JobPost implements Serializable {
     @Column(nullable = false)
     private Date closeDate;
 
-    @Column(precision = 10, scale = 2, nullable = false)
-    private BigDecimal salary;
+    @Column(length = 24, nullable = false)
+    private String salary;
 
     @Column(nullable = false)
     private Date createdDate;

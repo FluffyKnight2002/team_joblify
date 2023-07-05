@@ -26,13 +26,21 @@ public class Email implements Serializable {
     @Column(columnDefinition = "longtext", nullable = false)
     private String body;
 
-    @Column(length = 70, nullable = false)
-    private String interviewLocation;
+    @Column(length = 10)
+    @Enumerated(EnumType.STRING)
+    private InterviewType interviewType;
+
+    private Date interviewDate;
+
+    private Date interviewTime;
 
     @Column(nullable = false)
-    private Date interviewDate;
+    private Date sentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "applicant_id")
     private Applicant applicant;
+
+    @OneToOne(mappedBy = "email", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    private OnlineInterview onlineInterview;
 }

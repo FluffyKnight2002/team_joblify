@@ -20,20 +20,45 @@ public class Summary implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(length = 50, nullable = false)
+    private String name;
+
     @Column(nullable = false)
     private Date dob;
+
+    @Column(length = 8 ,nullable = false)
+    private Gender gender;
 
     @Column(length = 15, nullable = false)
     private String phone;
 
-    @Column(nullable = false)
-    private String skills;
+    @Column(length = 30, nullable = false)
+    private String email;
 
     @Column(nullable = false)
+    private String education;
+
+    @Column(nullable = false)
+    private String techSkills;
+
+    @Column(nullable = false)
+    private String languages;
+
+    @Column(nullable = false, length = 100)
+    private String applyPosition;
+
+    @Column(length = 15, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Level lvl;
+
+    @Column(nullable = false, length = 25)
+    private String specialistTech;
+
+    @Column(nullable = false, length = 25)
     private String experience;
 
-    @Column(length = 30, nullable = false, unique = true)
-    private String email;
+    @Column(nullable = false)
+    private int expectedSalary;
 
     @OneToOne(mappedBy = "summary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Candidate candidate;
