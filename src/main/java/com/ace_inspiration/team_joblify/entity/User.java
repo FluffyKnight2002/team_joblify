@@ -33,6 +33,9 @@ public class User implements Serializable {
     @Column(length = 15, nullable = false, unique = true)
     private String phone;
 
+    @Column(nullable = false, unique = true)
+    private String address;
+
     @Column(length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -43,12 +46,17 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Date updatedDate;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Applicant> applicants=new ArrayList<>();
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<JobPost> createdJobPosts=new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPost> updatedJobPosts=new ArrayList<>();
+    private List<JobPostDepartment> updatedJobPosts=new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Action> action=new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
 }

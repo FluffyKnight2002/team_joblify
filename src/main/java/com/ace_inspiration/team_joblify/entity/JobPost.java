@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,17 +17,12 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobPost implements Serializable {
+public class JobPost implements Serializable{
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(nullable = false)
-    private int requiredVacancies;
-
-    @Column(nullable = false)
-    private int hiredVacancies;
 
     @Column(columnDefinition ="longtext", nullable = false)
     private String description;
@@ -44,43 +39,30 @@ public class JobPost implements Serializable {
     @Column(length = 20, nullable = false)
     private String workingDay;
 
-    @Column(length = 15, nullable = false)
+    @Column(length = 20, nullable = false)
     private String workingHour;
 
-    @Column(length = 75, nullable = false)
-    private String jobLocation;
-
-    @Column(length = 10, nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private JobType jobType;
-
-    @Column(nullable = false)
-    private Date openDate;
-
-    @Column(nullable = false)
-    private Date closeDate;
-
-    @Column(length = 24, nullable = false)
-    private String salary;
+    private Status status;
 
     @Column(nullable = false)
     private Date createdDate;
 
-    @Column(nullable = false)
-    private Date updatedDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "createdUser_id")
     private User createdUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedUser_id")
-    private User updatedUser;
-
-    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Applicant> applicants=new ArrayList<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "position_id")
     private Position position;
+
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Action> action=new ArrayList<>();
+
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<JobPostDepartment> jobPostDepartment=new ArrayList<>();
+
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Candidate> candidate=new ArrayList<>();
 }

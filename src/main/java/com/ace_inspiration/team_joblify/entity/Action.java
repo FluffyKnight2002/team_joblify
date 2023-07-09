@@ -7,28 +7,35 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Interview implements Serializable {
+public class Action implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 15)
-    @Enumerated(EnumType.STRING)
-    private InterviewStage interviewStage;
-
     @Column(length = 15, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private InterviewType type;
+    private Status actionName;
 
-    @Column(columnDefinition = "longtext", nullable = false)
-    private String comment;
+    @Column(nullable = false)
+    private Date actionTime;
+
+    @Column(nullable = false)
+    private boolean makeAsRead;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "jobPost_id")
+    private JobPost jobPost;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")

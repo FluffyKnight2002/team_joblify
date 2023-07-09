@@ -5,5 +5,5 @@ import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InterviewRepository extends DataTablesRepository<Long, Interview> {
+public interface InterviewRepository extends DataTablesRepository<Interview, Long>{
 }

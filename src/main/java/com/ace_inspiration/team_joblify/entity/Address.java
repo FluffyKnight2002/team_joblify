@@ -7,28 +7,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OnlineInterview implements Serializable {
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 150, nullable = false)
-    private String onlineMeetingLink;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @Column(length = 20, nullable = false)
-    private String meetingId;
+    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<JobPostDepartment> jobPostDepartments;
 
-    @Column(nullable = false)
-    private String password;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "email_id")
-    private Email email;
 
 }
