@@ -34,6 +34,9 @@ public class Candidate implements Serializable {
     @Column(columnDefinition = "longblob", nullable = false)
     private String resume;
 
+    @Column(columnDefinition = "longtext")
+    private String note;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "summary_id")
     private Summary summary;

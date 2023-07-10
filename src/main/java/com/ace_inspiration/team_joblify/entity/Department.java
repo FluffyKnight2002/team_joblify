@@ -24,6 +24,9 @@ public class Department implements Serializable {
     @Column(length = 75, nullable = false, unique = true)
     private String name;
 
+    @Column(columnDefinition = "longtext")
+    private String note;
+
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<User> user=new ArrayList<>();
 

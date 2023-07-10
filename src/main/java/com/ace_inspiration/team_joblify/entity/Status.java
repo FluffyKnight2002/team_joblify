@@ -4,5 +4,13 @@ import java.io.Serializable;
 
 public enum Status implements Serializable {
 
-    RECEIVED
+    RECEIVED,
+    VIEWED,
+    CONSIDERING,
+    PASSED,
+    PENDING,
+    CANCEL,
+    OPEN,
+    CLOSE,
+    EXPIRED
 }

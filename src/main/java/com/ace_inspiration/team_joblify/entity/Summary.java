@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -28,6 +27,7 @@ public class Summary implements Serializable {
     private Date dob;
 
     @Column(length = 8 ,nullable = false)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(length = 15, nullable = false)
@@ -38,9 +38,6 @@ public class Summary implements Serializable {
 
     @Column(nullable = false)
     private String education;
-
-    @Column(nullable = false)
-    private String techSkills;
 
     @Column(nullable = false)
     private String languages;
@@ -64,6 +61,7 @@ public class Summary implements Serializable {
     @OneToOne(mappedBy = "summary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Candidate candidate;
 
-    @OneToMany(mappedBy = "summary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Skills> skills;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name="skills_id")
+    private Skills skills;
 }

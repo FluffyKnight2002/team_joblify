@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,8 +32,7 @@ public class JobPostDepartment implements Serializable {
     private int hiredVacancies;
 
     @Column(length = 10, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private JobType jobType;
+    private String jobType;
 
     @Column(nullable = false)
     private Date openDate;
@@ -41,6 +42,12 @@ public class JobPostDepartment implements Serializable {
 
     @Column(nullable = false)
     private Date updatedDate;
+
+    @Column()
+    private Level lvl;
+
+    @Column(columnDefinition = "longtext")
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
@@ -57,4 +64,7 @@ public class JobPostDepartment implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "jobPost_id")
     private JobPost jobPost;
+
+    @OneToMany(mappedBy = "jobPostDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Action> actions = new ArrayList<>();
 }

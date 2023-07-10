@@ -33,8 +33,10 @@ public class User implements Serializable {
     @Column(length = 15, nullable = false, unique = true)
     private String phone;
 
-    @Column(nullable = false, unique = true)
     private String address;
+
+    @Column(nullable = false)
+    private String password;
 
     @Column(length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
@@ -44,8 +46,9 @@ public class User implements Serializable {
     private Date createdDate;
 
     @Column(nullable = false)
-    private Date updatedDate;
+    private Date lastUpdatedDate;
 
+    private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<JobPost> createdJobPosts=new ArrayList<>();

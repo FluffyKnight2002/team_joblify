@@ -20,8 +20,8 @@ public class Action implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 15, nullable = false)
-    private Status actionName;
+    @Column(nullable = false)
+    private String actionName;
 
     @Column(nullable = false)
     private Date actionTime;
@@ -40,4 +40,8 @@ public class Action implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "jobPostDepartment_id")
+    private JobPostDepartment jobPostDepartment;
 }

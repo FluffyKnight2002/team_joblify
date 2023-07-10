@@ -23,12 +23,20 @@ public class Interview implements Serializable {
     @Enumerated(EnumType.STRING)
     private InterviewStage interviewStage;
 
+    private String ccMail;
+
     @Column(length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private InterviewType type;
 
-    @Column(columnDefinition = "longtext", nullable = false)
-    private String comment;
+    @Column(length = 50, nullable = false)
+    private String interviewTime;
+
+    @Column(length = 50, nullable = false)
+    private String interviewDate;
+
+    @Column(columnDefinition = "longtext")
+    private String note;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
