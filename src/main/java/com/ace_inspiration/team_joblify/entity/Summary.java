@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -61,7 +63,13 @@ public class Summary implements Serializable {
     @OneToOne(mappedBy = "summary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Candidate candidate;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name="skills_id")
-    private Skills skills;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "summary_languageSkills", joinColumns = @JoinColumn(name = "summary_id"),
+    inverseJoinColumns = @JoinColumn(name = "languageSkills_id"))
+    private List<LanguageSkills> languageSkills= new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "summary_techSkills", joinColumns = @JoinColumn(name = "summary_id"),
+            inverseJoinColumns = @JoinColumn(name = "techSkills_id"))
+    private List<TechSkills> techSkills= new ArrayList<>();
 }

@@ -6,15 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
-
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TechSkills implements Serializable {
+public class TechSkills {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -22,6 +20,6 @@ public class TechSkills implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "techSkills", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Skills> skills;
+    @ManyToMany(mappedBy = "techSkills", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Summary> summary;
 }

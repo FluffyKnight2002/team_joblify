@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,6 +22,6 @@ public class LanguageSkills implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "languageSkills", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Skills> skills=new ArrayList<>();
+    @ManyToMany(mappedBy = "languageSkills", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Summary> summary;
 }
