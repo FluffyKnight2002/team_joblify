@@ -1,4 +1,4 @@
-package com.ace_inspiration.team_joblify.controller.hr;
+package com.ace_inspiration.team_joblify.controller.candidate;
 
 import org.springframework.stereotype.Controller;
 
