@@ -41,9 +41,6 @@ public class Summary implements Serializable {
     @Column(nullable = false)
     private String education;
 
-    @Column(nullable = false)
-    private String languages;
-
     @Column(nullable = false, length = 100)
     private String applyPosition;
 

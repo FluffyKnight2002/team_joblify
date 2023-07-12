@@ -43,7 +43,7 @@ public class JobPostDepartment implements Serializable {
     @Column(nullable = false)
     private Date updatedDate;
 
-    @Column()
+    @Column(nullable = false, length = 30)
     private Level lvl;
 
     @Column(columnDefinition = "longtext")

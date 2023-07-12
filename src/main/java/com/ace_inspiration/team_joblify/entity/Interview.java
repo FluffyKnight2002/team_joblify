@@ -23,8 +23,6 @@ public class Interview implements Serializable {
     @Enumerated(EnumType.STRING)
     private InterviewStage interviewStage;
 
-    private String ccMail;
-
     @Column(length = 15, nullable = false)
     @Enumerated(EnumType.STRING)
     private InterviewType type;

@@ -33,6 +33,7 @@ public class User implements Serializable {
     @Column(length = 15, nullable = false, unique = true)
     private String phone;
 
+    @Column(columnDefinition = "longtext", nullable = false)
     private String address;
 
     @Column(nullable = false)
@@ -48,6 +49,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private Date lastUpdatedDate;
 
+    @Column(columnDefinition = "longtext")
     private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
