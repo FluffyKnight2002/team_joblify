@@ -1,0 +1,21 @@
+.page-link {
+    color: #1e497b;
+}
+
+.active-page {
+    background: #1e497b;
+    color: white;
+}
+
+.active-page:hover {
+    background: #1e497b;
+    color: white;
+}
+
+@media (max-width: 576px) {
+
+    /* Styles for small screens */
+    .search-form {
+        width: 100% !important;
+    }
+}
