@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -33,8 +33,16 @@ public class User implements Serializable {
     @Column(length = 15, nullable = false, unique = true)
     private String phone;
 
+    @Column(nullable = false, length = 8)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Column(columnDefinition = "longtext", nullable = false)
     private String address;
+
+    @Lob
+    @Column(columnDefinition = "longblob", nullable = false)
+    private String photo;
 
     @Column(nullable = false)
     private String password;
@@ -44,10 +52,10 @@ public class User implements Serializable {
     private Role role;
 
     @Column(nullable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @Column(nullable = false)
-    private Date lastUpdatedDate;
+    private LocalDateTime lastUpdatedDate;
 
     @Column(columnDefinition = "longtext")
     private String note;

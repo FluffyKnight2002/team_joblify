@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,13 +35,13 @@ public class JobPostDepartment implements Serializable {
     private String jobType;
 
     @Column(nullable = false)
-    private Date openDate;
+    private LocalDateTime openDate;
 
     @Column(nullable = false)
-    private Date closeDate;
+    private LocalDateTime closeDate;
 
     @Column(nullable = false)
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
     @Column(nullable = false, length = 30)
     private Level lvl;

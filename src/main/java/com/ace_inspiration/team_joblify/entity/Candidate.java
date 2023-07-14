@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,7 +28,7 @@ public class Candidate implements Serializable {
     private  Status interviewStatus;
 
     @Column(nullable = false)
-    private Date applyDate;
+    private LocalDateTime applyDate;
 
     @Lob
     @Column(columnDefinition = "longblob", nullable = false)

@@ -29,6 +29,10 @@ public class MyUserDetails implements UserDetails {
     public String getPhone(){
         return user.getPhone();
     }
+
+    public String getPhoto(){
+        return user.getPhoto();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(user.getRole().name()));
