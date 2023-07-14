@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Vacancy</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
+    <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
+
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+        <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+        <div id="main">
+            <form class="">
+                <h3 class="text-primary mb-5">Vacancy Form</h3>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title(Position)</label>
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="post" class="form-label">Post</label>
+                        <input type="text" class="form-control" id="post" name="post">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="department" class="form-label">Department</label>
+                        <input type="text" class="form-control" id="department" name="department">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="type" class="form-label">Type</label>
+                        <input type="text" class="form-control" id="type" name="type">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="experienceLevel" class="form-label">Experience Level</label>
+                        <input type="text" class="form-control" id="experienceLevel" name="experienceLevel">
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-12 col-md-4">
+                        <label for="workingDays" class="form-label">Working Days</label>
+                        <input type="text" class="form-control" id="workingDays" name="workingDays" value="Mon ~ Fri">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="workingHours" class="form-label">Working Hours</label>
+                        <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00AM ~ 6:00PM">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="salary" class="form-label">Salary</label>
+                        <input type="text" class="form-control" id="salary" name="salary">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="descriptions" class="form-label">Descriptions</label>
+                    <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">Requirements</label>
+                    <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="responsibility" class="form-label">Responsibility</label>
+                    <textarea class="form-control" id="responsibility" name="responsibility" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="preferences" class="form-label">Preferences</label>
+                    <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
+                    <button type="submit" class="btn btn-primary mx-1">Upload</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="vacancyPostPreview">Vacancy Preview</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="detail-header">
+                                        <div class="title-sesion d-flex justify-content-between">
+                                            <h4 class="default-font text-start" id="preview-title"></h4>
+                                            <h6 class="text-muted"><i class='bx bx-time'></i>Just now</h6>
+                                        </div>
+                                        <div>
+                                            <u class="text-muted" id="preview-department"></u>
+                                            <span><i class='bx bx-location-plus'></i>
+                                                <span id="preview-address"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="content-con text-start">
+
+                                        <div class="general-fects">
+                                            <span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
+                                                <span id="preview-post-type"></span>
+                                            </span>
+                                            <span class="my-2 d-block"><i class='bx bxs-award'></i>
+                                                <span id="preview-level"></span>
+                                            </span>
+                                        </div>
+
+                                        <!-- Apply button start -->
+                                        <div>
+                                            <button type="button" class="btn btn-primary rounded-pill my-3">
+                                                Apply
+                                            </button>
+                                        </div>
+
+                                        <!-- Apply button end-->
+
+                                        <div class="mb-3">
+                                            <h5>Job Description</h5>
+                                            <p id="preview-description"></p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Job Responsibilities</h5>
+                                            <pre id="preview-responsibilities"></pre>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Job Requirements</h5>
+                                            <pre id="preview-requirements"></pre>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Preferences</h5>
+                                            <pre id="preview-preferences"></pre>
+                                        </div>
+
+                                        <table class="w-100 mx-2 mb-3">
+                                            <tr>
+                                                <th>Working Day</th>
+                                                <th id="preview-working-days"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Working Hours</th>
+                                                <th id="preview-working-hours"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Salary</th>
+                                                <th id="preview-salary"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Job Location</th>
+                                                <th id="preview-location"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Job Type</th>
+                                                <th id="preview-type"></th>
+                                            </tr>
+                                        </table>
+
+                                        <div class="about-com-con container-fluid rounded-top py-3 bg-white">
+                                            <h4 class="mb-3">About the company</h4>
+                                            <p class="mb-3">ACE Data Systems Ltd. was founded in 1992 as a small software house and IT training
+                                                center. Nowadays, ACE Data Systems
+                                                Group has grown into a group of twenty-two companies with over eight hundred and fifty employees
+                                                with business
+                                                operations in software development and system integration, outsourcing, IT infrastructure and
+                                                cyber security, education
+                                                services, e-commerce and business consulting.</p>
+                                            <div class="mb-3">
+                                                <h6>Website Link : </h6>
+                                                <a href="http://www.acedatasystems.com" target="_blank"
+                                                   class="default-font">http://www.acedatasystems.com</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="/assets/js/pages/dashboard.js"></script>
+    <script src="/assets/js/vacancyform.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+
+</html>

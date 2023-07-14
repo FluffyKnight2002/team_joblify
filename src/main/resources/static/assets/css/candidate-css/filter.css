@@ -1,0 +1,15 @@
+.offcanvas {
+    transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas-transition {
+    transition: transform 0.3s ease-in-out;
+}
+
+.offcanvas-end {
+    transform: translateX(100%);
+}
+
+.offcanvas.show {
+    transform: translateX(0);
+}

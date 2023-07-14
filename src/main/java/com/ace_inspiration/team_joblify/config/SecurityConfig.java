@@ -20,7 +20,6 @@ public class SecurityConfig {
 
     @Value("${app.remember-me-key}")
     private static String rememberMeKey;
-
     private final MyUserDetailsService myUserDetailsService;
 
     @Bean
@@ -37,11 +36,10 @@ public class SecurityConfig {
                         rememberMe -> rememberMe
                                 .key(rememberMeKey)
                                 .tokenValiditySeconds(84600)
-                                .rememberMeCookieName("remember-me-cookie")
+                                .rememberMeCookieName("cookie")
                                 .rememberMeParameter("remember-me")
                                 .userDetailsService(myUserDetailsService)
                 )
-
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers("/assets/**", "/assets/css/**", "/assets/images/**", "/assets/js/**", "/assets/vendors/**").permitAll()
                         .requestMatchers("/**").permitAll()
@@ -49,7 +47,6 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(exception-> exception
                         .accessDeniedHandler(deniedHandler())
-
                 )
 
                 .formLogin(login->login

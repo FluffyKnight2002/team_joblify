@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacancies page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="/assets/css/candidate-css/style.css">
+    <link rel="stylesheet" href="/assets/css/candidate-css/carousel.css">
+</head>
+
+<body>
+    <!-- Loading animation start -->
+    <div id="loading-animation">
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+    </div>
+    <!-- Loading animation end -->
+
+    <!-- Navbar start -->
+    <div th:replace="/fragments/layout ::nav"></div>
+    <!-- Navbar end -->
+
+    <!-- Carousel start -->
+    <div id="owl-demo" class="owl-carousel owl-theme">
+        <div class="item"><img src="/assets/images/candidate-images/01.jpg" alt="The Last of Us"></div>
+        <div class="item"><img src="/assets/images/candidate-images/02.jpg" alt="GTA V"></div>
+        <div class="item"><img src="/assets/images/candidate-images/03.jpg" alt="Mirror Edge"></div>
+        <div class="item"><img src="/assets/images/candidate-images/04.jpg" alt="Mirror Edge"></div>
+    </div>
+    <!-- Carousel end -->
+
+    <!-- Jobs list start -->
+    <div class="container mt-5 row mx-auto">
+        <h3 class="text-center mb-5">Recent Jobs</h3>
+
+        <!-- Jobs start -->
+        <div class="col-md-10 mx-auto">
+
+            <div class="card flex-md-row">
+                <div class="">
+                    <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Fullstack Developer<span class="applicants-text d-inline-block d-md-inline-block"><i
+                                class='bx bxs-droplet'></i> 11 applicants</span></h5>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5 (Full-time)</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+                        3-5 Lakhs</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> 1
+                        Hour ago</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT Park,
+                        Hlaing Township,Yangon</span>
+                </div>
+                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+                    <a href="details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip" data-placement="bottom"
+                        title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+                        8</span>
+                </div>
+            </div>
+            <div class="card flex-md-row">
+                <div class="">
+                    <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Fullstack Developer<span class="applicants-text d-inline-block d-md-inline-block"><i
+                                class='bx bxs-droplet'></i> 11 applicants</span></h5>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5 (Full-time)</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+                        3-5 Lakhs</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> 1
+                        Hour ago</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT Park,
+                        Hlaing Township,Yangon</span>
+                </div>
+                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+                    <a href="details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip" data-placement="bottom"
+                        title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+                        8</span>
+                </div>
+            </div>
+            <div class="card flex-md-row">
+                <div class="">
+                    <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Fullstack Developer<span class="applicants-text d-inline-block d-md-inline-block"><i
+                                class='bx bxs-droplet'></i> 11 applicants</span></h5>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5 (Full-time)</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+                        3-5 Lakhs</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> 1
+                        Hour ago</span>
+                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT Park,
+                        Hlaing Township,Yangon</span>
+                </div>
+                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+                    <a href="details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip" data-placement="bottom"
+                        title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+                        8</span>
+                </div>
+            </div>
+
+            <a href="jobs.html" class="btn btn-primary mx-auto w-75 d-block mt-3">Show All</a>
+    </div>
+    <!-- Jobs end -->
+
+    </div>
+    <!-- Jobs list end -->
+
+    <!-- Footer start -->
+    <div th:replace="/fragments/layout ::footer"></div>
+    <!-- Footer end -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="/assets/js/javaScript/carousel.js"></script>
+    <script src="/assets/js/javaScript/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+</body>
+
+</html>
