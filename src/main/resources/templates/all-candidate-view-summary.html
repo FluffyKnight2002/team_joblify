@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table - Mazer Admin Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="index.html"><img src="/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+ 
+                        <li class="sidebar-item active ">
+                            <a action="/interviewProcess" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Interview Process</span>
+                            </a>
+                        </li>
+
+                          <li class="sidebar-item active ">
+                            <a action="AllCandidateViewSummary" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>All Candidate</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+          			   	
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Table</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+              <section class="section">
+                    <div class="row" id="table-striped">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">All Candidate's Interview Process</h4>
+                                     <div class="col-md-6 mb-1">
+                                      <div class="input-group mb-3">
+                                         <button class="btn btn-primary" type="button"
+                                                 id="button-addon1">Button</button>
+                                             <input type="text" class="form-control" placeholder=""
+                                                    aria-label="Example text with button addon"
+                                                    aria-describedby="button-addon1">
+                                      </div>
+                                </div>
+                                </div>
+                               
+                                <div class="card-content">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Name</th>
+                                                    <th>Apply Date</th>
+                                                    <th>interview Date</th>
+                                                    <th>Action status</th>
+                                                    <th>DOB</th>
+                                                    <th>Sex</th>
+                                                    <th>Ph No.</th>
+                                                    <th>Email</th>
+                                                    <th>Bachelor Degree/Diploma</th>
+                                                    <th>Technical Skills</th>
+                                                    <th>language Skills</th>
+                                                    <th>Apply Position</th>
+                                                    <th>Level</th>
+                                                    <th>Main Specialist Technology</th>
+                                                    <th>Related Total Experience Year</th>
+                                                    <th>Expected Salary</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr >
+                                                    <td class="text-bold-500">1</td>
+                                                    <td>kaung kaung</td>
+                                                    <td class="text-bold-500">2023-07-15</td>
+                                                    <td>2023-08-15</td>
+                                                    <td class="text-bold-500">passed</td>
+                                                    <td>1992-07-15</td>
+                                                    <td class="text-bold-500">Male</td>
+                                                    <td>09-442434234</td>
+                                                    <td class="text-bold-500">kaung@gmail.com</td>
+                                                    <td>B.C.SC(IT)</td>
+                                                    <td class="text-bold-500">C#,java</td>
+                                                    <td>English</td>
+                                                    <td class="text-bold-500">C# Developer</td>
+                                                    <td>Mid Level</td>
+                                                    <td class="text-bold-500">C#</td>
+                                                    <td>3 Year</td>
+                                                    <td class="text-bold-500">800,000.00</td>
+                                                   
+                                                    <td><a href="#"><i
+                                                                class="badge-circle badge-circle-light-secondary font-medium-1"
+                                                                data-feather="mail"></i></a></td>
+                                                </tr>
+                                                 <tr >
+                                                    <td class="text-bold-500">1</td>
+                                                    <td>Mg Mg</td>
+                                                    <td class="text-bold-500">2023-07-15</td>
+                                                    <td>2023-08-15</td>
+                                                    <td class="text-bold-500">passed</td>
+                                                    <td>1992-07-15</td>
+                                                    <td class="text-bold-500">Male</td>
+                                                    <td>09-442434234</td>
+                                                    <td class="text-bold-500">kaung@gmail.com</td>
+                                                    <td>B.C.SC(IT)</td>
+                                                    <td class="text-bold-500">C#,java</td>
+                                                    <td>English</td>
+                                                    <td class="text-bold-500">C# Developer</td>
+                                                    <td>Mid Level</td>
+                                                    <td class="text-bold-500">C#</td>
+                                                    <td>3 Year</td>
+                                                    <td class="text-bold-500">800,000.00</td>
+                                                   
+                                                    <td><a href="#"><i
+                                                                class="badge-circle badge-circle-light-secondary font-medium-1"
+                                                                data-feather="mail"></i></a></td>
+                                                </tr>
+                                               
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2021 &copy; Mazer</p>
+                    </div>
+                    <div class="float-end">
+                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                                href="http://ahmadsaugi.com">A. Saugi</a></p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+
+</html>
