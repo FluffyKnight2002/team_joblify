@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .formLogin(login->login
                         .loginPage("/login")
                         .usernameParameter("username")
-                        .failureUrl("/?error=true")
+                        .failureUrl("/login?error=true")
                         .defaultSuccessUrl("/dashboard?loginSuccess=true")
                         .permitAll()
                 )
