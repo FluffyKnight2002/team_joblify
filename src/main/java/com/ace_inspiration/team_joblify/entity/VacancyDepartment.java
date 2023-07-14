@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JobPostDepartment implements Serializable {
+public class VacancyDepartment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,9 +62,9 @@ public class JobPostDepartment implements Serializable {
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "jobPost_id")
-    private JobPost jobPost;
+    @JoinColumn(name = "vacancy_id")
+    private Vacancy vacancy;
 
-    @OneToMany(mappedBy = "jobPostDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "vacancyDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Action> actions = new ArrayList<>();
 }

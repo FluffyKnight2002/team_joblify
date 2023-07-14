@@ -4,5 +4,6 @@ package com.ace_inspiration.team_joblify.dto;
 //@Builder
 //@AllArgsConstructor
 //@NoArgsConstructor
-public class JobPostDto {
+public class VacancyDto {
+
 }

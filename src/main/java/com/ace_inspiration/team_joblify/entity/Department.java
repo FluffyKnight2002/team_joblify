@@ -31,5 +31,5 @@ public class Department implements Serializable {
     private List<User> user=new ArrayList<>();
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPostDepartment> jobPostDepartment=new ArrayList<>();
+    private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
 }

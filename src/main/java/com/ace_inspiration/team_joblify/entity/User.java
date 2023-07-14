@@ -61,10 +61,10 @@ public class User implements Serializable {
     private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPost> createdJobPosts=new ArrayList<>();
+    private List<Vacancy> createdVacancies =new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPostDepartment> updatedJobPosts=new ArrayList<>();
+    private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Action> action=new ArrayList<>();
