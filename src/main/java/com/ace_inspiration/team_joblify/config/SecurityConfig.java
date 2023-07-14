@@ -37,7 +37,9 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/","allJobs","jobDetails","contactUs").permitAll()
+                        .requestMatchers("/dashboard","/uploadVacancy").permitAll()
+                        .requestMatchers("/assets/**" ,"/assets/images/**","/assets/js/**","/assets/css/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception-> exception
