@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+<div id="app">
+    <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+    <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+    <div id="main">
+        <div id="main-content">
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last mb-3">
+                            <h3>User Registration</h3>
+
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">User Registration
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <section class="section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Create New Account for Users</h4>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/user-register}" method="post">
+                                <div class="row">
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <input type="text" class="form-control form-control" placeholder="Username">
+                                        <div class="form-control-icon p-4">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <input type="password" class="form-control form-control" placeholder="Name">
+                                        <div class="form-control-icon p-4">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <input type="text" class="form-control form-control" placeholder="Phone">
+                                        <div class="form-control-icon p-4">
+                                            <i class="bi bi-phone"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <input type="password" class="form-control form-control" placeholder="Email">
+                                        <div class="form-control-icon p-4">
+                                            <i class="bi bi-shield-lock"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <select class="form-control form-control" title="department">
+                                            <option selected disabled>Department</option>
+                                            <option value="1">Human Resources</option>
+                                            <option value="2">Off-Show</option>
+                                            <option value="3">Finance</option>
+                                            <
+                                        </select>
+                                        <div class="form-control-icon p-4">
+                                            <i class="bi bi-card-list"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <select class="form-control form-control" title="role">
+                                            <option selected disabled>Role</option>
+                                            <option value="1">Senior HR</option>
+                                            <option value="2">Junior HR</option>
+                                            <option value="3">Other</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-person-fill p-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
+                                        <select class="form-control form-control" title="gender">
+                                            <option selected disabled>Gender</option>
+                                            <option value="1">Male</option>
+                                            <option value="2">Female</option>
+                                            <option value="3">Other</option>
+                                            <!-- Add more options as needed -->
+                                        </select>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-person-fill p-3"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="exampleFormControlTextarea1" class="form-label">Address</label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                  rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
+
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2023 &copy; Ace Data System Co.ltd</p>
+                    </div>
+                    <div class="float-end">
+                        <p>Created <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
+                            by Team Joblify</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+
+<script src="/assets/js/main.js"></script>
+</body>
+
+</html>

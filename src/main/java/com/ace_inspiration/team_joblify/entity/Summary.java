@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -26,7 +26,7 @@ public class Summary implements Serializable {
     private String name;
 
     @Column(nullable = false)
-    private Date dob;
+    private LocalDate dob;
 
     @Column(length = 8 ,nullable = false)
     @Enumerated(EnumType.STRING)

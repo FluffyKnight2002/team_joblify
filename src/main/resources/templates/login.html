@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/bootstrap.css">
+  <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="/assets/css/app.css">
+  <link rel="stylesheet" href="/assets/css/pages/auth.css">
+</head>
+
+<body>
+<div id="auth">
+
+  <div class="row h-100">
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="py-4 px-3 px-md-4 px-lg-5 shadow-lg col-10 col-sm-8 col-md-5 mx-auto" style="border-radius: 30px;">
+        <h1 class="auth-title text-center pb-4">Log In</h1>
+
+        <form action="index">
+          <div class="form-group position-relative has-icon-left mb-4">
+            <input type="text" class="form-control form-control" placeholder="Username">
+            <div class="form-control-icon">
+              <i class="bi bi-person"></i>
+            </div>
+          </div>
+          <div class="form-group position-relative has-icon-left mb-4">
+            <input type="password" class="form-control form-control" placeholder="Password">
+            <div class="form-control-icon">
+              <i class="bi bi-shield-lock"></i>
+            </div>
+          </div>
+          <div class="form-check form-check-lg d-flex align-items-end">
+            <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label fs-6 text-muted" for="flexCheckDefault">
+              Remember Me
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block mt-4">Log in</button>
+        </form>
+        <div class="text-center mt-3 text-lg fs-6">
+          <p class="text-gray-600">Don't have an account? <a href="auth-register"
+                                                             class="font-bold">Sign
+            up</a>.</p>
+          <p><a class="font-bold fs-6" href="auth-forgot-password">Forgot password?</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+
+</html>

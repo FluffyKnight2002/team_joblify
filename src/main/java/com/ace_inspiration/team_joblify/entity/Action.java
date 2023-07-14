@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,7 +25,7 @@ public class Action implements Serializable {
     private String actionName;
 
     @Column(nullable = false)
-    private Date actionTime;
+    private LocalDateTime actionTime;
 
     @Column(nullable = false)
     private boolean makeAsRead;

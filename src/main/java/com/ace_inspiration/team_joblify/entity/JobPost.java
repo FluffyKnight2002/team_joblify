@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -47,7 +47,7 @@ public class JobPost implements Serializable{
     private Status status;
 
     @Column(nullable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "createdUser_id")
@@ -58,7 +58,7 @@ public class JobPost implements Serializable{
     private Position position;
 
     @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Action> action=new ArrayList<>();
+    private List<Action> actions=new ArrayList<>();
 
     @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<JobPostDepartment> jobPostDepartment=new ArrayList<>();
