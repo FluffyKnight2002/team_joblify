@@ -1,6 +1,6 @@
 package com.ace_inspiration.team_joblify.config;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +15,12 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.remember-me-key}")
-    private static String rememberMeKey;
+    @Value("${app.remember.me.key}")
+    private String rememberMeKey;
+
     private final MyUserDetailsService myUserDetailsService;
 
     @Bean

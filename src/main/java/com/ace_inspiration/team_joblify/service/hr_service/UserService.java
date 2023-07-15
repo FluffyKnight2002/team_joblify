@@ -5,6 +5,6 @@ import com.ace_inspiration.team_joblify.entity.User;
 
 import java.io.IOException;
 
-public interface HRService {
+public interface UserService {
     User userCreate(UserDto userDto, long userId) throws IOException;
 }

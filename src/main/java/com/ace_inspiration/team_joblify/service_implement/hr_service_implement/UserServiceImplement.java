@@ -5,7 +5,7 @@ import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.ActionRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
-import com.ace_inspiration.team_joblify.service.hr_service.HRService;
+import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +17,7 @@ import java.util.Base64;
 
 @Service
 @AllArgsConstructor
-public class HRServiceImplement implements HRService {
+public class UserServiceImplement implements UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
