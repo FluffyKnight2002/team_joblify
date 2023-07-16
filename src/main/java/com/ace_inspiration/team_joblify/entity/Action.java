@@ -35,7 +35,7 @@ public class Action implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobPost_id")
-    private JobPost jobPost;
+    private Vacancy vacancy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id")
@@ -43,5 +43,5 @@ public class Action implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobPostDepartment_id")
-    private JobPostDepartment jobPostDepartment;
+    private VacancyDepartment vacancyDepartment;
 }
