@@ -21,4 +21,8 @@ public class UserController {
         return "all-user-list";
     }
 
+    @GetMapping("/user-profile-edit")
+    public String showUserProfileEdit(){
+        return "user-profile-edit";
+    }
 }

@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.service_implement.default_project_initi
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.*;
 import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
