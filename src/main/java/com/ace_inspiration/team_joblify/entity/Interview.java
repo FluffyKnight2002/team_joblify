@@ -36,7 +36,7 @@ public class Interview implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 }

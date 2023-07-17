@@ -27,9 +27,9 @@ public class Department implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<User> user=new ArrayList<>();
 
-    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
 }

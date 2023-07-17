@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
 
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
@@ -24,40 +24,48 @@
         <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
         <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
         <div id="main">
-            <form class="">
+            <form th:action="@{upload-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
                 <h3 class="text-primary mb-5">Vacancy Form</h3>
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <label for="title" class="form-label">Title(Position)</label>
-                    <input type="text" class="form-control" id="title" name="title">
+                    <input type="text" class="form-control" id="title" name="position">
+                    <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
+                    <div id="title-suggestions"></div>
                 </div>
-                <div class="mb-3 row">
-                    <div class="col-12 col-md-6 col-lg-3">
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="post" class="form-label">Post</label>
                         <input type="text" class="form-control" id="post" name="post">
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                         <label for="department" class="form-label">Department</label>
                         <input type="text" class="form-control" id="department" name="department">
+                        <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                        <div id="department-suggestions"></div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="type" class="form-label">Type</label>
                         <input type="text" class="form-control" id="type" name="type">
                     </div>
-                    <div class="col-12 col-md-6 col-lg-3">
-                        <label for="experienceLevel" class="form-label">Experience Level</label>
-                        <input type="text" class="form-control" id="experienceLevel" name="experienceLevel">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="lvl" class="form-label">Experience Level</label>
+                        <select name="lvl" id="lvl" class="form-control">
+                            <option th:each="level : ${lvlList}"
+                                    th:value="${level}"
+                                    th:text="${level.toString()}"></option>
+                        </select>
                     </div>
                 </div>
-                <div class="mb-3 row">
-                    <div class="col-12 col-md-4">
+                <div class="row">
+                    <div class="col-12 col-md-4 mb-3">
                         <label for="workingDays" class="form-label">Working Days</label>
                         <input type="text" class="form-control" id="workingDays" name="workingDays" value="Mon ~ Fri">
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-4 mb-3">
                         <label for="workingHours" class="form-label">Working Hours</label>
                         <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00AM ~ 6:00PM">
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-4 mb-3">
                         <label for="salary" class="form-label">Salary</label>
                         <input type="text" class="form-control" id="salary" name="salary">
                     </div>
@@ -67,15 +75,63 @@
                     <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="requirements" class="form-label">Requirements</label>
+                    <label for="responsibilities" class="form-label">
+                        Responsibilities
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
+                    <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">
+                        Requirements
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
                     <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label for="responsibility" class="form-label">Responsibility</label>
-                    <textarea class="form-control" id="responsibility" name="responsibility" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="preferences" class="form-label">Preferences</label>
+                    <label for="preferences" class="form-label">
+                        Preferences
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
                     <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
@@ -94,7 +150,7 @@
                                     <h1 class="modal-title fs-5" id="vacancyPostPreview">Vacancy Preview</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body">
+                                <div class="modal-body p-3">
 
                                     <div class="detail-header">
                                         <div class="title-sesion d-flex justify-content-between">
@@ -135,17 +191,17 @@
 
                                         <div class="mb-3">
                                             <h5>Job Responsibilities</h5>
-                                            <pre id="preview-responsibilities"></pre>
+                                            <textarea class="preview" disabled id="preview-responsibilities"></textarea>
                                         </div>
 
                                         <div class="mb-3">
                                             <h5>Job Requirements</h5>
-                                            <pre id="preview-requirements"></pre>
+                                            <textarea class="preview" disabled id="preview-requirements"></textarea>
                                         </div>
 
                                         <div class="mb-3">
                                             <h5>Preferences</h5>
-                                            <pre id="preview-preferences"></pre>
+                                            <textarea class="preview" disabled id="preview-preferences"></textarea>
                                         </div>
 
                                         <table class="w-100 mx-2 mb-3">
@@ -191,7 +247,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Upload</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
                                 </div>
                             </div>
                         </div>
@@ -207,6 +263,7 @@
     <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <script src="/assets/js/main.js"></script>
 </body>

@@ -1,10 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.io.Serializable;
@@ -18,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Vacancy implements Serializable{
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,26 +32,40 @@ public class Vacancy implements Serializable{
     @Column(columnDefinition ="longtext", nullable = false)
     private String preferences;
 
-    @Column(length = 20, nullable = false)
-    private String workingDay;
+    @Column(length = 30, nullable = false)
+    private String workingDays;
 
-    @Column(length = 20, nullable = false)
-    private String workingHour;
+    @Column(length = 30, nullable = false)
+    private String workingHours;
+
+    @Column(nullable = false, columnDefinition = "VARCHAR(30)")
+    private String salary;
+
+    @Column(length = 30, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Level lvl;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(length = 20, nullable = false)
+    private String type;
+
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdUser_id")
     private User createdUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Action> actions=new ArrayList<>();
@@ -65,4 +75,5 @@ public class Vacancy implements Serializable{
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Candidate> candidate=new ArrayList<>();
+
 }

@@ -37,17 +37,17 @@ public class Candidate implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "summary_id")
     private Summary summary;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "candidate", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Interview>interviews=new ArrayList<>();
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "candidate", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Action>actions=new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobPost_id")
     private Vacancy vacancy;
 }

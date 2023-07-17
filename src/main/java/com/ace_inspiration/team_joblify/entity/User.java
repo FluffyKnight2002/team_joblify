@@ -1,10 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +12,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,13 +60,14 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vacancy> createdVacancies =new ArrayList<>();
 
-    @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "updatedUser", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Action> action=new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
+
 }
