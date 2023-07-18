@@ -17,8 +17,8 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public void addPosition(Position position) {
-        positionRepository.save(position);
+    public Position addPosition(Position position) {
+        return positionRepository.save(position);
     }
 
     @Override

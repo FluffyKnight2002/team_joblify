@@ -9,7 +9,6 @@ import com.ace_inspiration.team_joblify.repository.VacancyRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -125,7 +124,7 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public void updateVacancy(VacancyDto updatedVacancyDto) {
+    public Vacancy updateVacancy(VacancyDto updatedVacancyDto) {
         Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getId()).get();
         vacancy.setPosition(convertPosition(updatedVacancyDto.getPosition()));
         vacancy.setType(updatedVacancyDto.getType());
@@ -138,7 +137,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancy.setSalary(updatedVacancyDto.getSalary());
         vacancy.setLvl(vacancy.getLvl());
         vacancy.setStatus(updatedVacancyDto.getStatus());
-        vacancyRepository.save(vacancy);
+        return vacancyRepository.save(vacancy);
     }
 
     @Override
