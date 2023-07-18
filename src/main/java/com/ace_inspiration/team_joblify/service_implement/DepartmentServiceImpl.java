@@ -4,6 +4,7 @@ import com.ace_inspiration.team_joblify.dto.DepartmentDto;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -66,7 +67,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department findbyName(String departmentName) {
-        return departmentRepository.findByName(departmentName);
+    public Department findByName(String departmentName) {
+        return departmentRepository.findByName(departmentName)
+                .orElseThrow(()-> new UsernameNotFoundException("Department not found"));
     }
 }

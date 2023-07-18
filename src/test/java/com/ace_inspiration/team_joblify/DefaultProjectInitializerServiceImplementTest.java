@@ -35,7 +35,7 @@ class DefaultProjectInitializerServiceImplementTest{
         private DepartmentRepository departmentRepository;
 
         @Mock
-        private ActionRepository actionRepository;
+        private NotificationRepository notificationRepository;
 
         @Mock
         private PasswordEncoder passwordEncoder;
@@ -110,8 +110,8 @@ class DefaultProjectInitializerServiceImplementTest{
                         notification.setActionName("Default HR account is created");
                         notification.setActionTime(currentDate);
                         notification.setUser(defaultUser);
-                        actionRepository.save(notification);
-                        verify(actionRepository,times(1)).save(notification);
+                        notificationRepository.save(notification);
+                        verify(notificationRepository,times(1)).save(notification);
                 }
                 if(positionRepository.count() == 0){
                         verify(userRepository,times(1)).count();

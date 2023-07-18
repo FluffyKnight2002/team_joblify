@@ -63,13 +63,6 @@ public class Vacancy implements Serializable{
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Notification> notifications =new ArrayList<>();
-
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
 

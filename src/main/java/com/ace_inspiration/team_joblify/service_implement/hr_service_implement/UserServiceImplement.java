@@ -2,8 +2,8 @@ package com.ace_inspiration.team_joblify.service_implement.hr_service_implement;
 
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
-import com.ace_inspiration.team_joblify.repository.ActionRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
+import com.ace_inspiration.team_joblify.repository.NotificationRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserServiceImplement implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
-    private final ActionRepository actionRepository;
+    private final NotificationRepository notificationRepository;
 
     @Value("${app.default.user.password}")
     private String password;
@@ -66,7 +66,7 @@ public class UserServiceImplement implements UserService {
         notification.setActionName(userDto.getName() + " is created by "+ actionUser.getName());
         notification.setActionTime(currentDate);
         notification.setUser(user);
-        actionRepository.save(notification);
+        notificationRepository.save(notification);
 
         return null;
 

@@ -9,6 +9,7 @@ import com.ace_inspiration.team_joblify.repository.VacancyRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,7 +41,6 @@ public class VacancyServiceImpl implements VacancyService {
         Vacancy vacancy = Vacancy.builder()
                 .position(convertPosition(vacancyDto.getPosition()))
                 .type(vacancyDto.getType())
-                .department(convertDepartment((vacancyDto.getDepartment())))
                 .lvl(convertLevel((vacancyDto.getLvl())))
                 .description(vacancyDto.getDescriptions())
                 .requirements(vacancyDto.getRequirements())
@@ -91,8 +91,7 @@ public class VacancyServiceImpl implements VacancyService {
         departmentService.createDepartment(departmentDto);
     }
     private Department convertDepartment(String departmentName) {
-        Department department = departmentRepository.findByName(departmentName);
-        return department;
+        return departmentService.findByName(departmentName);
     }
 
     private Level convertLevel(String levelName) {

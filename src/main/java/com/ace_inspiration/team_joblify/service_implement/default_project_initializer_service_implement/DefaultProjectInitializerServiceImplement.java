@@ -30,7 +30,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
 
     private final DepartmentRepository departmentRepository;
     private final UserRepository userRepository;
-    private final ActionRepository actionRepository;
+    private final NotificationRepository notificationRepository;
     private final PasswordEncoder passwordEncoder;
     private final ResourceLoader resourceLoader;
     private final PositionRepository positionRepository;
@@ -91,9 +91,8 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
             Notification notification = new Notification();
             notification.setActionName("Default HR account is created");
             notification.setActionTime(currentDate);
-            notification.setMakeAsRead(false);
             notification.setUser(defaultUser);
-            actionRepository.save(notification);
+            notificationRepository.save(notification);
         }
         if(positionRepository.count() == 0){
             Position position= Position.builder()
