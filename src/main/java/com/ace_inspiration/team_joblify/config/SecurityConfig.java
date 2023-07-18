@@ -23,10 +23,10 @@ public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
 
-    @Bean
-    public CustomAccessDeniedHandler deniedHandler(){
-        return new CustomAccessDeniedHandler();
-    }
+//     @Bean
+//     public CustomAccessDeniedHandler deniedHandler(){
+//         return new CustomAccessDeniedHandler();
+//     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -47,9 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception-> exception
-                        .accessDeniedHandler(deniedHandler())
-                )
+                // .exceptionHandling(exception-> exception
+                //         .accessDeniedHandler(deniedHandler())
+                // )
 
                 .formLogin(login->login
                         .loginPage("/login")

@@ -48,6 +48,6 @@ public class Candidate implements Serializable {
     private List<Action>actions=new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobPost_id")
+    @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 }

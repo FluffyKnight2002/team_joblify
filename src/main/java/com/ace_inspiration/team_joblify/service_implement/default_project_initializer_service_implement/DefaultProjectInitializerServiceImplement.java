@@ -7,18 +7,20 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 
 @Service
@@ -33,6 +35,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
     private final UserRepository userRepository;
     private final ActionRepository actionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ResourceLoader resourceLoader;
     private final PositionRepository positionRepository;
     private final TechSkillsRepository techSkillsRepository;
     private final LanguageSkillsRepository languageSkillsRepository;
@@ -63,10 +66,13 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
         Department defaultDepartment=departmentRepository.findByName("Human Resources").orElseThrow(()-> new UsernameNotFoundException("Department Not Found"));
 
         if (userRepository.count() == 0) {
-            Resource resource = new ClassPathResource("static/assets/images/faces/5.jpg");
-            InputStream inputStream = resource.getInputStream();
-            byte[] fileBytes = StreamUtils.copyToByteArray(inputStream);
-            inputStream.close();
+
+                Resource resource = resourceLoader.getResource("classpath:static/assets/images/faces/5.jpg");
+                InputStream inputStream = resource.getInputStream();
+                byte [] photoBytes = IOUtils.toByteArray(inputStream);
+
+
+
 
             User defaultUser = User.builder()
                     .username("Admin")
@@ -74,7 +80,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                     .phone("09777159555")
                     .email("ace@gmail.com")
                     .address("Ace Data System")
-                    .photo(Base64.encodeBase64String(fileBytes))
+                    .photo(Base64.encodeBase64String(photoBytes))
                     .gender(Gender.FEMALE)
                     .password(passwordEncoder.encode(password))
                     .role(Role.DEFAULT_HR)
@@ -85,7 +91,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                     .build();
             userRepository.save(defaultUser);
 
-            Action action=new Action();
+            Action action = new Action();
             action.setActionName("Default HR account is created");
             action.setActionTime(currentDate);
             action.setMakeAsRead(false);

@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class UserDto {
 
+    private MultipartFile photo;
+
     private String username;
 
     private String name;
@@ -24,13 +26,9 @@ public class UserDto {
 
     private int gender;
 
-    private MultipartFile photo;
-
-    private String password;
-
     private String role;
 
     private String note;
 
-    private long department;
+    private String department;
 }

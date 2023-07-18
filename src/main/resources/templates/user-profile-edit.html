@@ -10,6 +10,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/bootstrap.css">
 
+  <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
+  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+
   <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
   <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/assets/css/app.css">
@@ -27,14 +31,14 @@
         <div class="page-title">
           <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-              <h3>User Registration</h3>
+              <h3>User Profile Edit</h3>
 
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
               <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">User Registration
+                  <li class="breadcrumb-item active" aria-current="page">User Profile Edit
                   </li>
                 </ol>
               </nav>
@@ -44,75 +48,76 @@
         <section class="section">
           <div class="card">
             <div class="card-header">
-              <h4 class="card-title">Create New Account for Users</h4>
+              <h4 class="card-title">Edit User Account Here</h4>
             </div>
             <div class="card-body">
-              <form th:action="@{/user-register}" method="post">
+              <form id="user-profile-edit" enctype="multipart/form-data" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
                 <div class="row">
                   <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <input type="text" class="form-control form-control" placeholder="Username">
-                    <div class="form-control-icon p-4">
-                      <i class="bi bi-person"></i>
-                    </div>
+                    <input type="file" class="form-control image-resize-filepond" id="photo" name="photo" accept="image/*">
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <input type="password" class="form-control form-control" placeholder="Name">
-                    <div class="form-control-icon p-4">
-                      <i class="bi bi-person"></i>
-                    </div>
+
+                </div>
+                <div class="row">
+                  <div class="form-floating mb-3 col-md-6">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                    <label for="username"><i class="bi bi-person px-3"></i>Username</label>
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <input type="text" class="form-control form-control" placeholder="Phone">
-                    <div class="form-control-icon p-4">
-                      <i class="bi bi-phone"></i>
-                    </div>
+                  <div class="form-floating mb-3 col-md-6">
+                    <input type="text" class="form-control" placeholder="Name" id="name" name="name">
+                    <label for="name"><i class="bi bi-person px-3"></i>Name</label>
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <input type="password" class="form-control form-control" placeholder="Email">
-                    <div class="form-control-icon p-4">
-                      <i class="bi bi-shield-lock"></i>
-                    </div>
+                  <div class="form-floating mb-3 col-md-6">
+                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone">
+                    <label for="phone"><i class="bi bi-phone px-3"></i>Phone</label>
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <select class="form-control form-control" title="department">
+                  <div class="form-floating mb-3 col-md-6">
+                    <input type="email" class="form-control" placeholder="Email" id="email" name="email">
+                    <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
+                  </div>
+                  <div class="form-floating mb-3 col-md-6">
+                    <select class="form-select" aria-label="Department" name="department" id="department">
                       <option selected disabled>Department</option>
-                      <option value="1">Human Resources</option>
-                      <option value="2">Off-Show</option>
-                      <option value="3">Finance</option>
+                      <option value="Human Resources">Human Resources</option>
+                      <option value="Banking">Banking</option>
+                      <option value="Retail">Retail</option>
                       <
                     </select>
-                    <div class="form-control-icon p-4">
-                      <i class="bi bi-card-list"></i>
-                    </div>
+                    <label for="department"><i class="bi bi-card-list px-3"></i>Department</label>
+
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <select class="form-control form-control" title="role">
+                  <div class="form-floating mb-3 col-md-6">
+                    <select class="form-select" aria-label="Role" name="role" id="role">
                       <option selected disabled>Role</option>
-                      <option value="1">Senior HR</option>
-                      <option value="2">Junior HR</option>
-                      <option value="3">Other</option>
+                      <option value="Senior HR">Senior HR</option>
+                      <option value="Junior HR">Junior HR</option>
+                      <option value="Other">Other</option>
                       <!-- Add more options as needed -->
                     </select>
-                    <div class="form-control-icon">
-                      <i class="bi bi-person-fill p-3"></i>
-                    </div>
+                    <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
                   </div>
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <select class="form-control form-control" title="gender">
+                  <div class="form-floating mb-3 col-md-6">
+                    <select class="form-select" aria-label="Gender" name="gender" id="gender">
                       <option selected disabled>Gender</option>
                       <option value="1">Male</option>
                       <option value="2">Female</option>
                       <option value="3">Other</option>
                       <!-- Add more options as needed -->
                     </select>
-                    <div class="form-control-icon">
-                      <i class="bi bi-person-fill p-3"></i>
-                    </div>
+                    <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
                   </div>
-                  <div class="form-group mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Address</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1"
-                              rows="3"></textarea>
+                  <div class="row">
+                    <div class="form-floating mb-3 col-md-6">
+
+                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px"></textarea>
+                      <label for="address"><span class="px-3">Address</span></label>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
+
+                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px"></textarea>
+                      <label for="note"><span class="px-3">Note</span></label>
+                    </div>
                   </div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
@@ -140,7 +145,106 @@
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
+<!-- filepond validation -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+<!-- image editor -->
+<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-filter/dist/filepond-plugin-image-filter.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+
+<!-- toastify -->
+<script src="/assets/vendors/toastify/toastify.js"></script>
+
+<!-- filepond -->
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<script>
+  // register desired plugins...
+  FilePond.registerPlugin(
+          // validates the size of the file...
+          FilePondPluginFileValidateSize,
+          // validates the file type...
+          FilePondPluginFileValidateType,
+
+          // calculates & dds cropping info based on the input image dimensions and the set crop ratio...
+          FilePondPluginImageCrop,
+          // preview the image file type...
+          FilePondPluginImagePreview,
+          // filter the image file
+          FilePondPluginImageFilter,
+          // corrects mobile image orientation...
+          FilePondPluginImageExifOrientation,
+          // calculates & adds resize information...
+          FilePondPluginImageResize,
+  );
+
+  const photoInput = document.querySelector('.image-resize-filepond');
+  const form = document.getElementById('registration-form');
+
+  // Filepond: Image Resize
+  FilePond.create( photoInput, {
+    allowImagePreview: true,
+    allowImageFilter: false,
+    allowImageExifOrientation: false,
+    allowImageCrop: false,
+    allowImageResize: true,
+    imageResizeTargetWidth: 200,
+    imageResizeTargetHeight: 200,
+    imageResizeMode: 'cover',
+    imageResizeUpscale: true,
+    acceptedFileTypes: ['image/png','image/jpg','image/jpeg'],
+    fileValidateTypeDetectType: (source, type) => new Promise((resolve, reject) => {
+      // Do custom type detection here and return with promise
+      resolve(type);
+    })
+  });
+</script>
+
 <script src="/assets/js/main.js"></script>
+<script>
+  document.querySelector("#user-profile-edit-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    var csrfToken = document.querySelector('#token').value;
+    console.log(csrfToken);
+    // Get form data
+
+    const formData= new FormData(form);
+
+
+
+    // Make the registration request
+    fetch('/v1/user-register', {
+      method: 'POST',
+      headers: {
+        'X-XSRF-Token': csrfToken
+      },
+      body: formData
+    })
+
+
+            .then(response => {
+              if (response.ok) {
+                // Registration successful, handle the response
+                console.log("Registration successful");
+                // You can redirect to another page or show a success message here
+              } else {
+                // Registration failed, handle the error
+                console.error("Registration failed");
+                // You can show an error message to the user here
+              }
+            })
+            .catch(error => {
+              // An error occurred, handle the error
+              console.error("An error occurred during registration:", error);
+              // You can show an error message to the user here
+            });
+  });
+</script>
+
 </body>
 
 </html>
