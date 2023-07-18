@@ -67,9 +67,12 @@ public class User implements Serializable {
     private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Action> action=new ArrayList<>();
+    private List<Notification> notification =new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
 }

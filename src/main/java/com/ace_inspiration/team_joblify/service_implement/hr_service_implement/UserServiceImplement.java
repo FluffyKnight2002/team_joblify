@@ -60,14 +60,13 @@ public class UserServiceImplement implements UserService {
         userRepository.save(user);
 
 
-        Action action=new Action();
+        Notification notification =new Notification();
 
         User actionUser=userRepository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
-        action.setActionName(userDto.getName() + " is created by "+ actionUser.getName());
-        action.setActionTime(currentDate);
-        action.setMakeAsRead(false);
-        action.setUser(user);
-        actionRepository.save(action);
+        notification.setActionName(userDto.getName() + " is created by "+ actionUser.getName());
+        notification.setActionTime(currentDate);
+        notification.setUser(user);
+        actionRepository.save(notification);
 
         return null;
 

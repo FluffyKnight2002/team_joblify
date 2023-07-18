@@ -2,23 +2,17 @@ package com.ace_inspiration.team_joblify;
 
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.*;
-import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
 import com.ace_inspiration.team_joblify.service_implement.default_project_initializer_service_implement.DefaultProjectInitializerServiceImplement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
@@ -112,13 +106,12 @@ class DefaultProjectInitializerServiceImplementTest{
                         userRepository.save(defaultUser);
                         verify(userRepository,times(1)).save(defaultUser);
 
-                        Action action=new Action();
-                        action.setActionName("Default HR account is created");
-                        action.setActionTime(currentDate);
-                        action.setMakeAsRead(false);
-                        action.setUser(defaultUser);
-                        actionRepository.save(action);
-                        verify(actionRepository,times(1)).save(action);
+                        Notification notification =new Notification();
+                        notification.setActionName("Default HR account is created");
+                        notification.setActionTime(currentDate);
+                        notification.setUser(defaultUser);
+                        actionRepository.save(notification);
+                        verify(actionRepository,times(1)).save(notification);
                 }
                 if(positionRepository.count() == 0){
                         verify(userRepository,times(1)).count();

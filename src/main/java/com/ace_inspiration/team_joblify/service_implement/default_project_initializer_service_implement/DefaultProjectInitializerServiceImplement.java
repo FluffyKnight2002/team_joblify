@@ -3,13 +3,11 @@ package com.ace_inspiration.team_joblify.service_implement.default_project_initi
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.*;
 import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 
 @Service
@@ -91,12 +88,12 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                     .build();
             userRepository.save(defaultUser);
 
-            Action action = new Action();
-            action.setActionName("Default HR account is created");
-            action.setActionTime(currentDate);
-            action.setMakeAsRead(false);
-            action.setUser(defaultUser);
-            actionRepository.save(action);
+            Notification notification = new Notification();
+            notification.setActionName("Default HR account is created");
+            notification.setActionTime(currentDate);
+            notification.setMakeAsRead(false);
+            notification.setUser(defaultUser);
+            actionRepository.save(notification);
         }
         if(positionRepository.count() == 0){
             Position position= Position.builder()
