@@ -89,9 +89,10 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
             userRepository.save(defaultUser);
 
             Notification notification = new Notification();
-            notification.setActionName("Default HR account is created");
-            notification.setActionTime(currentDate);
+            notification.setName("Default HR account is created");
+            notification.setTime(currentDate);
             notification.setUser(defaultUser);
+            notification.setLink("Mock Link");
             notificationRepository.save(notification);
         }
         if(positionRepository.count() == 0){

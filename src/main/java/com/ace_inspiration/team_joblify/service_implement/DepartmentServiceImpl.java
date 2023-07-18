@@ -21,14 +21,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public void createDepartment(DepartmentDto departmentDto) {
+    public Department createDepartment(DepartmentDto departmentDto) {
         Department department = Department.builder()
                 .name(departmentDto.getName())
                 .note(departmentDto.getNote())
                 .user(departmentDto.getUser())
                 .vacancyDepartment(departmentDto.getVacancyDepartment())
                 .build();
-        departmentRepository.save(department);
+        return departmentRepository.save(department);
     }
 
     @Override

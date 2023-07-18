@@ -107,8 +107,8 @@ class DefaultProjectInitializerServiceImplementTest{
                         verify(userRepository,times(1)).save(defaultUser);
 
                         Notification notification =new Notification();
-                        notification.setActionName("Default HR account is created");
-                        notification.setActionTime(currentDate);
+                        notification.setName("Default HR account is created");
+                        notification.setTime(currentDate);
                         notification.setUser(defaultUser);
                         notificationRepository.save(notification);
                         verify(notificationRepository,times(1)).save(notification);

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DepartmentService {
 
-    void createDepartment(DepartmentDto departmentDto);
+    Department createDepartment(DepartmentDto departmentDto);
     List<DepartmentDto> selectAllDepartment();
     void updateDepartment(DepartmentDto departmentDto);
     void removeDepartment(long id);

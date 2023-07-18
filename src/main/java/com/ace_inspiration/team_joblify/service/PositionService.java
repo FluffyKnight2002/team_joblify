@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PositionService {
 
-    void addPosition(Position position);
+    Position addPosition(Position position);
     List<Position> selectAllPosition();
     void removePosition(long id);
     List<Position> findByNameContainingIgnoreCase(String term);
