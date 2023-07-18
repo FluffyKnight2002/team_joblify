@@ -44,12 +44,15 @@
                         <div id="department-suggestions"></div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
-                        <label for="type" class="form-label">Type</label>
-                        <input type="text" class="form-control" id="type" name="type">
+                        <label for="type" class="form-label">Job type</label>
+                        <select class="form-select" id="type" name="type">
+                            <option value="Full time" selected>Full time</option>
+                            <option value="Part time">Part time</option>
+                        </select>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="lvl" class="form-label">Experience Level</label>
-                        <select name="lvl" id="lvl" class="form-control">
+                        <select name="lvl" id="lvl" class="form-select">
                             <option th:each="level : ${lvlList}"
                                     th:value="${level}"
                                     th:text="${level.toString()}"></option>
@@ -258,13 +261,19 @@
     </div>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- Stomp -->
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- SockJS -->
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
+    <script src="/assets/js/websocket.js"></script>
     <script src="/assets/js/main.js"></script>
 </body>
 

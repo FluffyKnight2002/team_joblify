@@ -1,12 +1,13 @@
 package com.ace_inspiration.team_joblify.service;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
+import com.ace_inspiration.team_joblify.entity.Vacancy;
 
 import java.util.List;
 
 public interface VacancyService {
 
-    void createVacancy(VacancyDto vacancyDto);
+    Vacancy createVacancy(VacancyDto vacancyDto);
     List<VacancyDto> selectAllVacancy();
     void updateVacancy(VacancyDto vacancyDto);
     void deleteVacancy(long id);

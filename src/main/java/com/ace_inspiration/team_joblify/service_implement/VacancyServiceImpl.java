@@ -34,7 +34,7 @@ public class VacancyServiceImpl implements VacancyService {
     }
 
     @Override
-    public void createVacancy(VacancyDto vacancyDto) {
+    public Vacancy createVacancy(VacancyDto vacancyDto) {
         Position position = checkAndSetPosition(vacancyDto.getPosition());
         Department department = checkAndSetDepartment(vacancyDto.getDepartment());
         Vacancy vacancy = Vacancy.builder()
@@ -54,7 +54,7 @@ public class VacancyServiceImpl implements VacancyService {
                 .createdUser(User.builder().id(1L).build())
                 .build();
 
-        vacancyRepository.save(vacancy);
+        return vacancyRepository.save(vacancy);
     }
 
     private Position checkAndSetPosition(String positionName) {

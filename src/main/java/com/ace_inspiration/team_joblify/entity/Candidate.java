@@ -45,7 +45,7 @@ public class Candidate implements Serializable {
     private List<Interview>interviews=new ArrayList<>();
 
     @OneToMany(mappedBy = "candidate", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Action>actions=new ArrayList<>();
+    private List<Notification> notifications =new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jobPost_id")

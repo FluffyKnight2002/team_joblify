@@ -8,8 +8,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
@@ -41,8 +44,12 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/assets/**", "/assets/css/**", "/assets/images/**", "/assets/js/**", "/assets/vendors/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/assets/**",
+                                "/assets/css/**",
+                                "/assets/images/**",
+                                "/assets/js/**",
+                                "/assets/vendors/**").permitAll()
+                        .requestMatchers("/**", "/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception-> exception
@@ -67,6 +74,17 @@ public class SecurityConfig {
 
 
         return http.build();
+    }
+
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails user = User.withDefaultPasswordEncoder()
+                .username("test")
+                .password("test")
+                .roles("DEFAULT_HR")
+                .build();
+
+        return new InMemoryUserDetailsManager(user);
     }
 
     @Bean

@@ -29,7 +29,7 @@ public class TestUtil {
         user.setNote("MockNote");
         user.setCreatedVacancies(new ArrayList<>());
         user.setUpdatedJobPosts(new ArrayList<>());
-        user.setAction(new ArrayList<>());
+        user.setNotification(new ArrayList<>());
         user.setDepartment(new Department());
 
         return user;

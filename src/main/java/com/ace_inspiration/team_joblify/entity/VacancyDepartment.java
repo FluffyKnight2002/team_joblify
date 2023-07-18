@@ -66,5 +66,5 @@ public class VacancyDepartment implements Serializable {
     private Vacancy vacancy;
 
     @OneToMany(mappedBy = "vacancyDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Action> actions = new ArrayList<>();
+    private List<Notification> notifications = new ArrayList<>();
 }
