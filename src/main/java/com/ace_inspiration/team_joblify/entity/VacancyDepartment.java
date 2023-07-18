@@ -22,8 +22,8 @@ public class VacancyDepartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 24, nullable = false)
-    private String salary;
+    @Column(nullable = false, columnDefinition = "decimal(10,2)")
+    private double salary;
 
     @Column(nullable = false)
     private int requiredVacancies;
@@ -32,7 +32,8 @@ public class VacancyDepartment implements Serializable {
     private int hiredVacancies;
 
     @Column(length = 10, nullable = false)
-    private String jobType;
+    @Enumerated(EnumType.STRING)
+    private VacancyType jobType;
 
     @Column(nullable = false)
     private LocalDateTime openDate;
@@ -42,9 +43,6 @@ public class VacancyDepartment implements Serializable {
 
     @Column(nullable = false)
     private LocalDateTime updatedDate;
-
-    @Column(nullable = false, length = 30)
-    private Level lvl;
 
     @Column(columnDefinition = "longtext")
     private String note;
