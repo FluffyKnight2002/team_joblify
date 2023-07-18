@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class User implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String email;
 
-    @Column(length = 15, nullable = false, unique = true)
+    @Column(length = 15, nullable = false)
     private String phone;
 
     @Column(nullable = false, length = 8)
@@ -58,16 +58,18 @@ public class User implements Serializable {
     private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Vacancy> createdVacancies = new ArrayList<>();
+    private List<Vacancy> createdVacancies =new ArrayList<>();
 
-    @OneToMany(mappedBy = "updatedUser", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VacancyDepartment> updatedJobPosts= new ArrayList<>();
+    @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Notification> notification = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Notification> notification =new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
 }

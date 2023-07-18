@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,21 +29,16 @@ public class Notification implements Serializable {
     private LocalDateTime actionTime;
 
     @Column(nullable = false)
-    private boolean makeAsRead;
+    private String link;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobPost_id")
-    private Vacancy vacancy;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "candidate_id")
-    private Candidate candidate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jobPostDepartment_id")
+    @JoinColumn(name = "vacancyDepartment_id")
     private VacancyDepartment vacancyDepartment;
+
+    @OneToMany(mappedBy = "action",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
 }
