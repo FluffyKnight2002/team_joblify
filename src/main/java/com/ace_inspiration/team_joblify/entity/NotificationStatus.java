@@ -23,7 +23,7 @@ public class NotificationStatus implements Serializable {
     private boolean makeAsRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "action_id")
+    @JoinColumn(name = "notification_id")
     private Notification notification;
 
     @ManyToOne(fetch = FetchType.LAZY)

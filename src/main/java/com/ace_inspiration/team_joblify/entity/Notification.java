@@ -23,10 +23,10 @@ public class Notification implements Serializable {
     private long id;
 
     @Column(nullable = false)
-    private String actionName;
+    private String name;
 
     @Column(nullable = false)
-    private LocalDateTime actionTime;
+    private LocalDateTime time;
 
     @Column(nullable = false)
     private String link;
@@ -39,6 +39,6 @@ public class Notification implements Serializable {
     @JoinColumn(name = "vacancyDepartment_id")
     private VacancyDepartment vacancyDepartment;
 
-    @OneToMany(mappedBy = "action",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "notification",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NotificationStatus> notificationStatuses = new ArrayList<>();
 }
