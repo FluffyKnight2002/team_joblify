@@ -35,6 +35,10 @@ public class VacancyDepartment implements Serializable {
     @Enumerated(EnumType.STRING)
     private VacancyType jobType;
 
+    @Column(length = 30, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Level lvl;
+
     @Column(nullable = false)
     private LocalDateTime openDate;
 

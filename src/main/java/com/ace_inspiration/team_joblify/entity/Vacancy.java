@@ -38,10 +38,6 @@ public class Vacancy implements Serializable{
     @Column(length = 30, nullable = false)
     private String workingHours;
 
-    @Column(length = 30, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Level lvl;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
