@@ -10,5 +10,6 @@ public interface PositionService {
     List<Position> selectAllPosition();
     void removePosition(long id);
     List<Position> findByNameContainingIgnoreCase(String term);
+    Position findByName(String name);
 
 }

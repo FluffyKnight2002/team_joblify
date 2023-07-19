@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,22 +27,22 @@ public class VacancyDepartment implements Serializable {
     private String salary;
 
     @Column(nullable = false)
-    private int requiredVacancies;
+    private int post;
 
     @Column(nullable = false)
-    private int hiredVacancies;
+    private int hiredPost;
 
     @Column(length = 10, nullable = false)
     private String jobType;
 
     @Column(nullable = false)
-    private LocalDateTime openDate;
+    private LocalDate openDate;
 
     @Column(nullable = false)
-    private LocalDateTime closeDate;
+    private LocalDate closeDate;
 
     @Column(nullable = false)
-    private LocalDateTime updatedDate;
+    private LocalDateTime updatedTime;
 
     @Column(nullable = false, length = 30)
     private Level lvl;
