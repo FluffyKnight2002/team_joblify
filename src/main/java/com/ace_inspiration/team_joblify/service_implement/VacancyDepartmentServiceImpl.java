@@ -46,7 +46,7 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
                 .closeDate(LocalDate.now())
                 .note(vacancyDto.getNote())
                 .build();
-        return null;
+        return vacancyDepartmentRepository.save(vacancyDepartment);
     }
 
     private Position checkAndSetPosition(String positionName) {
