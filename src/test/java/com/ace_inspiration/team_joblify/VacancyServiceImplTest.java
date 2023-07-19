@@ -79,7 +79,7 @@ class VacancyServiceImplTest {
         positionService.addPosition(newPosition);
     }
     Position convertPosition(String positionName) {
-        Position position = positionRepository.findByName(positionName);
+        Position position = positionService.findByName(positionName);
         return position;
     }
 

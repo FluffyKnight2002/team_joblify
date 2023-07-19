@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,10 @@ public class VacancyDepartment implements Serializable {
     private double salary;
 
     @Column(nullable = false)
-    private int requiredVacancies;
+    private int post;
 
     @Column(nullable = false)
-    private int hiredVacancies;
+    private int hiredPost;
 
     @Column(length = 10, nullable = false)
     @Enumerated(EnumType.STRING)
@@ -40,13 +41,13 @@ public class VacancyDepartment implements Serializable {
     private Level lvl;
 
     @Column(nullable = false)
-    private LocalDateTime openDate;
+    private LocalDate openDate;
 
     @Column(nullable = false)
-    private LocalDateTime closeDate;
+    private LocalDate closeDate;
 
     @Column(nullable = false)
-    private LocalDateTime updatedDate;
+    private LocalDateTime updatedTime;
 
     @Column(columnDefinition = "longtext")
     private String note;

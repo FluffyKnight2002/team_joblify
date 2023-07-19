@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 "/assets/js/**",
                                 "/assets/vendors/**").permitAll()
                         .requestMatchers("/**", "/ws/**").permitAll()
+                        .requestMatchers("/upload-vacancy").permitAll()
                         .anyRequest().authenticated()
                 )
                 // .exceptionHandling(exception-> exception

@@ -4,6 +4,7 @@ import com.ace_inspiration.team_joblify.dto.DepartmentDto;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +13,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
-
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
-
+    
     @Override
     public Department createDepartment(DepartmentDto departmentDto) {
         Department department = Department.builder()

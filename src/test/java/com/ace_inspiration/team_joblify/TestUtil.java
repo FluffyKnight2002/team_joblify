@@ -79,10 +79,6 @@ public class TestUtil {
         vacancy.setPreferences("Mock preferences");
         vacancy.setWorkingDays("Mock working day");
         vacancy.setWorkingHours("Mock working hour");
-        vacancy.setSalary("3 Lakhs");
-        vacancy.setLvl(Level.ENTRY_LEVEL);
-        vacancy.setStatus(Status.OPEN);
-        vacancy.setType("Mock type");
         vacancy.setCreatedDate(LocalDateTime.now());
         // Set other properties accordingly
         return vacancy;

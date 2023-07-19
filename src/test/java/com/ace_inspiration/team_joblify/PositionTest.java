@@ -6,6 +6,7 @@ import com.ace_inspiration.team_joblify.service.PositionService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -49,8 +50,8 @@ class PositionTest {
     }
 
     Position convertPosition(String positionName) {
-        Position position = positionRepository.findByName(positionName);
-        return position;
+        return positionRepository.findByName(positionName)
+                .orElseThrow(()-> new UsernameNotFoundException("Position not found"));
     }
 }
 
