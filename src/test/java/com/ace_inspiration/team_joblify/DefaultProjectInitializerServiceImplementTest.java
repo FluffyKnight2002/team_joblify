@@ -56,28 +56,24 @@ class DefaultProjectInitializerServiceImplementTest{
                         verify(departmentRepository,times(1)).count();
                         Department department = Department.builder()
                                 .name("Human Resources")
-                                .note("HR Department is created by Default")
                                 .build();
                         departmentRepository.save(department);
                         verify(departmentRepository,times(1)).save(department);
 
                         Department department1 = Department.builder()
                                 .name("Banking")
-                                .note("Banking Department is created by Default")
                                 .build();
                         departmentRepository.save(department1);
                         verify(departmentRepository,times(1)).save(department1);
 
                         Department department2 = Department.builder()
                                 .name("Retail")
-                                .note("Retail Department is created by Default")
                                 .build();
                         departmentRepository.save(department2);
                         verify(departmentRepository,times(1)).save(department2);
                 }
                 Department department=new Department();
                 department.setName("Human Resources");
-                department.setNote("HR Department is created by Default");
                 when(departmentRepository.findByName("Human Resources")).thenReturn(Optional.of(department));
                 Department defaultDepartment=departmentRepository.findByName("Human Resources").orElseThrow(()-> new UsernameNotFoundException("Department Not Found"));
 

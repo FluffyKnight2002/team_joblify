@@ -46,6 +46,6 @@ public class Candidate implements Serializable {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacancy_id")
-    private Vacancy vacancy;
+    @JoinColumn(name = "vacancy_department_id")
+    private VacancyDepartment vacancyDepartment;
 }

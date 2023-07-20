@@ -1,9 +1,9 @@
 package com.ace_inspiration.team_joblify;
 
-import com.ace_inspiration.team_joblify.dto.DepartmentDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,20 +46,16 @@ public class TestUtil {
         Department department = Department.builder()
                 .id(1L)
                 .name("Sales")
-                .note("This department handles sales operations.")
                 .user(new ArrayList<>())
-                .vacancyDepartment(new ArrayList<>())
                 .build();
         return department;
     }
 
-    public static DepartmentDto createMockDepartmentDto(){
-        DepartmentDto departmentDto = DepartmentDto.builder()
+    public static Department createMockDepartmentDto(){
+        Department departmentDto = Department.builder()
                 .id(1L)
                 .name("Sales")
-                .note("This department handles sales operations.")
                 .user(new ArrayList<>())
-                .vacancyDepartment(new ArrayList<>())
                 .build();
         return departmentDto;
     }
@@ -71,14 +67,27 @@ public class TestUtil {
     }
 
     public static Vacancy createMockVacancy() {
-        Vacancy vacancy = new Vacancy();
-        vacancy.setId(1L);
-        vacancy.setDescription("Mock description");
-        vacancy.setRequirements("Mock requirements");
-        vacancy.setResponsibilities("Mock responsibilities");
-        vacancy.setPreferences("Mock preferences");
-        vacancy.setWorkingDays("Mock working day");
-        vacancy.setWorkingHours("Mock working hour");
+        Address address = Address.builder()
+                .id(1l)
+                .name("Mock Address")
+                .build();
+        Position position = Position.builder()
+                .id(1l)
+                .name("Mock Position")
+                .build();
+        Department department = Department.builder()
+                .id(1l)
+                .name("Mock Department")
+                .build();
+        Vacancy vacancy = Vacancy.builder()
+                .id(1L)
+                .position(position)
+                .department(department)
+                .address(address)
+                .department(createMockDepartment())
+                .createdUser(User.builder().build())
+                .createdDate(LocalDateTime.now())
+                .build();
         vacancy.setCreatedDate(LocalDateTime.now());
         // Set other properties accordingly
         return vacancy;
@@ -110,4 +119,22 @@ public class TestUtil {
         vacancies.add(createMockVacancy());
         return vacancies;
     }
+    public static VacancyDepartment createMockVacancyDepartment() {
+        VacancyDepartment vacancyDepartment = VacancyDepartment.builder()
+                .id(1L)
+                .post(2)
+                .jobType("Mock Department")
+                .vacancy(createMockVacancy())
+                .lvl(Level.ENTRY_LEVEL)
+                .salary("Mock salary")
+                .updatedUser(createMockUser())
+                .updatedTime(LocalDateTime.now())
+                .openDate(LocalDate.now())
+                .closeDate(LocalDate.now())
+                .note("Mock note")
+                .build();
+
+        return vacancyDepartment;
+    }
 }
+

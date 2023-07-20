@@ -1,13 +1,12 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
+import com.ace_inspiration.team_joblify.service.hr_service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import com.ace_inspiration.team_joblify.service.hr_service.UserService;
-
-import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,6 +29,7 @@ public class UserController {
 
     @GetMapping("/user-register")
     public String showUserRegisterForm(){
+
         return "user-register";
     }
 

@@ -20,24 +20,6 @@ public class Vacancy implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(columnDefinition ="longtext", nullable = false)
-    private String description;
-
-    @Column(columnDefinition ="longtext", nullable = false)
-    private String requirements;
-
-    @Column(columnDefinition ="longtext", nullable = false)
-    private String responsibilities;
-
-    @Column(columnDefinition ="longtext", nullable = false)
-    private String preferences;
-
-    @Column(length = 30, nullable = false)
-    private String workingDays;
-
-    @Column(length = 30, nullable = false)
-    private String workingHours;
-
     @Column(nullable = false)
     private LocalDateTime createdDate;
 
@@ -49,10 +31,19 @@ public class Vacancy implements Serializable{
     @JoinColumn(name = "position_id")
     private Position position;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
-    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Candidate> candidate=new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @Column(length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
 
 }

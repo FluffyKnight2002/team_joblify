@@ -23,11 +23,7 @@ public class VacancyController {
     @PostMapping("/upload-vacancy")
     public String postVacancy(@ModelAttribute("vacancy")VacancyDto vacancyDto) {
         vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
-//        if(vacancyDepartment != null) {
-//            String notification = "User1 upload " + vacancyDto.getPosition() + " vacancy.";
-//            notificationService.createNotifications(notification);
-//        }
-        return "redirect:show-upload-vacancy-form";
+        return "redirect:/show-upload-vacancy-form";
     }
 
     // ModalAttributes session start
