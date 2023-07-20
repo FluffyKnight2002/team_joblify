@@ -37,6 +37,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public Position findByName(String name) {
-        return positionRepository.findByName(name).orElseThrow(()-> new UsernameNotFoundException("Position not found"));
+        return positionRepository.findByName(name).orElse(null);
+//                .orElseThrow(()-> new UsernameNotFoundException("Position not found"));
     }
 }

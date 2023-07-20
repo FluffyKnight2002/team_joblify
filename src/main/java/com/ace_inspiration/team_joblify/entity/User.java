@@ -1,5 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -61,7 +63,7 @@ public class User implements Serializable {
     private List<Vacancy> createdVacancies =new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
+        private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Notification> notification =new ArrayList<>();

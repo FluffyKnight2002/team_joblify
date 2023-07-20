@@ -21,7 +21,7 @@ public class VacancyController {
     }
 
     @PostMapping("/upload-vacancy")
-    public String postVacancy(@ModelAttribute("vacancy")VacancyDto vacancyDto) {
+    public String postVacancy(VacancyDto vacancyDto) {
         vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
 //        if(vacancyDepartment != null) {
 //            String notification = "User1 upload " + vacancyDto.getPosition() + " vacancy.";
@@ -31,10 +31,10 @@ public class VacancyController {
     }
 
     // ModalAttributes session start
-    @ModelAttribute("vacancy")
-    public VacancyDto getVacancyDto() {
-        return new VacancyDto();
-    }
+//    @ModelAttribute("vacancy")
+//    public VacancyDto getVacancyDto() {
+//        return new VacancyDto();
+//    }
 
     @ModelAttribute("lvlList")
     public Level[] getFormattedLevelList() {

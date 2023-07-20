@@ -37,7 +37,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findByName(String name) {
-        return addressRepository.findByName(name)
-                .orElseThrow(()-> new UsernameNotFoundException("Address not found"));
+        return addressRepository.findByName(name).orElse(null);
+//                .orElseThrow(()-> new UsernameNotFoundException("Address not found"));
     }
 }

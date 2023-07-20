@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
 
     @GetMapping("/login")
     public String showLoginForm(){

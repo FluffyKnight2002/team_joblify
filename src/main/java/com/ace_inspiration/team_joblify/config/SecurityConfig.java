@@ -52,7 +52,6 @@ public class SecurityConfig {
                                 "/assets/js/**",
                                 "/assets/vendors/**").permitAll()
                         .requestMatchers("/**", "/ws/**").permitAll()
-                        .requestMatchers("/upload-vacancy").permitAll()
                         .anyRequest().authenticated()
                 )
                 // .exceptionHandling(exception-> exception
@@ -79,16 +78,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("test")
-                .password("test")
-                .roles("DEFAULT_HR")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("test")
+//                .password("test")
+//                .roles("DEFAULT_HR")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

@@ -1,5 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +25,9 @@ public class VacancyDepartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, columnDefinition = "decimal(10,2)")
-    private double salary;
+    @Column(nullable = false)
+//    , columnDefinition = "decimal(10,2)"
+    private String salary;
 
     @Column(nullable = false)
     private int post;
@@ -33,8 +36,8 @@ public class VacancyDepartment implements Serializable {
     private int hiredPost;
 
     @Column(length = 10, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private VacancyType jobType;
+//    @Enumerated(EnumType.STRING)
+    private String jobType;
 
     @Column(length = 30, nullable = false)
     @Enumerated(EnumType.STRING)

@@ -66,7 +66,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department findByName(String departmentName) {
-        return departmentRepository.findByName(departmentName)
-                .orElseThrow(()-> new UsernameNotFoundException("Department not found"));
+        return departmentRepository.findByName(departmentName).orElse(null);
+//                .orElseThrow(()-> new UsernameNotFoundException("Department not found"));
     }
 }
