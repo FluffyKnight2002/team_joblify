@@ -4,7 +4,6 @@ import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +37,5 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public Position findByName(String name) {
         return positionRepository.findByName(name).orElse(null);
-//                .orElseThrow(()-> new UsernameNotFoundException("Position not found"));
     }
 }

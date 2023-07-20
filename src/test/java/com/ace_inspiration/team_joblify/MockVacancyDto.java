@@ -2,9 +2,10 @@ package com.ace_inspiration.team_joblify;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.Address;
+import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.User;
-import com.ace_inspiration.team_joblify.dto.DepartmentDto;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -33,7 +34,7 @@ public class MockVacancyDto {
                 .lvl("Entry Level")
                 .salary("Mock salary")
                 .status(Status.OPEN)
-                .departmentDto(createMockDepartmentDto())
+                .department(createMockDepartment().getName())
                 .updatedUser(createMockUser())
                 .creadedUser(createMockUser())
                 .createdDateTime(LocalDateTime.now())
@@ -45,8 +46,9 @@ public class MockVacancyDto {
         return vacancyDto;
     }
 
-    private static DepartmentDto createMockDepartmentDto() {
-        DepartmentDto departmentDto = DepartmentDto.builder()
+    private static Department createMockDepartment() {
+        Department departmentDto = Department.builder()
+                .id(1L)
                 .name("Mock department name")
                 .build();
 

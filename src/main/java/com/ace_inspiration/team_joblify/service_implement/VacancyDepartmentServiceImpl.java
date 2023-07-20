@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
-import com.ace_inspiration.team_joblify.dto.DepartmentDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
@@ -34,8 +33,6 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
         Department department = checkAndSetDepartment(vacancyDto.getDepartment());
         VacancyDepartment vacancyDepartment = VacancyDepartment.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
-                .address(address)
-                .department(department)
                 .updatedUser(User.builder().id(1L).build())
                 .jobType(vacancyDto.getType())
                 .lvl(convertLevel(vacancyDto.getLvl()))
@@ -77,10 +74,10 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
         return department;
     }
     private void autoFillDepartment(String newName) {
-        DepartmentDto departmentDto = DepartmentDto.builder()
+        Department department = Department.builder()
                 .name(newName)
                 .build();
-        departmentService.createDepartment(departmentDto);
+        departmentService.createDepartment(department);
     }
     private Department convertDepartment(String departmentName) {
 

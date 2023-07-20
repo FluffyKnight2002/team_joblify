@@ -1,15 +1,16 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Vacancy;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyRepository;
+import com.ace_inspiration.team_joblify.service.AddressService;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VacancyServiceImpl implements VacancyService {
 
     private final VacancyRepository vacancyRepository;
@@ -25,28 +27,21 @@ public class VacancyServiceImpl implements VacancyService {
     private final DepartmentRepository departmentRepository;
     private final PositionRepository positionRepository;
     private final PositionService positionService;
-
-    public VacancyServiceImpl(VacancyRepository vacancyRepository, DepartmentService departmentService, DepartmentRepository departmentRepository, PositionRepository positionRepository, PositionService positionService) {
-        this.vacancyRepository = vacancyRepository;
-        this.departmentService = departmentService;
-        this.departmentRepository = departmentRepository;
-        this.positionRepository = positionRepository;
-        this.positionService = positionService;
-    }
+    private final AddressRepository addressRepository;
+    private final AddressService addressService;
 
     @Override
     public Vacancy createVacancy(VacancyDto vacancyDto) {
         Position position = checkAndSetPosition(vacancyDto.getPosition());
+        Address address = checkAndSetAddress(vacancyDto.getAddress());
+        Department department = checkAndSetDepartment(vacancyDto.getDepartment());
         Vacancy vacancy = Vacancy.builder()
                 .position(convertPosition(vacancyDto.getPosition()))
-                .description(vacancyDto.getDescriptions())
-                .requirements(vacancyDto.getRequirements())
-                .responsibilities(vacancyDto.getResponsibilities())
-                .preferences(vacancyDto.getPreferences())
-                .workingDays(vacancyDto.getWorkingDays())
-                .workingHours(vacancyDto.getWorkingHours())
                 .createdDate(LocalDateTime.now())
                 .createdUser(vacancyDto.getCreadedUser())
+                .address(address)
+                .department(department)
+                .status(Status.OPEN)
                 .build();
 
         return vacancyRepository.save(vacancy);
@@ -70,23 +65,41 @@ public class VacancyServiceImpl implements VacancyService {
         return positionService.findByName(positionName);
     }
 
-//    private Department checkAndSetDepartment(String departmentName) {
-//        Department department = new Department();
-//        if(departmentRepository.findByName(departmentName) == null) {
-//            autoFillDepartment(departmentName);
-//        }
-//        department = convertDepartment(departmentName);
-//        return department;
-//    }
-//    private void autoFillDepartment(String newName) {
-//        DepartmentDto departmentDto = DepartmentDto.builder()
-//                .name(newName)
-//                .build();
-//        departmentService.createDepartment(departmentDto);
-//    }
-//    private Department convertDepartment(String departmentName) {
-//        return departmentService.findByName(departmentName);
-//    }
+    private Department checkAndSetDepartment(String departmentName) {
+        Department department = new Department();
+        if(departmentRepository.findByName(departmentName) == null) {
+            autoFillDepartment(departmentName);
+        }
+        department = convertDepartment(departmentName);
+        return department;
+    }
+    private void autoFillDepartment(String newName) {
+        Department departmentDto = Department.builder()
+                .name(newName)
+                .build();
+        departmentService.createDepartment(departmentDto);
+    }
+    private Department convertDepartment(String departmentName) {
+        return departmentService.findByName(departmentName);
+    }
+
+    private Address checkAndSetAddress(String newAddress) {
+        Address address = new Address();
+        if(addressService.findByName(newAddress) == null) {
+            autoFillAddress(newAddress);
+        }
+        address = convertAddress(newAddress);
+        return address;
+    }
+    private void autoFillAddress(String newName) {
+        Address newAddress = Address.builder()
+                .name(newName)
+                .build();
+        addressService.addAddress(newAddress);
+    }
+    private Address convertAddress(String addressName) {
+        return addressService.findByName(addressName);
+    }
 
     private Level convertLevel(String levelName) {
         Level level = Level.valueOf(levelName.toUpperCase().replace(" ", "_"));
@@ -103,12 +116,11 @@ public class VacancyServiceImpl implements VacancyService {
             VacancyDto dto = VacancyDto.builder()
                     .id(vacancy.getId())
                     .position(vacancy.getPosition().getName())
-                    .descriptions(vacancy.getDescription())
-                    .requirements(vacancy.getRequirements())
-                    .responsibilities(vacancy.getResponsibilities())
-                    .preferences(vacancy.getPreferences())
-                    .workingDays(vacancy.getWorkingDays())
-                    .workingHours(vacancy.getWorkingHours())
+                    .closeDate(vacancy.getCreatedDate().toLocalDate())
+                    .creadedUser(vacancy.getCreatedUser())
+                    .address(vacancy.getAddress().getName())
+                    .department(vacancy.getDepartment().getName())
+                    .status(vacancy.getStatus())
                     .build();
             vacancies.add(dto);
         }
@@ -117,15 +129,15 @@ public class VacancyServiceImpl implements VacancyService {
 
     @Override
     public Vacancy updateVacancy(VacancyDto updatedVacancyDto) {
+        Position position = checkAndSetPosition(updatedVacancyDto.getPosition());
+        Department department = checkAndSetDepartment(updatedVacancyDto.getDepartment());
+        Address address = checkAndSetAddress(updatedVacancyDto.getAddress());
         Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getId()).get();
         vacancy.setId(updatedVacancyDto.getId());
         vacancy.setPosition(convertPosition(updatedVacancyDto.getPosition()));
-        vacancy.setDescription(updatedVacancyDto.getDescriptions());
-        vacancy.setRequirements(updatedVacancyDto.getRequirements());
-        vacancy.setResponsibilities(updatedVacancyDto.getResponsibilities());
-        vacancy.setPreferences(updatedVacancyDto.getPreferences());
-        vacancy.setWorkingDays(updatedVacancyDto.getWorkingDays());
-        vacancy.setWorkingHours(vacancy.getWorkingHours());
+        vacancy.setDepartment(department);
+        vacancy.setAddress(address);
+        vacancy.setStatus(updatedVacancyDto.getStatus());
         return vacancyRepository.save(vacancy);
     }
 

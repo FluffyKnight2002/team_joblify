@@ -10,10 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,24 +41,21 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
         if(departmentRepository.count() ==0) {
             Department department = Department.builder()
                     .name("Human Resources")
-                    .note("HR Department is created by Default")
                     .build();
             departmentRepository.save(department);
 
             Department department1 = Department.builder()
                     .name("Banking")
-                    .note("Banking Department is created by Default")
                     .build();
             departmentRepository.save(department1);
 
             Department department2 = Department.builder()
                     .name("Retail")
-                    .note("Retail Department is created by Default")
                     .build();
             departmentRepository.save(department2);
         }
 
-        Department defaultDepartment=departmentRepository.findByName("Human Resources").orElseThrow(()-> new UsernameNotFoundException("Department Not Found"));
+        Department defaultDepartment=departmentRepository.findByName("Human Resources").orElseThrow(null);
 
         if (userRepository.count() == 0) {
 

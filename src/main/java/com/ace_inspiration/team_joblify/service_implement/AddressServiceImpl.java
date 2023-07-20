@@ -4,7 +4,7 @@ import com.ace_inspiration.team_joblify.entity.Address;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.service.AddressService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

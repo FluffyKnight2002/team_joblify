@@ -33,7 +33,6 @@ public class VacancyDto {
     private String lvl;
     private String salary;
     private Status status;
-    private DepartmentDto departmentDto;
     private User updatedUser;
     private User creadedUser;
     private LocalDateTime createdDateTime;

@@ -1,7 +1,5 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +23,25 @@ public class VacancyDepartment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
-//    , columnDefinition = "decimal(10,2)"
+    @Column(columnDefinition ="longtext", nullable = false)
+    private String description;
+
+    @Column(columnDefinition ="longtext", nullable = false)
+    private String requirements;
+
+    @Column(columnDefinition ="longtext", nullable = false)
+    private String responsibilities;
+
+    @Column(columnDefinition ="longtext", nullable = false)
+    private String preferences;
+
+    @Column(length = 30, nullable = false)
+    private String workingDays;
+
+    @Column(length = 30, nullable = false)
+    private String workingHours;
+
+    @Column(length = 24, nullable = false)
     private String salary;
 
     @Column(nullable = false)
@@ -36,12 +51,7 @@ public class VacancyDepartment implements Serializable {
     private int hiredPost;
 
     @Column(length = 10, nullable = false)
-//    @Enumerated(EnumType.STRING)
     private String jobType;
-
-    @Column(length = 30, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Level lvl;
 
     @Column(nullable = false)
     private LocalDate openDate;
@@ -52,6 +62,12 @@ public class VacancyDepartment implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedTime;
 
+    @Column(nullable = false, length = 30)
+    private Level lvl;
+
+    @Column(nullable = false, length = 30)
+    private OnSiteOrRemote onSiteOrRemote;
+
     @Column(columnDefinition = "longtext")
     private String note;
 
@@ -60,17 +76,12 @@ public class VacancyDepartment implements Serializable {
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id")
-    private Department department;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 
     @OneToMany(mappedBy = "vacancyDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Candidate> candidate=new ArrayList<>();
 }

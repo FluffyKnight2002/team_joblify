@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify;
 
-import com.ace_inspiration.team_joblify.dto.DepartmentDto;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.service_implement.DepartmentServiceImpl;
@@ -11,9 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class DepartServiceImplTest {
@@ -32,11 +29,11 @@ public class DepartServiceImplTest {
     @Test
     void createDepartmentTest() {
         Department department = TestUtil.createMockDepartment();
-        DepartmentDto departmentDto = TestUtil.createMockDepartmentDto();
+        Department departmentDto = TestUtil.createMockDepartmentDto();
 
         when(departmentRepository.save(any(Department.class))).thenReturn(department);
 
-        departmentService.createDepartment(departmentDto);
+        departmentService.createDepartment(department);
 
         verify(departmentRepository,times(1)).save(any(Department.class));
     }
@@ -47,25 +44,9 @@ public class DepartServiceImplTest {
 
         when(departmentRepository.findAll()).thenReturn(departments);
 
-        List<DepartmentDto> result = departmentService.selectAllDepartment();
+        List<Department> result = departmentService.selectAllDepartment();
 
         verify(departmentRepository,times(1)).findAll();
-    }
-
-    @Test
-    void updateDepartmentTest() {
-        DepartmentDto departmentDto = TestUtil.createMockDepartmentDto();
-        departmentDto.setId(1L);
-        Department department = TestUtil.createMockDepartment();
-
-        when(departmentRepository.findById(departmentDto.getId())).thenReturn(Optional.of(department));
-
-        departmentService.updateDepartment(departmentDto);
-
-        verify(departmentRepository,times(1)).findById(departmentDto.getId());
-        verify(departmentRepository,times(1)).save(any(Department.class));
-
-        assertEquals(departmentDto.getName(),department.getName());
     }
 
     @Test
