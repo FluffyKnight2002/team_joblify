@@ -27,9 +27,11 @@ public class UserDto {
 
     private int gender;
 
-    private String role;
+    private int role;
 
     private String note;
 
     private String department;
+
+    private String password;
 }
