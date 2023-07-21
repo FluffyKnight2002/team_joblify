@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
-
-
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -72,4 +73,98 @@ public class UserServiceImplement implements UserService {
         return null;
 
         }
+
+    @Override
+    public Optional<User> findById(long userId) {
+        return userRepository.findById(userId);
     }
+
+    @Override
+    public void savePassword(String password, long userId) {
+        User user=userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("User Not Found"));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    @Override
+    public User adminProfileEdit(UserDto userDto, long userId) throws  IOException {
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User Not Found"));
+        Department department = departmentRepository.findByName(userDto.getDepartment()).orElseThrow(() -> new NoSuchElementException("Department Not Found"));
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPhone(userDto.getPhone());
+        user.setAddress(userDto.getAddress());
+        user.setPhoto(Base64.getEncoder().encodeToString(userDto.getPhoto().getBytes()));
+        user.setPassword(passwordEncoder.encode(password));
+
+        if (userDto.getRole() == 1) {
+            user.setRole(Role.DEFAULT_HR);
+        } else if (userDto.getRole() == 2) {
+            user.setRole(Role.SENIOR_HR);
+        } else if (userDto.getRole() == 3) {
+            user.setRole(Role.JUNIOR_HR);
+        } else if (userDto.getRole() == 4) {
+            user.setRole(Role.MANAGEMENT);
+        } else if (userDto.getRole() == 5) {
+            user.setRole(Role.INTERVIEW);
+        }
+
+        user.setNote(userDto.getNote());
+        user.setDepartment(department);
+        user.setLastUpdatedDate(currentDate);
+
+        if (userDto.getGender() == 1) {
+            user.setGender(Gender.FEMALE);
+        } else if (userDto.getGender() == 2) {
+            user.setGender(Gender.MALE);
+        } else if (userDto.getGender() == 3) {
+            user.setGender(Gender.OTHER);
+        }
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User userProfileEdit(UserDto userDto, long userId) throws IOException {
+
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User Not Found"));
+        Department department = departmentRepository.findByName(userDto.getDepartment()).orElseThrow(() -> new NoSuchElementException("Department Not Found"));
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setPhone(userDto.getPhone());
+        user.setAddress(userDto.getAddress());
+        user.setPhoto(Base64.getEncoder().encodeToString(userDto.getPhoto().getBytes()));
+
+        if (userDto.getRole() == 1) {
+            user.setRole(Role.DEFAULT_HR);
+        } else if (userDto.getRole() == 2) {
+            user.setRole(Role.SENIOR_HR);
+        } else if (userDto.getRole() == 3) {
+            user.setRole(Role.JUNIOR_HR);
+        } else if (userDto.getRole() == 4) {
+            user.setRole(Role.MANAGEMENT);
+        } else if (userDto.getRole() == 5) {
+            user.setRole(Role.INTERVIEW);
+        }
+
+        user.setNote(userDto.getNote());
+        user.setDepartment(department);
+        user.setLastUpdatedDate(currentDate);
+
+        if (userDto.getGender() == 1) {
+            user.setGender(Gender.FEMALE);
+        } else if (userDto.getGender() == 2) {
+            user.setGender(Gender.MALE);
+        } else if (userDto.getGender() == 3) {
+            user.setGender(Gender.OTHER);
+        }
+
+        return userRepository.save(user);
+    }
+}

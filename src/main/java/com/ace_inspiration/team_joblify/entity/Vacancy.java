@@ -1,5 +1,6 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,10 +22,15 @@ public class Vacancy implements Serializable{
     private long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdUser_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private User createdUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,10 +44,6 @@ public class Vacancy implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id")
     private Department department;
-
-    @Column(length = 20, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();

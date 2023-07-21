@@ -1,6 +1,8 @@
 package com.ace_inspiration.team_joblify.entity;
 
-public enum Level {
+import java.io.Serializable;
+
+public enum Level implements Serializable {
     ENTRY_LEVEL("Entry Level"),
     JUNIOR_LEVEL("Junior Level"),
     MID_LEVEL("Mid Level"),

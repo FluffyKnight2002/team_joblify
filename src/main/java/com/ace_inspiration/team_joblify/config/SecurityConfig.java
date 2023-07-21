@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,15 +23,11 @@ public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
 
-//     @Bean
-//     public CustomAccessDeniedHandler deniedHandler(){
-//         return new CustomAccessDeniedHandler();
-//     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-//                .csrf().disable()
                 .csrf(
                         csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
@@ -40,7 +35,7 @@ public class SecurityConfig {
                         rememberMe -> rememberMe
                                 .key(rememberMeKey)
                                 .tokenValiditySeconds(84600)
-                                .rememberMeCookieName("cookie")
+                                .rememberMeCookieName("remember-me-cookie")
                                 .rememberMeParameter("remember-me")
                                 .userDetailsService(myUserDetailsService)
                 )
@@ -51,8 +46,6 @@ public class SecurityConfig {
                                 "/assets/js/**",
                                 "/assets/vendors/**").permitAll()
                         .requestMatchers("/**", "/ws/**").permitAll()
-                        .requestMatchers("/show-upload-vacancy-form").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/upload-vacancy").permitAll()
                         .anyRequest().authenticated()
                 )
                 // .exceptionHandling(exception-> exception
@@ -68,7 +61,7 @@ public class SecurityConfig {
                 )
                 .logout(logout->logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?success=true")
+                        .logoutSuccessUrl("/login?logoutSuccess=true")
                         .deleteCookies("JSESSIONID", "remember-me-cookie")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
@@ -79,16 +72,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("test")
-//                .password("test")
-//                .roles("DEFAULT_HR")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

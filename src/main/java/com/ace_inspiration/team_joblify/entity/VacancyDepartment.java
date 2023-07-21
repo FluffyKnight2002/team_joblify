@@ -1,5 +1,6 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,6 +76,7 @@ public class VacancyDepartment implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
