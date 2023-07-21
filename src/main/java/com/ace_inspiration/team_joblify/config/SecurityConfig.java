@@ -8,11 +8,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
@@ -26,10 +23,7 @@ public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
 
-//     @Bean
-//     public CustomAccessDeniedHandler deniedHandler(){
-//         return new CustomAccessDeniedHandler();
-//     }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -41,7 +35,7 @@ public class SecurityConfig {
                         rememberMe -> rememberMe
                                 .key(rememberMeKey)
                                 .tokenValiditySeconds(84600)
-                                .rememberMeCookieName("cookie")
+                                .rememberMeCookieName("remember-me-cookie")
                                 .rememberMeParameter("remember-me")
                                 .userDetailsService(myUserDetailsService)
                 )
@@ -67,7 +61,7 @@ public class SecurityConfig {
                 )
                 .logout(logout->logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?success=true")
+                        .logoutSuccessUrl("/login?logoutSuccess=true")
                         .deleteCookies("JSESSIONID", "remember-me-cookie")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
@@ -78,16 +72,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
-//                .username("test")
-//                .password("test")
-//                .roles("DEFAULT_HR")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

@@ -107,12 +107,12 @@
                 { name: "Email", data: "email", targets: 1 },
                 { name: "Phone", data: "phone", targets: 2 },
                 { name: "Address", data: "address", targets: 3 },
-                { name: "Department", data: "department", targets: 4},
+                { name: "Department", data: "department.name", targets: 4},
                 {
                     targets: 5,
                     data: "id",
                     render: function (data, type, row) {
-                        return '<a href="/customers/edit?id=' + row.id + '"><button class="btn btn-success">Detail</button></a>' ;
+                        return '<a href="/user-profile-edit?id=' + row.id + '"><button class="btn btn-success">Detail</button></a>' ;
                     },
                     sortable: false
                 },
