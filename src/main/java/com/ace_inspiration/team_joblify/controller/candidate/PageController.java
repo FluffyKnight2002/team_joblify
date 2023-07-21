@@ -11,17 +11,17 @@ public class PageController {
         return "index";
     }
 
-    @GetMapping("/contactUs")
+    @GetMapping("/contact-us")
     public String showContactUs() {
         return "contact-us";
     }
 
-    @GetMapping("/jobDetails")
+    @GetMapping("/job-details")
     public String showJobDetails() {
         return "job-details";
     }
 
-    @GetMapping("/allJobs")
+    @GetMapping("/all-jobs")
     public String showAllJobs() {
         return "jobs";
     }

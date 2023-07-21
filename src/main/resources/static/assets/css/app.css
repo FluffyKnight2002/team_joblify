@@ -3,6 +3,32 @@
     backdrop-filter: blur(10px);
 }
 
+.spinner {
+    position: absolute;
+    top: 60%;
+    right: 10px;
+}
+
+.department-spinner {
+    right: 22px;
+}
+
+.loading {
+    background: url(/static/assets/images/gif/Search.gif) no-repeat right center;
+}
+
+.preview {
+    background: transparent;
+    border: none;
+    overflow: auto;
+    resize: none;
+    width: 100%;
+}
+
+#title:focus + #spinner {
+    display: block;
+}
+
 .sticky {
     position: sticky;
     top: 0;

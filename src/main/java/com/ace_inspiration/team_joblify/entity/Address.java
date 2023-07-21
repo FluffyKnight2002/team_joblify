@@ -23,8 +23,8 @@ public class Address implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "address", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<VacancyDepartment> vacancyDepartments;
+    @OneToMany(mappedBy = "address", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Vacancy> vacancies;
 
 
 }
