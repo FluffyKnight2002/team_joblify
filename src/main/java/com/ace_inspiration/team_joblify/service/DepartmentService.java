@@ -11,4 +11,7 @@ public interface DepartmentService {
     void removeDepartment(long id);
     List<Department> findByNameContainingIgnoreCase(String term);
     Department findByName(String departmentName);
+    Department checkAndSetDepartment(String departmentName);
+    void autoFillDepartment(String newName);
+    Department convertDepartment(String departmentName);
 }

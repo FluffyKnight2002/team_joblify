@@ -29,7 +29,6 @@ public class TestUtil {
         user.setNote("MockNote");
         user.setCreatedVacancies(new ArrayList<>());
         user.setUpdatedJobPosts(new ArrayList<>());
-        user.setNotification(new ArrayList<>());
         user.setDepartment(new Department());
 
         return user;
@@ -73,7 +72,7 @@ public class TestUtil {
                 .build();
         Position position = Position.builder()
                 .id(1l)
-                .name("Mock Position")
+                .name("Back-end Developer")
                 .build();
         Department department = Department.builder()
                 .id(1l)
@@ -96,7 +95,7 @@ public class TestUtil {
     public static VacancyDto createMockVacancyDto() {
         VacancyDto vacancyDto = new VacancyDto();
         vacancyDto.setId(1L);
-        vacancyDto.setPosition("Backend Developer");
+        vacancyDto.setPosition("Back-end Developer");
         vacancyDto.setPost(1);
         vacancyDto.setType("Mock type");
         vacancyDto.setDepartment("Banking");

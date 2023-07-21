@@ -38,4 +38,27 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Department findByName(String departmentName) {
         return departmentRepository.findByName(departmentName).orElse(null);
     }
+
+    @Override
+    public Department checkAndSetDepartment(String departmentName) {
+        Department department = new Department();
+        if(departmentRepository.findByName(departmentName).isEmpty()) {
+            autoFillDepartment(departmentName);
+        }
+        department = convertDepartment(departmentName);
+        return department;
+    }
+
+    @Override
+    public void autoFillDepartment(String newName) {
+        Department department = Department.builder()
+                .name(newName)
+                .build();
+        departmentRepository.save(department);
+    }
+
+    @Override
+    public Department convertDepartment(String departmentName) {
+        return departmentRepository.findByName(departmentName).orElse(null);
+    }
 }

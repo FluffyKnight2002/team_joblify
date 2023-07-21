@@ -63,9 +63,6 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                 InputStream inputStream = resource.getInputStream();
                 byte [] photoBytes = IOUtils.toByteArray(inputStream);
 
-
-
-
             User defaultUser = User.builder()
                     .username("Admin")
                     .name("Admin")
@@ -86,7 +83,6 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
             Notification notification = new Notification();
             notification.setName("Default HR account is created");
             notification.setTime(currentDate);
-            notification.setUser(defaultUser);
             notification.setLink("Mock Link");
             notificationRepository.save(notification);
         }

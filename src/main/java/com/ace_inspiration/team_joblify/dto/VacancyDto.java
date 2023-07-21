@@ -30,6 +30,7 @@ public class VacancyDto {
     private String address;
     private String workingDays;
     private String workingHours;
+    private String onSiteOrRemote;
     private String lvl;
     private String salary;
     private Status status;
