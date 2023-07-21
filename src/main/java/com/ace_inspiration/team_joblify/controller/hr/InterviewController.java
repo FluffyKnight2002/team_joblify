@@ -13,7 +13,7 @@ public class InterviewController {
 	private HRServiceImplement service;
 	
 	@GetMapping("/interviewProcess")
-	public String interviewProcessSummary(ModelMap map) {
+	public String interviewProcessSummary() {
 		
 		return "interview-proces-summary";
 	}
