@@ -5,5 +5,5 @@ import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JobPostRepository extends DataTablesRepository<Vacancy, Long> {
+public interface VacancyRepository extends DataTablesRepository<Vacancy, Long> {
 }

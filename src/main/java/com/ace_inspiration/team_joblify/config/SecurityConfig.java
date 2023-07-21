@@ -1,9 +1,10 @@
 package com.ace_inspiration.team_joblify.config;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,20 +16,23 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.remember-me-key}")
-    private static String rememberMeKey;
+    @Value("${app.remember.me.key}")
+    private String rememberMeKey;
+
     private final MyUserDetailsService myUserDetailsService;
 
-    @Bean
-    public CustomAccessDeniedHandler deniedHandler(){
-        return new CustomAccessDeniedHandler();
-    }
+//     @Bean
+//     public CustomAccessDeniedHandler deniedHandler(){
+//         return new CustomAccessDeniedHandler();
+//     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
+//                .csrf().disable()
                 .csrf(
                         csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
@@ -41,18 +45,24 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
-                        .requestMatchers("/assets/**", "/assets/css/**", "/assets/images/**", "/assets/js/**", "/assets/vendors/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/assets/**",
+                                "/assets/css/**",
+                                "/assets/images/**",
+                                "/assets/js/**",
+                                "/assets/vendors/**").permitAll()
+                        .requestMatchers("/**", "/ws/**").permitAll()
+                        .requestMatchers("/show-upload-vacancy-form").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/upload-vacancy").permitAll()
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception-> exception
-                        .accessDeniedHandler(deniedHandler())
-                )
+                // .exceptionHandling(exception-> exception
+                //         .accessDeniedHandler(deniedHandler())
+                // )
 
                 .formLogin(login->login
                         .loginPage("/login")
                         .usernameParameter("username")
-                        .failureUrl("/?error=true")
+                        .failureUrl("/login?error=true")
                         .defaultSuccessUrl("/dashboard?loginSuccess=true")
                         .permitAll()
                 )
@@ -68,6 +78,17 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("test")
+//                .password("test")
+//                .roles("DEFAULT_HR")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
