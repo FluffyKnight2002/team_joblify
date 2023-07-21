@@ -1,11 +1,12 @@
 package com.ace_inspiration.team_joblify;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Vacancy;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyRepository;
+import com.ace_inspiration.team_joblify.service.AddressService;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service_implement.VacancyServiceImpl;
@@ -33,6 +34,10 @@ class VacancyServiceImplTest {
     private PositionRepository positionRepository;
     @Mock
     private PositionService positionService;
+    @Mock
+    private AddressRepository addressRepository;
+    @Mock
+    private AddressService addressService;
 
     @InjectMocks
     private VacancyServiceImpl vacancyService;
@@ -60,30 +65,6 @@ class VacancyServiceImplTest {
     }
 
     @Test
-    void checkAndSetPosition() {
-        String positionName = "New Position";
-
-        if (positionRepository.findByName(positionName) == null) {
-            autoFillPosition(positionName);
-        }
-        Position position = convertPosition(positionName);
-
-        assertNotNull(position);
-
-        assertNotNull(position.getName());
-    }
-    void autoFillPosition(String newName) {
-        Position newPosition = Position.builder()
-                .name(newName)
-                .build();
-        positionService.addPosition(newPosition);
-    }
-    Position convertPosition(String positionName) {
-        Position position = positionService.findByName(positionName);
-        return position;
-    }
-
-    @Test
     void selectAllVacancyTest() {
         List<Vacancy> vacancies = TestUtil.createMockVacancyList();
 
@@ -96,23 +77,68 @@ class VacancyServiceImplTest {
         assertTrue(result != null);
     }
 
+//    @Test
+//    void updateVacancyTest() {
+//        VacancyDto vacancyDto = TestUtil.createMockVacancyDto();
+//        vacancyDto.setId(1L);
+//        Vacancy vacancy = TestUtil.createMockVacancy();
+//
+//        when(vacancyRepository.findById(vacancyDto.getId())).thenReturn(Optional.of(vacancy));
+//        when(vacancyRepository.save(any(Vacancy.class))).thenReturn(vacancy);
+//
+//        vacancyService.updateVacancy(vacancyDto);
+//
+//        verify(vacancyRepository, times(1)).findById(vacancyDto.getId());
+//        verify(vacancyRepository, times(1)).save(any(Vacancy.class));
+//
+//        // Assert the vacancy properties are updated correctly
+//        // Example assertion:
+//        assertEquals(vacancyDto.getPosition(), vacancy.getPosition());
+//    }
+
     @Test
-    void updateVacancyTest() {
-        VacancyDto vacancyDto = TestUtil.createMockVacancyDto();
-        vacancyDto.setId(1L);
-        Vacancy vacancy = TestUtil.createMockVacancy();
+    public void testUpdateVacancy() {
 
-        when(vacancyRepository.findById(vacancyDto.getId())).thenReturn(Optional.of(vacancy));
-        when(vacancyRepository.save(any(Vacancy.class))).thenReturn(vacancy);
+        // Create mock instances for the related entities (Position, Department, Address)
+        Position position = mock(Position.class);
+        position.setName("Back-end Developer");
+        Department department = mock(Department.class);
+        department.setName("Software Development");
+        Address address = mock(Address.class);
+        address.setName("123 Main Street");
 
-        vacancyService.updateVacancy(vacancyDto);
+        VacancyDto updatedVacancyDto = TestUtil.createMockVacancyDto();
 
-        verify(vacancyRepository, times(1)).findById(vacancyDto.getId());
+        updatedVacancyDto.setId(1L);
+        updatedVacancyDto.setPosition("Back-end Developer");
+        updatedVacancyDto.setDepartment("Software Development");
+        updatedVacancyDto.setAddress("123 Main Street");
+        updatedVacancyDto.setStatus(Status.OPEN);
+
+        // Define the behavior of the mock repositories and entities
+        when(vacancyRepository.findById(updatedVacancyDto.getId())).thenReturn(Optional.of(new Vacancy()));
+        when(vacancyRepository.save(any(Vacancy.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(positionService.checkAndSetPosition(updatedVacancyDto.getPosition())).thenReturn(position);
+        when(departmentService.checkAndSetDepartment(updatedVacancyDto.getDepartment())).thenReturn(department);
+        when(addressService.checkAndSetAddress(updatedVacancyDto.getAddress())).thenReturn(address);
+
+        // Call the method to be tested
+        Vacancy updatedVacancy = vacancyService.updateVacancy(updatedVacancyDto);
+
+        // Perform assertions
+        assertNotNull(updatedVacancy);
+        assertEquals(updatedVacancyDto.getId(), updatedVacancy.getId());
+        assertEquals(position.getName(), updatedVacancy.getPosition());
+        assertEquals(department.getName(), updatedVacancy.getDepartment());
+        assertEquals(address.getName(), updatedVacancy.getAddress());
+        assertEquals(updatedVacancyDto.getStatus(), updatedVacancy.getStatus());
+
+        // Verify that the methods were called with the correct arguments
+        verify(vacancyRepository, times(1)).findById(updatedVacancyDto.getId());
         verify(vacancyRepository, times(1)).save(any(Vacancy.class));
-
-        // Assert the vacancy properties are updated correctly
-        // Example assertion:
-        assertEquals(vacancyDto.getPosition(), vacancy.getPosition());
+        verify(positionService, times(1)).checkAndSetPosition(updatedVacancyDto.getPosition());
+        verify(departmentService, times(1)).checkAndSetDepartment(updatedVacancyDto.getDepartment());
+        verify(addressService, times(1)).checkAndSetAddress(updatedVacancyDto.getAddress());
     }
 
 

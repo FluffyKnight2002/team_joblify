@@ -35,7 +35,26 @@ public class PositionServiceImpl implements PositionService {
     }
 
     @Override
-    public Position findByName(String name) {
+    public Position checkAndSetPosition(String positionName) {
+        Position position = new Position();
+        if(positionRepository.findByName(positionName).isEmpty()) {
+            autoFillPosition(positionName);
+        }
+        position = convertPosition(positionName);
+        return position;
+    }
+    public void autoFillPosition(String newName) {
+        Position newPosition = Position.builder()
+                .name(newName)
+                .build();
+        positionRepository.save(newPosition);
+    }
+    public Position convertPosition(String positionName) {
+        return positionRepository.findByName(positionName).orElse(null);
+    }
+
+    @Override
+    public Position findByName(String name){
         return positionRepository.findByName(name).orElse(null);
     }
 }

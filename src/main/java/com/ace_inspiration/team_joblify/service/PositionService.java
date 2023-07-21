@@ -10,6 +10,8 @@ public interface PositionService {
     List<Position> selectAllPosition();
     void removePosition(long id);
     List<Position> findByNameContainingIgnoreCase(String term);
+    Position checkAndSetPosition(String name);
+    void autoFillPosition(String newName);
+    Position convertPosition(String positionName);
     Position findByName(String name);
-
 }

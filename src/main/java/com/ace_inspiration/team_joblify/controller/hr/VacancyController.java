@@ -2,6 +2,7 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class VacancyController {
 
     private final VacancyDepartmentService vacancyDepartmentService;
+    private final NotificationService notificationService;
 
     @GetMapping("/show-upload-vacancy-form")
     public String showUploadVacancyForm(){
@@ -21,21 +23,21 @@ public class VacancyController {
     }
 
     @PostMapping("/upload-vacancy")
-    public String postVacancy(VacancyDto vacancyDto) {
-        vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
-        return "redirect:/show-upload-vacancy-form";
-    }
+        public String postVacancy (VacancyDto vacancyDto){
+            vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
+            return "redirect:/show-upload-vacancy-form";
 
-    // ModalAttributes session start
+    }
+        // ModalAttributes session start
 //    @ModelAttribute("vacancy")
 //    public VacancyDto getVacancyDto() {
 //        return new VacancyDto();
 //    }
 
-    @ModelAttribute("lvlList")
-    public Level[] getFormattedLevelList() {
-
-        return Level.values();
-    }
+//    @ModelAttribute("lvlList")
+//    public Level[] getFormattedLevelList() {
+//
+//        return Level.values();
+//    }
 
 }

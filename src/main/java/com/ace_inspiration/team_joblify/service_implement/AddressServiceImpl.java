@@ -38,6 +38,29 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public Address findByName(String name) {
         return addressRepository.findByName(name).orElse(null);
-//                .orElseThrow(()-> new UsernameNotFoundException("Address not found"));
+    }
+
+    @Override
+    public Address checkAndSetAddress(String newAddress) {
+        Address address = new Address();
+        if(addressRepository.findByName(newAddress).isEmpty()) {
+            autoFillAddress(newAddress);
+        }
+        address = convertAddress(newAddress);
+        return address;
+    }
+
+    @Override
+    public void autoFillAddress(String newName) {
+        Address newAddress = Address.builder()
+                .name(newName)
+                .build();
+        addressRepository.save(newAddress);
+    }
+
+    @Override
+    public Address convertAddress(String addressName) {
+
+        return addressRepository.findByName(addressName).orElse(null);
     }
 }

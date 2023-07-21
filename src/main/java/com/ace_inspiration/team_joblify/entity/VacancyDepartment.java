@@ -64,9 +64,11 @@ public class VacancyDepartment implements Serializable {
     private LocalDateTime updatedTime;
 
     @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private Level lvl;
 
     @Column(nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
     private OnSiteOrRemote onSiteOrRemote;
 
     @Column(columnDefinition = "longtext")
@@ -80,9 +82,6 @@ public class VacancyDepartment implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
-
-    @OneToMany(mappedBy = "vacancyDepartment",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Candidate> candidate=new ArrayList<>();
