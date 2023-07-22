@@ -7,8 +7,10 @@ import java.util.List;
 
 public interface NotificationStatusService {
 
-    NotificationStatus createNotification(NotificationStatus notificationStatus);
+    NotificationStatus createNotification(NotificationDto notificationDto);
     List<NotificationDto> selectAllNotificationStatus();
     void deleteNotificationById(long id);
+
+    long setRead(long notificationId, long userId);
 
 }

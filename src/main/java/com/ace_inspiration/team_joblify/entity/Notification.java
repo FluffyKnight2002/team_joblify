@@ -26,7 +26,7 @@ public class Notification implements Serializable {
     private LocalDateTime time;
 
     @Column(nullable = false)
-    private String name;
+    private String message;
 
     @Column(nullable = false)
     private String link;

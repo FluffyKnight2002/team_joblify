@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class NotificationDto {
 
     private long id;
-    private String name;
+    private String message;
     private String link;
     private boolean makeAsRead;
     private User user;
