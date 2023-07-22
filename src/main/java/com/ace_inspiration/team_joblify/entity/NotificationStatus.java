@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class NotificationStatus implements Serializable {
 
     @Id
@@ -29,6 +30,9 @@ public class NotificationStatus implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonIdentityReference(alwaysAsId = true)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vacancy_department_id")
+    private VacancyDepartment vacancyDepartment;
 }

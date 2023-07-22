@@ -18,6 +18,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class VacancyDepartment implements Serializable {
 
     @Id
@@ -76,13 +77,15 @@ public class VacancyDepartment implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
-    @JsonIdentityReference(alwaysAsId = true)
     private User updatedUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 
     @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Candidate> candidate=new ArrayList<>();
+
+    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<NotificationStatus> notificationStatuses=new ArrayList<>();
 }

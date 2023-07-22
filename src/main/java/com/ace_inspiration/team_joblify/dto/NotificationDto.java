@@ -1,15 +1,14 @@
 package com.ace_inspiration.team_joblify.dto;
 
 import com.ace_inspiration.team_joblify.entity.User;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class NotificationDto {
 
     private long id;

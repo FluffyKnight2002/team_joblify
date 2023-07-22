@@ -30,7 +30,7 @@ public class Api {
 
 
     @GetMapping("/get-all-user")
-    public DataTablesOutput<User> getALlUsers(@Valid DataTablesInput input){
+    public DataTablesOutput<User> getALlUsers(DataTablesInput input){
         return userRepository.findAll(input);
     }
 
