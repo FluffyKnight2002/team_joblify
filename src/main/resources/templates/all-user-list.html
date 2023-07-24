@@ -112,7 +112,10 @@
                     targets: 5,
                     data: "id",
                     render: function (data, type, row) {
-                        return '<a href="/user-profile-edit?id=' + row.id + '"><button class="btn btn-success">Detail</button></a>' ;
+                        return '<form action="/user-profile-edit" method="get">' +
+                            '<input type="hidden" name="id" value="' + row.id + '"/>' +
+                            '<button type="submit" class="btn btn-success">Detail</button>' +
+                            '</form>' ;
                     },
                     sortable: false
                 },

@@ -2,7 +2,6 @@ package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.entity.NotificationStatus;
-import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.NotificationStatusRepository;
 import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.NotificationStatusService;
@@ -22,9 +21,9 @@ public class NotificationStatusServiceImpl implements NotificationStatusService 
     private final UserService userService;
 
     @Override
-    public NotificationStatus createNotification(NotificationDto notificationDto) {
+    public void createNotification(NotificationDto notificationDto) {
         NotificationStatus notificationStatus = dtoToEntry(notificationDto);
-        return notificationStatusRepository.save(notificationStatus);
+        notificationStatusRepository.save(notificationStatus);
     }
 
     @Override
@@ -40,8 +39,8 @@ public class NotificationStatusServiceImpl implements NotificationStatusService 
     }
 
     private NotificationDto entityToDto(NotificationStatus notification) {
-        List<User> users = UserService
-        NotificationDto dto = NotificationDto.builder()
+
+        return NotificationDto.builder()
                 .id(notification.getId())
                 .message(notification.getNotification().getMessage())
                 .link(notification.getNotification().getLink())
@@ -49,16 +48,14 @@ public class NotificationStatusServiceImpl implements NotificationStatusService 
                 .time(notification.getNotification().getTime())
                 .user(notification.getUser())
                 .build();
-        return dto;
     }
 
     private NotificationStatus dtoToEntry(NotificationDto dto) {
-        NotificationStatus notificationStatus = NotificationStatus.builder()
+        return NotificationStatus.builder()
                 .notification(notificationService.createNotifications(dto))
                 .makeAsRead(dto.isMakeAsRead())
                 .user(dto.getUser())
                 .build();
-        return notificationStatus;
     }
 
     @Override
@@ -69,6 +66,7 @@ public class NotificationStatusServiceImpl implements NotificationStatusService 
     @Override
     public long setRead(long notificationId,long userId) {
 
-        return notificationStatusRepository.save(notificationStatus).getId();
+//
+        return 1;
     }
 }

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
-
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
@@ -90,24 +90,24 @@
                                         </div>
                                     </div>
                                     <div class="form-floating mb-3 col-md-6">
-                                        <select class="form-select" aria-label="Department" name="department" id="department" required>
-                                            <option selected disabled value="">Department</option>
-                                            <option value="Human Resources">Human Resources</option>
-                                            <option value="Banking">Banking</option>
-                                            <option value="Retail">Retail</option>
-                                            <
-                                        </select>
+
+                                        <input type="text" class="form-control" placeholder="Department" id="department" name="department" required>
                                         <label for="department"><i class="bi bi-card-list px-3"></i>Department</label>
+                                        <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                                        <div id="department-suggestions"></div>
                                         <div class="invalid-feedback" id="department-error">
                                             Please Choose Department.
                                         </div>
                                     </div>
+
                                     <div class="form-floating mb-3 col-md-6">
                                         <select class="form-select" aria-label="Role" name="role" id="role" required>
                                             <option selected disabled value="">Role</option>
-                                            <option value="Senior HR">Senior HR</option>
-                                            <option value="Junior HR">Junior HR</option>
-                                            <option value="Other">Other</option>
+                                            <option value="1">Senior HR</option>
+                                            <option value="2">Junior HR</option>
+                                            <option value="3">Management</option>
+                                            <option value="4">Interviewer</option>
+                                            <option value="5">Other</option>
                                             <!-- Add more options as needed -->
                                         </select>
                                         <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
@@ -167,9 +167,11 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <!-- filepond validation -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
@@ -230,6 +232,8 @@
 
 <script src="/assets/js/main.js"></script>
 <script>
+
+
     document.querySelector("#registration-form").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the form from submitting normally
         
@@ -336,6 +340,62 @@
     // Add event listener to email input
     const emailInput = document.getElementById('email');
     emailInput.addEventListener('input', checkEmail);
+
+// <------------------------Validation end here----------------------------->
+
+
+    // Function to fetch department suggestions using the fetch API
+    function fetchDepartments(request, response) {
+        // Show the spinner
+        departmentSpinner.style.display = 'inline-block';
+        console.log("Spinner loading..")
+
+        fetch(`/fetch-departments?term=${request.term}`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.length === 0) {
+                    console.log(" + Add new ");
+                    response(["+ Add new"]);
+                } else {
+                    console.log("Spinner hide")
+                    response(data);
+                }
+
+                // Hide the spinner after the response is received
+                departmentSpinner.style.display = 'none';
+            })
+            .catch((error) => {
+                console.error('Error fetching departments:', error);
+
+                // Hide the spinner even if there's an error
+                departmentSpinner.style.display = 'none';
+            });
+    }
+
+    // Hide the spinner at the start
+    const departmentSpinner = document.querySelector('.department-spinner');
+    departmentSpinner.style.display = 'none';
+
+    // Add event listener to department input field to trigger the autocomplete
+    $("#department").autocomplete({
+        minLength: 1,
+        source: fetchDepartments,
+        open: function(event, ui) {
+            var menu = $(this).autocomplete("widget");
+            menu.css({
+                "font-size": "1rem",
+                "border-radius": "0.5rem",
+            });
+            menu.find(".ui-menu-item").css({
+                "color": "#6c757d"
+            });
+        },
+        select: function(e, ui) {
+            var departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
+            $('#department').val(departmentValue);
+            return false;
+        }
+    });
 </script>
 
 </body>
