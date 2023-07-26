@@ -5,16 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Department implements Serializable {
 
     @Id
@@ -25,6 +26,8 @@ public class Department implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.EAGER)
+    // @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties("department")
     private List<User> user=new ArrayList<>();
 
     @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)

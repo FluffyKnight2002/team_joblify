@@ -25,9 +25,9 @@ public class UserDto {
 
     private String address;
 
-    private int gender;
+    private String gender;
 
-    private int role;
+    private String role;
 
     private String note;
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,9 +49,17 @@ public class SecurityConfig {
                         .requestMatchers("/**", "/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                // .exceptionHandling(exception-> exception
-                //         .accessDeniedHandler(deniedHandler())
-                // )
+                .exceptionHandling(
+                        exception -> exception.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/403"))
+                                .authenticationEntryPoint((request, response, authException) -> {
+                            if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+                                response.sendRedirect("/404");
+                            } else if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+                                response.sendRedirect("/500");
+                            } else {
+                                response.sendRedirect("/login");
+                            }
+                        }))
 
                 .formLogin(login->login
                         .loginPage("/login")

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <meta charset="UTF-8">
@@ -102,14 +102,15 @@
                       Please Choose Department.
                     </div>
                   </div>
-                  <div class="form-floating mb-3 col-md-6">
+
+                  <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Role" name="role" id="role" required>
                       <option selected disabled value="">Role</option>
-                      <option value="1">Senior HR</option>
-                      <option value="2">Junior HR</option>
-                      <option value="3">Management</option>
-                      <option value="4">Interviewer</option>
-                      <option value="5">Other</option>
+                      <option th:selected="${user.role == user.role.SENIOR_HR}" value="SENIOR_HR">Senior HR</option>
+                      <option th:selected="${user.role == user.role.JUNIOR_HR}" value="JUNIOR_HR">Junior HR</option>
+                      <option th:selected="${user.role == user.role.MANAGEMENT}" value="MANAGEMENT">Management</option>
+                      <option th:selected="${user.role == user.role.INTERVIEWER}" value="INTERVIEWER">Interviewer</option>
+                      <option th:selected="${user.role == user.role.OTHER}" value="OTHER">Other</option>
                       <!-- Add more options as needed -->
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
@@ -117,12 +118,14 @@
                       Please Choose Role.
                     </div>
                   </div>
+
+
                   <div class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Gender" name="gender" id="gender" required>
                       <option selected disabled value="">Gender</option>
-                      <option th:selected="${user.gender == user.gender.MALE}"  value="1">Male</option>
-                      <option th:selected="${user.gender == user.gender.FEMALE}" value="2">Female</option>
-                      <option th:selected="${user.gender == user.gender.OTHER}" value="3">Other</option>
+                      <option th:selected="${user.gender == user.gender.MALE}"  value="MALE">Male</option>
+                      <option th:selected="${user.gender == user.gender.FEMALE}" value="FEMALE">Female</option>
+                      <option th:selected="${user.gender == user.gender.OTHER}" value="OTHER">Other</option>
                       <!-- Add more options as needed -->
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
