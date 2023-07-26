@@ -49,6 +49,7 @@
           <div class="card">
             <div class="card-header">
               <h4 class="card-title">Edit User Account Here</h4>
+              <div class="mt-md-3 text-center"><h3 class=" success-line"></h3></div>
             </div>
             <div class="card-body">
               <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
@@ -61,6 +62,7 @@
                 </div>
                 <div class="row">
                   <div class="form-floating mb-3 col-md-6">
+                    <input type="hidden" class="form-control" id="id" name="id" th:value="${user.id}">
                     <input type="text" class="form-control" id="username" name="username" placeholder="Username"  th:value="${user.username}" required>
                     <label for="username"><i class="bi bi-person px-3"></i>Username</label>
                     <div class="invalid-feedback">
@@ -84,6 +86,8 @@
                   <div class="form-floating mb-3 col-md-6">
                     <input type="email" class="form-control" placeholder="Email" id="email" name="email" th:value="${user.email}" required>
                     <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
+                    <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
+
                     <div id="email-error" class="invalid-feedback">
                       Please provide a valid email.
                     </div>
@@ -234,6 +238,11 @@
   document.querySelector("#registration-form").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
 
+    if (!isFormValid()) {
+      console.log("Form data is not valid. Please fill all required fields.");
+      return;
+    }
+
     var csrfToken = document.querySelector('#token').value;
     console.log(csrfToken);
     // Get form data
@@ -243,7 +252,7 @@
 
 
     // Make the registration request
-    fetch('/user-register', {
+    fetch('/user-profile-edit', {
       method: 'POST',
       headers: {
         'X-XSRF-Token': csrfToken
@@ -255,12 +264,21 @@
             .then(response => {
               if (response.ok) {
                 // Registration successful, handle the response
-                console.log("Registration successful");
+                console.log("Profile Edit successful");
                 // You can redirect to another page or show a success message here
+                const successLine = document.querySelector('.success-line');
+                successLine.innerHTML='Profile Edit Success!';
+                successLine.style.display = 'inline-block';
+                successLine.style.color= 'lawngreen';
+
               } else {
                 // Registration failed, handle the error
-                console.error("Registration failed");
+                console.error("Profile Edit failed");
                 // You can show an error message to the user here
+                const successLine = document.querySelector('.success-line');
+                successLine.innerHTML='Profile Edit Fail!';
+                successLine.style.display = 'inline-block';
+                successLine.style.color= 'red';
               }
             })
             .catch(error => {
@@ -270,8 +288,26 @@
             });
   });
 
+  function isFormValid() {
+    // Get all required input fields, textareas, and select elements
+    const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
 
-  // <-----------------------------------------fetch call for user registe----------->
+    // Check if all required fields have values (except the "Note" textarea)
+    for (const field of requiredFields) {
+      if (field.tagName === 'TEXTAREA' && field.id === 'note') {
+        // Skip the "Note" textarea from validation
+        continue;
+      }
+      if (!field.value.trim()) {
+        return false; // Form data is not valid
+      }
+    }
+
+    return true; // Form data is valid
+  }
+
+
+  // <-----------------------------------------fetch call for user profile dit----------->
 
   (() => {
     'use strict';
@@ -294,7 +330,7 @@
     const phoneNumberInput = document.getElementById('phone');
     const phoneNumber = phoneNumberInput.value;
     const phoneNumberLength = phoneNumber.length;
-    const phoneError = document.getElementById('phoneError');
+
 
     // Check if phone number matches the pattern
     if (!phoneNumber.match(/[+0-9]+/)) {
@@ -318,25 +354,64 @@
 
   // Function to check email format
   function checkEmail() {
+    const idInput = document.getElementById('id');
+    const idValue = idInput.value;
+
     const emailInput = document.getElementById('email');
     const emailValue = emailInput.value;
-    const emailError = document.getElementById('email-error');
+    console.log(emailValue)
+    const emailError=document.getElementById('email-error');
+    emailSpinner.style.display = 'inline-block';
+    console.log("Spinner loading..")
 
-    // Check if email matches the pattern
-    if (!emailValue.match(/\S+@\S+\.\S+/)) {
-      // Show error message and set custom validity
-      emailInput.setCustomValidity('Please provide a valid email.');
-      emailInput.classList.add('is-invalid');
-    } else {
-      // Remove error message and custom validity
-      emailInput.setCustomValidity('');
-      emailInput.classList.remove('is-invalid');
-    }
+    fetch(`/fetch-email-except-mine?email=${emailValue}&userId=${idValue}`)
+            .then((response) => response.json())
+
+            .then((data) => {
+              console.log(data)
+              emailSpinner.style.display = 'none';
+              console.log("Spinner hide")
+              if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
+                console.log("Email\'s already exist and Email is also not Valid")
+                emailInput.classList.add('is-invalid');
+                emailError.innerHTML='Email\'s already exist and Email is also not Valid';
+
+              } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
+                console.log("Email's already exist")
+                emailInput.classList.add('is-invalid');
+                emailError.innerText='Email\'s already exist.';
+
+              } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
+                emailInput.classList.add('is-invalid');
+                console.log("Email is not Valid")
+                emailError.innerHTML='Email is also not Valid';
+
+              } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)){
+                emailInput.classList.remove('is-invalid');
+                console.log("Email is good to use.")
+              }
+
+              // Hide the spinner after the response is received
+              departmentSpinner.style.display = 'none';
+            })
+            .catch((error) => {
+              console.error('Error fetching departments:', error);
+
+              // Hide the spinner even if there's an error
+              departmentSpinner.style.display = 'none';
+              emailInput.classList.add('is-invalid');
+            });
+
+
   }
+
+  const emailSpinner = document.querySelector('.email-spinner');
+  emailSpinner.style.display = 'none';
 
   // Add event listener to email input
   const emailInput = document.getElementById('email');
   emailInput.addEventListener('input', checkEmail);
+
 
   // <------------------------Validation end here----------------------------->
 
@@ -393,6 +468,9 @@
       return false;
     }
   });
+
+  // <----------------------Departmrnt Suggestion end here----------------------->
+
 </script>
 
 </body>

@@ -4,6 +4,8 @@ import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
+import com.ace_inspiration.team_joblify.service.hr_service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,17 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 // Add this line to specify the base URL
 public class SuggestionsController {
 
     private final PositionService positionService;
 
     private final DepartmentService departmentService;
+    private final UserService userService;
 
-    public SuggestionsController(PositionService positionService, DepartmentService departmentService) {
-        this.positionService = positionService;
-        this.departmentService = departmentService;
-    }
+
 
     @GetMapping("/fetch-titles")
     @ResponseBody
@@ -48,4 +49,18 @@ public class SuggestionsController {
 
         return suggestions;
     }
+
+    @GetMapping("/fetch-email")
+    @ResponseBody
+    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
+        return userService.emailDuplication(email);
+}
+
+    @GetMapping("/fetch-email-except-mine")
+    @ResponseBody
+    public boolean emailDuplicateSearchExceptMine(@RequestParam("email") String email, @RequestParam("userId") long userId) {
+        return userService.emailDuplicationExceptMine(email, userId);
+    }
+
+
 }

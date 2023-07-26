@@ -16,4 +16,8 @@ public interface UserService {
 
     User userProfileEdit(UserDto userDto, long userId) throws IOException;
 
+    boolean emailDuplication(String email);
+
+    boolean emailDuplicationExceptMine(String email, long userId);
+
 }

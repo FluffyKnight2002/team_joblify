@@ -99,10 +99,10 @@
 <script>
     $(document).ready(function () {
         $('table#table').DataTable({
-            "serverSide": true,
-            "processing": true,
-            "ajax": '/get-all-user',
-            "columns": [
+            serverSide: true,
+            processing: true,
+            ajax: '/get-all-user',
+            columns: [
                 { name: "Name", data: "name", targets: 0 },
                 { name: "Email", data: "email", targets: 1 },
                 { name: "Phone", data: "phone", targets: 2 },

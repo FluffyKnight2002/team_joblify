@@ -81,7 +81,7 @@ public class UserServiceImplement implements UserService {
         Notification notification =new Notification();
 
         User actionUser=userRepository.findById(userId)
-                .orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
+                .orElseThrow(()-> new NoSuchElementException("User Not Found"));
         notification.setMessage(userDto.getName() + " is created by "+ actionUser.getName());
         notification.setTime(currentDate);
         notification.setLink("aaa");
@@ -196,5 +196,19 @@ public class UserServiceImplement implements UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public boolean emailDuplication(String email) {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        return user != null;
+    }
+
+    @Override
+    public boolean emailDuplicationExceptMine(String email, long userId) {
+        User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
+
+        return user != null;
     }
 }
