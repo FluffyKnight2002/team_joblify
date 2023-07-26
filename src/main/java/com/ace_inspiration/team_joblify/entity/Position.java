@@ -25,5 +25,5 @@ public class Position implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "position", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPost> jobPosts=new ArrayList<>();
+    private List<Vacancy> vacancies =new ArrayList<>();
 }

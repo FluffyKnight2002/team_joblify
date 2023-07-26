@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -24,7 +24,7 @@ public class Action implements Serializable {
     private String actionName;
 
     @Column(nullable = false)
-    private Date actionTime;
+    private LocalDateTime actionTime;
 
     @Column(nullable = false)
     private boolean makeAsRead;
@@ -35,7 +35,7 @@ public class Action implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "jobPost_id")
-    private JobPost jobPost;
+    private Vacancy vacancy;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "candidate_id")
@@ -43,5 +43,5 @@ public class Action implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "jobPostDepartment_id")
-    private JobPostDepartment jobPostDepartment;
+    private VacancyDepartment vacancyDepartment;
 }

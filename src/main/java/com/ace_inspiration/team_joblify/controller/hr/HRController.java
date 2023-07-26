@@ -5,10 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HRController {
+
 	
-	@GetMapping("/")
-	public String ViewAllSummary() {
-		return"view-all-summary";
+	@GetMapping("/view-summary-info")
+	public String ViewSummaryinfo() {
+		return"view-summary-info";
 	}
-	
+
+    @GetMapping("/dashboard")
+    public String showDashboard() {
+        return "dashboard";
+    }
+
 }

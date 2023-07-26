@@ -7,9 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Data
@@ -28,7 +30,7 @@ public class Candidate implements Serializable {
     private  Status interviewStatus;
 
     @Column(nullable = false)
-    private Date applyDate;
+    private LocalDateTime applyDate;
 
     @Lob
     @Column(columnDefinition = "longblob", nullable = false)
@@ -49,5 +51,5 @@ public class Candidate implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "jobPost_id")
-    private JobPost jobPost;
+    private Vacancy vacancy;
 }

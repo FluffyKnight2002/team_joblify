@@ -1,0 +1,148 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5));
+    backdrop-filter: blur(10px);
+    color: black;
+    z-index: 3;
+}
+
+.nav-link {
+    color: #1e497b !important;
+    font-size: large !important;
+    font-weight: bold;
+    padding: 0 10px !important;
+}
+
+.nav-link:hover {
+    color: #2063b0 !important;
+    font-weight: bolder;
+}
+
+.active {
+    color: #2063b0 !important;
+    font-weight: bolder;
+    border-bottom: 2px solid #2063b0;
+}
+
+.btn-primary {
+    margin-right: 20px;
+    background: #1e497b !important;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #112f52 !important;
+}
+
+.default-font {
+    color: #1e497b !important;
+}
+
+.card {
+    transition-duration: 0.4s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.applicants-text {
+    color: rgb(24, 217, 153);
+    font-size: 0.7rem;
+    margin: 0 10px;
+}
+
+.end-date-text {
+    font-size: 0.9rem;
+}
+
+.footer {
+    background: #1e497b !important;
+}
+
+.reset-btn {
+    color: #1e497b;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.reset-btn:hover {
+    color: #1e497b;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background: #d9d9d9;
+}
+
+#loading-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    /* Add this line to disable pointer events on the loading animation */
+    transition: opacity 0.3s ease;
+}
+
+#loading-animation.show {
+    opacity: 1;
+    pointer-events: auto;
+    /* Add this line to enable pointer events on the loading animation when it's shown */
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1e497b;
+    /* Sky blue color */
+    margin: 0 3px;
+    transform: scale(0);
+    animation: dot-animation 1.5s infinite ease-in-out;
+}
+
+.dot-1 {
+    animation-delay: 0s;
+}
+
+.dot-2 {
+    animation-delay: 0.5s;
+}
+
+.dot-3 {
+    animation-delay: 1s;
+}
+
+@keyframes dot-animation {
+
+    0%,
+    100% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+}

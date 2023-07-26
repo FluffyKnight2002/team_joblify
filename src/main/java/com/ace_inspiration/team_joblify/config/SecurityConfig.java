@@ -11,23 +11,28 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.remember-me-key}")
-    private static String rememberMeKey;
-    private final MyUserDetailsService myUserDetailsService;
+	@Value("${app.remember-me-key}")
+	private static String rememberMeKey;
+	private final MyUserDetailsService myUserDetailsService;
 
-    @Bean
-    public CustomAccessDeniedHandler deniedHandler(){
-        return new CustomAccessDeniedHandler();
-    }
-    @Bean
+	@Bean
+	public CustomAccessDeniedHandler deniedHandler() {
+		return new CustomAccessDeniedHandler();
+	}
+
+	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(
+                        csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .rememberMe(
                         rememberMe -> rememberMe
                                 .key(rememberMeKey)
@@ -37,8 +42,12 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
+
                 		.requestMatchers("/assets/**").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/assets/**", "/assets/css/**", "/assets/images/**", "/assets/js/**", "/assets/vendors/**").permitAll()
+                        .requestMatchers("/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception-> exception
@@ -46,16 +55,16 @@ public class SecurityConfig {
                 )
 
                 .formLogin(login->login
-                        .loginPage("/")
+                        .loginPage("/login")
                         .usernameParameter("username")
                         .failureUrl("/?error=true")
-                        .successForwardUrl("/?loginSuccess=true")
+                        .defaultSuccessUrl("/dashboard?loginSuccess=true")
                         .permitAll()
                 )
                 .logout(logout->logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/?success=true")
-                        .deleteCookies("JSESSIONID", "cookie")
+                        .logoutSuccessUrl("/login?success=true")
+                        .deleteCookies("JSESSIONID", "remember-me-cookie")
                         .clearAuthentication(true)
                         .invalidateHttpSession(true)
                         .permitAll()
@@ -65,13 +74,13 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

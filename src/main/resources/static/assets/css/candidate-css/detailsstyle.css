@@ -1,0 +1,73 @@
+.modal-header {
+    background: #112f52 !important;
+    color: white;
+}
+
+.jobs-con-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.close-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    color: white;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #0c233d !important;
+}
+
+.skill-input {
+    background: transparent;
+    outline: none;
+}
+
+.jobs-con-header {
+    background: #1e497b !important;
+}
+
+.scrollable-container {
+    overflow-y: auto;
+    max-height: 400px;
+    backdrop-filter: blur(10px);
+}
+
+.scrollable-container::-webkit-scrollbar {
+    width: 11px;
+}
+
+.scrollable-container {
+    scrollbar-width: thin;
+    scrollbar-color: #1e497b transparent;
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+    background: #1e497b;
+    border-radius: 6px;
+    border: 3px solid #1e497b;
+}
+
+@media (max-width: 768px) {
+
+    /* Styles for small screens */
+    .jobs-list-con {
+        display: none !important;
+    }
+
+    .job-details-con {
+        width: 100% !important;
+    }
+}

@@ -7,8 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -33,8 +33,16 @@ public class User implements Serializable {
     @Column(length = 15, nullable = false, unique = true)
     private String phone;
 
+    @Column(nullable = false, length = 8)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Column(columnDefinition = "longtext", nullable = false)
     private String address;
+
+    @Lob
+    @Column(columnDefinition = "longblob", nullable = false)
+    private String photo;
 
     @Column(nullable = false)
     private String password;
@@ -44,19 +52,19 @@ public class User implements Serializable {
     private Role role;
 
     @Column(nullable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @Column(nullable = false)
-    private Date lastUpdatedDate;
+    private LocalDateTime lastUpdatedDate;
 
     @Column(columnDefinition = "longtext")
     private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPost> createdJobPosts=new ArrayList<>();
+    private List<Vacancy> createdVacancies =new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<JobPostDepartment> updatedJobPosts=new ArrayList<>();
+    private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Action> action=new ArrayList<>();

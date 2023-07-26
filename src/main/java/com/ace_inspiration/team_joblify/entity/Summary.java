@@ -1,15 +1,27 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import jakarta.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -26,7 +38,7 @@ public class Summary implements Serializable {
     private String name;
 
     @Column(nullable = false)
-    private Date dob;
+    private LocalDate dob;
 
     @Column(length = 8 ,nullable = false)
     @Enumerated(EnumType.STRING)
@@ -54,16 +66,16 @@ public class Summary implements Serializable {
     @Column(nullable = false, length = 25)
     private String experience;
 
-    @Column(nullable = false)
-    private int expectedSalary;
+    @Column(nullable = false, columnDefinition = "decimal(10,2)")
+    private double expectedSalary;
 
-    @OneToOne(mappedBy = "summary", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, orphanRemoval = true)
     private Candidate candidate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "summary_languageSkills", joinColumns = @JoinColumn(name = "summary_id"),
     inverseJoinColumns = @JoinColumn(name = "languageSkills_id"))
-    private List<LanguageSkills> languageSkills= new ArrayList<>();
+    private List<LanguageSkills> languageSkills;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "summary_techSkills", joinColumns = @JoinColumn(name = "summary_id"),
