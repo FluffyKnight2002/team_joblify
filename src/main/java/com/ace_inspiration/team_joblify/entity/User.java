@@ -73,7 +73,17 @@ public class User implements Serializable {
     @JsonIdentityReference(alwaysAsId = true)
     private Department department;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    List<NotificationUser> notificationUsers= new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
+
+//    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+//    @JoinTable(name = "notification_user",
+//            joinColumns = @JoinColumn(name="notification_id"),
+//            inverseJoinColumns = @JoinColumn(name="user_id")
+//    )
+//    private List<Notification> notifications= new ArrayList<>();
 }

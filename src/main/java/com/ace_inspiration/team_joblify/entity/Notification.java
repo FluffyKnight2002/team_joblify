@@ -31,6 +31,6 @@ public class Notification implements Serializable {
     @Column(nullable = false)
     private String link;
 
-    @OneToMany(mappedBy = "notification",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
+    @OneToMany(mappedBy = "notification", orphanRemoval = true, cascade = CascadeType.ALL)
+    List<NotificationUser> notificationUsers= new ArrayList<>();
 }
