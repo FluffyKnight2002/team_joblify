@@ -77,8 +77,8 @@ function displayNotification(notifications) {
 /* Function to add notifications to the notificationContainer */
 function addNotifications(notification) {
     const isNewNotification = notification.seen;
-    console.log(isNewNotification)
-    console.log(typeof(isNewNotification))
+    // console.log(isNewNotification)
+    // console.log(typeof(isNewNotification))
     const notificationElement = $('<div class="pe-3 border-bottom dropdown-item">').html(`
     <div class="d-flex justify-content-between mb-2">
         <a th:href="@{${notification.link}}" onclick="makeAsRead(${notification.id})" style="cursor: pointer">

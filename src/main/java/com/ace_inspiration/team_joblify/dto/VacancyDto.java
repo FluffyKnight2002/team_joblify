@@ -1,7 +1,5 @@
 package com.ace_inspiration.team_joblify.dto;
 
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,9 +31,10 @@ public class VacancyDto {
     private String onSiteOrRemote;
     private String lvl;
     private String salary;
-    private Status status;
-    private User updatedUser;
-    private User creadedUser;
+    private String status;
+    private String updatedUsername;
+    private LocalDateTime updatedTime;
+    private String creadedUsername;
     private LocalDateTime createdDateTime;
     private LocalDate openDate;
     private LocalDate closeDate;

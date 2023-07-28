@@ -1,6 +1,6 @@
 package com.ace_inspiration.team_joblify.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
