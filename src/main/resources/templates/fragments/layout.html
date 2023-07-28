@@ -16,16 +16,15 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link" aria-current="page" th:href="@{/}"><span class="active">Home</span></a>
-                    <a class="nav-link" th:href="@{all-jobs}">Jobs</a>
-                    <a class="nav-link" th:href="@{job-details}">Details</a>
-                    <a class="nav-link" th:href="@{contact-us}">Contact us</a>
+                    <a class="nav-link" th:href="@{/}"><span th:classappend="${currentPage == '/' ? 'active' : ''}">Home</span></a>
+                    <a class="nav-link" th:href="@{all-jobs}"><span th:classappend="${currentPage == '/all-jobs' ? 'active' : ''}">Jobs</span></a>
+                    <a class="nav-link" th:href="@{contact-us}"><span th:classappend="${currentPage == '/contact-us' ? 'active' : ''}">Contact us</span></a>
                 </div>
             </div>
         </div>
     </nav>
     <footer class="footer mt-5" th:fragment="footer">
-        <div class="d-flex justify-content-center align-items-center py-3">
+        <div class="d-flex justify-content-center align-items-center py-3" id="footer-content">
             <p class="text-white m-0" style="font-size: 0.7rem;">© 2023 All rights reserved by ACE Data Systems Ltd.</p>
         </div>
     </footer>

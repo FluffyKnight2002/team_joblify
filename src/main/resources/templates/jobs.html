@@ -33,7 +33,7 @@
     <!-- Jobs list start -->
     <div class="container row mx-auto">
 
-        <form class="mb-5 mx-auto d-flex w-75 search-form">
+        <form class="my-5 mx-auto d-flex w-75 search-form" style="height: 20px">
 
             <!-- Quick search start -->
             <div class="input-group">
@@ -173,7 +173,7 @@
         </form>
 
         <!-- Jobs start -->
-        <di class="col-md-10 mx-auto">
+        <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px">
 
             <div class="card flex-md-row">
                 <div class="">
@@ -316,26 +316,27 @@
                 </div>
             </div>
 
+        </div>
 
-            <div class="d-flex justify-content-center my-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link active-page" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+        <div id="pagination-container" class="d-flex justify-content-center my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link active-page" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
     </div>
     <!-- Jobs end -->
@@ -355,6 +356,7 @@
     <script src="/assets/js/javaScript/carousel.js"></script>
     <script src="/assets/js/javaScript/app.js"></script>
     <script src="/assets/js/javaScript/filter.js"></script>
+    <script src="/assets/js/javaScript/jobs.js"></script>
 </body>
 
 </html>

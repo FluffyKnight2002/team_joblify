@@ -108,7 +108,7 @@ public class TestUtil {
         vacancyDto.setWorkingHours("Mock working hour");
         vacancyDto.setLvl("Entry Level");
         vacancyDto.setSalary("3 Lakhs");
-        vacancyDto.setStatus(Status.OPEN);
+        vacancyDto.setStatus("OPEN");
         // Set other properties accordingly
         return vacancyDto;
     }

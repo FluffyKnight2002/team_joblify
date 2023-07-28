@@ -1,7 +1,8 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -62,28 +63,21 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    private List<Vacancy> createdVacancies =new ArrayList<>();
+    @JsonManagedReference
+    private List<Vacancy> createdVacancies = new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
+    @JsonBackReference
+    private List<VacancyDepartment> updatedJobPosts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-    @JsonIdentityReference(alwaysAsId = true)
+//    @JsonIdentityReference(alwaysAsId = true)
     private Department department;
 
+//    @JsonManagedReference
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     List<NotificationUser> notificationUsers= new ArrayList<>();
 
-//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-//    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
-
-//    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-//    @JoinTable(name = "notification_user",
-//            joinColumns = @JoinColumn(name="notification_id"),
-//            inverseJoinColumns = @JoinColumn(name="user_id")
-//    )
-//    private List<Notification> notifications= new ArrayList<>();
 }

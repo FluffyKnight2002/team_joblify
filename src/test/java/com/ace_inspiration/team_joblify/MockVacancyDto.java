@@ -3,7 +3,6 @@ package com.ace_inspiration.team_joblify;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.Address;
 import com.ace_inspiration.team_joblify.entity.Department;
-import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.User;
 
 import java.time.LocalDate;
@@ -33,10 +32,10 @@ public class MockVacancyDto {
                 .workingHours("Mock working hour")
                 .lvl("Entry Level")
                 .salary("Mock salary")
-                .status(Status.OPEN)
+                .status("OPEN")
                 .department(createMockDepartment().getName())
-                .updatedUser(createMockUser())
-                .creadedUser(createMockUser())
+//                .updatedUsername("afasd")
+//                .creadedUser(createMockUser())
                 .createdDateTime(LocalDateTime.now())
                 .openDate(LocalDate.now())
                 .closeDate(LocalDate.now())

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -49,20 +48,20 @@ public class VacancyServiceImpl implements VacancyService {
     public List<VacancyDto> selectAllVacancy() {
         List<Vacancy> lists = vacancyRepository.findAll();
         List<VacancyDto> vacancies = new ArrayList<>();
-        Iterator<Vacancy> itr = lists.iterator();
-        while (itr.hasNext()){
-            Vacancy vacancy = itr.next();
-            VacancyDto dto = VacancyDto.builder()
-                    .id(vacancy.getId())
-                    .position(vacancy.getPosition().getName())
-                    .closeDate(vacancy.getCreatedDate().toLocalDate())
-                    .creadedUser(vacancy.getCreatedUser())
-                    .address(vacancy.getAddress().getName())
-                    .department(vacancy.getDepartment().getName())
-                    .status(vacancy.getStatus())
-                    .build();
-            vacancies.add(dto);
-        }
+//        Iterator<Vacancy> itr = lists.iterator();
+//        while (itr.hasNext()){
+//            Vacancy vacancy = itr.next();
+//            VacancyDto dto = VacancyDto.builder()
+//                    .id(vacancy.getId())
+//                    .position(vacancy.getPosition().getName())
+//                    .closeDate(vacancy.getCreatedDate().toLocalDate())
+//                    .creadedUsername(vacancy.getCreatedUser())
+//                    .address(vacancy.getAddress().getName())
+//                    .department(vacancy.getDepartment().getName())
+//                    .status(vacancy.getStatus())
+//                    .build();
+//            vacancies.add(dto);
+//        }
         return vacancies;
     }
 
@@ -76,7 +75,7 @@ public class VacancyServiceImpl implements VacancyService {
         vacancy.setPosition(position);
         vacancy.setDepartment(department);
         vacancy.setAddress(address);
-        vacancy.setStatus(updatedVacancyDto.getStatus());
+        vacancy.setStatus(Status.valueOf(updatedVacancyDto.getStatus()));
         return vacancyRepository.save(vacancy);
     }
 

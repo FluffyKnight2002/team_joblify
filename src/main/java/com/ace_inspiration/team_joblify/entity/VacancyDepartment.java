@@ -76,13 +76,19 @@ public class VacancyDepartment implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
+//    @JsonBackReference
     @JsonIdentityReference(alwaysAsId = true)
     private User updatedUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
+//    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId = true)
     private Vacancy vacancy;
 
+//    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Candidate> candidate=new ArrayList<>();
+    private List<Candidate> candidates = new ArrayList<>();
+
 }
