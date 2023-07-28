@@ -4,23 +4,20 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
 
-@Entity
 @Data
-@Builder
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-public class NotificationStatus implements Serializable {
+@Builder
+@Entity
+public class NotificationUser implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean makeAsRead;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
@@ -29,8 +26,4 @@ public class NotificationStatus implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacancy_department_id")
-    private VacancyDepartment vacancyDepartment;
 }

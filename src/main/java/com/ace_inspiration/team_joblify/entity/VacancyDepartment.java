@@ -1,6 +1,6 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -83,9 +83,8 @@ public class VacancyDepartment implements Serializable {
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 
-    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidate> candidate=new ArrayList<>();
 
-    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<NotificationStatus> notificationStatuses=new ArrayList<>();
+
 }

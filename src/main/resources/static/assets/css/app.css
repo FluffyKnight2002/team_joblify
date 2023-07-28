@@ -35,6 +35,47 @@
     z-index: 5;
 }
 
+/* CSS to make the notifications container scrollable */
+#notifications-container {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+#notifications-container::-webkit-scrollbar {
+    width: 11px;
+}
+
+#notifications-container {
+    scrollbar-width: thin;
+    scrollbar-color: #1e497b transparent;
+}
+
+#notifications-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#notifications-container::-webkit-scrollbar-thumb {
+    background: #1e497b;
+    border-radius: 6px;
+    border: 3px solid #1e497b;
+}
+
+/* Custom CSS to make the dropdown responsive and stay in the middle */
+@media (max-width: 654px) {
+    .notification-dropdown {
+        font-size: 0.8rem;
+        position: absolute; /* Change 'fixed' to 'absolute' */
+        top: 50%;
+        left: 50%;
+        transform: translate(-65%, 7%); /* Center the dropdown */
+        width: 80vw;
+        max-height: 80vh; /* Limit the max height to fit within the viewport */
+        overflow-y: auto; /* Add scrollable behavior if needed */
+        margin: 0;
+        padding: 1rem;
+    }
+}
+
 .alert {
     border: none
 }

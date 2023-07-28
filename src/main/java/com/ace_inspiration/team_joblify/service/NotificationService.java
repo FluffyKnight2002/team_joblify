@@ -1,12 +1,14 @@
 package com.ace_inspiration.team_joblify.service;
 
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
-import com.ace_inspiration.team_joblify.entity.Notification;
 
 import java.util.List;
 
 public interface NotificationService {
-    Notification createNotifications(NotificationDto notificationDto);
-    List<Notification> showNotifications();
+    void createNotifications(NotificationDto notificationDto);
+    List<NotificationDto> showNotifications();
+    long getNotificationCount();
     void removeNotification(long id);
+    void findDeleteAllNotificationUserByUserId(Long userId);
+    void findNotificationByIdAndUserIdAndDelete(Long notificationId, Long userId);
 }

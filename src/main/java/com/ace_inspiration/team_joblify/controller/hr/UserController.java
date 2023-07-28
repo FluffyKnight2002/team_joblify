@@ -52,12 +52,16 @@ public class UserController {
         return "user-profile-edit";
     }
 
-     @GetMapping("/user-password-edit")
-     public String showUserPasswordEditForm(){
+    @GetMapping("/user-password-edit")
+    public String showUserPasswordEditForm(){
          return "user-password-edit-form";
      }
 
-
+    @GetMapping("/password-change")
+    public String showPasswordChangeForm(@RequestParam ("userId") long userId, Model model) {
+        model.addAttribute("id", userId);
+        return "password-change";
+    }
 
     
 }

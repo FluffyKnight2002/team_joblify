@@ -14,7 +14,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,18 +58,19 @@ public class User implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vacancy> createdVacancies =new ArrayList<>();
 
-    @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-    // @JsonIdentityReference(alwaysAsId = true)
     @JsonIgnoreProperties("user")
     private Department department;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<NotificationUser> notificationUsers= new ArrayList<>();
+
+
 }

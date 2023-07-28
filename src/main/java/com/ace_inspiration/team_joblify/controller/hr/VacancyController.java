@@ -3,23 +3,26 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.entity.VacancyDepartment;
-import com.ace_inspiration.team_joblify.service.NotificationStatusService;
+import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequiredArgsConstructor
 public class VacancyController {
 
     private final VacancyDepartmentService vacancyDepartmentService;
-    private final NotificationStatusService notificationStatusService;
+    private final NotificationService notificationService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/show-upload-vacancy-form")
     public String showUploadVacancyForm(){
@@ -36,13 +39,13 @@ public class VacancyController {
             String link = "/view-vacancy-details/" + vacancyDepartment.getId();
             notificationDto.setMessage(message);
             notificationDto.setLink(link);
-            notificationDto.setUser(User.builder().id(myUserDetails.getUserId()).build());
-            notificationStatusService.createNotification(notificationDto);
+            notificationDto.setUserId(myUserDetails.getUserId());
+            notificationDto.setUsername(myUserDetails.getUsername());
+            notificationDto.setTime(LocalDateTime.now());
+            notificationService.createNotifications(notificationDto);
+            messagingTemplate.convertAndSend("/all/notifications", notificationDto);
         }
         return "redirect:/show-upload-vacancy-form";
     }
 
-    }
-
-
-
+}

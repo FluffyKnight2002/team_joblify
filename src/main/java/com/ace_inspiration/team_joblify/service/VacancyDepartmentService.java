@@ -8,6 +8,7 @@ import java.util.List;
 public interface VacancyDepartmentService {
     VacancyDepartment createdVacancyDepartments(VacancyDto vacancyDto);
     List<VacancyDepartment> selectAllVacancyDepartments();
+
     VacancyDepartment updateVacancyDepartments(VacancyDto vacancyDto);
     void closedVacancyDepartments(long id);
 }

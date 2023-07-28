@@ -24,6 +24,6 @@ public class Position implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "position", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "position", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Vacancy> vacancies =new ArrayList<>();
 }

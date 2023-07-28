@@ -57,15 +57,15 @@ public class Summary implements Serializable {
     @Column(nullable = false, columnDefinition = "decimal(10,2)")
     private double expectedSalary;
 
-    @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Candidate candidate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "summary_languageSkills", joinColumns = @JoinColumn(name = "summary_id"),
     inverseJoinColumns = @JoinColumn(name = "languageSkills_id"))
     private List<LanguageSkills> languageSkills= new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "summary_techSkills", joinColumns = @JoinColumn(name = "summary_id"),
             inverseJoinColumns = @JoinColumn(name = "techSkills_id"))
     private List<TechSkills> techSkills= new ArrayList<>();

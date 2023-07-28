@@ -66,7 +66,7 @@ public class UserServiceImplement implements UserService {
         notification.setLink("aaa");
         notificationRepository.save(notification);
 
-        return null;
+        return user;
 
     }
 
@@ -151,5 +151,21 @@ public class UserServiceImplement implements UserService {
         User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
 
         return user != null;
+    }
+
+    @Override
+    public boolean checkOldPassword(String password, long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        assert user != null;
+
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Override
+    public boolean passwordChange(String newPassword, long id){
+        User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not Found"));
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
     }
 }

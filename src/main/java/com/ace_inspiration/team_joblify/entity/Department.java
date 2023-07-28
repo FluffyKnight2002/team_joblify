@@ -25,11 +25,10 @@ public class Department implements Serializable {
     @Column(length = 75, nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.EAGER)
-    // @JsonIdentityReference(alwaysAsId = true)
+    @OneToMany(mappedBy = "department", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnoreProperties("department")
     private List<User> user=new ArrayList<>();
 
-    @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "department", orphanRemoval = true , cascade = CascadeType.ALL)
     private List<Vacancy> vacancies =new ArrayList<>();
 }

@@ -20,4 +20,8 @@ public interface UserService {
 
     boolean emailDuplicationExceptMine(String email, long userId);
 
+    boolean checkOldPassword(String password, long userId);
+
+    boolean passwordChange(String newPassword, long id);
+
 }

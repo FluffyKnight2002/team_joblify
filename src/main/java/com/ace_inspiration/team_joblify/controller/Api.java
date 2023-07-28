@@ -6,8 +6,6 @@ import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,7 +23,6 @@ public class Api {
 
     private final UserRepository userRepository;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/get-all-user")
@@ -54,13 +50,16 @@ public class Api {
 
     }
 
-    @PostMapping("/user-password-edit")
-    public String userPasswordEdit(@RequestBody UserDto userDto, Authentication authentication){
-        MyUserDetails myUserDetails=(MyUserDetails)authentication.getPrincipal();
-        if(passwordEncoder.matches(userDto.getPassword(),myUserDetails.getPassword())){
+    @PostMapping("/change-password")
+    public boolean changePassword(@RequestParam ("newPassword") String newPassword, @RequestParam ("id") long id){
 
-            userService.savePassword(userDto.getPassword(), myUserDetails.getUserId());
-        }
-        return "user-password-edit-form";
+        return userService.passwordChange(newPassword, id);
+    }
+
+    @PostMapping("/old-password-check")
+    public boolean oldPasswordCheck(@RequestParam("oldPassword") String oldPassword, @RequestParam("id") Long id){
+
+        return userService.checkOldPassword(oldPassword, id);
+
     }
 }

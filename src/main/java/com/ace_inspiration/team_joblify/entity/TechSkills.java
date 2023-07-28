@@ -21,6 +21,6 @@ public class TechSkills implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "techSkills", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "techSkills")
     private List<Summary> summary;
 }

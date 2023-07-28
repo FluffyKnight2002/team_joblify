@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Registration</title>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <title>User Profile Edit</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -49,7 +51,7 @@
           <div class="card">
             <div class="card-header">
               <h4 class="card-title">Edit User Account Here</h4>
-              <div class="mt-md-3 text-center"><h3 class=" success-line"></h3></div>
+              <div class="mt-md-3 text-center"><h3 class="success-line"></h3></div>
             </div>
             <div class="card-body">
               <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
@@ -150,8 +152,9 @@
                     </div>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block mt-4">Register</button>
-
+                <div class="text-end">
+                  <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 mt-4">Edit</button>
+                </div>
               </form>
             </div>
           </div>
@@ -246,8 +249,9 @@
       return;
     }
 
-    var csrfToken = document.querySelector('#token').value;
-    console.log(csrfToken);
+    const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+
+    console.log(metaCsrfToken);
     // Get form data
 
     const formData= new FormData(form);
@@ -258,7 +262,7 @@
     fetch('/user-profile-edit', {
       method: 'POST',
       headers: {
-        'X-XSRF-Token': csrfToken
+        'X-XSRF-Token': metaCsrfToken
       },
       body: formData
     })

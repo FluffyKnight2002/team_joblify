@@ -22,9 +22,11 @@ public class Candidate implements Serializable {
     private long id;
 
     @Column(nullable = false, length = 15)
+    @Enumerated(value = EnumType.STRING)
     private Status selectionStatus;
 
     @Column(nullable = false, length = 15)
+    @Enumerated(value = EnumType.STRING)
     private  Status interviewStatus;
 
     @Column(nullable = false)
@@ -37,11 +39,11 @@ public class Candidate implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "summary_id")
     private Summary summary;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Interview>interviews=new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
