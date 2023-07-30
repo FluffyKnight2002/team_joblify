@@ -12,11 +12,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class VacancyDepartment implements Serializable {
 
     @Id
@@ -75,12 +82,18 @@ public class VacancyDepartment implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","updatedJobPosts"})
+    @JsonManagedReference
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "vacancy_id")
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","vacancyDepartment"})
+    @JsonManagedReference
     private Vacancy vacancy;
 
     @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","vacancyDepartment"})
+    @JsonBackReference
     private List<Candidate> candidate=new ArrayList<>();
 }

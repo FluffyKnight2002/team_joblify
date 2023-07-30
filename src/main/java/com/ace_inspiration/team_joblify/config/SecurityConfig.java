@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/**", "/ws/**").permitAll()
                         .requestMatchers("/show-upload-vacancy-form").permitAll()
                         .requestMatchers(HttpMethod.POST,"/upload-vacancy").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/updateStatus").permitAll()
                         .anyRequest().authenticated()
                 )
                 // .exceptionHandling(exception-> exception

@@ -9,11 +9,15 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Address implements Serializable {
 
     @Id
@@ -24,6 +28,8 @@ public class Address implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "address", orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","address"})
+    @JsonBackReference
     private List<Vacancy> vacancies;
 
 

@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CandidateRepository extends DataTablesRepository<Candidate, Long> {
+	
+	
 }
