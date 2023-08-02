@@ -19,7 +19,6 @@ public class MockVacancyDto {
                 .id(1L)
                 .position("Mock position")
                 .post(2)
-                .requiredPost(1)
                 .applicants(3)
                 .type("Mock type")
                 .department("Mock department")

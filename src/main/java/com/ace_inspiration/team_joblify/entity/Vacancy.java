@@ -53,6 +53,6 @@ public class Vacancy implements Serializable{
     @JsonManagedReference
     @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
+    private List<VacancyInfo> vacancyInfo =new ArrayList<>();
 
 }

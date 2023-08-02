@@ -47,6 +47,6 @@ public class Candidate implements Serializable {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacancy_department_id")
-    private VacancyDepartment vacancyDepartment;
+    @JoinColumn(name = "vacancy_info_id")
+    private VacancyInfo vacancyInfo;
 }

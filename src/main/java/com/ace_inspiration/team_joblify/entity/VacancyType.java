@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 public enum VacancyType implements Serializable {
     OFFICE,
-
     REMOTE,
 
 

@@ -59,6 +59,14 @@
     border: 3px solid #1e497b;
 }
 
+.bulletText {
+    background: transparent;
+    border: none;
+    overflow: auto;
+    resize: none;
+    width: 100%;
+}
+
 @media (max-width: 768px) {
 
     /* Styles for small screens */

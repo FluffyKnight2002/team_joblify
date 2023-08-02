@@ -25,10 +25,10 @@ async function loadVacancies(page) {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>${vacancy.post} (${vacancy.type})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Salary"><i class='bx bx-money'></i>${vacancy.salary}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> ${timeAgo(vacancy.updatedTime)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>${vacancy.address}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Location"><i class="bi bi-geo-alt-fill"></i>${vacancy.address}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                        <a href="/job-details?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
+                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
                         <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip" data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> ${changeTimeFormat(vacancy.closeDate)}</span>
                     </div>
                 </div>

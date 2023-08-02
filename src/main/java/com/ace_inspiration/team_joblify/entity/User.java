@@ -69,7 +69,7 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonBackReference
-    private List<VacancyDepartment> updatedJobPosts = new ArrayList<>();
+    private List<VacancyInfo> updatedJobPosts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")

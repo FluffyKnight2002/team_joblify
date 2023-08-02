@@ -33,8 +33,8 @@ function fetchJobsAndRenderUI() {
                               ${timeAgo(job.updatedTime)}
                             </span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>${job.address}</span>
+                              data-placement="bottom" title="Location">
+                            <i class="bi bi-geo-alt-fill"></i>${job.address}</span>
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
@@ -69,7 +69,7 @@ function fetchJobDetails(id) {
     currentId = jobId;
     console.log(jobId);
 
-    fetch(`/vacancy/job-details?id=${jobId}`)
+    fetch(`/vacancy/job-detail?id=${jobId}`)
         .then(response => response.json())
         .then(data => {
             // Assuming data contains the job details returned from the server
@@ -85,17 +85,26 @@ function fetchJobDetails(id) {
                         </div>
                         <div>
                             <h6 class="text-danger" style="font-size: 0.7rem">Close in : ${changeTimeFormat(data.closeDate)}</h6>
-                            <u class="text-muted">${data.department}</u>
-                            <span><i class='bx bx-location-plus'></i>${data.address}</span>
+                            <span class="text-muted text-decoration-underline" data-toggle="tooltip"
+                              data-placement="bottom" title="Department">
+                              <i class="bi bi-building"></i> ${data.department}</span>
+                            <span data-toggle="tooltip" data-placement="bottom" title="Location">
+                            <i class="bi bi-geo-alt-fill"></i>${data.address}</span>
                         </div>
                     </div>
                     <div class="content-con">
                         <div class="general-fects">
-                    <span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
+                    <span class="my-2 d-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Post(Job type)">
+                        <i class='bx bxs-briefcase'></i>
                         ${data.post} (${data.type})</span>
-                    <span class="my-2 d-block"><i class='bx bx-money'></i>
+                    <span class="my-2 d-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Salary">
+                        <i class='bx bx-money'></i>
                         ${data.salary}</span>
-                    <span class="my-2 d-block"><i class='bx bxs-award'></i>
+                    <span class="my-2 d-block" data-toggle="tooltip"
+                        data-placement="bottom" title="Experience Level">
+                        <i class='bx bxs-award'></i>
                         ${data.lvl}</span>
                 </div>
 
@@ -116,17 +125,17 @@ function fetchJobDetails(id) {
 
                 <div class="mb-3">
                     <h5>Job Responsibilities</h5>
-                    <p>${data.responsibilities}</p>
+                    <textarea class="bulletText" disabled>${data.responsibilities}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <h5>Job Requirements</h5>
-                    <p>${data.requirements}</p>
+                    <textarea class="bulletText" disabled>${data.requirements}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <h5>Preferences</h5>
-                    <p>${data.preferences}</p>
+                    <textarea class="bulletText" disabled>${data.preferences}</textarea>
                 </div>
 
                 <table class="w-100 mx-2 mb-3">
@@ -139,12 +148,8 @@ function fetchJobDetails(id) {
                         <th>${data.workingHours}</th>
                     </tr>
                     <tr>
-                        <th>Salary</th>
-                        <th>${data.salary}</th>
-                    </tr>
-                    <tr>
                         <th>Job Location</th>
-                        <th>${data.location}</th>
+                        <th>${data.address}</th>
                     </tr>
                     <tr>
                         <th>Job Type</th>
@@ -171,6 +176,12 @@ function fetchJobDetails(id) {
 
             // Append the new job details content to the container
             jobDetailsContainer.append(jobContainer);
+
+            // Resize textarea elements
+            $('.bulletText').each(function() {
+                this.style.height = 'auto'; // Reset height to "auto" to allow resizing
+                this.style.height = this.scrollHeight + 'px'; // Set the height based on scrollHeight
+            });
         })
         .catch(error => {
             console.error("Error fetching job details:", error);

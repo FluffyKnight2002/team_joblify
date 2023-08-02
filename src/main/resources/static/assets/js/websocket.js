@@ -28,22 +28,6 @@ $('#view-noti-btn').on('click', function(e) {
     fetchNotifications();
 });
 
-// function fetchCount() {
-//     fetch("/notifications/count")
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error("Network response was not ok");
-//             }
-//             return response.json();
-//         })
-//         .then(data => showNotificationCount(data))
-//         .catch(error => console.error('Error fetching notifications count:', error));
-// }
-//
-// function showNotificationCount(data) {
-//     $('#notifications-count').text(data); // Update the notification count live
-// }
-
 function fetchNotifications() {
     fetch("/notifications/show")
         .then(response => {
@@ -81,7 +65,7 @@ function addNotifications(notification) {
     // console.log(typeof(isNewNotification))
     const notificationElement = $('<div class="pe-3 border-bottom dropdown-item">').html(`
     <div class="d-flex justify-content-between mb-2">
-        <a th:href="@{${notification.link}}" onclick="makeAsRead(${notification.id})" style="cursor: pointer">
+        <a href="${notification.link}" onclick="makeAsRead(${notification.id})" style="cursor: pointer">
             ${notification.message}
         </a>
         ${isNewNotification === true ? '<span class="d-inline-block badge bg-danger text-white m-1 rounded-pill text-center" style="font-size: 0.6rem">New</span>' : ''}
@@ -161,7 +145,6 @@ function makeAsRead(notificationId) {
     fetch(`/notifications/makeAsRead?id=${notificationId}`)
         .then(notificationLight.hide())
         .then(fetchNotifications)
-    // window.location.href = link;
 }
 
 function makeAllAsRead() {

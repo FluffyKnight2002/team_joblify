@@ -1,6 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class VacancyDepartment implements Serializable {
+public class VacancyInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +53,8 @@ public class VacancyDepartment implements Serializable {
     private int hiredPost;
 
     @Column(length = 10, nullable = false)
-    private String jobType;
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
 
     @Column(nullable = false)
     private LocalDate openDate;
@@ -76,19 +78,20 @@ public class VacancyDepartment implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
-//    @JsonBackReference
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonBackReference
+//    @JsonIdentityReference(alwaysAsId = true)
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
-//    @JsonBackReference
-    @JsonIdentityReference(alwaysAsId = true)
+    @JsonBackReference
+//    @JsonIdentityReference(alwaysAsId = true)
     private Vacancy vacancy;
 
-//    @JsonManagedReference
-    @JsonIdentityReference(alwaysAsId = true)
-    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+
+    @JsonManagedReference
+//    @JsonIdentityReference(alwaysAsId = true)
+    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Candidate> candidates = new ArrayList<>();
 
 }
