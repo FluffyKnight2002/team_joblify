@@ -63,15 +63,8 @@ public class Candidate implements Serializable {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-<<<<<<< HEAD
-    @JoinColumn(name = "vacancy_department_id")
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","candidate"})
-    @JsonManagedReference
-    private VacancyDepartment vacancyDepartment;
-=======
     @JoinColumn(name = "vacancy_info_id")
 //    @JsonIgnoreProperties(value={"hibernateLazyInitializer","candidate"})
     @JsonManagedReference
     private VacancyInfo vacancyInfo;
->>>>>>> backup
 }

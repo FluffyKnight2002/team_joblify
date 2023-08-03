@@ -51,8 +51,6 @@ public class CandidateServiceImplement implements CandidateService{
 	            entityManager.persist(candidate); // Save the updated candidate entity
 	        }
 	    }
-<<<<<<< HEAD
-=======
 	
 	@Override
 	@Transactional
@@ -63,5 +61,4 @@ public class CandidateServiceImplement implements CandidateService{
 	            entityManager.persist(candidate); // Save the updated candidate entity
 	        }
 	    }
->>>>>>> backup
 }

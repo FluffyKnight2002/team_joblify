@@ -9,28 +9,6 @@
 <title>Upload Vacancy</title>
 
 
-<<<<<<< HEAD
-
-<link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
-<link rel="stylesheet"
-	href="assets/vendors/summernote/summernote-lite.min.css">
-<link rel="stylesheet"
-	href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-<link rel="stylesheet"
-	href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
-<link rel="stylesheet" href="/assets/css/app.css">
-<link rel="shortcut icon" href="/assets/images/favicon.svg"
-	type="image/x-icon">
-<link rel="stylesheet" href="assets/vendors/simple-datatables/style.css">
-<link rel="stylesheet"
-	href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-=======
 <link rel="stylesheet"
 	href="assets/vendors/summernote/summernote-lite.min.css">
 <link rel="stylesheet"
@@ -44,7 +22,6 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
->>>>>>> backup
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script
@@ -99,17 +76,6 @@ tr.selected-row {
     								    <option value="">All</option>
   									  </select>
 									</p>
-<<<<<<< HEAD
-
-									
-									
-									
-									<table class="table " id="table1">
-										<thead>
-											<tr>
-												<th id="select-all-checkbox"><input type="checkbox"
-													id="selectAll">Select all</th>
-=======
 									
 									<table class="table table-striped" id="table1">
 										<thead>
@@ -118,18 +84,10 @@ tr.selected-row {
 												<th id="select-all-checkbox"><input type="checkbox"
 													id="selectAll">All</th>
 													<th></th>
->>>>>>> backup
 												<th class="id">No.</th>
 												<th>Name</th>
 												<th>Position</th>
 												<th>Selection Status</th>
-<<<<<<< HEAD
-												<th>Interview Invert Mail</th>
-												<th>Interview Status</th>
-												<th>Offer Mail</th>
-												<th>See More</th>
-												<th>Position</th>
-=======
 												<th >phone</th>
 												<th >Interview Invert Mail</th>
 												<th>Interview Status</th>
@@ -138,7 +96,6 @@ tr.selected-row {
 												<th >experience</th>
 												
 												
->>>>>>> backup
 
 											</tr>
 										</thead>
@@ -323,318 +280,12 @@ tr.selected-row {
 	<script src="assets/vendors/summernote/summernote-lite.min.js"></script>
 	<script src="/assets/ajax/jquery.spring-friendly.js"
 		type="text/javascript"></script>
-<<<<<<< HEAD
-	<script>
-		$('.summernote').summernote({
-			tabsize : 2,
-			height : 110,
-		})
-
-		var table;
-		$(document).ready(function() {
-							table = $('#table1').DataTable(
-								{
-								"serverSide" : true,
-								"processing" : true,
-								"ajax" : '/allCandidate',
-								      
-								
-								"columns" : [
-								{
-									targets : 0,
-									data : "id",
-									render : function(
-									data, type,row) 
-									{return '<input type="checkbox" class="ck" value="' + data + '">';},
-									sortable : false,visible : true,},
-														{
-															data : "id",
-															targets : 1
-														},
-														{
-															data : "summary.name",
-															targets : 2
-														},
-														{
-															data : "summary.email",
-															targets : 3
-														},
-														
-														{
-														    targets: 4,
-														    data: "selectionStatus",
-														    
-														},
-														{
-															targets : 5,
-															data:"summary.email",
-															render : function(
-																	data, type,
-																	row) {
-																return '<a  data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invert Mail</a>';
-															},
-															sortable : false
-														},
-														{
-															
-															data : "interviewStatus",
-															targets : 6,
-															render : function(data, type,row) {
-																return '<select id="changeStatus">' +
-													            '<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
-													            '<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
-													            '<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
-													            '<option value="CANCEL"' + (data === 'CANCEL' ? ' selected' : '') + '>CANCEL</option>' +
-													           
-													            
-													            '</select>';
-															},
-															sortable : false
-															
-														},
-														{
-															targets : 7,
-															data:"summary.email",
-															render : function(data, type,row) {
-																return '<a  data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
-															},
-															sortable : false
-														},
-														{
-															targets : 8,
-															data:'id',
-															render : function(data, type,row) {
-																return '<a href="#" class="btn btn-outline-primary btn-sm btn-block seeMoreBtn">See More</a>';
-
-															}
-														},
-														{
-															targets:9,
-															data:"vacancyDepartment.vacancy.position.name"
-															
-														}
-
-												],
-
-											});
-							 $('#positionSelect').on('change', function(){
-							       table.column(9).search(this.value).draw();   
-							    });
-							
-
-							
-							$('#selectAll').on(
-									'change',
-									function() {
-										var checkboxes = $('#table1').find(
-												':checkbox');
-										checkboxes
-												.prop('checked', this.checked);
-										checkboxes.closest('tbody tr')
-												.toggleClass('selected-row',
-														this.checked);
-									});
-
-							$('#table1')
-									.on(
-											'change',
-											':checkbox',
-											function() {
-												var checkboxes = $('#table1')
-														.find(':checkbox');
-												var selectAllCheckbox = $('#selectAll');
-												if (!this.checked) {
-													selectAllCheckbox.prop(
-															'checked', false);
-
-												} else {
-													selectAllCheckbox
-															.prop(
-																	'checked',
-																	checkboxes.length === checkboxes
-																			.filter(':checked').length);
-												}
-												$(this).closest('tbody tr')
-														.toggleClass(
-																'selected-row',
-																this.checked);
-											});
-
-							$('#table1 tbody').on('click','.btn-outline-primary',
-									function() {
-										var modalTitle = $(this).data(
-												'modal-title');
-										  var row = table.row($(this).closest('tr')).data();
-										  console.log(row.summary.dob);
-										  console.log(email);
-										$('#emailModal .modal-title').text(
-												modalTitle);
-										$('#emailModal .candidatEmail').val(row.summary.email);
-										$("#emailModal .userEmail").val(row.vacancyDepartment.vacancy.createdUser.email);
-									});
-							
-							// Function to get the CSRF token from the cookie
-							function getCsrfToken() {
- 							 const metaTag = document.querySelector('meta[name="_csrf"]');
-  								return metaTag ? metaTag.getAttribute('content') : null;
-													}
-
-							$('#table1 tbody').on('click', '.seeMoreBtn',
-									function() {
-										var tr = $(this).closest('tr');
-										var row = table.row(tr).data();
-											$('#seeMoreModal').modal('show');
-										const csrfToken = getCsrfToken();
-										var id= row.id;
-										
-										if(row.selectionStatus=='RECEIVED'){
-											console.log(row.selectionStatus)
-										fetch('/changStatus',{
-											method:'POST',
-											headers:{
-												'Content-Type': 'application/json;charset=utf-8',
-									            'X-XSRF-Token':csrfToken
-											},
-											 body: JSON.stringify(id) 
-										})	
-										.then(response =>{
-											if (response.ok){
-												console.log("Change SelectStatus");
-												 $('table#table1').DataTable().ajax.reload(null, false);
-											}
-											else{
-												console.log("Error change SelectStatus");
-											}
-										})
-										}
-										
-										else{
-											   fetch('/seeMore', {
-											        method: 'POST',
-											        headers: {
-											            'Content-Type': 'application/json;charset=utf-8',
-											            'X-XSRF-Token':csrfToken
-											           
-											        },
-											        body: JSON.stringify(id) 
-											    })
-											    .then(response => {
-											        if (response.ok) {
-											            return response.json();
-											            
-											        } else {
-											            console.error("Fail");
-											        }
-											    })
-											    .then(candidateData => {
-											    	console.log(candidateData);
- 													 $('#name').html(candidateData.name);
- 													 $('#email').html(candidateData.email);
- 													 $('#phone').html(candidateData.phone);
- 													 $('#dob').html(candidateData.dob);
- 													 $('#gender').html(candidateData.gender);
- 													 $('#education').html(candidateData.education);
- 													 $('#applyPosition').html(candidateData.apply_position);
- 													 $('#expectedSalary').html(candidateData.expectedSalary);
- 													 $('#experience').html(candidateData.experience);
- 													 $('#level').html(candidateData.lvl);
- 													 $('#specialist').html(candidateData.specialist_tech);
-													})
-											    .catch(error => {
-											        console.error("Error:", error);
-											    });
-										}
-										 
-									});
-							$.ajax({
-							    url: '/allPositions',
-							    type: 'GET',
-							    success: function(response) {
-							        
-							        const selectElement = $('#positionSelect');
-							        $.each(response, function(index, position) {
-							            const option = $('<option>').val(position.name).text(position.name);
-							            selectElement.append(option);
-							            
-							        });
-							    },
-							    error: function(xhr, status, error) {
-							    	console.log(status);
-							        console.error('Error fetching positions:', error);
-							    }
-							});
-							
-							function non(){
-								console.log("helllllllooooo");
-								fetch('/changeInterview',{
-									method:'POST',
-									headers:{
-										'Content-Type': 'application/json;charset=utf-8',
-							            'X-XSRF-Token':csrfToken
-									},
-									 body: JSON.stringify(id) 
-										
-								})    
-								.then(response => {
-							        if (response.ok) {
-							            console.log('Success');
-							            
-							        } else {
-							            console.error("Fail");
-							        }
-								})
-							}
-							
-
-						});
-		document.addEventListener('DOMContentLoaded', function () {
-		    // Get the button element
-		    const fetchValueButton = document.getElementById('fetchValueButton');
-		    const interviewStatusSelect = document.getElementById('changeStatus');
-	        
-	        interviewStatusSelect.addEventListener('change', function () {
-	            const selectedValue = interviewStatusSelect.value;
-	            non(selectedValue);
-	        });
-	    });
-
-	    function non(status) {
-	        console.log("helllllllooooo");
-	        fetch('/changeInterview', {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json;charset=utf-8',
-	                'X-XSRF-Token': csrfToken
-	            },
-	            body: JSON.stringify({ id: status })
-	        })
-	        .then(response => {
-	            if (response.ok) {
-	                console.log('Success');
-	            } else {
-	                console.error("Fail");
-	            }
-	        });
-	    }
-		    // Add a click event listener to the button
-		    fetchValueButton.addEventListener('click', function () {
-		      // Get the value of the input with id="time"
-		      const timeInputValue = document.getElementById('time').value;
-
-		      // Do something with the value (e.g., display it in an alert)
-		      alert('Value of time: ' + timeInputValue);
-		    });
-		  
-		
-	</script>
-=======
 		<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 		<script src="/assets/js/javaScript/allCandidate.js"></script>
 		
     <script src="assets/vendors/sweetalert2/sweetalert2.all.min.js"></script>
 
->>>>>>> backup
 
 
 
