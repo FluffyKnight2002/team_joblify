@@ -59,6 +59,10 @@ public class Vacancy implements Serializable{
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JsonIgnoreProperties(value={"hibernateLazyInitializer","vacancy"})
     @JsonBackReference
+<<<<<<< HEAD
     private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
+=======
+    private List<VacancyInfo> vacancyInfo =new ArrayList<>();
+>>>>>>> backup
 
 }

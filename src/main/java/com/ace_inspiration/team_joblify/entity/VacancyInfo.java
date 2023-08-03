@@ -23,8 +23,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+<<<<<<< HEAD:src/main/java/com/ace_inspiration/team_joblify/entity/VacancyDepartment.java
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class VacancyDepartment implements Serializable {
+=======
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class VacancyInfo implements Serializable {
+>>>>>>> backup:src/main/java/com/ace_inspiration/team_joblify/entity/VacancyInfo.java
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,7 +97,11 @@ public class VacancyDepartment implements Serializable {
     @JsonManagedReference
     private Vacancy vacancy;
 
+<<<<<<< HEAD:src/main/java/com/ace_inspiration/team_joblify/entity/VacancyDepartment.java
     @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+=======
+    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+>>>>>>> backup:src/main/java/com/ace_inspiration/team_joblify/entity/VacancyInfo.java
 //    @JsonIgnoreProperties(value={"hibernateLazyInitializer","vacancyDepartment"})
     @JsonBackReference
     private List<Candidate> candidate=new ArrayList<>();

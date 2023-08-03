@@ -51,4 +51,17 @@ public class CandidateServiceImplement implements CandidateService{
 	            entityManager.persist(candidate); // Save the updated candidate entity
 	        }
 	    }
+<<<<<<< HEAD
+=======
+	
+	@Override
+	@Transactional
+    public void changeInterviewstatus(long id,String status) {
+      Candidate candidate = entityManager.find(Candidate.class, id);
+	        if (candidate != null) {
+	            candidate.setInterviewStatus(Status.valueOf(status)); // Set the new status value
+	            entityManager.persist(candidate); // Save the updated candidate entity
+	        }
+	    }
+>>>>>>> backup
 }

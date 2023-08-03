@@ -70,7 +70,11 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    @JsonIgnoreProperties(value={"hibernateLazyInitializer","updatedUser"})
     @JsonBackReference
+<<<<<<< HEAD
     private List<VacancyDepartment> updatedJobPosts=new ArrayList<>();
+=======
+    private List<VacancyInfo> updatedJobPosts=new ArrayList<>();
+>>>>>>> backup
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")

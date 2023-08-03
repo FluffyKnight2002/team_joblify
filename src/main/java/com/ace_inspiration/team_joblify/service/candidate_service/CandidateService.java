@@ -15,5 +15,9 @@ public interface CandidateService {
 	DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input);
 	 void changeStatus(long id);
 	 Optional<Candidate> findByid(long id);
+<<<<<<< HEAD
 	
+=======
+	void changeInterviewstatus(long id,String status);
+>>>>>>> backup
 }
