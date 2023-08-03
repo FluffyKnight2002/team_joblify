@@ -8,11 +8,16 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class NotificationStatus implements Serializable {
 
     @Id
@@ -24,9 +29,13 @@ public class NotificationStatus implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","notificationStatuses"})
+    @JsonManagedReference
     private Notification notification;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","notificationStatuses"})
+    @JsonBackReference
     private User user;
 }

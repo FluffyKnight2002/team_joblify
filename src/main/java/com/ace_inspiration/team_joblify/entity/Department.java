@@ -10,11 +10,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Department implements Serializable {
 
     @Id
@@ -25,8 +29,12 @@ public class Department implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","department"})
+    @JsonManagedReference
     private List<User> user=new ArrayList<>();
 
     @OneToMany(mappedBy = "department", orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","department"})
+    @JsonManagedReference
     private List<Vacancy> vacancies =new ArrayList<>();
 }

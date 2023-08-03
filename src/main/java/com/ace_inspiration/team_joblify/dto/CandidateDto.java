@@ -4,7 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
+
+
+import com.ace_inspiration.team_joblify.entity.Gender;
+import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.entity.Status;
 
 @Data
 @Builder
@@ -12,8 +19,36 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 public class CandidateDto {
 
-    private MultipartFile resume;
-
-    private String note;
+   private long id;
+   
+   private String name;
+   
+   private String email;
+   
+   private Status selectionStatus;
+   
+   private Status interviewStatus;
+   
+   private LocalDate dob;
+   
+   private String apply_position;
+   
+   private String education;
+   
+   private String experience;
+   
+   private double expected_salary;
+   
+   private Gender gender;
+   
+   private Level lvl;
+   
+   private String phone;
+   
+   private String specialist_tech;
+   
+   private String pId;
+   
+   
 
 }

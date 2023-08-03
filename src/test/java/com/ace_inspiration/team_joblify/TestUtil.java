@@ -118,8 +118,8 @@ public class TestUtil {
         vacancies.add(createMockVacancy());
         return vacancies;
     }
-    public static VacancyDepartment createMockVacancyDepartment() {
-        VacancyDepartment vacancyDepartment = VacancyDepartment.builder()
+    public static VacancyInfo createMockVacancyDepartment() {
+        VacancyInfo vacancyDepartment = VacancyInfo.builder()
                 .id(1L)
                 .post(2)
                 .jobType("Mock Department")

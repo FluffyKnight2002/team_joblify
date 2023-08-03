@@ -28,10 +28,10 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     private final AddressService addressService;
 
     @Override
-    public VacancyDepartment createdVacancyDepartments(VacancyDto vacancyDto) {
+    public VacancyInfo createdVacancyDepartments(VacancyDto vacancyDto) {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         Department department = departmentService.checkAndSetDepartment(vacancyDto.getDepartment());
-        VacancyDepartment vacancyDepartment = VacancyDepartment.builder()
+        VacancyInfo vacancyDepartment = VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
@@ -65,12 +65,12 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     }
 
     @Override
-    public List<VacancyDepartment> selectAllVacancyDepartments() {
+    public List<VacancyInfo> selectAllVacancyDepartments() {
         return null;
     }
 
     @Override
-    public VacancyDepartment updateVacancyDepartments(VacancyDto vacancyDto) {
+    public VacancyInfo updateVacancyDepartments(VacancyDto vacancyDto) {
         return null;
     }
 
