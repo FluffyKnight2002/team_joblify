@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class VacancyDepartment implements Serializable {
+public class VacancyInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,14 +45,14 @@ public class VacancyDepartment implements Serializable {
     @Column(length = 24, nullable = false)
     private String salary;
 
+    @Column(length = 15, nullable = false)
+    private String jobType;
+
     @Column(nullable = false)
     private int post;
 
     @Column(nullable = false)
     private int hiredPost;
-
-    @Column(length = 10, nullable = false)
-    private String jobType;
 
     @Column(nullable = false)
     private LocalDate openDate;
@@ -61,14 +60,14 @@ public class VacancyDepartment implements Serializable {
     @Column(nullable = false)
     private LocalDate closeDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime updatedTime;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OnSiteOrRemote onSiteOrRemote;
 
@@ -83,7 +82,7 @@ public class VacancyDepartment implements Serializable {
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 
-    @OneToMany(mappedBy = "vacancyDepartment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidate> candidate=new ArrayList<>();
 
 

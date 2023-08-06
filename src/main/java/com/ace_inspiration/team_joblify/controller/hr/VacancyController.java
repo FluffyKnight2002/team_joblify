@@ -3,7 +3,7 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.VacancyDepartment;
+import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +31,12 @@ public class VacancyController {
 
     @PostMapping("/upload-vacancy")
     public String postVacancy(@ModelAttribute("vacancy")VacancyDto vacancyDto, Authentication authentication) {
-        VacancyDepartment vacancyDepartment = vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
-        if(vacancyDepartment != null) {
+        VacancyInfo vacancyInfo = vacancyDepartmentService.createdVacancyDepartments(vacancyDto);
+        if(vacancyInfo != null) {
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
             NotificationDto notificationDto = new NotificationDto();
-            String message = authentication.getName() + " create a " + vacancyDepartment.getVacancy().getPosition().getName() + " vacancy.";
-            String link = "/view-vacancy-details/" + vacancyDepartment.getId();
+            String message = authentication.getName() + " create a " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
+            String link = "/view-vacancy-details/" + vacancyInfo.getId();
             notificationDto.setMessage(message);
             notificationDto.setLink(link);
             notificationDto.setUserId(myUserDetails.getUserId());

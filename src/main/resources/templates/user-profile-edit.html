@@ -460,7 +460,7 @@
     minLength: 1,
     source: fetchDepartments,
     open: function(event, ui) {
-      var menu = $(this).autocomplete("widget");
+      const menu = $(this).autocomplete("widget");
       menu.css({
         "font-size": "1rem",
         "border-radius": "0.5rem",
@@ -470,7 +470,7 @@
       });
     },
     select: function(e, ui) {
-      var departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
+      const departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
       $('#department').val(departmentValue);
       return false;
     }

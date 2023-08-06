@@ -53,6 +53,7 @@
                             <table id="table" class="table table-striped" style="width: 100%;" aria-describedby="myDesc">
                                 <thead>
                                 <tr>
+                                    <th></th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -75,11 +76,11 @@
             <footer>
                 <div class="footer clearfix mb-0 text-muted">
                     <div class="float-start">
-                        <p>2023 &copy; Mazer</p>
+                        <p>2023 &copy; Ace Data System</p>
                     </div>
                     <div class="float-end">
                         <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                            by <a href="https://ahmadsaugi.com">Saugi</a></p>
+                            by <a href="https://ahmadsaugi.com">Team Joblify</a></p>
                     </div>
                 </div>
             </footer>
@@ -97,34 +98,91 @@
 <script src="/assets/js/jquery.spring-friendly.js" type="text/javascript"></script>
 
 <script>
+
     $(document).ready(function () {
-        $('table#table').DataTable({
-            serverSide: true,
-            processing: true,
+
+
+
+        function format(d) {
+        return (
+            'Note: ' +
+            d.note +
+            '<br>' +
+            'The child row can contain any data you wish, including links, images, inner tables etc.'
+        );
+    }
+
+
+        const table = $('table#table').DataTable({
+
             ajax: '/get-all-user',
-            
+
             columns: [
-                { name: "Name", data: "name", targets: 0 },
-                { name: "Email", data: "email", targets: 1 },
-                { name: "Phone", data: "phone", targets: 2 },
-                { name: "Address", data: "address", targets: 3 },
-                { name: "Department", data: "department.name", targets: 4},
                 {
-                    targets: 5,
+                    target: 0,
+                    class: 'dt-control',
+                    orderable: false,
+                    searchable: false,
+                    data: "id",
+                    defaultContent: ''
+                },
+                {name: "Name", data: "name", targets: 1},
+                {name: "Email", data: "email", targets: 2},
+                {name: "Phone", data: "phone", targets: 3},
+                {name: "Address", data: "address", targets: 4},
+                {name: "Department", data: "department.name", targets: 5},
+                {
+                    targets: 6,
                     data: "id",
                     render: function (data, type, row) {
                         return '<form action="/user-profile-edit" method="get">' +
                             '<input type="hidden" name="id" value="' + row.id + '"/>' +
                             '<button type="submit" class="btn btn-success">Detail</button>' +
-                            '</form>' ;
+                            '</form>';
                     },
                     sortable: false
                 },
-
-
-            ]
+            ],
+            serverSide: true,
+            processing: true,
+            stateSave: true
         });
+
+        // Array to track the ids of the details displayed rows
+        const detailRows = [];
+
+        $('#table tbody').on('click', 'tr td.dt-control', function () {
+            const tr = $(this).closest('tr');
+            const row = table.row(tr);
+            const idx = detailRows.indexOf(tr.attr('id'));
+
+            if (row.child.isShown()) {
+                tr.removeClass('details');
+                row.child.hide();
+
+                // Remove from the 'open' array
+                detailRows.splice(idx, 1);
+            }
+            else {
+                tr.addClass('details');
+                row.child(format(row.data())).show();
+
+                // Add to the 'open' array
+                if (idx === -1) {
+                    detailRows.push(tr.attr('id'));
+                }
+            }
+        });
+
+        // On each draw, loop over the `detailRows` array and show any child rows
+        table.on('draw', function () {
+            detailRows.forEach(function (id, i) {
+                $('#' + id + ' td.dt-control').trigger('click');
+            });
+        });
+
     });
+
 
 </script>
 </body>

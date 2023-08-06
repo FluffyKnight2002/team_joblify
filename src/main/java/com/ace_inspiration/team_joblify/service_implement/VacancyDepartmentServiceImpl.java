@@ -33,17 +33,17 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     private final UserRepository userRepository;
 
     @Override
-    public VacancyDepartment createdVacancyDepartments(VacancyDto vacancyDto) {
-        VacancyDepartment vacancyDepartment = dtoToEntity(vacancyDto);
-        return vacancyDepartmentRepository.save(vacancyDepartment);
+    public VacancyInfo createdVacancyDepartments(VacancyDto vacancyDto) {
+        VacancyInfo vacancyInfo = dtoToEntity(vacancyDto);
+        return vacancyDepartmentRepository.save(vacancyInfo);
     }
 
     @Override
     public List<VacancyDto> selectAllVacancyDepartments() {
         List<VacancyDto> vacancyDtos = new ArrayList<>();
-        List<VacancyDepartment> vacancyDepartments = vacancyDepartmentRepository.findAll();
-        for(VacancyDepartment vacancyDepartment: vacancyDepartments) {
-            VacancyDto vacancyDto = entityToDto(vacancyDepartment);
+        List<VacancyInfo> vacancyInfos = vacancyDepartmentRepository.findAll();
+        for(VacancyInfo vacancyInfo : vacancyInfos) {
+            VacancyDto vacancyDto = entityToDto(vacancyInfo);
             vacancyDtos.add(vacancyDto);
         }
         return vacancyDtos;
@@ -51,10 +51,10 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
 
     @Override
     public List<VacancyDto> selectLastVacancies() {
-        List<VacancyDepartment> lastVacancies = vacancyDepartmentRepository.getLastVacancyDepartments();
+        List<VacancyInfo> lastVacancies = vacancyDepartmentRepository.getLastVacancyDepartments();
         List<VacancyDto> vacancyDtos = new ArrayList<>();
-        for(VacancyDepartment vacancyDepartment: lastVacancies) {
-            VacancyDto vacancyDto = entityToDto(vacancyDepartment);
+        for(VacancyInfo vacancyInfo : lastVacancies) {
+            VacancyDto vacancyDto = entityToDto(vacancyInfo);
             vacancyDtos.add(vacancyDto);
         }
         return vacancyDtos;
@@ -63,7 +63,7 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     @Override
     public VacancyDto selectVacancyById(long id) {
         VacancyDto vacancyDto = new VacancyDto();
-        Optional<VacancyDepartment> optionalVacancyDepartment = vacancyDepartmentRepository.findById(id);
+        Optional<VacancyInfo> optionalVacancyDepartment = vacancyDepartmentRepository.findById(id);
         if(optionalVacancyDepartment.isPresent()) {
             vacancyDto = entityToDto(optionalVacancyDepartment.get());
         }
@@ -72,7 +72,7 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     }
 
     @Override
-    public VacancyDepartment updateVacancyDepartments(VacancyDto vacancyDto) {
+    public VacancyInfo updateVacancyDepartments(VacancyDto vacancyDto) {
         return null;
     }
 
@@ -83,7 +83,7 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
 
     @Override
     public Page<VacancyDto> getPaginatedVacancies(Pageable pageable) {
-        Page<VacancyDepartment> vacanciesPage = vacancyDepartmentRepository.findAll(pageable);
+        Page<VacancyInfo> vacanciesPage = vacancyDepartmentRepository.findAll(pageable);
 
         List<VacancyDto> vacancyDtos = vacanciesPage.getContent().stream()
                 .map(this::entityToDto)
@@ -92,8 +92,8 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
         return new PageImpl<>(vacancyDtos, pageable, vacanciesPage.getTotalElements());
     }
 
-    private VacancyDepartment dtoToEntity(VacancyDto vacancyDto) {
-        VacancyDepartment vacancyDepartment = VacancyDepartment.builder()
+    private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
+        return VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
@@ -113,55 +113,52 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
                 .closeDate(LocalDate.now())
                 .note(vacancyDto.getNote())
                 .build();
-        return vacancyDepartment;
     }
 
-    public VacancyDto entityToDto(VacancyDepartment vacancyDepartment) {
+    public VacancyDto entityToDto(VacancyInfo vacancyInfo) {
         VacancyDto vacancyDto = new VacancyDto();
-        System.out.println(vacancyDepartment.getVacancy().getPosition().getName());
-        Vacancy vacancy = vacancyRepository.findById(vacancyDepartment.getId()).get();
-        vacancyDto.setId(vacancyDepartment.getId());
-        vacancyDto.setPosition(vacancyDepartment.getVacancy().getPosition().getName());
-        vacancyDto.setDepartment(vacancyDepartment.getVacancy().getDepartment().getName());
-        vacancyDto.setAddress(vacancyDepartment.getVacancy().getAddress().getName());
-        vacancyDto.setDescriptions(vacancyDepartment.getDescription());
-        vacancyDto.setResponsibilities(vacancyDepartment.getResponsibilities());
-        vacancyDto.setRequirements(vacancyDepartment.getRequirements());
-        vacancyDto.setPreferences(vacancyDepartment.getPreferences());
-        vacancyDto.setOnSiteOrRemote(String.valueOf(vacancyDepartment.getOnSiteOrRemote()));
-        vacancyDto.setWorkingHours(vacancyDepartment.getWorkingHours());
-        vacancyDto.setWorkingDays(vacancyDepartment.getWorkingDays());
-        vacancyDto.setType(vacancyDepartment.getJobType());
-        vacancyDto.setLvl(String.valueOf(vacancyDepartment.getLvl()));
-        vacancyDto.setPost(vacancyDepartment.getPost());
-        vacancyDto.setSalary(vacancyDepartment.getSalary());
-        vacancyDto.setNote(vacancyDepartment.getNote());
+        System.out.println(vacancyInfo.getVacancy().getPosition().getName());
+        Vacancy vacancy = vacancyRepository.findById(vacancyInfo.getId()).get();
+        vacancyDto.setId(vacancyInfo.getId());
+        vacancyDto.setPosition(vacancyInfo.getVacancy().getPosition().getName());
+        vacancyDto.setDepartment(vacancyInfo.getVacancy().getDepartment().getName());
+        vacancyDto.setAddress(vacancyInfo.getVacancy().getAddress().getName());
+        vacancyDto.setDescriptions(vacancyInfo.getDescription());
+        vacancyDto.setResponsibilities(vacancyInfo.getResponsibilities());
+        vacancyDto.setRequirements(vacancyInfo.getRequirements());
+        vacancyDto.setPreferences(vacancyInfo.getPreferences());
+        vacancyDto.setOnSiteOrRemote(String.valueOf(vacancyInfo.getOnSiteOrRemote()));
+        vacancyDto.setWorkingHours(vacancyInfo.getWorkingHours());
+        vacancyDto.setWorkingDays(vacancyInfo.getWorkingDays());
+        vacancyDto.setType(vacancyInfo.getJobType());
+        vacancyDto.setLvl(String.valueOf(vacancyInfo.getLvl()));
+        vacancyDto.setPost(vacancyInfo.getPost());
+        vacancyDto.setSalary(vacancyInfo.getSalary());
+        vacancyDto.setNote(vacancyInfo.getNote());
         // Fetch updated user's username if it exists
-        if (vacancyDepartment.getUpdatedUser() != null) {
-            Long updatedUserId = vacancyDepartment.getUpdatedUser().getId();
+        if (vacancyInfo.getUpdatedUser() != null) {
+            Long updatedUserId = vacancyInfo.getUpdatedUser().getId();
             Optional<User> updatedUserOptional = userRepository.findById(updatedUserId);
             if (updatedUserOptional.isPresent()) {
                 vacancyDto.setUpdatedUsername(updatedUserOptional.get().getUsername());
             }
         }
-        vacancyDto.setCreadedUsername(vacancyDepartment.getVacancy().getCreatedUser().getUsername());
-        vacancyDto.setCreatedDateTime(vacancyDepartment.getVacancy().getCreatedUser().getCreatedDate());
-        vacancyDto.setUpdatedUsername(vacancyDepartment.getUpdatedUser().getUsername());
-        vacancyDto.setUpdatedTime(vacancyDepartment.getUpdatedTime());
-        vacancyDto.setOpenDate(vacancyDepartment.getOpenDate());
-        vacancyDto.setCloseDate(vacancyDepartment.getCloseDate());
-        vacancyDto.setStatus(String.valueOf(vacancyDepartment.getVacancy().getStatus()));
+        vacancyDto.setCreadedUsername(vacancyInfo.getVacancy().getCreatedUser().getUsername());
+        vacancyDto.setCreatedDateTime(vacancyInfo.getVacancy().getCreatedUser().getCreatedDate());
+        vacancyDto.setUpdatedUsername(vacancyInfo.getUpdatedUser().getUsername());
+        vacancyDto.setUpdatedTime(vacancyInfo.getUpdatedTime());
+        vacancyDto.setOpenDate(vacancyInfo.getOpenDate());
+        vacancyDto.setCloseDate(vacancyInfo.getCloseDate());
+        vacancyDto.setStatus(String.valueOf(vacancyInfo.getVacancy().getStatus()));
 
         return vacancyDto;
     }
 
     private Level convertLevel(String levelName) {
-        Level level = Level.valueOf(levelName);
-        return level;
+        return Level.valueOf(levelName);
     }
 
     private OnSiteOrRemote convertOnSiteOrRemote(String onSiteOrRemote) {
-        OnSiteOrRemote chgOnSiteOrRemote  = OnSiteOrRemote.valueOf(onSiteOrRemote);
-        return chgOnSiteOrRemote;
+        return OnSiteOrRemote.valueOf(onSiteOrRemote);
     }
 }

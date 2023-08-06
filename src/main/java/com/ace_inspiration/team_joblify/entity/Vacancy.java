@@ -1,14 +1,11 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,13 +26,11 @@ public class Vacancy implements Serializable{
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "createdUser_id")
-    @JsonBackReference
-    @JsonIdentityReference(alwaysAsId = true)
     private User createdUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -50,9 +45,7 @@ public class Vacancy implements Serializable{
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @JsonManagedReference
-    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VacancyDepartment> vacancyDepartment =new ArrayList<>();
+    private List<VacancyInfo> vacancyInfo =new ArrayList<>();
 
 }

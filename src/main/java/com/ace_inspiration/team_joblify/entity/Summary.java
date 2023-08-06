@@ -54,8 +54,8 @@ public class Summary implements Serializable {
     @Column(nullable = false, length = 25)
     private String experience;
 
-    @Column(nullable = false, columnDefinition = "decimal(10,2)")
-    private double expectedSalary;
+    @Column(nullable = false)
+    private String expectedSalary;
 
     @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Candidate candidate;

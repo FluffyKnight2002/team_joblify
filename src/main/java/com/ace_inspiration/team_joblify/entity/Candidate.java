@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +29,7 @@ public class Candidate implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private  Status interviewStatus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime applyDate;
 
     @Lob
@@ -47,8 +46,8 @@ public class Candidate implements Serializable {
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Interview>interviews=new ArrayList<>();
 
-    @JsonBackReference
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vacancy_department_id")
-    private VacancyDepartment vacancyDepartment;
+    @JoinColumn(name = "vacancy_info_id")
+    private VacancyInfo vacancyInfo;
 }
