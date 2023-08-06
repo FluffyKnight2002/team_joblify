@@ -17,7 +17,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class VacancyInfo implements Serializable {
 
     @Id
@@ -45,14 +44,15 @@ public class VacancyInfo implements Serializable {
     @Column(length = 24, nullable = false)
     private String salary;
 
-    @Column(length = 15, nullable = false)
-    private String jobType;
-
     @Column(nullable = false)
     private int post;
 
     @Column(nullable = false)
     private int hiredPost;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
 
     @Column(nullable = false)
     private LocalDate openDate;

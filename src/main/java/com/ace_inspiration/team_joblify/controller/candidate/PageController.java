@@ -1,6 +1,6 @@
 package com.ace_inspiration.team_joblify.controller.candidate;
 
-import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
+import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class PageController {
 
-    private final VacancyDepartmentService vacancyDepartmentService;
+    private final VacancyInfoService vacancyInfoService;
 
     @GetMapping("/")
     public String showIndex(Model model) {
         model.addAttribute("currentPage", "/");
-        model.addAttribute("vacancies", vacancyDepartmentService.selectLastVacancies());
+        model.addAttribute("vacancies", vacancyInfoService.selectLastVacancies());
         return "index";
     }
 
@@ -26,7 +26,7 @@ public class PageController {
         return "contact-us";
     }
 
-    @GetMapping("/job-details")
+    @GetMapping("/job-detail")
     public String showJobDetails(@RequestParam("id")long id,Model model) {
         model.addAttribute("currentPage", "/all-jobs");
         return "job-details";

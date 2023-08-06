@@ -4,20 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Vacancy</title>
+    <title>Vacancy Details</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>-->
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
-
 </head>
 
 <body>
@@ -25,71 +24,73 @@
         <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
         <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
         <div id="main">
-            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
-                <h3 class="text-primary mb-5">Vacancy Form</h3>
+            <form th:action="@{/update-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
+                <h3 class="text-primary mb-5">Vacancy Detail</h3>
+                <input type="hidden" th:field="${vacancy.id}"/>
 <!--                <input type="text" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
                 <div class="mb-3 position-relative">
                     <label for="title" class="form-label">Title(Position)</label>
-                    <input type="text" class="form-control" id="title" name="position">
+                    <input type="text" class="form-control" id="title" th:field="${vacancy.position}">
                     <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
                     <div id="title-suggestions"></div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="post" class="form-label">Post</label>
-                        <input type="text" class="form-control" id="post" name="post">
+                        <input type="text" class="form-control" id="post" th:field="${vacancy.post}">
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                         <label for="department" class="form-label">Department</label>
-                        <input type="text" class="form-control" id="department" name="department">
+                        <input type="text" class="form-control" id="department" th:field="${vacancy.department}">
                         <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
                         <div id="department-suggestions"></div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="type" class="form-label">Job type</label>
-                        <select class="form-select" id="type" name="type">
+                        <select class="form-select" id="type" th:field="${vacancy.type}">
                             <option th:each="type : ${typeList}"
-                                    th:value="${type.name()}"
-                                    th:text="${type}">
-                            </option>
+                                    th:value="${type}"
+                                    th:text="${type}"
+                                    th:selected="${vacancy.type == type}"></option>
                         </select>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="lvl" class="form-label">Experience Level</label>
-                        <select class="form-select" id="lvl" name="lvl">
+                        <select class="form-select" id="lvl" th:field="${vacancy.lvl}">
                             <option th:each="level : ${experienceLevels}"
-                                    th:value="${level.name()}"
-                                    th:text="${level}">
-                            </option>
+                                    th:value="${level}"
+                                    th:text="${level}"
+                                    th:selected="${vacancy.lvl == level}"></option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingDays" class="form-label">Working Days</label>
-                        <input type="text" class="form-control" id="workingDays" name="workingDays" value="Mon ~ Fri">
+                        <input type="text" class="form-control" id="workingDays" th:field="${vacancy.workingDays}">
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingHours" class="form-label">Working Hours</label>
-                        <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00AM ~ 6:00PM">
+                        <input type="text" class="form-control" id="workingHours" th:field="${vacancy.workingHours}">
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="salary" class="form-label">Salary</label>
-                        <input type="text" class="form-control" id="salary" name="salary">
+                        <input type="text" class="form-control" id="salary" th:field="${vacancy.salary}">
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
-                        <select class="form-select" id="onSiteOrRemote" name="onSiteOrRemote">
+                        <select class="form-select" id="onSiteOrRemote" th:field="${vacancy.onSiteOrRemote}">
                             <option th:each="onSiteOrRemote : ${onSiteOrRemoteList}"
-                                    th:value="${onSiteOrRemote.name()}"
-                                    th:text="${onSiteOrRemote}">
+                                    th:value="${onSiteOrRemote}"
+                                    th:text="${onSiteOrRemote}"
+                                    th:selected="${vacancy.onSiteOrRemote == onSiteOrRemote}">
                             </option>
                         </select>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="descriptions" class="form-label">Descriptions</label>
-                    <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
+                    <textarea class="form-control" id="descriptions" th:field="${vacancy.descriptions}" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="responsibilities" class="form-label">
@@ -109,7 +110,7 @@
                             <i class="bi bi-justify"></i>
                         </button>
                     </div>
-                    <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3"></textarea>
+                    <textarea class="form-control" id="responsibilities" th:field="${vacancy.responsibilities}" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="requirements" class="form-label">
@@ -129,7 +130,7 @@
                             <i class="bi bi-justify"></i>
                         </button>
                     </div>
-                    <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                    <textarea class="form-control" id="requirements" th:field="${vacancy.requirements}" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="preferences" class="form-label">
@@ -149,11 +150,11 @@
                             <i class="bi bi-justify"></i>
                         </button>
                     </div>
-                    <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
+                    <textarea class="form-control" id="preferences" th:field="${vacancy.preferences}" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    <textarea class="form-control" id="address" th:field="${vacancy.address}" rows="3"></textarea>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
@@ -176,8 +177,7 @@
                                         </div>
                                         <div>
                                             <u class="text-muted" id="preview-department"></u>
-                                            <span>
-                                                <i class="bi bi-geo-alt-fill"></i>
+                                            <span><i class='bx bx-location-plus'></i>
                                                 <span id="preview-address"></span>
                                             </span>
                                         </div>
@@ -283,6 +283,7 @@
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
     <script src="/assets/js/websocket.js"></script>

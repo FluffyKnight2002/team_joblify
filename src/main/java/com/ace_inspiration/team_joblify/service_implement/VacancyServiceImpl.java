@@ -4,6 +4,7 @@ import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
+import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyRepository;
 import com.ace_inspiration.team_joblify.service.AddressService;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
@@ -26,6 +27,7 @@ public class VacancyServiceImpl implements VacancyService {
     private final PositionService positionService;
     private final AddressRepository addressRepository;
     private final AddressService addressService;
+    private final UserRepository userRepository;
 
     @Override
     public Vacancy createVacancy(VacancyDto vacancyDto) {
@@ -37,7 +39,7 @@ public class VacancyServiceImpl implements VacancyService {
                 .department(department)
                 .address(address)
                 .createdDate(LocalDateTime.now())
-                .createdUser(User.builder().id(1L).build())
+                .createdUser(userRepository.findById(vacancyDto.getCreatedUserId()).get())
                 .status(Status.OPEN)
                 .build();
 
@@ -71,11 +73,9 @@ public class VacancyServiceImpl implements VacancyService {
         Department department = departmentService.checkAndSetDepartment(updatedVacancyDto.getDepartment());
         Address address = addressService.checkAndSetAddress(updatedVacancyDto.getAddress());
         Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getId()).get();
-        vacancy.setId(updatedVacancyDto.getId());
         vacancy.setPosition(position);
         vacancy.setDepartment(department);
         vacancy.setAddress(address);
-        vacancy.setStatus(Status.valueOf(updatedVacancyDto.getStatus()));
         return vacancyRepository.save(vacancy);
     }
 

@@ -1,12 +1,17 @@
 package com.ace_inspiration.team_joblify.controller.candidate;
 
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
+import com.ace_inspiration.team_joblify.entity.VacancyView;
+import com.ace_inspiration.team_joblify.repository.VacancyViewRepository;
+import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,11 +26,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/vacancy")
 public class FetchVacancyController {
 
-    private final VacancyDepartmentService vacancyDepartmentService;
+    private final VacancyViewRepository vacancyViewRepository;
+
+    private final VacancyInfoService vacancyInfoService;
 
     @GetMapping("/show-last")
     public List<VacancyDto> showLastVacancies() {
-        List<VacancyDto> lastVacancies = vacancyDepartmentService.selectLastVacancies();
+        List<VacancyDto> lastVacancies = vacancyInfoService.selectLastVacancies();
         return lastVacancies;
     }
 
@@ -49,19 +56,25 @@ public class FetchVacancyController {
         Pageable pageable = PageRequest.of(page, size, sorting);
 
         // Call your service/dao method to fetch paginated data
-        Page<VacancyDto> paginatedVacancies = vacancyDepartmentService.getPaginatedVacancies(pageable);
+        Page<VacancyDto> paginatedVacancies = vacancyInfoService.getPaginatedVacancies(pageable);
 
         return paginatedVacancies;
     }
 
-    @GetMapping("/show-others")
-    public List<VacancyDto> getOtherVacancies() {
-        return vacancyDepartmentService.selectAllVacancyDepartments();
+
+    @GetMapping("/show-all-data")
+    public DataTablesOutput<VacancyView> getDataTable(@Valid DataTablesInput input) {
+        return vacancyViewRepository.findAll(input);
     }
 
-    @GetMapping("/job-details")
+    @GetMapping("/show-others")
+    public List<VacancyDto> getOtherVacancies() {
+        return vacancyInfoService.selectAllVacancyInfo();
+    }
+
+    @GetMapping("/job-detail")
     public VacancyDto getVacancyDto(@RequestParam("id")long id){
-        return vacancyDepartmentService.selectVacancyById(id);
+        return vacancyInfoService.selectVacancyById(id);
     }
 
 }

@@ -36,7 +36,7 @@ function displayVacancies(data) {
                         data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> 1
                         Hour ago</span>
                     <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>${vacancyData.address}</span>
+                        data-placement="bottom" title="Location"><i class="bi bi-geo-alt-fill"></i>${vacancyData.address}</span>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
                     <a href="/job-details?id=${vacancyData.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
