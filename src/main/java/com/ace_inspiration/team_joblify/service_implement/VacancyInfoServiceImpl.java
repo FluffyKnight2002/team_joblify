@@ -46,6 +46,36 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     }
 
     @Override
+    public VacancyInfo reopenVacancyInfo(VacancyDto vacancyDto) {
+        Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
+        // Update the properties of the existingVacancy based on vacancyDto
+        VacancyInfo vacancyInfo = VacancyInfo.builder()
+                .vacancy(vacancyService.updateVacancy(vacancyDto))
+                .description(vacancyDto.getDescriptions())
+                .responsibilities(vacancyDto.getResponsibilities())
+                .requirements(vacancyDto.getRequirements())
+                .preferences(vacancyDto.getPreferences())
+                .onSiteOrRemote(convertOnSiteOrRemote(vacancyDto.getOnSiteOrRemote()))
+                .hiredPost(0)
+                .workingHours(vacancyDto.getWorkingHours())
+                .workingDays(vacancyDto.getWorkingDays())
+                .jobType(convertJobType(vacancyDto.getType()))
+                .lvl(convertLevel(vacancyDto.getLvl()))
+                .post(vacancyDto.getPost())
+                .salary(vacancyDto.getSalary())
+                .address(address)
+                .updatedUser(userRepository.findById(vacancyDto.getUpdatedUserId()).get())
+                .updatedTime(LocalDateTime.now())
+                .openDate(vacancyDto.getOpenDate())
+                .closeDate(vacancyDto.getCloseDate())
+                .note(vacancyDto.getNote())
+                .status(Status.OPEN)
+                .build();
+        System.out.println("Vacancy Status : " + vacancyInfo.getStatus());
+        return vacancyInfoRepository.save(vacancyInfo);
+    }
+
+    @Override
     public List<VacancyDto> selectAllVacancyInfo() {
         List<VacancyDto> vacancyDtos = new ArrayList<>();
         List<VacancyInfo> vacancyInfos = vacancyInfoRepository.findAll();
@@ -75,9 +105,10 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     @Override
     public VacancyDto selectVacancyById(long id) {
         VacancyDto vacancyDto = new VacancyDto();
-        Optional<VacancyInfo> optionalVacancyDepartment = vacancyInfoRepository.findById(id);
-        if(optionalVacancyDepartment.isPresent()) {
-            vacancyDto = entityToDto(optionalVacancyDepartment.get());
+        Optional<VacancyInfo> optionalVacancyInfo = vacancyInfoRepository.findById(id);
+        System.out.println("Vacancy : ID : " + optionalVacancyInfo.get().getVacancy().getId());
+        if(optionalVacancyInfo.isPresent()) {
+            vacancyDto = entityToDto(optionalVacancyInfo.get());
         }
 
         return vacancyDto;
@@ -87,7 +118,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     public VacancyInfo updateVacancyInfo(VacancyDto vacancyDto) {
         Long vacancyId = vacancyDto.getId();
         VacancyInfo existingVacancy = null;
-
+        Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         existingVacancy = vacancyInfoRepository.findById(vacancyId).orElse(null);
         // Update the properties of the existingVacancy based on vacancyDto
         existingVacancy.setVacancy(vacancyService.updateVacancy(vacancyDto));
@@ -95,6 +126,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         existingVacancy.setRequirements(vacancyDto.getRequirements());
         existingVacancy.setResponsibilities(vacancyDto.getResponsibilities());
         existingVacancy.setPreferences(vacancyDto.getPreferences());
+        existingVacancy.setAddress(address);
         existingVacancy.setWorkingDays(vacancyDto.getWorkingDays());
         existingVacancy.setWorkingHours(vacancyDto.getWorkingHours());
         existingVacancy.setSalary(vacancyDto.getSalary());
@@ -137,31 +169,34 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
             long daysDifference = ChronoUnit.DAYS.between(openDate, currentDate);
 
             if (daysDifference >= 30) {
-                vacancyInfo.getVacancy().setStatus(Status.CLOSED);
+                vacancyInfo.setStatus(Status.CLOSED);
                 vacancyInfoRepository.save(vacancyInfo);
             }
         }
     }
 
     @Override
-    public boolean closeVacancyById(long id) {
+    public VacancyInfo closeVacancyById(long id) {
         Optional<VacancyInfo> optionalVacancyInfo = vacancyInfoRepository.findById(id);
-        if(optionalVacancyInfo.isPresent()){
-            VacancyInfo vacancyInfo = optionalVacancyInfo.get();
-            vacancyInfo.getVacancy().setStatus(Status.CLOSED);
-            vacancyInfoRepository.save(vacancyInfo);
+        VacancyInfo vacancyInfo = null;
+        if(optionalVacancyInfo.isEmpty()){
+            return vacancyInfo;
         }
-        return false;
+        vacancyInfo = optionalVacancyInfo.get();
+        vacancyInfo.setStatus(Status.CLOSED);
+        return vacancyInfoRepository.save(vacancyInfo);
     }
 
     private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
-        return VacancyInfo.builder()
+        Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
+        VacancyInfo vacancyInfo = VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
                 .requirements(vacancyDto.getRequirements())
                 .preferences(vacancyDto.getPreferences())
                 .onSiteOrRemote(convertOnSiteOrRemote(vacancyDto.getOnSiteOrRemote()))
+                .address(address)
                 .hiredPost(0)
                 .workingHours(vacancyDto.getWorkingHours())
                 .workingDays(vacancyDto.getWorkingDays())
@@ -171,19 +206,22 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
                 .salary(vacancyDto.getSalary())
                 .updatedUser(userRepository.findById(vacancyDto.getUpdatedUserId()).get())
                 .updatedTime(LocalDateTime.now())
-                .openDate(LocalDate.now())
-                .closeDate(LocalDate.now())
+                .openDate(vacancyDto.getOpenDate())
+                .closeDate(vacancyDto.getCloseDate())
                 .note(vacancyDto.getNote())
+                .status(Status.valueOf(vacancyDto.getStatus()))
                 .build();
+        return vacancyInfo;
     }
 
     public VacancyDto entityToDto(VacancyInfo vacancyInfo) {
+        System.out.println("updated vacancyInfo : " + vacancyInfo.getVacancy().getId());
         VacancyDto vacancyDto = new VacancyDto();
-
         vacancyDto.setId(vacancyInfo.getId());
+        vacancyDto.setVacancyId(vacancyRepository.findById(vacancyInfo.getVacancy().getId()).get().getId());
         vacancyDto.setPosition(vacancyInfo.getVacancy().getPosition().getName());
         vacancyDto.setDepartment(vacancyInfo.getVacancy().getDepartment().getName());
-        vacancyDto.setAddress(vacancyInfo.getVacancy().getAddress().getName());
+        vacancyDto.setAddress(vacancyInfo.getAddress().getName());
         vacancyDto.setDescriptions(vacancyInfo.getDescription());
         vacancyDto.setResponsibilities(vacancyInfo.getResponsibilities());
         vacancyDto.setRequirements(vacancyInfo.getRequirements());
@@ -204,8 +242,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyDto.setUpdatedTime(vacancyInfo.getUpdatedTime());
         vacancyDto.setOpenDate(vacancyInfo.getOpenDate());
         vacancyDto.setCloseDate(vacancyInfo.getCloseDate());
-        vacancyDto.setStatus(String.valueOf(vacancyInfo.getVacancy().getStatus()));
-
+        vacancyDto.setStatus(String.valueOf(vacancyInfo.getStatus()));
         return vacancyDto;
     }
 

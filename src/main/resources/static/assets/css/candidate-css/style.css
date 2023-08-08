@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+.spinner {
+    position: absolute;
+    top: 60%;
+    right: 10px;
+}
+
+.title-input-spinner {
+    position: absolute;
+    top: 30%;
+    right: 10px;
+}
+
 .navbar {
     position: sticky;
     top: 0;

@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Upload Vacancy</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -24,10 +26,23 @@
     <div id="app">
         <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
         <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+        <!--Message Modal -->
+        <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+            <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center" id="message-con" style="background: #0c233d">
+                        <div class="loader"></div>
+                        <div class="loader-txt">
+                            <p>Check out this slick bootstrap spinner modal. <br><br><small>We are addicted to Bootstrap... #love</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="main">
-            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
+            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" id="upload-form" style="background: #fff" th:object="${vacancy}">
                 <h3 class="text-primary mb-5">Vacancy Form</h3>
-<!--                <input type="text" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
                 <div class="mb-3 position-relative">
                     <label for="title" class="form-label">Title(Position)</label>
                     <input type="text" class="form-control" id="title" name="position">
@@ -154,10 +169,11 @@
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
-                    <button type="submit" class="btn btn-primary mx-1">Upload</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
@@ -264,7 +280,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="type" class="btn btn-primary" onclick="$('submit-btn').click()">Upload</button>
                                 </div>
                             </div>
                         </div>
@@ -283,8 +299,9 @@
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
+    <script src="/assets/js/autocomplete.js"></script>
+    <script src="/assets/js/messageandloader.js"></script>
     <script src="/assets/js/websocket.js"></script>
     <script src="/assets/js/main.js"></script>
 </body>

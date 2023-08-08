@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Controller
@@ -33,24 +34,45 @@ public class VacancyController {
     }
 
     @PostMapping("/upload-vacancy")
-    public String postVacancy(@ModelAttribute("vacancy")VacancyDto vacancyDto, Authentication authentication) {
+    @ResponseBody
+    public boolean postVacancy(@RequestBody VacancyDto vacancyDto, Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         vacancyDto.setCreatedUserId(myUserDetails.getUserId());
         vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
+        // For close date plus 30
+        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
+        vacancyDto.setStatus("OPEN");
         VacancyInfo vacancyInfo = vacancyInfoService.createdVacancyInfo(vacancyDto);
         if(vacancyInfo != null) {
             NotificationDto notificationDto = new NotificationDto();
             String message = authentication.getName() + " create a " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            notificationDto.setMessage(message);
-            notificationDto.setLink(link);
-            notificationDto.setUserId(myUserDetails.getUserId());
-            notificationDto.setUsername(myUserDetails.getUsername());
-            notificationDto.setTime(LocalDateTime.now());
-            notificationService.createNotifications(notificationDto);
-            messagingTemplate.convertAndSend("/all/notifications", notificationDto);
+            createNotification(myUserDetails,message,link);
+            return true;
         }
-        return "redirect:/show-upload-vacancy-form";
+        return false;
+    }
+
+    @PostMapping("/reopen-vacancy")
+    @ResponseBody
+    public boolean reopenVacancy(@RequestBody VacancyDto vacancyDto, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        vacancyDto.setCreatedUserId(myUserDetails.getUserId());
+        vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
+        vacancyDto.setStatus("OPEN");
+        // For close date plus 30
+        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
+        VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfo(vacancyDto);
+        if(vacancyInfo != null) {
+            NotificationDto notificationDto = new NotificationDto();
+            String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
+            String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
+            createNotification(myUserDetails,message,link);
+            return true;
+        }
+        return false;
     }
 
     @GetMapping("/show-all-vacancies-page")
@@ -62,6 +84,7 @@ public class VacancyController {
     @GetMapping("/view-vacancy-detail")
     public String showAllVacancyPage(@RequestParam("id")long id, Model model) {
         VacancyDto vacancyDto = vacancyInfoService.selectVacancyById(id);
+        System.out.println("Vacancy ID : " + vacancyDto.getVacancyId());
         System.out.println(vacancyDto.getPosition());
         System.out.println(vacancyDto.getDescriptions());
         System.out.println(vacancyDto.getLvl());
@@ -71,7 +94,8 @@ public class VacancyController {
     }
 
     @PostMapping("/update-vacancy")
-    public String updateVacancy(@ModelAttribute("vacancy")VacancyDto vacancyDto, Authentication authentication) {
+    @ResponseBody
+    public boolean updateVacancy(@RequestBody VacancyDto vacancyDto, Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
         VacancyInfo vacancyInfo = vacancyInfoService.updateVacancyInfo(vacancyDto);
@@ -79,23 +103,29 @@ public class VacancyController {
             NotificationDto notificationDto = new NotificationDto();
             String message = authentication.getName() + " update " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            notificationDto.setMessage(message);
-            notificationDto.setLink(link);
-            notificationDto.setUserId(myUserDetails.getUserId());
-            notificationDto.setUsername(myUserDetails.getUsername());
-            notificationDto.setTime(LocalDateTime.now());
-            notificationService.createNotifications(notificationDto);
-            messagingTemplate.convertAndSend("/all/notifications", notificationDto);
+            createNotification(myUserDetails,message,link);
+            return true;
         }
-        return "redirect:/show-all-vacancies-page";
+        return false;
     }
 
     @PostMapping("/close-vacancy")
     @ResponseBody
-    public boolean closeVacancy(@RequestParam("id")long id) {
-        return vacancyInfoService.closeVacancyById(id);
+    public boolean closeVacancy(@RequestParam("id")long id, Authentication authentication) {
+        System.out.println("ID : " + id);
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        VacancyInfo vacancyInfo = vacancyInfoService.closeVacancyById(id);
+        if(vacancyInfo != null) {
+            NotificationDto notificationDto = new NotificationDto();
+            String message = authentication.getName() + " close " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
+            String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
+            createNotification(myUserDetails,message,link);
+            return true;
+        }
+        return false;
     }
 
+    // Modal attributes to show select input
     @ModelAttribute("experienceLevels")
     public Level[] getExperienceLevel() {
         return Level.values();
@@ -109,6 +139,18 @@ public class VacancyController {
     @ModelAttribute("typeList")
     public JobType[] getTypeList() {
         return JobType.values();
+    }
+
+    // Create notification
+    public void createNotification(MyUserDetails myUserDetails, String message, String link) {
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setMessage(message);
+        notificationDto.setLink(link);
+        notificationDto.setUserId(myUserDetails.getUserId());
+        notificationDto.setUsername(myUserDetails.getUsername());
+        notificationDto.setTime(LocalDateTime.now());
+        notificationService.createNotifications(notificationDto);
+        messagingTemplate.convertAndSend("/all/notifications", notificationDto);
     }
 
 }

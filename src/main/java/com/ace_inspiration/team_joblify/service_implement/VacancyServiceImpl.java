@@ -32,15 +32,12 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public Vacancy createVacancy(VacancyDto vacancyDto) {
         Position position = positionService.checkAndSetPosition(vacancyDto.getPosition());
-        Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         Department department = departmentService.checkAndSetDepartment(vacancyDto.getDepartment());
         Vacancy vacancy = Vacancy.builder()
                 .position(position)
                 .department(department)
-                .address(address)
                 .createdDate(LocalDateTime.now())
                 .createdUser(userRepository.findById(vacancyDto.getCreatedUserId()).get())
-                .status(Status.OPEN)
                 .build();
 
         return vacancyRepository.save(vacancy);
@@ -71,11 +68,10 @@ public class VacancyServiceImpl implements VacancyService {
     public Vacancy updateVacancy(VacancyDto updatedVacancyDto) {
         Position position = positionService.checkAndSetPosition(updatedVacancyDto.getPosition());
         Department department = departmentService.checkAndSetDepartment(updatedVacancyDto.getDepartment());
-        Address address = addressService.checkAndSetAddress(updatedVacancyDto.getAddress());
-        Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getId()).get();
+        System.out.println("VacancyId : " + updatedVacancyDto.getVacancyId());
+        Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getVacancyId()).get();
         vacancy.setPosition(position);
         vacancy.setDepartment(department);
-        vacancy.setAddress(address);
         return vacancyRepository.save(vacancy);
     }
 

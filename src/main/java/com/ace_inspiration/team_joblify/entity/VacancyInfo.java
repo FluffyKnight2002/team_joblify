@@ -75,6 +75,10 @@ public class VacancyInfo implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_user_id")
     private User updatedUser;
@@ -85,6 +89,10 @@ public class VacancyInfo implements Serializable {
 
     @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidate> candidate=new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
 
 }
