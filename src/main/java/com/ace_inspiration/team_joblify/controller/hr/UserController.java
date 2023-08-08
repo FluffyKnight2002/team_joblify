@@ -1,9 +1,6 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
-import com.ace_inspiration.team_joblify.config.MyUserDetails;
-import com.ace_inspiration.team_joblify.dto.UserDto;
-import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,9 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,8 +49,5 @@ public class UserController {
      public String showUserPasswordEditForm(){
          return "user-password-edit-form";
      }
-
-
-
     
 }

@@ -1,9 +1,11 @@
 package com.ace_inspiration.team_joblify.controller.candidate;
 
+import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.VacancyView;
 import com.ace_inspiration.team_joblify.repository.VacancyViewRepository;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import com.ace_inspiration.team_joblify.service_implement.JobFilterServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,10 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 public class FetchVacancyController {
 
     private final VacancyViewRepository vacancyViewRepository;
-
+    private final JobFilterServiceImpl jobFilterService;
     private final VacancyInfoService vacancyInfoService;
 
     @GetMapping("/show-last")
@@ -37,7 +36,7 @@ public class FetchVacancyController {
     }
 
     @GetMapping("/show-all")
-    public Page<VacancyDto> getPaginatedVacancies(@RequestParam int page,
+    public Page<VacancyView> getPaginatedVacancies(@RequestParam int page,
                                                   @RequestParam int size,
                                                   @RequestParam(defaultValue = "id,desc") String[] sort) {
         // Provide default sorting parameters if the sort array is empty or invalid
@@ -56,7 +55,7 @@ public class FetchVacancyController {
         Pageable pageable = PageRequest.of(page, size, sorting);
 
         // Call your service/dao method to fetch paginated data
-        Page<VacancyDto> paginatedVacancies = vacancyInfoService.getPaginatedVacancies(pageable);
+        Page<VacancyView> paginatedVacancies = vacancyViewRepository.findAll(pageable);
 
         return paginatedVacancies;
     }
@@ -75,6 +74,21 @@ public class FetchVacancyController {
     @GetMapping("/job-detail")
     public VacancyDto getVacancyDto(@RequestParam("id")long id){
         return vacancyInfoService.selectVacancyById(id);
+    }
+
+    @PostMapping("/filter")
+    @ResponseBody
+    public Page<VacancyView> filterJobs(@RequestBody JobFilterRequest filterRequest) {
+        int pageNumber = 0; // Set the default page number
+        int pageSize = 5; // Set the default page size
+        System.out.println("It's work!!!!");
+        // Create a pageable object for pagination
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        // Call the service method to filter the jobs
+        Page<VacancyView> filteredJobs = jobFilterService.filterJobs(filterRequest, pageable);
+
+        return filteredJobs;
     }
 
 }

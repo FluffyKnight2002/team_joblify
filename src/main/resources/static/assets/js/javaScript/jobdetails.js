@@ -291,4 +291,10 @@ $(document).ready(function (){
     $('#footer-content').css('margin-top', '85px');
     fetchJobDetails();
     fetchJobsAndRenderUI();
+
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 });

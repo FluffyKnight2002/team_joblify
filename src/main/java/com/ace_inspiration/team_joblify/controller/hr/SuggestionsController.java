@@ -1,7 +1,9 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
+import com.ace_inspiration.team_joblify.entity.Address;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
@@ -19,12 +21,9 @@ import java.util.List;
 public class SuggestionsController {
 
     private final PositionService positionService;
-
     private final DepartmentService departmentService;
-
     private final PositionRepository positionRepository;
-
-
+    private final AddressRepository addressRepository;
 
     @GetMapping("/fetch-titles")
     public List<String> getTitleSuggestions(@RequestParam("term") String term) {
@@ -51,6 +50,18 @@ public class SuggestionsController {
 
         for (Department department : departments) {
             suggestions.add(department.getName());
+        }
+
+        return suggestions;
+    }
+
+    @GetMapping("/fetch-address")
+    public List<String> getAddressSuggestions(@RequestParam("term") String term) {
+        List<Address> addresses = addressRepository.findByNameContainingIgnoreCase(term);
+        List<String> suggestions = new ArrayList<>();
+
+        for (Address address : addresses) {
+            suggestions.add(address.getName());
         }
 
         return suggestions;

@@ -24,7 +24,7 @@ public class Address implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "address", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Vacancy> vacancies;
+    private List<VacancyInfo> vacancyInfos;
 
 
 }

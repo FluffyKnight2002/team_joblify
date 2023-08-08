@@ -26,10 +26,6 @@ public class Vacancy implements Serializable{
     private long id;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
-    @Column(nullable = false)
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,10 +37,6 @@ public class Vacancy implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
     private Position position;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
-    private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "department_id")

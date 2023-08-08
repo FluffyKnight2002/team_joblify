@@ -76,6 +76,10 @@ public class VacancyInfo implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updatedUser_id")
     @JsonBackReference
@@ -88,6 +92,10 @@ public class VacancyInfo implements Serializable {
 //    @JsonIdentityReference(alwaysAsId = true)
     private Vacancy vacancy;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    @JsonBackReference
+    private Address address;
 
     @JsonManagedReference
 //    @JsonIdentityReference(alwaysAsId = true)

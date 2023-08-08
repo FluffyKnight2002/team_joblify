@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface VacancyInfoService {
     VacancyInfo createdVacancyInfo(VacancyDto vacancyDto);
+    VacancyInfo reopenVacancyInfo(VacancyDto vacancyDto);
     List<VacancyDto> selectAllVacancyInfo();
     List<VacancyDto> selectLastVacancies();
     DataTablesOutput<VacancyView> getVacanciesDataTable(DataTablesInput input);
@@ -20,5 +21,5 @@ public interface VacancyInfoService {
     void closedVacancyDepartments(long id);
     Page<VacancyDto> getPaginatedVacancies(Pageable pageable);
     void updateStatusAfter30Days();
-    boolean closeVacancyById(long id);
+    VacancyInfo closeVacancyById(long id);
 }

@@ -81,4 +81,10 @@ function changeTimeFormat(time) {
     // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
     var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
     return formattedDate;
+
+    // Initialize Bootstrap tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 }

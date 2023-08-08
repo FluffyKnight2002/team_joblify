@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,11 +15,10 @@ import java.time.LocalDateTime;
 public class VacancyDto {
 
     private long id;
+    private long vacancyId;
     private String position;
     private int post;
-    @JsonInclude(JsonInclude.Include.ALWAYS)
     private int hiredPost;
-    @JsonInclude(JsonInclude.Include.ALWAYS)
     private int applicants;
     private String type;
     private String department;
