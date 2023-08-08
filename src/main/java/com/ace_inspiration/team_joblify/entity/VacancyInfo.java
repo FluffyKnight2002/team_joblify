@@ -45,7 +45,7 @@ public class VacancyInfo implements Serializable {
     @Column(length = 24, nullable = false)
     private String salary;
 
-    @Column(nullable = false)
+    @Column(name = "required_post", nullable = false)
     private int post;
 
     @Column(nullable = false)

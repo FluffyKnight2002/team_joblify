@@ -71,7 +71,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
                 .note(vacancyDto.getNote())
                 .status(Status.OPEN)
                 .build();
-        System.out.println("Vacancy Status : " + vacancyInfo.getStatus());
         return vacancyInfoRepository.save(vacancyInfo);
     }
 
@@ -106,7 +105,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     public VacancyDto selectVacancyById(long id) {
         VacancyDto vacancyDto = new VacancyDto();
         Optional<VacancyInfo> optionalVacancyInfo = vacancyInfoRepository.findById(id);
-        System.out.println("Vacancy : ID : " + optionalVacancyInfo.get().getVacancy().getId());
         if(optionalVacancyInfo.isPresent()) {
             vacancyDto = entityToDto(optionalVacancyInfo.get());
         }
@@ -189,7 +187,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
 
     private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
-        VacancyInfo vacancyInfo = VacancyInfo.builder()
+        return VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
@@ -211,11 +209,9 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
                 .note(vacancyDto.getNote())
                 .status(Status.valueOf(vacancyDto.getStatus()))
                 .build();
-        return vacancyInfo;
     }
 
     public VacancyDto entityToDto(VacancyInfo vacancyInfo) {
-        System.out.println("updated vacancyInfo : " + vacancyInfo.getVacancy().getId());
         VacancyDto vacancyDto = new VacancyDto();
         vacancyDto.setId(vacancyInfo.getId());
         vacancyDto.setVacancyId(vacancyRepository.findById(vacancyInfo.getVacancy().getId()).get().getId());

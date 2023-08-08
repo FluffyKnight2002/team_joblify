@@ -25,7 +25,7 @@ public class Address implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "address", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Vacancy> vacancies;
+    private List<VacancyInfo> vacancyInfos;
 
 
 }
