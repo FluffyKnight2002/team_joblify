@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "candidate")
 public class Candidate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

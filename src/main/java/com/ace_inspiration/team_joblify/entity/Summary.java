@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "summary")
 public class Summary implements Serializable {
 
     @Id
@@ -61,12 +62,12 @@ public class Summary implements Serializable {
     private Candidate candidate;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "summary_languageSkills", joinColumns = @JoinColumn(name = "summary_id"),
-    inverseJoinColumns = @JoinColumn(name = "languageSkills_id"))
+    @JoinTable(name = "summary_language_skills", joinColumns = @JoinColumn(name = "summary_id"),
+    inverseJoinColumns = @JoinColumn(name = "language_skills_id"))
     private List<LanguageSkills> languageSkills= new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "summary_techSkills", joinColumns = @JoinColumn(name = "summary_id"),
-            inverseJoinColumns = @JoinColumn(name = "techSkills_id"))
+    @JoinTable(name = "summary_tech_skills", joinColumns = @JoinColumn(name = "summary_id"),
+            inverseJoinColumns = @JoinColumn(name = "tech_skills_id"))
     private List<TechSkills> techSkills= new ArrayList<>();
 }

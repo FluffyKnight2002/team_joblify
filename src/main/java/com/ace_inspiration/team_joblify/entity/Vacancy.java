@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "vacancy")
 public class Vacancy implements Serializable{
 
     @Id
@@ -30,7 +31,7 @@ public class Vacancy implements Serializable{
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "createdUser_id")
+    @JoinColumn(name = "created_user_id")
     private User createdUser;
 
     @ManyToOne(fetch = FetchType.LAZY)

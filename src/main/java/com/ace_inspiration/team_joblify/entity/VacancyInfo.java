@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "vacancy_info")
 public class VacancyInfo implements Serializable {
 
     @Id
@@ -67,7 +68,7 @@ public class VacancyInfo implements Serializable {
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = false)
+    @Column( nullable = false)
     @Enumerated(EnumType.STRING)
     private OnSiteOrRemote onSiteOrRemote;
 
@@ -75,7 +76,7 @@ public class VacancyInfo implements Serializable {
     private String note;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedUser_id")
+    @JoinColumn(name = "updated_user_id")
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY)

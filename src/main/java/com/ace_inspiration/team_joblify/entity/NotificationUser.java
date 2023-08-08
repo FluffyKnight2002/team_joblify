@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
+@Table(name = "notification_user")
 public class NotificationUser implements Serializable {
 
     @Id

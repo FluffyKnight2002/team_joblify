@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Table(name = "department")
 public class Department implements Serializable {
 
     @Id

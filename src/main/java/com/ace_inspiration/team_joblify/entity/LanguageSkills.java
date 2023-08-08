@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "language_skills")
 public class LanguageSkills implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "tech_skills")
 public class TechSkills implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

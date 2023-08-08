@@ -21,7 +21,7 @@ public interface VacancyInfoRepository extends DataTablesRepository<VacancyInfo,
             "JOIN FETCH v.position " +
             "JOIN FETCH v.department " +
             "JOIN FETCH v.address " +
-            "LEFT JOIN vd.candidates c " +
+            "LEFT JOIN vd.candidate c " +
             "GROUP BY vd")
     List<Object[]> findAllWithDataTablesAndApplicantsCount(DataTablesInput input);
 

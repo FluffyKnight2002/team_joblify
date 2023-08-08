@@ -155,7 +155,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     }
 
     private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
-        VacancyInfo vacancyInfo = VacancyInfo.builder()
+        return VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
@@ -175,12 +175,11 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
                 .closeDate(LocalDate.now())
                 .note(vacancyDto.getNote())
                 .build();
-        return vacancyInfo;
     }
 
     public VacancyDto entityToDto(VacancyInfo vacancyInfo) {
         VacancyDto vacancyDto = new VacancyDto();
-//        Vacancy vacancy = vacancyRepository.findById(vacancyDepartment.getId()).get();
+
         vacancyDto.setId(vacancyInfo.getId());
         vacancyDto.setPosition(vacancyInfo.getVacancy().getPosition().getName());
         vacancyDto.setDepartment(vacancyInfo.getVacancy().getDepartment().getName());
@@ -198,14 +197,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyDto.setSalary(vacancyInfo.getSalary());
         String note = (vacancyInfo.getNote() == null) ? "There is no note." : vacancyInfo.getNote();
         vacancyDto.setNote(note);
-        // Fetch updated user's username if it exists
-//        if (vacancyDepartment.getUpdatedUser() != null) {
-//            Long updatedUserId = vacancyDepartment.getUpdatedUser().getId();
-//            Optional<User> updatedUserOptional = userRepository.findById(updatedUserId);
-//            if (updatedUserOptional.isPresent()) {
-//                vacancyDto.setUpdatedUsername(updatedUserOptional.get().getUsername());
-//            }
-//        }
+
         vacancyDto.setCreatedUsername(vacancyInfo.getVacancy().getCreatedUser().getUsername());
         vacancyDto.setCreatedDateTime(vacancyInfo.getVacancy().getCreatedUser().getCreatedDate());
         vacancyDto.setUpdatedUsername(vacancyInfo.getUpdatedUser().getUsername());
@@ -213,7 +205,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyDto.setOpenDate(vacancyInfo.getOpenDate());
         vacancyDto.setCloseDate(vacancyInfo.getCloseDate());
         vacancyDto.setStatus(String.valueOf(vacancyInfo.getVacancy().getStatus()));
-        System.out.println(vacancyDto.getPosition());
+
         return vacancyDto;
     }
 
@@ -228,18 +220,15 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     }
 
     private Level convertLevel(String levelName) {
-        Level level = Level.valueOf(levelName);
-        return level;
+        return Level.valueOf(levelName);
     }
 
     private JobType convertJobType(String jobTypeName){
-        JobType jobType = JobType.valueOf(jobTypeName);
-        return jobType;
+        return JobType.valueOf(jobTypeName);
     }
 
     private OnSiteOrRemote convertOnSiteOrRemote(String onSiteOrRemote) {
-        OnSiteOrRemote chgOnSiteOrRemote  = OnSiteOrRemote.valueOf(onSiteOrRemote);
-        return chgOnSiteOrRemote;
+        return OnSiteOrRemote.valueOf(onSiteOrRemote);
     }
 
 }
