@@ -78,12 +78,15 @@ public class FetchVacancyController {
 
     @PostMapping("/filter")
     @ResponseBody
-    public Page<VacancyView> filterJobs(@RequestBody JobFilterRequest filterRequest) {
-        int pageNumber = 0; // Set the default page number
-        int pageSize = 5; // Set the default page size
+    public Page<VacancyView> filterJobs(@RequestBody JobFilterRequest filterRequest,
+                                        @RequestParam int page,
+                                        @RequestParam int pageSize) {
+
         System.out.println("It's work!!!!");
+        System.out.println("Page number : " + page);
+
         // Create a pageable object for pagination
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize); // Use actualPageNumber
 
         // Call the service method to filter the jobs
         Page<VacancyView> filteredJobs = jobFilterService.filterJobs(filterRequest, pageable);

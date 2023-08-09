@@ -58,13 +58,13 @@
                         <div class="border-2 border-bottom pb-3 mb-3">
                             <h6>Sort by</h6>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="sortRecent" value="-openDate" checked>
+                                <input class="form-check-input" type="radio" name="sortBy" id="sortRecent" value="openDate" checked>
                                 <label class="form-check-label" for="sortRecent" >
                                     Most recent
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="sortPost" value="-post">
+                                <input class="form-check-input" type="radio" name="sortBy" id="sortPost" value="post">
                                 <label class="form-check-label" for="sortPost">
                                     Most wanted
                                 </label>
@@ -105,15 +105,21 @@
                             </div>
                         </div>
                         <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Type</h6>
+                            <h6>Sort by</h6>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="type-full-time" name="jobType" value="FULL_TIME">
-                                <label class="form-check-label" for="type-full-time">
+                                <input class="form-check-input" type="radio" name="jobType" id="type-both" value="BOTH" checked>
+                                <label class="form-check-label" for="type-both" >
+                                    Both
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="jobType" id="type-full-time" value="FULL_TIME">
+                                <label class="form-check-label" for="type-full-time" >
                                     Full-time
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="type-part-time" name="jobType" value="PART_TIME">
+                                <input class="form-check-input" type="radio" name="jobType" id="type-part-time" value="PART_TIME">
                                 <label class="form-check-label" for="type-part-time">
                                     Part-time
                                 </label>

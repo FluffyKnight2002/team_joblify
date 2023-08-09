@@ -1,7 +1,6 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
-import com.ace_inspiration.team_joblify.entity.JobType;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.VacancyView;
@@ -34,7 +33,7 @@ public class JobFilterServiceImpl {
         Specification<VacancyView> spec = Specification.where(null);
 
         System.out.println("Position : " + (filterRequest.getPosition().trim() == ""));
-        System.out.println("Status : " + (filterRequest.getStatus().trim() == ""));
+        System.out.println("Status : " + (filterRequest.isIncludingClosed()));
 
 //        if (filterRequest.getSortBy() != null) {
 //            String sortBy = filterRequest.getSortBy();
@@ -59,10 +58,15 @@ public class JobFilterServiceImpl {
 
         if (filterRequest.getSortBy() != null) {
             String sortBy = filterRequest.getSortBy();
-            Sort.Direction sortDirection = sortBy.startsWith("-") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-            final String finalSortBy = sortBy.substring(sortBy.startsWith("-") ? 1 : 0); // Extract without '-' if present
-            spec = spec.and((root, query, builder) -> orderBySpecification(builder, root, finalSortBy, sortDirection));
+            spec = spec.and((root, query, builder) -> {
+                if ("openDate".equals(sortBy)) {
+                    query.orderBy(builder.desc(root.get("openDate")));
+                } else if ("post".equals(sortBy)) {
+                    query.orderBy(builder.desc(root.get("post")));
+                }
+                return null;
+            });
         }
 
         if (filterRequest.getPosition() != null && !filterRequest.getPosition().trim().isEmpty()) {
@@ -96,26 +100,11 @@ public class JobFilterServiceImpl {
             }
         }
 
-        if (filterRequest.getJobType() != null && filterRequest.getJobType().length > 0) {
-            String[] jobTypeValues = filterRequest.getJobType();
-            List<JobType> jobTypeEnums = Arrays.stream(jobTypeValues)
-                    .map(strValue -> {
-                        try {
-                            return JobType.valueOf(strValue.toUpperCase()); // Convert to uppercase
-                        } catch (IllegalArgumentException e) {
-                            // Handle invalid string value, e.g., return a default job type or skip it
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull) // Filter out null values (invalid strings)
-                    .collect(Collectors.toList());
-
-            System.out.println("Enum job type: " + jobTypeEnums);
-            if (!jobTypeEnums.isEmpty()) {
-                spec = spec.and((root, query, builder) ->
-                        root.get("jobType").in(jobTypeEnums));
-            }
+        if (!filterRequest.getJobType().equals("BOTH")) {
+            spec = spec.and((root, query, builder) ->
+                    root.get("jobType").in(filterRequest.getJobType()));
         }
+
 
         if (filterRequest.getLevel() != null && filterRequest.getLevel().length > 0) {
             String[] levelValues = filterRequest.getLevel();
@@ -137,15 +126,19 @@ public class JobFilterServiceImpl {
             }
         }
 
-        if (filterRequest.isUnder10Applicants()) {
+        if (filterRequest.isUnder10()) {
             spec = spec.and((root, query, builder) ->
                     builder.lessThanOrEqualTo(root.get("applicants"), 10));
         }
 
-        if ("OPEN".equals(filterRequest.getStatus())) {
+        if (!filterRequest.isIncludingClosed()) {
             System.out.println("Status works!!!");
             spec = spec.and((root, query, builder) ->
                     builder.equal(root.get("status"), Status.OPEN)); // Change VacancyStatus with your actual enum class
+        }else {
+            System.out.println("Status works!!!");
+            spec = spec.and((root, query, builder) ->
+                    builder.equal(root.get("status"), Status.CLOSED));
         }
 
         // ... (other filter conditions)
@@ -164,6 +157,7 @@ public class JobFilterServiceImpl {
 
         // Count the total number of results without pagination
         CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        System.out.println("Count query : " + countQuery);
         countQuery.select(criteriaBuilder.count(countQuery.from(VacancyView.class)));
         Long totalResults = entityManager.createQuery(countQuery).getSingleResult();
 

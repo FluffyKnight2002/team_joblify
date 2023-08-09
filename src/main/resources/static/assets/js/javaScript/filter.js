@@ -8,22 +8,25 @@ async function applyFilter() {
   let sortBy = $('input[name="sortBy"]:checked').val();
   let datePosted = $('input[name="datePosted"]:checked').val();
   let position = $('#title-input').val();
-  let jobType = $('input[name="jobType"]:checked').val() === undefined ? null :
-      $('input[name="jobType"]:checked').serializeArray().map(item => item.value);
-  let level = $('input[name="level"]:checked').val() === undefined ? null :
+  let jobType = $('input[name="jobType"]:checked').val();
+  let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
       $('input[name="level"]:checked').serializeArray().map(item => item.value);
+  // let levelString = levelArray.join(',');
   let under10Applicants = $('input[name="under10"]:checked').val() === undefined ? false : true;
-  let status = $('input[name="status"]:checked').val() === undefined ? "OPEN" : "";
+  let status = $('input[name="status"]:checked').val() === undefined ? false : true;
+  let page = 0;
+  let itemPerPage = 5;
 
   console.log("Sort By Sort By:", sortBy);
   console.log("Sort By Date Posted:", datePosted);
   console.log("Sort By Job Type:", jobType);
-  console.log("Sort By Level:",level);
+  console.log("Sort By Level:",levelArray);
   console.log("Under 10 Applicants:",under10Applicants);
   console.log("Show both :",status);
+  console.log("Page from applyJobs :",page);
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, level, under10Applicants, status);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, under10Applicants, status,page,itemPerPage);
         totalPages = data.totalPages;
         resultCount = data.totalElements;
         console.log("Result Count from apply: " + resultCount);
@@ -69,7 +72,7 @@ function closeFilter() {
   }, 300); // 300 milliseconds = transition duration
 }
 
-async function filterJobs(sortBy, datePosted, position, jobType, level, under10Applicants, status) {
+async function filterJobs(sortBy, datePosted, position, jobType, level, under10Applicants, status,page,itemPerPage) {
     let filterData = {
         sortBy: sortBy,
         datePosted: datePosted,
@@ -87,7 +90,7 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, under10A
     console.log(csrfToken);
 
     try {
-        const response = await fetch("vacancy/filter", {
+        const response = await fetch(`vacancy/filter?page=${page}&pageSize=${itemPerPage}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -208,7 +211,7 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the previous button
     const startPageButton = `
         <li class="page-item">
-            <a class="page-link" href="#" onclick="loadVacancies(${startPage-1})" aria-label="Previous">
+            <a class="page-link" href="#" onclick="loadVacancies(${startPage})" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
@@ -217,21 +220,21 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the next button
     const lastPageButton = `
         <li class="page-item">
-            <a class="page-link" href="#" onclick="loadVacancies(${endPage-1})" aria-label="Next">
+            <a class="page-link" href="#" onclick="loadVacancies(${endPage})" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
     `;
 
-    // Create the page links
+    // Update the page link creation section
     const pageLinks = [];
     for (let i = startPage; i <= endPage; i++) {
         const activeClass = i === currentPage ? "active-page" : "";
         const pageLink = `
-            <li class="page-item">
-                <a class="page-link ${activeClass}" href="#" onclick="loadVacancies(${i-1})">${i}</a>
-            </li>
-        `;
+        <li class="page-item">
+            <a class="page-link ${activeClass}" href="#" onclick="loadVacancies(${i-1})">${i}</a>
+        </li>
+    `;
         pageLinks.push(pageLink);
     }
 
@@ -345,7 +348,7 @@ function changeTimeFormat(time) {
         }
     }
 
-    // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
+    // Format the date as "Dayth Month Year" (e.g., "27th Jul")
     var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
     return formattedDate;
 }
@@ -356,23 +359,26 @@ $('#show-result-btn').on('click', function(event) {
 });
 
 async function loadVacancies(page) {
+    console.log("Page from loadVacancies: ",page)
     // Get selected values
     let sortBy = $('input[name="sortBy"]:checked').val();
     let datePosted = $('input[name="datePosted"]:checked').val();
     let position = $('#title-input').val();
-    let jobType = $('input[name="jobType"]:checked').val() === undefined ? null :
-        $('input[name="jobType"]:checked').serializeArray().map(item => item.value);
-    let level = $('input[name="level"]:checked').val() === undefined ? null :
+    let jobType = $('input[name="jobType"]:checked').val();
+    let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
         $('input[name="level"]:checked').serializeArray().map(item => item.value);
+    let levelString = levelArray != null ? levelArray.join(',') : null;
     let under10Applicants = $('input[name="under10"]:checked').val() === undefined ? false : true;
-    let status = $('input[name="status"]:checked').val() === undefined ? "OPEN" : "";
+    let status = $('input[name="status"]:checked').val() === undefined ? false : true;
+    let itemPerPage = 5;
 
     try {
-        const data = await applyFilter(sortBy, datePosted, position, jobType, level, under10Applicants, status, page);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, under10Applicants, status, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
         console.log("Loaded vacancies:", vacancies);
 
+        showResult(vacancies);
         updatePaginationUI(totalPages, page);
     } catch (error) {
         // Handle errors
@@ -392,5 +398,6 @@ $(document).ready(async function () {
 
     // vacancies =await applyFilter();
     console.log("Doc ready : " +  vacancies);
-    await loadVacancies();
+    await loadVacancies(0);
+    // showResult(vacancies);
 });

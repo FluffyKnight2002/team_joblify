@@ -10,8 +10,8 @@ public class JobFilterRequest {
     private String sortBy;
     private String datePosted;
     private String position;
-    private String[] jobType;
+    private String jobType;
     private String[] level;
-    private boolean under10Applicants;
-    private String status;
+    private boolean isUnder10;
+    private boolean isIncludingClosed;
 }
