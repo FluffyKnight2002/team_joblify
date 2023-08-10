@@ -13,6 +13,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "interview")
 public class Interview implements Serializable {
 
     @Id

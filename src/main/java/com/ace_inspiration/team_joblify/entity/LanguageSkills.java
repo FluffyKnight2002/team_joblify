@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "language_skills")
 public class LanguageSkills implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,6 @@ public class LanguageSkills implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "languageSkills", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "languageSkills")
     private List<Summary> summary;
 }

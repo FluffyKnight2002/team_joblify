@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "notification")
 public class Notification implements Serializable {
 
     @Id
@@ -32,5 +33,5 @@ public class Notification implements Serializable {
     private String link;
 
     @OneToMany(mappedBy = "notification", orphanRemoval = true, cascade = CascadeType.ALL)
-    List<NotificationUser> notificationUsers= new ArrayList<>();
+    private List<NotificationUser> notificationUsers= new ArrayList<>();
 }

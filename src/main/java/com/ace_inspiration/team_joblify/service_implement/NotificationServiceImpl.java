@@ -31,7 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void createNotifications(NotificationDto notificationDto) {
         List<User> users = userRepository.findAll();
         for(User user: users) {
-            System.out.println(user.getName());
+
             NotificationUser notificationUser = new NotificationUser();
             Notification notification = new Notification();
             notification.setMessage(notificationDto.getMessage());
@@ -83,10 +83,6 @@ public class NotificationServiceImpl implements NotificationService {
         notificationUserRepository.deleteAllByUser(user);
     }
 
-//    @Override
-//    public void removeNotification(long id) {
-//        notificationRepository.deleteById(id);
-//    }
 
     public NotificationDto mapToDto(Notification notification) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -111,7 +107,7 @@ public class NotificationServiceImpl implements NotificationService {
     private boolean checkUserNotificationAssociation(long notificationId, long userId) {
         boolean isExit = false;
         List<NotificationUser> list = notificationUserRepository.findAll();
-        if(list.size() == 0) {
+        if(list.isEmpty()) {
             return isExit;
         }
         for(NotificationUser notiUser: list) {
@@ -124,40 +120,24 @@ public class NotificationServiceImpl implements NotificationService {
                 // Found the association, return true
                 isExit = true;
             }
-        System.out.println("JoinTable \nxxxxxxxxxx \nnotificationId: " + userNotificationId + "\n" + "userId: " + userUserId);
+
         }
-        System.out.println("Parameters \nxxxxxxxxxx \nnotificationId: " + notificationId + "\n" + "userId: " + userId);
-        System.out.println("isExit: " + isExit);
+
         return isExit;
     }
 
-//    public Notification mapToEntity(NotificationDto notificationDto) {
-//        Notification notification = new Notification();
-//        notification.setId(notificationDto.getId());
-//        notification.setMessage(notificationDto.getMessage());
-//        notification.setLink(notificationDto.getLink());
-//        notification.setTime(notificationDto.getTime());
-//        // Assuming you are not updating the users list from DTO to Entity
-//
-//        return notification;
-//    }
-//
+
     // Method to find a notification by both notification_id and user_id
     @Override
     public void findNotificationByIdAndUserIdAndDelete(Long notificationId, Long userId) {
         Notification notification = Notification.builder().id(notificationId).build();
         User user = User.builder().id(userId).build();
         Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findNotificationUserByNotificationAndUser(notification,user);
-//        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findById(notificationId);
+
         if (optionalNotificationUser.isPresent()) {
             NotificationUser notificationUser = optionalNotificationUser.get();
             notificationUserRepository.deleteById(notificationUser.getId());
-//            List<User> associatedUsers = notification.getUsers();
-//            for (User user : associatedUsers) {
-//                if (user.getId() == userId) {
-//                    return mapToDto(notification);
-//                }
-//            }
+
         }
     }
 }

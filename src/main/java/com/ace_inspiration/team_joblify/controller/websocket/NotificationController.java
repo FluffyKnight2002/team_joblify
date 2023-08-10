@@ -18,18 +18,12 @@ import java.util.List;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-//    private final SimpMessagingTemplate simpMessagingTemplate;
     private final List<NotificationDto> notifications = new ArrayList<>();
     private final NotificationService notificationService;
 
-//    public NotificationController(SimpMessagingTemplate simpMessagingTemplate) {
-//        this.simpMessagingTemplate = simpMessagingTemplate;
-//    }
-
     @GetMapping("/show")
     public List<NotificationDto> getAllNotifications(){
-        List<NotificationDto> notifications = notificationService.showNotifications();
-        return notifications;
+        return notificationService.showNotifications();
     }
 
     @GetMapping("/count")
@@ -37,16 +31,11 @@ public class NotificationController {
         return notificationService.getNotificationCount();
     }
 
-//    @MessageMapping("/application")
-//    @SendTo("/all/notification")
-//    public Message send(final Message message) throws Exception {
-//        return message;
-//
-//    }
+
 
     @GetMapping("/makeAsRead")
     public void makeNotificationAsRead(@RequestParam("id")Long notificationId, Authentication authentication){
-        System.out.println("NotificationId : " + notificationId);
+
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         // Find the notification by both notification_id and user_id
         notificationService.findNotificationByIdAndUserIdAndDelete(notificationId, myUserDetails.getUserId());
@@ -63,15 +52,5 @@ public class NotificationController {
         notificationService.removeNotification(notificationId);
     }
 
-//    @MessageMapping("/private")
-//    public void sendToSpecificUser(@Payload Message message) {
-//        simpMessagingTemplate.convertAndSendToUser(message.getClass().getName(), "/toDefaultHR", message);
-//    }
-
-//    @MessageMapping("/private")
-//    public void sendToSpecificUser(@Payload Message<String> message, SimpMessageHeaderAccessor accessor) {
-//        String destination = "/user/" + accessor.getUser().getName() + "/toDefaultHR";
-//        simpMessagingTemplate.convertAndSend(destination, message);
-//    }
 }
 

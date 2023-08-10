@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "address")
 public class Address implements Serializable {
 
     @Id
@@ -23,7 +24,7 @@ public class Address implements Serializable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "address", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "address", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<VacancyInfo> vacancyInfos;
 
 

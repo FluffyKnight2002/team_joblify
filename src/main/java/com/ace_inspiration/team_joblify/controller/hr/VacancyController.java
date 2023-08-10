@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
+import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.entity.JobType;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.OnSiteOrRemote;

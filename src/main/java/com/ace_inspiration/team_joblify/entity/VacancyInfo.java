@@ -1,7 +1,5 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +17,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "vacancy_info")
 public class VacancyInfo implements Serializable {
 
     @Id
@@ -46,13 +45,13 @@ public class VacancyInfo implements Serializable {
     @Column(length = 24, nullable = false)
     private String salary;
 
-    @Column(nullable = false)
+    @Column(name = "required_post", nullable = false)
     private int post;
 
     @Column(nullable = false)
     private int hiredPost;
 
-    @Column(length = 10, nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private JobType jobType;
 
@@ -62,14 +61,14 @@ public class VacancyInfo implements Serializable {
     @Column(nullable = false)
     private LocalDate closeDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime updatedTime;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = false, length = 30)
+    @Column( nullable = false)
     @Enumerated(EnumType.STRING)
     private OnSiteOrRemote onSiteOrRemote;
 
@@ -81,25 +80,19 @@ public class VacancyInfo implements Serializable {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedUser_id")
-    @JsonBackReference
-//    @JsonIdentityReference(alwaysAsId = true)
+    @JoinColumn(name = "updated_user_id")
     private User updatedUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
-    @JsonBackReference
-//    @JsonIdentityReference(alwaysAsId = true)
     private Vacancy vacancy;
+
+    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Candidate> candidate=new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
-    @JsonBackReference
     private Address address;
 
-    @JsonManagedReference
-//    @JsonIdentityReference(alwaysAsId = true)
-    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Candidate> candidates = new ArrayList<>();
 
 }

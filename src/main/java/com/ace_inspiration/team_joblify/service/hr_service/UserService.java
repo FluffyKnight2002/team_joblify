@@ -16,4 +16,12 @@ public interface UserService {
 
     User userProfileEdit(UserDto userDto, long userId) throws IOException;
 
+    boolean emailDuplication(String email);
+
+    boolean emailDuplicationExceptMine(String email, long userId);
+
+    boolean checkOldPassword(String password, long userId);
+
+    boolean passwordChange(String newPassword, long id);
+
 }
