@@ -12,17 +12,23 @@ import com.ace_inspiration.team_joblify.dto.SummaryDto;
 public class PageController {
 	
 
-    @GetMapping("/")
+    @GetMapping("/AA")
     public String showIndex() {
         return "index";
     }
 
-    @GetMapping("/contactUs")
+    @GetMapping("/contact-usAA")
     public String showContactUs() {
         return "contact-us";
     }
 
-    @GetMapping("/allJobs")
+
+    @GetMapping("/job-detailAA")
+    public String showJobDetails() {
+        return "job-details";
+    }
+
+    @GetMapping("/all-jobsAA")
     public String showAllJobs() {
         return "jobs";
     }

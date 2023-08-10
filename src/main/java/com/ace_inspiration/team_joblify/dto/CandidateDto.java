@@ -12,11 +12,12 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ace_inspiration.team_joblify.entity.Action;
+
 import com.ace_inspiration.team_joblify.entity.Candidate;
 import com.ace_inspiration.team_joblify.entity.Interview;
 import com.ace_inspiration.team_joblify.entity.LanguageSkills;
 import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Notification;
 import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.entity.TechSkills;
@@ -54,9 +55,9 @@ public class CandidateDto {
 
 	private Candidate candidate;
 
-	private List<LanguageSkills> languageSkills = new ArrayList<>();
+	private String [] languageSkills;
 
-	private List<TechSkills> techSkills = new ArrayList<>();
+	private String [] techSkills;
 	
 	private String selectionStatus;
 	
@@ -72,7 +73,7 @@ public class CandidateDto {
 	
 	private List<Interview>interviews=new ArrayList<>();
 	
-	private List<Action>actions=new ArrayList<>();
+	private List<Notification>notification=new ArrayList<>();
 	
 	private VacancyDto vacancyDto;
 

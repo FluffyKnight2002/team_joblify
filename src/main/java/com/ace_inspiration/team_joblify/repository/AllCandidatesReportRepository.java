@@ -1,9 +1,12 @@
 package com.ace_inspiration.team_joblify.repository;
 
-import com.ace_inspiration.team_joblify.entity.Vacancy;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
+import com.ace_inspiration.team_joblify.entity.AllCandidatesReport;
+
+
 @Repository
-public interface JobPostRepository extends DataTablesRepository<Vacancy, Long> {
+public interface AllCandidatesReportRepository extends DataTablesRepository<AllCandidatesReport, Long> {
+
 }

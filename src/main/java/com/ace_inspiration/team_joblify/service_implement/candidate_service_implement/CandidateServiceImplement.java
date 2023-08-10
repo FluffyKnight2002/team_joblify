@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.service_implement.candidate_service_imp
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
@@ -16,7 +17,9 @@ import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.entity.TechSkills;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
+import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
 import com.ace_inspiration.team_joblify.repository.SummaryRepository;
+import com.ace_inspiration.team_joblify.repository.TechSkillsRepository;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,9 @@ import lombok.RequiredArgsConstructor;
 public class CandidateServiceImplement implements CandidateService {
 	private final CandidateRepository candidateRepository;
 	private final SummaryRepository summaryRepository;
+	private final LanguageSkillsRepository languageSkillsRepository;
+	private final TechSkillsRepository techSkillsRepository;
+	
 	@Override
 	public List<Candidate> getAllCandidates() {
 		return candidateRepository.findAll();
@@ -34,37 +40,60 @@ public class CandidateServiceImplement implements CandidateService {
 	@Override
 	
 	public void saveCandidate(CandidateDto candidateDto) {
-		Candidate candidate=new Candidate();
+		List<LanguageSkills> languageSkillsList= new ArrayList<>();
+		for(String languageSkill: candidateDto.getLanguageSkills()) {
+		LanguageSkills  languageSkills= new LanguageSkills();
+		languageSkills.setName(languageSkill);
+		languageSkillsList.add(languageSkills);
+		languageSkillsRepository.save(languageSkills);
+		}
+		
+		List<TechSkills> techSkillsList= new ArrayList<>();
+		for(String techSkill: candidateDto.getTechSkills()) {
+		TechSkills  techSkills= new TechSkills();
+		techSkills.setName(techSkill);
+		techSkillsList.add(techSkills);
+		techSkillsRepository.save(techSkills);
+		}
+		
+		
+		
 		Summary summary = new Summary();
-		List<LanguageSkills> languageSkills = new ArrayList<>();
-		languageSkills.add(LanguageSkills.builder().id(1).build());
-		List<TechSkills> techSkills = new ArrayList<>();
-		techSkills.add(TechSkills.builder().id(1).build());
 		summary.setName(candidateDto.getName());
 		summary.setDob(candidateDto.getDob());
 		summary.setPhone(candidateDto.getPhone());
 		summary.setEmail(candidateDto.getEmail());
 		summary.setEducation(candidateDto.getEducation());
-		Level level = Level.valueOf(candidateDto.getLvl());
-		summary.setLvl(level);
+		summary.setLvl(Level.valueOf(candidateDto.getLvl()));
 		summary.setGender(Gender.valueOf(candidateDto.getGender()));
 		summary.setApplyPosition(candidateDto.getApplyPosition());
 		summary.setSpecialistTech(candidateDto.getSpecialistTech());
 		summary.setExperience(candidateDto.getExperience());
 		summary.setExpectedSalary(candidateDto.getExpectedSalary());
-		summary.setSpecialistTech("Apalar skills");
-		summary.setTechSkills(techSkills);
-		summary.setLanguageSkills(languageSkills);
-		candidate.setSummary(summaryRepository.save(summary));
+		summary.setSpecialistTech(candidateDto.getSpecialistTech());
+		summary.setLanguageSkills(languageSkillsList);
+		summary.setTechSkills(techSkillsList);
+		summaryRepository.save(summary);
+		
+		Candidate candidate=new Candidate();
+		
+		candidate.setSummary(summary);
 		candidate.setSelectionStatus(Status.RECEIVED);
 		candidate.setInterviewStatus(Status.NONE);
 		candidate.setApplyDate(LocalDateTime.now());
 		try {
-			candidate.setResume(encodeImageToString(candidateDto.getResume()));
+			candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		candidateRepository.save(candidate);	
+		 candidateRepository.save(candidate);
+		
+		
+		
+//		summary.getLanguageSkills().add(languageSkills);
+//		summary.getTechSkills().add(techSkills);
+//		
+//		candidateRepository.save(candidate);	
 	}
 	
 

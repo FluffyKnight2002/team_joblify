@@ -60,7 +60,7 @@ public class Summary implements Serializable {
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = false, length = 25)
+    @Column(nullable = true, length = 25)
     private String specialistTech;
 
     @Column(nullable = false, length = 25)

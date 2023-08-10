@@ -24,7 +24,7 @@
                 <li class="sidebar-title">Menu</li>
 
                 <li class="sidebar-item active">
-                    <a href="dashboard.html" class='sidebar-link'>
+                    <a th:href="@{/dashboard}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
                     </a>
@@ -37,10 +37,10 @@
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">
-                            <a th:href="uploadVacancy">Upload</a>
+                            <a th:href="show-upload-vacancy-form">Upload</a>
                         </li>
                         <li class="submenu-item ">
-                            <a th:href="viewAllVacancies">View list</a>
+                            <a th:href="view-vacancies">View list</a>
                         </li>
                     </ul>
                 </li>
@@ -67,7 +67,7 @@
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">
-                            <a th:href="viewAllVacancies">View list</a>
+                            <a th:href="view-summaryinfo">View list</a>
                         </li>
                     </ul>
                 </li>
