@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Summary implements Serializable {
 
     @Id

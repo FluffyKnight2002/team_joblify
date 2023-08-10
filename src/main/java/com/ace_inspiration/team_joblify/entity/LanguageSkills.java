@@ -23,7 +23,7 @@ public class LanguageSkills implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 30, nullable = false, unique = true)
+    @Column(length = 30, nullable = true, unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "languageSkills", fetch = FetchType.LAZY)

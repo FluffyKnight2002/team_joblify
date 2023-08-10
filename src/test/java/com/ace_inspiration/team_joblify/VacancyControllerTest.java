@@ -2,7 +2,7 @@ package com.ace_inspiration.team_joblify;
 
 import com.ace_inspiration.team_joblify.controller.hr.VacancyController;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.service.VacancyDepartmentService;
+import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,7 +22,7 @@ public class VacancyControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private VacancyDepartmentService vacancyDepartmentService;
+    private VacancyInfoService vacancyDepartmentService;
 
     @Test
     public void testPostVacancy() throws Exception {

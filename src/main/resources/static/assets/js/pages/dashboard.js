@@ -8,14 +8,14 @@ $(document).ready(function(){
 			var post5=[];
 			var post6=[];
 			var post7=[];
-			var post8=[];
+			
 			$.each(response, function(index, post){
+				var formattedLabel = post.open + " To " + post.close;
 				post4.push(post.postTotal);
                 post5.push(post.totalCandidates);
                 post6.push(post.hired);
-                post7.push(post.open);
-                post8.push(post.close)
-
+                post7.push(formattedLabel);
+				console.log(post)
 			});
 		
 var optionsProfileVisit = {
@@ -53,7 +53,7 @@ var optionsProfileVisit = {
 		colors: ['transparent']
 	},
 	xaxis: {
-		categories:post7
+		categories:post7 
 	},
 	yaxis: {
 		title: {

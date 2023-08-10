@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,12 +20,13 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Candidate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,6 @@ public class Candidate implements Serializable {
     private Status selectionStatus;
 
     @Column(nullable = false, length = 15)
-    @Enumerated(EnumType.STRING)
     private  Status interviewStatus;
 
     @Column(nullable = false)

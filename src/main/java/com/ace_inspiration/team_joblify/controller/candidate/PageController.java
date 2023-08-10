@@ -5,23 +5,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
+	
 
-    @GetMapping("/")
+    @GetMapping("/AA")
     public String showIndex() {
         return "index";
     }
 
-    @GetMapping("/contact-us")
+    @GetMapping("/contact-usAA")
     public String showContactUs() {
         return "contact-us";
     }
 
-    @GetMapping("/job-details")
+
+    @GetMapping("/job-detailAA")
     public String showJobDetails() {
         return "job-details";
     }
 
-    @GetMapping("/all-jobs")
+    @GetMapping("/all-jobsAA")
     public String showAllJobs() {
         return "jobs";
     }

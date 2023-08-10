@@ -2,515 +2,588 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vacancies page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
-    <link rel="stylesheet" href="/assets/css/candidate-css/style.css">
-    <link rel="stylesheet" href="/assets/css/candidate-css/detailsstyle.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vacancies page</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+	<link rel="stylesheet" href="/assets/css/candidate-css/style.css">
+	<link rel="stylesheet" href="/assets/css/candidate-css/detailsstyle.css">
 </head>
 
 <body>
-    <!-- Loading animation start -->
-    <div id="loading-animation">
-        <div class="dot dot-1"></div>
-        <div class="dot dot-2"></div>
-        <div class="dot dot-3"></div>
-    </div>
-    <!-- Loading animation end -->
+	<!-- Loading animation start -->
+	<div id="loading-animation">
+		<div class="dot dot-1"></div>
+		<div class="dot dot-2"></div>
+		<div class="dot dot-3"></div>
+	</div>
+	<!-- Loading animation end -->
 
-    <!-- Navbar start -->
-    <div th:replace="/fragments/layout ::nav"></div>
-    <!-- Navbar end -->
+	<!-- Navbar start -->
+	<div th:replace="/fragments/layout ::nav"></div>
+	<!-- Navbar end -->
 
-    <!-- Jobs list and details start -->
-    <div class="container-fluid row mx-auto">
+	<!-- Jobs list and details start -->
+	<div class="container-fluid row mx-auto">
 
-        <!-- Jobs list start -->
-        <div class="col-md-5 scrollable-container jobs-list-con mb-4">
-            <div class="jobs-con-header py-2 rounded-top">
-                <h6 class="text-white ps-3">Related jobs for you</h6>
-            </div>
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                        data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+		<!-- Jobs list start -->
+		<div class="col-md-5 scrollable-container jobs-list-con mb-4">
+			<div class="jobs-con-header py-2 rounded-top">
+				<h6 class="text-white ps-3">Related jobs for you</h6>
+			</div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                          data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                          data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                          data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                          data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-            <div class="card">
-                <div class="d-flex flex-row">
-                    <div class="">
-                        <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">Fullstack Developer<span
-                                class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
-                                11
-                                applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Post(Job type)"><i
-                                class='bx bxs-briefcase'></i>5
-                            (Full-time)</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            3-5 Lakhs</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                            1
-                            Hour ago</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                              data-placement="bottom" title="Location"><i
-                                class='bx bx-location-plus'></i>MICT
-                            Park,
-                            Hlaing Township,Yangon</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                          data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
+			<div class="card">
+				<div class="d-flex flex-row">
+					<div class="">
+						<img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon"
+							width="50" height="50">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">Fullstack Developer<span
+								class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i>
+								11
+								applicants</span></h5>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
+							(Full-time)</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
+							3-5 Lakhs</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
+							1
+							Hour ago</span>
+						<span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
+							data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT
+							Park,
+							Hlaing Township,Yangon</span>
+					</div>
+				</div>
+				<div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+					<a href="job-details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
+					<span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
+						data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
+						8</span>
+				</div>
+			</div>
 
-        </div>
-        <!-- Jobs list end -->
+		</div>
+		<!-- Jobs list end -->
 
-        <!-- Job details start-->
-        <div class="col-md-7 p-3 bg-light rounded scrollable-container job-details-con mb-4">
-            <div class="detail-header">
-                <div class="title-sesion d-flex justify-content-between">
-                    <h4 class="default-font text-start">Fullstack Developer</h4>
-                    <h6 class="text-muted"><i class='bx bx-time'></i> 1 hour ago</h6>
-                </div>
-                <div>
-                    <u class="text-muted">Banking</u>
-                    <span><i class='bx bx-location-plus'></i>MICT
-                        Park,
-                        Hlaing Township,Yangon</span>
-                </div>
-            </div>
-            <div class="content-con">
+		<!-- Job details start-->
+		<div class="col-md-7 p-3 bg-light rounded scrollable-container job-details-con mb-4">
+			<div class="detail-header">
+				<div class="title-sesion d-flex justify-content-between">
+					<h4 class="default-font text-start">Fullstack Developer</h4>
+					<h6 class="text-muted"><i class='bx bx-time'></i> 1 hour ago</h6>
+				</div>
+				<div>
+					<u class="text-muted">Banking</u>
+					<span><i class='bx bx-location-plus'></i>MICT
+						Park,
+						Hlaing Township,Yangon</span>
+				</div>
+			</div>
+			<div class="content-con">
 
-                <div class="general-fects">
-                    <span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
-                        5 (Full-time)</span>
-                    <span class="my-2 d-block"><i class='bx bx-money'></i>
-                        3-5 Lakhs</span>
-                    <span class="my-2 d-block"><i class='bx bxs-award'></i>
-                        Mid-senior</span>
-                </div>
+				<div class="general-fects">
+					<span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
+						5 (Full-time)</span>
+					<span class="my-2 d-block"><i class='bx bx-money'></i>
+						3-5 Lakhs</span>
+					<span class="my-2 d-block"><i class='bx bxs-award'></i>
+						Mid-senior</span>
+				</div>
 
-                <!-- Apply button start -->
-                <div>
-                    <button type="button" class="btn btn-primary rounded-pill my-3" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">
-                        Apply
-                    </button>
-                </div>
+				<!-- Apply button start -->
+				<div>
+					<button type="button" class="btn btn-primary rounded-pill my-3" data-bs-toggle="modal"
+						data-bs-target="#staticBackdrop">
+						Apply
+					</button>
+				</div>
 
-                <!-- Apply button end-->
+				<!-- Apply button end-->
 
-                <div class="mb-3">
-                    <h5>Job Description</h5>
-                    <p>Develop, implement and maintain IT systems and solutions according to user requirements by using
-                        Java based Web
-                        Application and Web API development frameworks, components and web interfaces.</p>
-                </div>
+				<div class="mb-3">
+					<h5>Job Description</h5>
+					<p>Develop, implement and maintain IT systems and solutions according to user requirements by using
+						Java based Web
+						Application and Web API development frameworks, components and web interfaces.</p>
+				</div>
 
-                <div class="mb-3">
-                    <h5>Job Responsibilities</h5>
-                    <ul>
-                        <li>Analyze system requirement and design according to user requirements and by studying user
-                            process flow and manual
-                            documents</li>
-                        <li>Development of technical specifications and plans</li>
-                        <li>Resolve technical issues</li>
-                        <li>Deliver quality code on schedule</li>
-                        <li>Review and improve project source code when necessary</li>
-                        <li>Troubleshoot and resolve technical issues</li>
-                        <li>Working closely with project manager and development team leader and report project risks
-                            and issues to management in
-                            advance</li>
-                        <li>Research and prepare new technology, frameworks and solutions to be used in projects</li>
-                        <li>Follow, suggest and develop necessary programming standards to create functional, reliable,
-                            robust, reusable,
-                            maintainable, efficient and secure software solutions</li>
-                        <li>Preparation of training manuals for users</li>
-                        <li>Communicate effectively and professional with internal and</li>
-                        <li>Effectively works in teams as well as independently</li>
-                        <li>Ensure comprehensive, timely and quality delivery of all requests</li>
-                    </ul>
-                </div>
+				<div class="mb-3">
+					<h5>Job Responsibilities</h5>
+					<ul>
+						<li>Analyze system requirement and design according to user requirements and by studying user
+							process flow and manual
+							documents</li>
+						<li>Development of technical specifications and plans</li>
+						<li>Resolve technical issues</li>
+						<li>Deliver quality code on schedule</li>
+						<li>Review and improve project source code when necessary</li>
+						<li>Troubleshoot and resolve technical issues</li>
+						<li>Working closely with project manager and development team leader and report project risks
+							and issues to management in
+							advance</li>
+						<li>Research and prepare new technology, frameworks and solutions to be used in projects</li>
+						<li>Follow, suggest and develop necessary programming standards to create functional, reliable,
+							robust, reusable,
+							maintainable, efficient and secure software solutions</li>
+						<li>Preparation of training manuals for users</li>
+						<li>Communicate effectively and professional with internal and</li>
+						<li>Effectively works in teams as well as independently</li>
+						<li>Ensure comprehensive, timely and quality delivery of all requests</li>
+					</ul>
+				</div>
 
-                <div class="mb-3">
-                    <h5>Job Requirements</h5>
-                    <ul>
-                        <li>Degree Holder, preferably Software Engineering, IT or related degree</li>
-                        <li>At least 3 years' experiences in web application development field with Java technologies
-                        </li>
-                        <li>Skills and working experiences in
-                            <ul>
-                                <li>Front-end with HTML5, CSS3, JavaScript, DOM, Bootstrap, Angular, React, Vue</li>
-                                <li>Core Java and J2EE</li>
-                                <li>Web Application Framework with Thymeleaf, Spring MVC, Spring Core, Spring Security
-                                    and JPA</li>
-                                <li>Spring Restful Web Services with JSON</li>
-                                <li>Reporting with Jasper Report</li>
-                                <li>RDBMS database design and SQL with MSSQL and MySQL</li>
-                            </ul>
-                        </li>
-                        <li>Willing to work smart, work hard and overtime to complete assignments when needed</li>
-                        <li>Must be able to work in Public Sector, Private Sector and Foreign Projects without
-                            preferences</li>
-                        <li>Must be able to travel to and work at customer project sites locally and internationally if
-                            necessary (typical
-                            assignment period - 6 months)</li>
-                        <li>Must be able to sign one-year employment contract after the probation period of three months
-                        </li>
-                        <li>English language proficiency</li>
-                        <li>Knowledge and experience in SDLC and methodology preferably on waterfall and agile</li>
-                        <li>Decent Personality, Team spirit, Strong Work Ethics and Motivation</li>
-                        <li>Possess strong analytical, critical thinking and problem-solving skill to solve and
-                            troubleshoot challenging problems</li>
-                        <li>Professional and positive communication skills</li>
-                        <li>Team player, self-motivated and ability to take ownership of the work</li>
-                    </ul>
-                </div>
+				<div class="mb-3">
+					<h5>Job Requirements</h5>
+					<ul>
+						<li>Degree Holder, preferably Software Engineering, IT or related degree</li>
+						<li>At least 3 years' experiences in web application development field with Java technologies
+						</li>
+						<li>Skills and working experiences in
+							<ul>
+								<li>Front-end with HTML5, CSS3, JavaScript, DOM, Bootstrap, Angular, React, Vue</li>
+								<li>Core Java and J2EE</li>
+								<li>Web Application Framework with Thymeleaf, Spring MVC, Spring Core, Spring Security
+									and JPA</li>
+								<li>Spring Restful Web Services with JSON</li>
+								<li>Reporting with Jasper Report</li>
+								<li>RDBMS database design and SQL with MSSQL and MySQL</li>
+							</ul>
+						</li>
+						<li>Willing to work smart, work hard and overtime to complete assignments when needed</li>
+						<li>Must be able to work in Public Sector, Private Sector and Foreign Projects without
+							preferences</li>
+						<li>Must be able to travel to and work at customer project sites locally and internationally if
+							necessary (typical
+							assignment period - 6 months)</li>
+						<li>Must be able to sign one-year employment contract after the probation period of three months
+						</li>
+						<li>English language proficiency</li>
+						<li>Knowledge and experience in SDLC and methodology preferably on waterfall and agile</li>
+						<li>Decent Personality, Team spirit, Strong Work Ethics and Motivation</li>
+						<li>Possess strong analytical, critical thinking and problem-solving skill to solve and
+							troubleshoot challenging problems</li>
+						<li>Professional and positive communication skills</li>
+						<li>Team player, self-motivated and ability to take ownership of the work</li>
+					</ul>
+				</div>
 
-                <div class="mb-3">
-                    <h5>Preferences</h5>
-                    <ul>
-                        <li>Experience or expertise with Finacle Online Banking and Finacle Mobile Banking</li>
-                        <li>Experience or expertise in Banking Related App Development and Maintenance</li>
-                        <li>Experience or expertise in Insurance Related App Development and Maintenance</li>
-                        <li>Experience or expertise in Distribution Management Related App Development and Maintenance
-                        </li>
-                    </ul>
-                </div>
+				<div class="mb-3">
+					<h5>Preferences</h5>
+					<ul>
+						<li>Experience or expertise with Finacle Online Banking and Finacle Mobile Banking</li>
+						<li>Experience or expertise in Banking Related App Development and Maintenance</li>
+						<li>Experience or expertise in Insurance Related App Development and Maintenance</li>
+						<li>Experience or expertise in Distribution Management Related App Development and Maintenance
+						</li>
+					</ul>
+				</div>
 
-                <table class="w-100 mx-2 mb-3">
-                    <tr>
-                        <th>Working Day</th>
-                        <th>Mon ~ Fri</th>
-                    </tr>
-                    <tr>
-                        <th>Working Hours</th>
-                        <th>9:00 AM ~ 6:00 PM</th>
-                    </tr>
-                    <tr>
-                        <th>Salary</th>
-                        <th>3-5 Lakhs (Negotiable)</th>
-                    </tr>
-                    <tr>
-                        <th>Job Location</th>
-                        <th>MICT Park, Haling Township, Yangon</th>
-                    </tr>
-                    <tr>
-                        <th>Job Type</th>
-                        <th>Full Time</th>
-                    </tr>
-                </table>
+				<table class="w-100 mx-2 mb-3">
+					<tr>
+						<th>Working Day</th>
+						<th>Mon ~ Fri</th>
+					</tr>
+					<tr>
+						<th>Working Hours</th>
+						<th>9:00 AM ~ 6:00 PM</th>
+					</tr>
+					<tr>
+						<th>Salary</th>
+						<th>3-5 Lakhs (Negotiable)</th>
+					</tr>
+					<tr>
+						<th>Job Location</th>
+						<th>MICT Park, Haling Township, Yangon</th>
+					</tr>
+					<tr>
+						<th>Job Type</th>
+						<th>Full Time</th>
+					</tr>
+				</table>
 
-                <div class="about-com-con container-fluid rounded-top py-3 bg-white">
-                    <h4 class="mb-3">About the company</h4>
-                    <p class="mb-3">ACE Data Systems Ltd. was founded in 1992 as a small software house and IT training
-                        center. Nowadays, ACE Data Systems
-                        Group has grown into a group of twenty-two companies with over eight hundred and fifty employees
-                        with business
-                        operations in software development and system integration, outsourcing, IT infrastructure and
-                        cyber security, education
-                        services, e-commerce and business consulting.</p>
-                    <div class="mb-3">
-                        <h6>Website Link : </h6>
-                        <a href="http://www.acedatasystems.com" target="_blank"
-                            class="default-font">http://www.acedatasystems.com</a>
-                    </div>
-                </div>
+				<div class="about-com-con container-fluid rounded-top py-3 bg-white">
+					<h4 class="mb-3">About the company</h4>
+					<p class="mb-3">ACE Data Systems Ltd. was founded in 1992 as a small software house and IT training
+						center. Nowadays, ACE Data Systems
+						Group has grown into a group of twenty-two companies with over eight hundred and fifty employees
+						with business
+						operations in software development and system integration, outsourcing, IT infrastructure and
+						cyber security, education
+						services, e-commerce and business consulting.</p>
+					<div class="mb-3">
+						<h6>Website Link : </h6>
+						<a href="http://www.acedatasystems.com" target="_blank"
+							class="default-font">http://www.acedatasystems.com</a>
+					</div>
+				</div>
 
-            </div>
-        </div>
-        <!-- Job details end-->
+			</div>
+		</div>
+		<!-- Job details end-->
 
-    </div>
-    <!-- Jobs list and details end -->
+	</div>
+	<!-- Jobs list and details end -->
 
-    <!-- Modal for apply form start -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Job apply form</h5>
-                    <span data-bs-dismiss="modal" aria-label="Close" class="close-btn"><i class='bx bx-x'></i></span>
-                </div>
-                <div class="modal-body">
-                    <form class="row g-3 needs-validation" novalidate>
+	<!-- Modal for apply form start -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+		aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="staticBackdropLabel">Job apply form</h5>
+					<span data-bs-dismiss="modal" aria-label="Close" class="close-btn"><i class='bx bx-x'></i></span>
+				</div>
+				<div class="modal-body">
 
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="name" placeholder="Name">
-                            <label for="name" class="ms-2">Name</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="email" class="form-control" id="email" placeholder="E-mail">
-                            <label for="email" class="ms-2">Email address</label>
-                        </div>
-                        <div>
-                            <div class="form-check form-check-inline w-50">
-                                <label class="form-label">Sex</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" class="form-check-input" id="male" name="gender" value="Male">
-                                <label class="form-check-label" for="male">Male</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input type="radio" class="form-check-input" id="female" name="gender" value="Female">
-                                <label class="form-check-label" for="female">Female</label>
-                            </div>
-                        </div>
-                        <div class="form-floating">
-                            <input type="tel" class="form-control" id="phoneNo" placeholder="Phone Number">
-                            <label for="phoneNo" class="ms-2">Phone Number</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="position" placeholder="Position">
-                            <label for="position" class="ms-2">Position</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="education" placeholder="Education">
-                            <label for="education" class="ms-2">Education</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="mainSkill" placeholder="Main Skill">
-                            <label for="mainSkill" class="ms-2">Main Skill</label>
-                        </div>
+					<form th:action="@{/apply-job}" id="apply-form" th:object="${candidate}" method="post" class="row g-3 needs-validation"
+						enctype="multipart/form-data">
 
-                        <!-- Skill input start -->
-                        <div class="form-floating mb-1">
-                            <input type="text" class="form-control" id="skill" placeholder="Skill">
-                            <label for="skill" class="ms-2">Skill</label>
-                        </div>
-                        <div class="d-flex flex-wrap px-1 skill-block">
-                        </div>
-                        <!-- Skill input end -->
+						<div class="form-floating">
+							<input type="text" class="form-control" th:id="name" th:field="*{name}" placeholder="name">
+							<label for="name" class="ms-2">Name</label>
+						</div>
 
-                        <div class="form-floating">
-                            <select class="form-select" id="experiences" aria-label="Floating label select example">
-                                <option value="Internship">Internship</option>
-                                <option value="Entry level">Entry level</option>
-                                <option value="Mid-Senior level">Mid-Senior level</option>
-                                <option value="Director">Director</option>
-                                <option value="Executive">Executive</option>
-                            </select>
-                            <label for="experiences" class="ms-2">Experiences level</label>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="salary" placeholder="Salary">
-                            <label for="salary" class="ms-2">Excepted salary</label>
-                        </div>
-                        <div>
-                            <label class="form-label" for="resume">Upload CV</label>
-                            <input type="file" class="form-control" id="resume" name="resume">
-                        </div>
 
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">Apply <i class='bx bxs-navigation'></i></button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for apply form end -->
+						<div class="form-floating">
+							<input type="email" class="form-control" th:id="email" th:field="*{email}"
+								placeholder="E-mail">
+							<label for="email" class="ms-2">Email address</label>
+						</div>
 
-    <!-- Footer start -->
-    <div th:replace="/fragments/layout ::footer"></div>
-    <!-- Footer end -->
+						<div class="form-floating">
+							<input type="tel" class="form-control" th:id="phone" th:field="*{phone}"
+								placeholder="Phone Number">
+							<label for="phone" class="ms-2">Phone Number</label>
+						</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
-    <script src="/assets/js/javaScript/app.js"></script>
-    <script src="/assets/js/javaScript/skillblock.js"></script>
+
+						<div class="form-floating">
+							<input type="date" class="form-control" th:id="dob" th:field="*{dob}" placeholder="date of birth">
+							<label for="dob" class="ms-2">Date Of Birth</label>
+						</div>
+
+
+
+						<div>
+							<div class="form-check form-check-inline w-50">
+								<label class="form-label">Gender</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input type="radio" class="form-check-input" th:field="*{gender}" th:value="MALE">
+								<label class="form-check-label" for="male">Male</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input type="radio" class="form-check-input" th:field="*{gender}" th:value="FEMALE">
+								<label class="form-check-label" for="female">Female</label>
+							</div>
+						</div>
+
+
+						<div class="form-floating">
+							<input type="text" class="form-control" th:id="education" th:field="*{education}"
+								placeholder="Education">
+							<label for="education" class="ms-2">Bachelor Degree/Diploma</label>
+						</div>
+
+
+						<div class="form-floating">
+							<input type="text" class="form-control" th:id="mainSkill" th:field="*{specialistTech}"
+								placeholder="Main Skill">
+							<label for="mainSkill" class="ms-2">Main Specialist Technology</label>
+						</div>
+
+
+
+
+						<!-- Skill input start -->
+						<div class="form-floating mb-1">
+							<input type="text" class="form-control" th:id="techSkills" th:field="*{techSkills}"
+								placeholder="techanical Skills">
+							<label for="techSkills" class="ms-2">Relative Knowledge</label>
+						</div>
+						<div class="d-flex flex-wrap px-1 skill-block">
+						</div>
+						<!-- Skill input end -->
+
+						<div class="form-floating mb-1">
+							<input type="text" class="form-control" th:id="languageSkills" th:field="*{languageSkills}"
+								placeholder="techanical Skills">
+							<label for="languageSkills" class="ms-2">Language Skills</label>
+						</div>
+						<div class="d-flex flex-wrap px-1 skill-block">
+						</div>
+
+
+
+						<div class="form-floating">
+							<input type="text" class="form-control" th:id="applyPosition" th:field="*{applyPosition}"
+								placeholder="Position">
+							<label for="applyPosition" class="ms-2">Apply Position</label>
+						</div>
+
+						<div class="form-floating">
+							<select class="form-select" th:id="lvl" th:field="*{lvl}"
+								aria-label="Floating label select example">
+								<option value="ENTRY_LEVEL" selected>Entry Level</option>
+								<option value="JUNIOR_LEVEL">Junior Level</option>
+								<option value="MID_LEVEL">Mid Level</option>
+								<option value="SENIOR_LEVEL">Senior Level</option>
+								<option value="SUPERVISOR_LEVEL">Supervisor Level</option>
+								<option value="SUPERVISOR_LEVEL">Executive Level</option>
+								<option value="DIRECTOR_LEVEL">Director Level</option>
+							</select>
+							<label for="experiences" class="ms-2">Experience level</label>
+						</div>
+
+
+						<div class="form-floating">
+							<input type="text" class="form-control" th:field="*{experience}" placeholder="experience">
+							<label for="experience" class="ms-2">Experience DateTime</label>
+						</div>
+
+
+
+						<div class="form-floating">
+							<input type="text" class="form-control" id="expectedSalary" th:field="*{expectedSalary}"
+								placeholder="Salary">
+							<label for="salary" class="ms-2">Excepted salary</label>
+						</div>
+
+
+						<div>
+							<label class="form-label" for="resume">Upload CV</label>
+							<input type="file" class="form-control" th:id="resume" th:field="*{resume}"
+								accept=".pdf,.doc,.docx" />
+						</div>
+
+					</form>
+
+
+
+
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-primary" id="applyButton" type="submit">Apply <i
+					class='bx bxs-navigation'></i></a>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal for apply form end -->
+
+	<!-- Footer start -->
+	<div th:replace="/fragments/layout ::footer"></div>
+	<!-- Footer end -->
+	<!-- Add the following JavaScript code at the end of your HTML file -->
+	<script>
+		// Wait for the document to be ready
+		document.addEventListener("DOMContentLoaded", function () {
+			// Find the "Apply" button by its ID
+			const applyButton = document.getElementById("applyButton");
+
+			// Add a click event listener to the "Apply" button
+			applyButton.addEventListener("click", function (event) {
+				// Prevent the default behavior of the link (i.e., navigating to a new page)
+				event.preventDefault();
+
+				// Find the form element in the DOM
+				const form = document.querySelector("#apply-form");
+
+				// Submit the form programmatically
+				form.submit();
+			});
+		});
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+	<script src="/assets/js/javaScript/app.js"></script>
+	<script src="/assets/js/javaScript/skillblock.js"></script>
 </body>
 
 </html>

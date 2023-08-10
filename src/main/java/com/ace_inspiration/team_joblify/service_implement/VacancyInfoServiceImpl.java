@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
+public class VacancyInfoServiceImpl implements VacancyInfoService {
 
     private final VacancyinfoRepository vacancyDepartmentRepository;
     private final VacancyService vacancyService;

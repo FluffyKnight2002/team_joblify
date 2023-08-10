@@ -10,8 +10,10 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,7 @@ import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.entity.Candidate;
 import com.ace_inspiration.team_joblify.entity.Dasboard;
 import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.DasboardRespository;
@@ -31,8 +34,10 @@ import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyinfoRepository;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service_implement.PositionServiceImpl;
 import com.ace_inspiration.team_joblify.service_implement.candidate_service_implement.CandidateServiceImplement;
+import com.ace_inspiration.team_joblify.service_implement.candidate_service_implement.SummaryServiceImplement;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +45,13 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class CandidateController {
+
+	private final CandidateService candidateService;
+
+	private final SummaryServiceImplement summaryServiceImplement;
+
 	
-	private final CandidateServiceImplement candidateService;
+	private final CandidateServiceImplement candidateImpl;
 	
 	private final PositionServiceImpl positioinService;
 	
@@ -72,47 +82,47 @@ public class CandidateController {
 
 	@PostMapping("/changStatus")
 	public ResponseEntity<?> changeStatus(@RequestBody long id){
-		 candidateService.changeStatus(id);
+		 candidateImpl.changeStatus(id);
 		 return ResponseEntity.ok("OK Change Status");
 	}
 	
-	@PostMapping("/seeMore")
-	@ResponseBody
-	public ResponseEntity<?> updateStatus(@RequestBody long id) {
-	    Optional<Candidate> candiDate=candidateService.findByid(id);
-	    if (candiDate.isPresent()) {
-	        Candidate candidate = candiDate.get();
-	        CandidateDto candidateDto = new CandidateDto(
-	            candidate.getId(),
-	            candidate.getSummary().getName(),
-	            candidate.getSummary().getEmail(),
-	            candidate.getSelectionStatus(),
-	            candidate.getInterviewStatus(),
-	            candidate.getSummary().getDob(),
-	            candidate.getSummary().getApplyPosition(),
-	            candidate.getSummary().getEducation(),
-	            candidate.getSummary().getExperience(),
-	            candidate.getSummary().getExpectedSalary(),
-	            candidate.getSummary().getGender(),
-	            candidate.getSummary().getLvl(),
-	            candidate.getSummary().getPhone(),
-	            candidate.getSummary().getSpecialistTech(),
-	        	candidate.getVacancyInfo().getVacancy().getPosition().getName()
-	        );
-	        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+candidateDto.getEmail());
+	// @PostMapping("/seeMore")
+	// @ResponseBody
+	// public ResponseEntity<?> updateStatus(@RequestBody long id) {
+	//     Optional<Candidate> candiDate=candidateService.findByid(id);
+	//     if (candiDate.isPresent()) {
+	//         Candidate candidate = candiDate.get();
+	//         CandidateDto candidateDto = new CandidateDto(
+	//             candidate.getId(),
+	//             candidate.getSummary().getName(),
+	//             candidate.getSummary().getEmail(),
+	//             candidate.getSelectionStatus(),
+	//             candidate.getInterviewStatus(),
+	//             candidate.getSummary().getDob(),
+	//             candidate.getSummary().getApplyPosition(),
+	//             candidate.getSummary().getEducation(),
+	//             candidate.getSummary().getExperience(),
+	//             candidate.getSummary().getExpectedSalary(),
+	//             candidate.getSummary().getGender(),
+	//             candidate.getSummary().getLvl(),
+	//             candidate.getSummary().getPhone(),
+	//             candidate.getSummary().getSpecialistTech(),
+	//         	candidate.getVacancyInfo().getVacancy().getPosition().getName()
+	//         );
+	//         System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+candidateDto.getEmail());
 	   
-	    return ResponseEntity.ok(candidateDto);
+	//     return ResponseEntity.ok(candidateDto);
 	
-	}else {
-		 return ResponseEntity.ok("error");
-	}
-	}
+	// }else {
+	// 	 return ResponseEntity.ok("error");
+	// }
+	// }
 	
 	@PostMapping("/changeInterview")
 	@ResponseBody
 	public ResponseEntity<?> changeInterview(@RequestParam("id") long id,@RequestParam("status") String status) {
 		
-		candidateService.changeInterviewstatus(id, status);
+		candidateImpl.changeInterviewstatus(id, status);
 		return ResponseEntity.ok("okokok");
 	}
 
@@ -150,6 +160,29 @@ public class CandidateController {
 
 	
 	
-	
+	@ModelAttribute("candidate")
+	public CandidateDto getCandidateDto() {
+		return new CandidateDto();
+	}
+//
+//	@GetMapping("/job-details")
+//	public String ShowJobDetail() {
+//		return "job-details";
+//	}
+
+	@PostMapping("/apply-job")
+	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
+		candidateService.saveCandidate(dto);
+		return "redirect:/show-job-details";
+
+	}
+
+	@GetMapping("/view-summaryinfo")
+	public String ViewSummaryInfo(Model model) {
+		List<Summary> summaries = summaryServiceImplement.getAllSummarys();
+		model.addAttribute("listsummaryinfo", summaries);
+		return "view-summaryinfo";
+
+	}
 
 }
