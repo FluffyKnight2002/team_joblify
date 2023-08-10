@@ -17,7 +17,7 @@ public class InterviewController {
 		return "interview-proces-summary";
 	}
 	
-	@GetMapping("/allCandidateViewSummary")
+	@GetMapping("/CandidateViewSummary")
 	public String all_candidtate_view_summary() {
 		
 		return "all-candidate-view-summary";

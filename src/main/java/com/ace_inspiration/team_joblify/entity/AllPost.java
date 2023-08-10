@@ -17,6 +17,9 @@ public class AllPost {
 	@Id
 	private long id;
 	
+	@Column(name="vi_id")
+	private long viId;
+	
 	@Column(name="close_date")
 	private String closeDate;
 

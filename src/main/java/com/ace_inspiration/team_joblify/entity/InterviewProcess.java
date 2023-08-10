@@ -19,6 +19,9 @@ public class InterviewProcess  {
 	@Id
 	private long id;
 	
+	@Column(name="vi_id")
+	private long viId;
+	
 	private String name;
 	
 	private String email;

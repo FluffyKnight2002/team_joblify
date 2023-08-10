@@ -5,7 +5,7 @@ import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.repository.VacancyDepartmentRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyinfoRepository;
 import com.ace_inspiration.team_joblify.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
 
-    private final VacancyDepartmentRepository vacancyDepartmentRepository;
+    private final VacancyinfoRepository vacancyDepartmentRepository;
     private final VacancyService vacancyService;
     private final PositionRepository positionRepository;
     private final PositionService positionService;
