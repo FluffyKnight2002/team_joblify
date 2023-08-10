@@ -48,7 +48,7 @@ public class VacancyView implements Serializable {
     @Column(name = "open_date")
     private LocalDate openDate;
 
-    @Column(name = "post")
+    @Column(name = "required_post")
     private int post;
 
     @Column(name = "preferences")
