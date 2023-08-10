@@ -173,13 +173,13 @@
                         <div class="pb-3">
                             <div class="form-check form-switch">
                                 <label class="form-check-label" for="status-both">Including closed</label>
-                                <input class="form-check-input" type="checkbox" name="status" id="status-both">
+                                <input class="form-check-input" type="checkbox" name="includingClosed" id="status-both">
                             </div>
                         </div>
                         <div class="pb-3 text-end">
-                            <button class="btn btn-sm reset-btn" onclick="resetFilter()">Reset</button>
+                            <button class="btn btn-sm reset-btn" onclick="resetFilter(event)">Reset</button>
                             <button class="btn btn-sm btn-primary rounded-pill" id="show-result-btn">Results
-                                <span class="text-white fw-bold" style="font-size: 0.8rem;" id="result-count">12</span>
+                                <span class="text-white fw-bold" style="font-size: 0.8rem;" id="result-count">0</span>
                             </button>
                         </div>
                     </form>
@@ -192,6 +192,22 @@
         <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px">
 
             <div class="card flex-md-row">
+                <div class="card placeholder-card flex-md-row">
+                    <div class="">
+                        <div class="placeholder-img m-3"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title placeholder-line"></h5>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
+                    </div>
+                    <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
+                        <a href="#" class="btn btn-sm btn-primary mb-1 placeholder-button"></a>
+                        <span class="default-font me-4 d-inline-block end-date-text placeholder-line"></span>
+                    </div>
+                </div>
                 <div class="">
                     <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
                 </div>

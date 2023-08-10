@@ -84,6 +84,8 @@ public class FetchVacancyController {
 
         System.out.println("It's work!!!!");
         System.out.println("Page number : " + page);
+        System.out.println("Is Under 10 : " + filterRequest.getIsUnder10());
+        System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
 
         // Create a pageable object for pagination
         Pageable pageable = PageRequest.of(page, pageSize); // Use actualPageNumber

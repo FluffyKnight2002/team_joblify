@@ -1,6 +1,7 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
+import com.ace_inspiration.team_joblify.entity.JobType;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.VacancyView;
@@ -33,7 +34,8 @@ public class JobFilterServiceImpl {
         Specification<VacancyView> spec = Specification.where(null);
 
         System.out.println("Position : " + (filterRequest.getPosition().trim() == ""));
-        System.out.println("Status : " + (filterRequest.isIncludingClosed()));
+        System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
+        System.out.println("Is Under10 : " + filterRequest.getIsUnder10());
 
 //        if (filterRequest.getSortBy() != null) {
 //            String sortBy = filterRequest.getSortBy();
@@ -100,9 +102,18 @@ public class JobFilterServiceImpl {
             }
         }
 
-        if (!filterRequest.getJobType().equals("BOTH")) {
-            spec = spec.and((root, query, builder) ->
-                    root.get("jobType").in(filterRequest.getJobType()));
+
+        if (filterRequest.getJobType() != null && !filterRequest.getJobType().isEmpty()) {
+            spec = spec.and((root, query, builder) -> {
+                Predicate fullTime = builder.equal(root.get("jobType"), JobType.FULL_TIME);
+                Predicate partTime = builder.equal(root.get("jobType"), JobType.PART_TIME);
+
+                return filterRequest.getJobType().equals("BOTH") ?
+                        builder.or(fullTime, partTime) :
+                        builder.equal(root.get("jobType"), JobType.valueOf(filterRequest.getJobType()));
+            });
+//            spec = spec.and((root, query, builder) ->
+//                    root.get("jobType").in(filterRequest.getJobType()));
         }
 
 
@@ -121,24 +132,29 @@ public class JobFilterServiceImpl {
                     .collect(Collectors.toList());
 
             if (!levelEnums.isEmpty()) {
+                System.out.println("Level Enum : " + levelEnums);
                 spec = spec.and((root, query, builder) ->
                         root.get("level").in(levelEnums));
             }
         }
 
-        if (filterRequest.isUnder10()) {
+        if (filterRequest.getIsUnder10().equals("true")) {
             spec = spec.and((root, query, builder) ->
-                    builder.lessThanOrEqualTo(root.get("applicants"), 10));
+                    builder.lessThanOrEqualTo(root.get("applicants"), 1));
         }
 
-        if (!filterRequest.isIncludingClosed()) {
-            System.out.println("Status works!!!");
-            spec = spec.and((root, query, builder) ->
-                    builder.equal(root.get("status"), Status.OPEN)); // Change VacancyStatus with your actual enum class
-        }else {
-            System.out.println("Status works!!!");
-            spec = spec.and((root, query, builder) ->
-                    builder.equal(root.get("status"), Status.CLOSED));
+        if (filterRequest.getIsIncludingClosed() != null && !filterRequest.getIsIncludingClosed().isEmpty()) {
+            System.out.println("Closed works!!!");
+            spec = spec.and((root, query, builder) -> {
+                Predicate openPredicate = builder.equal(root.get("status"), Status.OPEN);
+                Predicate closedPredicate = builder.equal(root.get("status"), Status.CLOSED);
+
+                return filterRequest.getIsIncludingClosed().equals("true") ?
+                        builder.or(openPredicate, closedPredicate) :
+                        openPredicate;
+            });
+//            spec = spec.and((root, query, builder) ->
+//                    root.get("level").in(Status.OPEN, Status.CLOSED));
         }
 
         // ... (other filter conditions)
@@ -156,9 +172,11 @@ public class JobFilterServiceImpl {
         List<VacancyView> results = query.getResultList();
 
         // Count the total number of results without pagination
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        System.out.println("Count query : " + countQuery);
-        countQuery.select(criteriaBuilder.count(countQuery.from(VacancyView.class)));
+        CriteriaBuilder countCriteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = countCriteriaBuilder.createQuery(Long.class);
+        Root<VacancyView> countRoot = countQuery.from(VacancyView.class);
+        Predicate countPredicate = spec.toPredicate(countRoot, countQuery, countCriteriaBuilder);
+        countQuery.select(countCriteriaBuilder.count(countRoot)).where(countPredicate);
         Long totalResults = entityManager.createQuery(countQuery).getSingleResult();
 
         // Create a Page object using PageImpl
