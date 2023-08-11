@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 
 public class EmailTemplateDto {
+
     String to;
     String name;
 

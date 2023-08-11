@@ -42,8 +42,8 @@ public class VacancyInfo implements Serializable {
     @Column(length = 30, nullable = false)
     private String workingHours;
 
-    @Column(length = 24, nullable = false)
-    private String salary;
+    @Column(nullable = false, columnDefinition = "decimal(10,2)")
+    private double salary;
 
     @Column(name = "required_post", nullable = false)
     private int post;

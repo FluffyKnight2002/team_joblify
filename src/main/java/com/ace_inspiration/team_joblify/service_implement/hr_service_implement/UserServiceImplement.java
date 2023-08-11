@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -148,9 +149,9 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public boolean emailDuplicationExceptMine(String email, long userId) {
-        User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
+        List<User> user = userRepository.findByEmailAndIdNot(email, userId);
 
-        return user != null;
+        return !user.isEmpty();
     }
 
     @Override

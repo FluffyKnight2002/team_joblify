@@ -87,7 +87,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
 
     @Override
     public List<VacancyDto> selectLastVacancies() {
-        List<VacancyInfo> lastVacancies = vacancyInfoRepository.getLastVacancyDepartments();
+        List<VacancyInfo> lastVacancies = vacancyInfoRepository.getLastVacancyInfo();
         List<VacancyDto> vacancyDtos = new ArrayList<>();
         for(VacancyInfo vacancyInfo : lastVacancies) {
             VacancyDto vacancyDto = entityToDto(vacancyInfo);

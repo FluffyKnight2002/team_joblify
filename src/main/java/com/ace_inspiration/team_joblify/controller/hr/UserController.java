@@ -59,14 +59,12 @@ public class UserController {
     }
 
     @GetMapping("/forgot-password-form")
-    public String showForgetPasswordForm(@RequestParam ("userId") long userId, Model model) {
-        model.addAttribute("id", userId);
+    public String showForgetPasswordForm() {
         return "forgot-password";
     }
 
     @GetMapping("/otp-authentication-form")
-    public String showOTPForm(@RequestParam ("userId") long userId, Model model) {
-        model.addAttribute("id", userId);
+    public String showOTPForm() {
         return "otp-authentication";
     }
 

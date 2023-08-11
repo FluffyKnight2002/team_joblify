@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,9 +19,11 @@ public class OtpServiceImplement implements OtpService {
     private final OtpRepository otpRepository;
     private final UserRepository userRepository;
     @Override
-    public boolean otpCheck(String otp, long userId) {
-        Otp o=otpRepository.findByCodeAndId(otp, userId);
-        return o != null;
+    public boolean otpCheck(String otp, String email) {
+        LocalDateTime now = LocalDateTime.now();
+        Otp o=otpRepository.findByCode(otp).orElse(null);
+
+        return o != null && o.getExpiredDate().isAfter(now);
     }
 
     @Override
@@ -27,15 +31,4 @@ public class OtpServiceImplement implements OtpService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-    @Override
-    public void saveOtp(String otp, long userId) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime time = now.plusMinutes(3);
-        Otp o=Otp.builder()
-                .code(otp)
-                .expiredDate(time)
-                .user(User.builder().id(userId).build())
-                .build();
-        otpRepository.save(o);
-    }
 }

@@ -77,7 +77,7 @@
         const email= document.getElementById('email').value
 
         console.log(email)
-        fetch('/search-email?email=' + email,{
+        fetch('/search-email?email=' + encodeURIComponent(email),{
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,11 +87,8 @@
         })
             .then(response => response.json())
             .then(data => {
-                const isSuccess = data[0]; // Get the first element (true/false)
-                const userId = data[1];   // Get the second element (user ID or null)
-
-                if (isSuccess === true) {  // You can also use 'if (isSuccess)' since it's a boolean
-                    window.location.href = '/otp-authentication-form?userId=' + userId;
+                if (data === true) {  // You can also use 'if (isSuccess)' since it's a boolean
+                    window.location.href = '/otp-authentication-form?email=' + email;
                 } else {
                     const emailInput = document.getElementById('email');
                     emailInput.classList.add('is-invalid');
