@@ -11,59 +11,44 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.generator.Generator;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.springframework.web.multipart.MultipartFile;
-
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "candidate")
 public class Candidate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false, length = 15)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private Status selectionStatus;
 
     @Column(nullable = false, length = 15)
+    @Enumerated(value = EnumType.STRING)
     private  Status interviewStatus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime applyDate;
 
     @Lob
-    @Column(columnDefinition = "longblob", nullable = true)
+    @Column(columnDefinition = "longblob", nullable = false)
     private String resume;
 
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "summary_id", unique = true)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","candidate"})
-    @JsonManagedReference
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "summary_id")
     private Summary summary;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","candidate"})
-    @JsonManagedReference
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Interview>interviews=new ArrayList<>();
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_info_id")
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","candidate"})
-    @JsonManagedReference
     private VacancyInfo vacancyInfo;
 }

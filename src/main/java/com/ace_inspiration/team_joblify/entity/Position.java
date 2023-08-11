@@ -11,18 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "position")
 public class Position implements Serializable {
 
     @Id
@@ -32,9 +27,7 @@ public class Position implements Serializable {
     @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "position", orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIdentityReference(alwaysAsId = true)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","position"})
+    @OneToMany(mappedBy = "position", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Vacancy> vacancies =new ArrayList<>();
 }

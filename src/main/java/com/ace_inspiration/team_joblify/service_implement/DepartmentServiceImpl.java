@@ -41,12 +41,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department checkAndSetDepartment(String departmentName) {
-        Department department = new Department();
+
         if(departmentRepository.findByName(departmentName).isEmpty()) {
             autoFillDepartment(departmentName);
         }
-        department = convertDepartment(departmentName);
-        return department;
+
+        return convertDepartment(departmentName);
     }
 
     @Override

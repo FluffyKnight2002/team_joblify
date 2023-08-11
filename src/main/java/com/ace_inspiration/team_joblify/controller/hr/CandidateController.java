@@ -22,18 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Dasboard;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.DasboardRespository;
 import com.ace_inspiration.team_joblify.entity.AllPost;
+import com.ace_inspiration.team_joblify.entity.Candidate;
 import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
-import com.ace_inspiration.team_joblify.repository.VacancyinfoRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service_implement.PositionServiceImpl;
 import com.ace_inspiration.team_joblify.service_implement.candidate_service_implement.CandidateServiceImplement;
@@ -61,7 +60,7 @@ public class CandidateController {
 	
 	private final AllPostRepository allPost;
 	
-	private final VacancyinfoRepository van;
+	private final VacancyInfoRepository van;
 	
 	private final CandidateRepository repo;
 	
@@ -75,48 +74,47 @@ public class CandidateController {
 	
 	@GetMapping("/allPositions")
 	@ResponseBody
-	public ResponseEntity<List<Position>> getAllPosition(){
+	public List<Position> getAllPosition(){
 		List<Position> position=positioinService.selectAllPosition();
-		return ResponseEntity.ok(position);
+		return position;
 	}
 
 	@PostMapping("/changStatus")
-	public ResponseEntity<?> changeStatus(@RequestBody long id){
+	public void changeStatus(@RequestBody long id){
 		 candidateImpl.changeStatus(id);
-		 return ResponseEntity.ok("OK Change Status");
 	}
 	
-	// @PostMapping("/seeMore")
-	// @ResponseBody
-	// public ResponseEntity<?> updateStatus(@RequestBody long id) {
-	//     Optional<Candidate> candiDate=candidateService.findByid(id);
-	//     if (candiDate.isPresent()) {
-	//         Candidate candidate = candiDate.get();
-	//         CandidateDto candidateDto = new CandidateDto(
-	//             candidate.getId(),
-	//             candidate.getSummary().getName(),
-	//             candidate.getSummary().getEmail(),
-	//             candidate.getSelectionStatus(),
-	//             candidate.getInterviewStatus(),
-	//             candidate.getSummary().getDob(),
-	//             candidate.getSummary().getApplyPosition(),
-	//             candidate.getSummary().getEducation(),
-	//             candidate.getSummary().getExperience(),
-	//             candidate.getSummary().getExpectedSalary(),
-	//             candidate.getSummary().getGender(),
-	//             candidate.getSummary().getLvl(),
-	//             candidate.getSummary().getPhone(),
-	//             candidate.getSummary().getSpecialistTech(),
-	//         	candidate.getVacancyInfo().getVacancy().getPosition().getName()
-	//         );
-	//         System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+candidateDto.getEmail());
+	 @PostMapping("/seeMore")
+	 @ResponseBody
+	 public SummaryDto updateStatus(@RequestBody long id) {
+	     Optional<Candidate> candiDate=candidateService.findByid(id);
+	     if (candiDate.isPresent()) {
+	         Candidate candidate = candiDate.get();
+	         SummaryDto summaryDto = new SummaryDto(
+	             candidate.getId(),
+	             candidate.getSummary().getName(),
+	             candidate.getSummary().getEmail(),
+	             candidate.getSelectionStatus(),
+	             candidate.getInterviewStatus(),
+	             candidate.getSummary().getDob(),
+	             candidate.getSummary().getApplyPosition(),
+	             candidate.getSummary().getEducation(),
+	             candidate.getSummary().getExperience(),
+	             candidate.getSummary().getExpectedSalary(),
+	             candidate.getSummary().getGender(),
+	             candidate.getSummary().getLvl(),
+	             candidate.getSummary().getPhone(),
+	             candidate.getSummary().getSpecialistTech(),
+	         	candidate.getVacancyInfo().getVacancy().getPosition().getName()
+	         );
+	         System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+summaryDto.getEmail());
 	   
-	//     return ResponseEntity.ok(candidateDto);
+	     return summaryDto;
 	
-	// }else {
-	// 	 return ResponseEntity.ok("error");
-	// }
-	// }
+	 }else {
+	 	 return null;
+	 }
+	 }
 	
 	@PostMapping("/changeInterview")
 	@ResponseBody

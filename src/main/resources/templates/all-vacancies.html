@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Vertical Navbar</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <style>
+        /* Adjust the z-index of the modal form to ensure it appears above the spinner */
+        #loadMe {
+            z-index: 1060;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+    <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+    <div id="main">
+
+        <div id="main-content" class="rounded-3 p-3" style="background: #fff">
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1">
+                            <h3>All Vacancies</h3>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/show-all-vacancies-page}">All Vacancies</a>
+                                    </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <section class="section">
+                    <div class="card">
+                        <div class="card-header p-0">
+
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table id="table" class="table table-striped" style="width: 100%;" aria-describedby="myDesc">
+                                    <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>Department</th>
+                                        <th>Experience</th>
+                                        <th>Salary</th>
+                                        <th>Status</th>
+                                        <th>Applicants</th>
+                                        <th>Created User/Time</th>
+                                        <th>Updated User/Time</th>
+                                        <th>Open/Close</th>
+                                        <th>
+                                            <!-- Add a button with an ID "toggleColumnsBtn" -->
+                                            <button class="btn btn-sm btn-primary my-3" id="toggleColumnsBtn">Switch</button>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </div>
+
+<!--            <footer>-->
+<!--                <div class="footer clearfix mb-0 text-muted">-->
+<!--                    <div class="float-start">-->
+<!--                        <p>2021 &copy; Mazer</p>-->
+<!--                    </div>-->
+<!--                    <div class="float-end">-->
+<!--                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>-->
+<!--                            by <a href="https://ahmadsaugi.com">Saugi</a></p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </footer>-->
+        </div>
+    </div>
+    <!--Message Modal -->
+    <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+        <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center" id="message-con" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div clas="loader-txt">
+                        <p>Check out this slick bootstrap spinner modal. <br><br><small>We are addicted to Bootstrap... #love</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    Form Modal-->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="vacancyDetail" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #0c233d;">
+                    <div class="d-flex flex-row">
+                        <h1 class="modal-title fs-5 text-white" id="vacancyDetail">Vacancy Detail</h1>
+                        <a class="btn-un-bright mx-3" id="reopen-btn">Reopen</a>
+                        <a class="btn btn-sm btn-light-secondary mx-3 close-vacancy" id="close-btn">Close Vacancy</a>
+                    </div>
+                    <button type="button" class="btn-close me-2" id="reset-repoen-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-3">
+                    <form th:action="@{/update-vacancy}" method="post" id="update-form" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
+                        <input id="id" type="hidden" name="id"/>
+                        <input id="vacancy-id" type="hidden" name="vacancyId">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
+                        <div class="mb-3 position-relative">
+                            <label for="title" class="form-label">
+                                Title(Position)
+                                <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                      title="Modify position was not allow in reopen mode!"
+                                >
+                                    <i class="bi bi-exclamation-circle-fill"></i>
+                                </span>
+                            </label>
+                            <input type="text" class="form-control input-to-disable" id="title" name="position">
+                            <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
+                            <div id="title-suggestions"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="post" class="form-label">Post</label>
+                                <input type="text" class="form-control" id="post" name="post">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
+                                <label for="department" class="form-label">
+                                    Department
+                                    <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                          title="Modify department was not allow in reopen mode!"
+                                    >
+                                        <i class="bi bi-exclamation-circle-fill"></i>
+                                    </span>
+                                </label>
+                                <input type="text" class="form-control input-to-disable" id="department" name="department">
+                                <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                                <div id="department-suggestions"></div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="type" class="form-label">Job type</label>
+                                <select class="form-select" id="type" name="type">
+                                    <option value="FULL_TIME" selected>Full time</option>
+                                    <option value="PART_TIME">Part time</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="lvl" class="form-label">Experience Level</label>
+                                <select class="form-select" id="lvl" name="lvl">
+                                    <option value="ENTRY_LEVEL" selected>Entry Level</option>
+                                    <option value="JUNIOR_LEVEL">Junior Level</option>
+                                    <option value="MID_LEVEL">Mid Level</option>
+                                    <option value="SENIOR_LEVEL">Senior Level</option>
+                                    <option value="SUPERVISOR_LEVEL">Supervisor Level</option>
+                                    <option value="EXECUTIVE_LEVEL">Executive Level</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="workingDays" class="form-label">Working Days</label>
+                                <input type="text" class="form-control" id="workingDays" name="workingDays">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="workingHours" class="form-label">Working Hours</label>
+                                <input type="text" class="form-control" id="workingHours" name="workingHours">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="salary" class="form-label">Salary</label>
+                                <input type="text" class="form-control" id="salary" name="salary">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
+                                <select class="form-select" id="onSiteOrRemote" name="onSiteOrRemote">
+                                    <option value="ON_SITE">On-site</option>
+                                    <option value="REMOTE">Remote</option>
+                                    <option value="HYBRID">Hybrid</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descriptions" class="form-label">Descriptions</label>
+                            <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="responsibilities" class="form-label">
+                                Responsibilities
+                            </label>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton1"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton1"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                                    <i class="bi bi-list-task"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton1"
+                                        data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                                    <i class="bi bi-justify"></i>
+                                </button>
+                            </div>
+                            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="requirements" class="form-label">
+                                Requirements
+                            </label>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton2"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton2"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                                    <i class="bi bi-list-task"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton2"
+                                        data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                                    <i class="bi bi-justify"></i>
+                                </button>
+                            </div>
+                            <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="preferences" class="form-label">
+                                Preferences
+                            </label>
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton3"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                                    <i class="bi bi-list-ul"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton3"
+                                        data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                                    <i class="bi bi-list-task"></i>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton3"
+                                        data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                                    <i class="bi bi-justify"></i>
+                                </button>
+                            </div>
+                            <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                            <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
+                            <div id="address-suggestions"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="update-form" data-success-message="Update successful!" data-error-message="Update failed. Please try again.">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Spinner element -->
+    <div class="spinner" id="spinner" style="display: none;">
+        <!-- Your spinner content here -->
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<!-- Stomp -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- SockJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<!-- Bootstrap JS Bundle (includes Popper.js) -->
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<!-- Perfect Scrollbar -->
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<!-- jQuery DataTables -->
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!-- Your custom scripts -->
+<script src="/assets/js/jquery.spring-friendly.js"></script>
+<script src="/assets/js/viewvacancies.js"></script>
+<script src="/assets/js/autocomplete.js"></script>
+<script src="/assets/js/messageandloader.js"></script>
+<script src="/assets/js/websocket.js"></script>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

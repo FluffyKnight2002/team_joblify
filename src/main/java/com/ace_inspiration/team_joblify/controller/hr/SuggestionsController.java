@@ -1,30 +1,37 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
+import com.ace_inspiration.team_joblify.entity.Address;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.repository.AddressRepository;
+import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.ace_inspiration.team_joblify.service.hr_service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 // Add this line to specify the base URL
+@AllArgsConstructor
 public class SuggestionsController {
 
     private final PositionService positionService;
-
     private final DepartmentService departmentService;
+    private final UserService userService;
 
-    public SuggestionsController(PositionService positionService, DepartmentService departmentService) {
-        this.positionService = positionService;
-        this.departmentService = departmentService;
-    }
+    private final PositionRepository positionRepository;
+    private final AddressRepository addressRepository;
 
     @GetMapping("/fetch-titles")
-    @ResponseBody
     public List<String> getTitleSuggestions(@RequestParam("term") String term) {
         List<Position> positions = positionService.findByNameContainingIgnoreCase(term);
         List<String> suggestions = new ArrayList<>();
@@ -36,8 +43,13 @@ public class SuggestionsController {
         return suggestions;
     }
 
+    @GetMapping("/titles")
+    public List<Position> getTitle() {
+        List<Position> positions = positionRepository.findAll();
+        return positions;
+    }
+
     @GetMapping("/fetch-departments")
-    @ResponseBody
     public List<String> getDepartmentsSuggestions(@RequestParam("term") String term) {
         List<Department> departments = departmentService.findByNameContainingIgnoreCase(term);
         List<String> suggestions = new ArrayList<>();
@@ -48,4 +60,30 @@ public class SuggestionsController {
 
         return suggestions;
     }
+
+    @GetMapping("/fetch-address")
+    public List<String> getAddressSuggestions(@RequestParam("term") String term) {
+        List<Address> addresses = addressRepository.findByNameContainingIgnoreCase(term);
+        List<String> suggestions = new ArrayList<>();
+
+        for (Address address : addresses) {
+            suggestions.add(address.getName());
+        }
+
+        return suggestions;
+    }
+
+    @GetMapping("/fetch-email")
+    @ResponseBody
+    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
+        return userService.emailDuplication(email);
+}
+
+    @GetMapping("/fetch-email-except-mine")
+    @ResponseBody
+    public boolean emailDuplicateSearchExceptMine(@RequestParam("email") String email, @RequestParam("userId") long userId) {
+        return userService.emailDuplicationExceptMine(email, userId);
+    }
+
+
 }

@@ -22,7 +22,7 @@ public class VacancyControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private VacancyInfoService vacancyDepartmentService;
+    private VacancyInfoService vacancyInfoService;
 
     @Test
     public void testPostVacancy() throws Exception {
@@ -31,7 +31,7 @@ public class VacancyControllerTest {
                 .andExpect(redirectedUrl("redirect:show-upload-vacancy-form"));
 
         // Verify that the method is called
-        verify(vacancyDepartmentService).createdVacancyDepartments(any(VacancyDto.class));
+        verify(vacancyInfoService).createdVacancyInfo(any(VacancyDto.class));
     }
 }
 

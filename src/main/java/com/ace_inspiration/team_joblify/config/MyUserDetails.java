@@ -33,6 +33,10 @@ public class MyUserDetails implements UserDetails {
     public String getPhoto(){
         return user.getPhoto();
     }
+
+    public String getDepartment(){
+        return user.getDepartment().getName();
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(user.getRole().name()));

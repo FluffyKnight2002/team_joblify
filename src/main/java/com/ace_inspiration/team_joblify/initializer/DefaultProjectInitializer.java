@@ -1,4 +1,4 @@
-package com.ace_inspiration.team_joblify.controller.hr;
+package com.ace_inspiration.team_joblify.initializer;
 
 import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
 import lombok.RequiredArgsConstructor;

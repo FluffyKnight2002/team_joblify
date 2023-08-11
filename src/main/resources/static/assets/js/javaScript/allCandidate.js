@@ -257,7 +257,7 @@ if (id != null) {
 
 						}
 						else {
-							console.log("Error change SelectStatus");
+							console.log("SomeOne is error");
 						}
 					})
 
@@ -375,7 +375,7 @@ if (id != null) {
 
 
 			{
-				fetch('/seeMore', {
+				fetch('/seeeMore', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json;charset=utf-8',

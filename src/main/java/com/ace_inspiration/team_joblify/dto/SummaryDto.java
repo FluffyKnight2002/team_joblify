@@ -16,6 +16,7 @@ import com.ace_inspiration.team_joblify.entity.Candidate;
 import com.ace_inspiration.team_joblify.entity.Gender;
 import com.ace_inspiration.team_joblify.entity.LanguageSkills;
 import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.TechSkills;
 
 import jakarta.persistence.CascadeType;
@@ -37,34 +38,34 @@ import jakarta.persistence.OneToOne;
 @NoArgsConstructor
 public class SummaryDto {
 
-	private long id;
-
-	private String name;
-
-	private LocalDate dob;
-
-	private String gender;
-
-	private String phone;
-
-	private String email;
-
-	private String education;
-
-	private String applyPosition;
-
-	private String lvl;
-
-	private String specialistTech;
-
-	private String experience;
-
-	private double expectedSalary;
-
-	private Candidate candidate;
-
-	private List<LanguageSkills> languageSkills = new ArrayList<>();
-
-	private List<TechSkills> techSkills = new ArrayList<>();
+	  private long id;
+	   
+	   private String name;
+	   
+	   private String email;
+	   
+	   private Status selectionStatus;
+	   
+	   private Status interviewStatus;
+	   
+	   private LocalDate dob;
+	   
+	   private String apply_position;
+	   
+	   private String education;
+	   
+	   private String experience;
+	   
+	   private double expected_salary;
+	   
+	   private Gender gender;
+	   
+	   private Level lvl;
+	   
+	   private String phone;
+	   
+	   private String specialist_tech;
+	   
+	   private String pId;
 	
 }

@@ -1,25 +1,21 @@
 package com.ace_inspiration.team_joblify.dto;
 
-import com.ace_inspiration.team_joblify.entity.User;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class NotificationDto {
 
     private long id;
-    private String name;
+    private String message;
     private String link;
-    private boolean makeAsRead;
-    private User user;
+    private boolean isSeen;
+    private long userId;
+    private String username;
     private LocalDateTime time;
 
 }
