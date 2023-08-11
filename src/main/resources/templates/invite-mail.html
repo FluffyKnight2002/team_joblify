@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}" /> <!-- CSRF token as a meta tag -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" /> <!-- CSRF header name as a meta tag -->
+    <title>Dynamic Email Template</title>
+    <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 20px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+        }
+
+        .ql-editor {
+            min-height: 200px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+
+<h1>Compose Email</h1>
+<form id="emailForm" method="post">
+    <div>
+        <label for="to">To:</label>
+        <input type="email" id="to" name="to" required>
+    </div>
+    <div>
+        <label for="content">Content:</label>
+        <div id="editor">
+            <!-- Pre-written email invitation content in the Quill editor -->
+            <p>Dear [Candidate's Name],</p>
+            <p>I hope this email finds you well. I am writing to extend our sincerest gratitude for your interest in the [Job Title] position at [Company Name]. Your application and qualifications have impressed us, and we would like to invite you to an interview to further discuss your potential contribution to our team.</p>
+            <p>The interview will take place on <strong>[Date]</strong> at our <strong>[Company Name]</strong> office located at <strong>[Office Address]</strong>. Please plan to arrive a few minutes early to allow for any necessary paperwork and to get settled.</p>
+            <h3>Interview Details:</h3>
+            <ul>
+                <li><strong>Date:</strong> [Date]</li>
+                <li><strong>Time:</strong> [Time]</li>
+                <li><strong>Location:</strong> [Company Name] Office, [Office Address]</li>
+            </ul>
+            <p>During the interview, you will have the opportunity to meet with members of our team and learn more about the position, our company culture, and the projects we are currently working on. We are also eager to learn more about your experience, skills, and how they align with our company's vision.</p>
+            <p>The interview will be conducted in a [face-to-face/remote] format. If it's an in-person interview, please bring a copy of your resume and any other supporting documents you deem relevant.</p>
+            <p>If the provided interview time is inconvenient for you or you have any special requirements, please let us know as soon as possible so that we can make suitable arrangements.</p>
+            <p>Kindly confirm your attendance by replying to this email or contacting us at <strong>[Your Phone Number]</strong> by <strong>[Confirmation Deadline]</strong>. We greatly appreciate your punctuality and consideration in this regard.</p>
+            <p>Once again, we appreciate your interest in joining our team at [Company Name]. We look forward to meeting you and exploring the possibility of working together.</p>
+            <p>If you have any questions or need further information before the interview, please don't hesitate to reach out to us.</p>
+            <p>Best regards,</p>
+            <p>[Your Name]<br>
+               [Your Title/Position]<br>
+               [Company Name]<br>
+               [Your Email Address]<br>
+               [Your Phone Number]</p>
+        </div>
+        <input type="hidden" id="content" name="content" required>
+    </div>
+    <button type="submit">Send</button>
+</form>
+
+
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    const toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // basic formatting
+        ['blockquote', 'code-block'],                     // blockquote and code
+        [{'header': 1}, {'header': 2}],               // headers
+        [{'list': 'ordered'}, {'list': 'bullet'}],    // lists
+        [{'script': 'sub'}, {'script': 'super'}],     // superscript/subscript
+        [{'indent': '-1'}, {'indent': '+1'}],         // indent/outdent
+        [{'direction': 'rtl'}],                         // text direction
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        [{'header': [1, 2, 3, 4, 5, 6, false]}],        // header dropdown
+        [{'color': []}, {'background': []}],          // color picker
+        [{'font': []}],                                 // font family
+        [{'align': []}],                                // text alignment
+        ['clean']                                         // remove formatting
+    ];
+
+    const quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: toolbarOptions
+        }
+    });
+
+    const form = document.getElementById('emailForm');
+    const editor = document.getElementById('editor');
+    const hiddenInput = document.getElementById('content');
+    const to = document.getElementById('to');
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    console.log(csrfToken);
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        hiddenInput.value = editor.querySelector('.ql-editor').innerHTML;
+
+        const data = {
+            to: to.value,
+            content: hiddenInput.value
+        };
+
+        try {
+            fetch('/send-invite-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'X-XSRF-Token': csrfToken // Include CSRF token as a request header
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Email sent successfully:', response);
+                    } else {
+                        console.error('Failed to send email:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                });
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    });
+</script>
+</body>
+</html>

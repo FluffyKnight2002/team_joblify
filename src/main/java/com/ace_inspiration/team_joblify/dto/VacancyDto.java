@@ -1,7 +1,5 @@
 package com.ace_inspiration.team_joblify.dto;
 
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +15,10 @@ import java.time.LocalDateTime;
 public class VacancyDto {
 
     private long id;
+    private long vacancyId;
     private String position;
     private int post;
-    private int requiredPost;
+    private int hiredPost;
     private int applicants;
     private String type;
     private String department;
@@ -33,9 +32,12 @@ public class VacancyDto {
     private String onSiteOrRemote;
     private String lvl;
     private String salary;
-    private Status status;
-    private User updatedUser;
-    private User creadedUser;
+    private String status;
+    private long updatedUserId;
+    private String updatedUsername;
+    private LocalDateTime updatedTime;
+    private long createdUserId;
+    private String createdUsername;
     private LocalDateTime createdDateTime;
     private LocalDate openDate;
     private LocalDate closeDate;

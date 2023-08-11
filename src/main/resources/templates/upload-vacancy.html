@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Upload Vacancy</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -11,22 +13,36 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
 </head>
 
 <body>
     <div id="app">
         <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
         <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+        <!--Message Modal -->
+        <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+            <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body text-center" id="message-con" style="background: #0c233d">
+                        <div class="loader"></div>
+                        <div class="loader-txt">
+                            <p>Check out this slick bootstrap spinner modal. <br><br><small>We are addicted to Bootstrap... #love</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="main">
-            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
+            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" id="upload-form" style="background: #fff" th:object="${vacancy}">
                 <h3 class="text-primary mb-5">Vacancy Form</h3>
-<!--                <input type="text" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
                 <div class="mb-3 position-relative">
                     <label for="title" class="form-label">Title(Position)</label>
                     <input type="text" class="form-control" id="title" name="position">
@@ -47,19 +63,19 @@
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="type" class="form-label">Job type</label>
                         <select class="form-select" id="type" name="type">
-                            <option value="Full time" selected>Full time</option>
-                            <option value="Part time">Part time</option>
+                            <option th:each="type : ${typeList}"
+                                    th:value="${type.name()}"
+                                    th:text="${type}">
+                            </option>
                         </select>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="lvl" class="form-label">Experience Level</label>
                         <select class="form-select" id="lvl" name="lvl">
-                            <option value="ENTRY_LEVEL" selected>Entry Level</option>
-                            <option value="JUNIOR_LEVEL">Junior Level</option>
-                            <option value="MID_LEVEL">Mid Level</option>
-                            <option value="SENIOR_LEVEL">Senior Level</option>
-                            <option value="SUPERVISOR_LEVEL">Supervisor Level</option>
-                            <option value="EXECUTIVE_LEVEL">Executive Level</option>
+                            <option th:each="level : ${experienceLevels}"
+                                    th:value="${level.name()}"
+                                    th:text="${level}">
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -79,9 +95,10 @@
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
                         <select class="form-select" id="onSiteOrRemote" name="onSiteOrRemote">
-                            <option value="ON_SITE" selected>On-site</option>
-                            <option value="REMOTE">Remote</option>
-                            <option value="HYBRID">Hybrid</option>
+                            <option th:each="onSiteOrRemote : ${onSiteOrRemoteList}"
+                                    th:value="${onSiteOrRemote.name()}"
+                                    th:text="${onSiteOrRemote}">
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -152,10 +169,11 @@
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                    <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
-                    <button type="submit" class="btn btn-primary mx-1">Upload</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
@@ -174,7 +192,8 @@
                                         </div>
                                         <div>
                                             <u class="text-muted" id="preview-department"></u>
-                                            <span><i class='bx bx-location-plus'></i>
+                                            <span>
+                                                <i class="bi bi-geo-alt-fill"></i>
                                                 <span id="preview-address"></span>
                                             </span>
                                         </div>
@@ -184,6 +203,9 @@
                                         <div class="general-fects">
                                             <span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
                                                 <span id="preview-post-type"></span>
+                                            </span>
+                                            <span class="my-2 d-block"><i class='bx bx-money'></i>
+                                                <span id="preview-salary"></span>
                                             </span>
                                             <span class="my-2 d-block"><i class='bx bxs-award'></i>
                                                 <span id="preview-level"></span>
@@ -229,10 +251,6 @@
                                                 <th id="preview-working-hours"></th>
                                             </tr>
                                             <tr>
-                                                <th>Salary</th>
-                                                <th id="preview-salary"></th>
-                                            </tr>
-                                            <tr>
                                                 <th>Job Location</th>
                                                 <th id="preview-location"></th>
                                             </tr>
@@ -262,7 +280,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                    <button type="type" class="btn btn-primary" onclick="$('submit-btn').click()">Upload</button>
                                 </div>
                             </div>
                         </div>
@@ -277,14 +295,13 @@
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- SockJS -->
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
-    <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
+    <script src="/assets/js/autocomplete.js"></script>
+    <script src="/assets/js/messageandloader.js"></script>
     <script src="/assets/js/websocket.js"></script>
     <script src="/assets/js/main.js"></script>
 </body>

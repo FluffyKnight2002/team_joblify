@@ -1,24 +1,19 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name="users")
+@Table(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,37 +45,34 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @Column(length = 15, nullable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime createdDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime lastUpdatedDate;
 
     @Column(columnDefinition = "longtext")
     private String note;
 
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","createdUser"})
-    @JsonBackReference
-    private List<Vacancy> createdVacancies =new ArrayList<>();
+    private List<Vacancy> createdVacancies = new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","updatedUser"})
-    @JsonBackReference
-    private List<VacancyInfo> updatedJobPosts=new ArrayList<>();
+    private List<VacancyInfo> updatedJobPosts = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","user"})
-    @JsonBackReference
+    @JsonIgnoreProperties("user")
     private Department department;
 
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","user"})
-    @JsonManagedReference
-    private List<NotificationStatus> notificationStatuses = new ArrayList<>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<NotificationUser> notificationUsers= new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Otp> otps= new ArrayList<>();
+
 }

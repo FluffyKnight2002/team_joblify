@@ -1,3 +1,4 @@
+let inputsToDisable = [];
 $(document).ready(function() {
 
     // Text area session start
@@ -151,86 +152,5 @@ $(document).ready(function() {
         $("#previewModal").modal("show");
     });
     // Preview Modal end
-
-    // Auto complete session start
-    var titleSpinner = $(".title-spinner").hide();
-    var departmentSpinner = $(".department-spinner").hide();
-
-    $("#title").autocomplete({
-        minLength: 1,
-        source: function(request, response) {
-            titleSpinner.show();
-            console.log("Spinner loading..")
-            $.ajax({
-                url: "/fetch-titles", // Replace with your server-side endpoint to fetch names
-                data: {
-                    term: request.term
-                },
-                success: function(data) {
-                    if(data.length == 0) {
-                        console.log(" + Add new ");
-                        response(["+ Add new"]);
-                    }else {
-                        console.log("Spinner hide")
-                        response(data);
-                    }
-                    titleSpinner.hide()
-                }
-            });
-        },
-        open: function(event, ui) {
-            var menu = $(this).autocomplete("widget");
-            menu.css( {
-                "font-size" : "0.8rem",
-                "border-radius": "0.25rem"
-            });
-            menu.find(".ui-menu-item").css( {
-                "color" :"#6c757d"});
-        },
-        select: function(e, ui) {
-            var titleValue = (ui.item.value === "+ Add new") ? $('#title').val() : ui.item.value;
-            $('#title').val(titleValue);
-            return false;
-        }
-    });
-
-    $("#department").autocomplete({
-        minLength: 1,
-        source: function(request, response) {
-            departmentSpinner.show();
-            console.log("Spinner loading..")
-            $.ajax({
-                url: "/fetch-departments", // Replace with your server-side endpoint to fetch names
-                data: {
-                    term: request.term
-                },
-                success: function(data) {
-                    if(data.length == 0) {
-                        console.log(" + Add new ");
-                        response(["+ Add new"]);
-                    }else {
-                        console.log("Spinner hide")
-                        response(data);
-                    }
-                    departmentSpinner.hide()
-                }
-            });
-        },
-        open: function(event, ui) {
-            var menu = $(this).autocomplete("widget");
-            menu.css( {
-                "font-size" : "0.8rem",
-                "border-radius": "0.25rem"
-                });
-            menu.find(".ui-menu-item").css( {
-                "color" :"#6c757d"});
-        },
-        select: function(e, ui) {
-            var departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
-            $('#department').val(departmentValue);
-            return false;
-        }
-    });
-    // Auto complete session end
 
 });

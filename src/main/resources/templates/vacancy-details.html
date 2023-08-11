@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacancy Details</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/bootstrap.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>-->
+    <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+        <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+        <div id="main">
+            <form th:action="@{/update-vacancy}" method="post" class="p-5 rounded-3" style="background: #fff" th:object="${vacancy}">
+                <h3 class="text-primary mb-5">Vacancy Detail</h3>
+                <input type="hidden" th:field="${vacancy.id}"/>
+<!--                <input type="text" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+                <div class="mb-3 position-relative">
+                    <label for="title" class="form-label">Title(Position)</label>
+                    <input type="text" class="form-control" id="title" th:field="${vacancy.position}">
+                    <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
+                    <div id="title-suggestions"></div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="post" class="form-label">Post</label>
+                        <input type="text" class="form-control" id="post" th:field="${vacancy.post}">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
+                        <label for="department" class="form-label">Department</label>
+                        <input type="text" class="form-control" id="department" th:field="${vacancy.department}">
+                        <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                        <div id="department-suggestions"></div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="type" class="form-label">Job type</label>
+                        <select class="form-select" id="type" th:field="${vacancy.type}">
+                            <option th:each="type : ${typeList}"
+                                    th:value="${type}"
+                                    th:text="${type}"
+                                    th:selected="${vacancy.type == type}"></option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="lvl" class="form-label">Experience Level</label>
+                        <select class="form-select" id="lvl" th:field="${vacancy.lvl}">
+                            <option th:each="level : ${experienceLevels}"
+                                    th:value="${level}"
+                                    th:text="${level}"
+                                    th:selected="${vacancy.lvl == level}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="workingDays" class="form-label">Working Days</label>
+                        <input type="text" class="form-control" id="workingDays" th:field="${vacancy.workingDays}">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="workingHours" class="form-label">Working Hours</label>
+                        <input type="text" class="form-control" id="workingHours" th:field="${vacancy.workingHours}">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="salary" class="form-label">Salary</label>
+                        <input type="text" class="form-control" id="salary" th:field="${vacancy.salary}">
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                        <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
+                        <select class="form-select" id="onSiteOrRemote" th:field="${vacancy.onSiteOrRemote}">
+                            <option th:each="onSiteOrRemote : ${onSiteOrRemoteList}"
+                                    th:value="${onSiteOrRemote}"
+                                    th:text="${onSiteOrRemote}"
+                                    th:selected="${vacancy.onSiteOrRemote == onSiteOrRemote}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="descriptions" class="form-label">Descriptions</label>
+                    <textarea class="form-control" id="descriptions" th:field="${vacancy.descriptions}" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="responsibilities" class="form-label">
+                        Responsibilities
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton1"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
+                    <textarea class="form-control" id="responsibilities" th:field="${vacancy.responsibilities}" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">
+                        Requirements
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton2"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
+                    <textarea class="form-control" id="requirements" th:field="${vacancy.requirements}" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="preferences" class="form-label">
+                        Preferences
+                    </label>
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-sm btn-light text-center" id="setBulletButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Add lists">
+                            <i class="bi bi-list-ul"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="addSubListButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Add sub-lists">
+                            <i class="bi bi-list-task"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-light text-center" id="removeBulletButton3"
+                                data-toggle="tooltip" data-placement="bottom" title="Back to texts">
+                            <i class="bi bi-justify"></i>
+                        </button>
+                    </div>
+                    <textarea class="form-control" id="preferences" th:field="${vacancy.preferences}" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" id="address" th:field="${vacancy.address}" rows="3"></textarea>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
+                    <button type="submit" class="btn btn-primary mx-1">Upload</button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="vacancyPostPreview">Vacancy Preview</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-3">
+
+                                    <div class="detail-header">
+                                        <div class="title-sesion d-flex justify-content-between">
+                                            <h4 class="default-font text-start" id="preview-title"></h4>
+                                            <h6 class="text-muted"><i class='bx bx-time'></i>Just now</h6>
+                                        </div>
+                                        <div>
+                                            <u class="text-muted" id="preview-department"></u>
+                                            <span><i class='bx bx-location-plus'></i>
+                                                <span id="preview-address"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="content-con text-start">
+
+                                        <div class="general-fects">
+                                            <span class="my-2 d-block"><i class='bx bxs-briefcase'></i>
+                                                <span id="preview-post-type"></span>
+                                            </span>
+                                            <span class="my-2 d-block"><i class='bx bx-money'></i>
+                                                <span id="preview-salary"></span>
+                                            </span>
+                                            <span class="my-2 d-block"><i class='bx bxs-award'></i>
+                                                <span id="preview-level"></span>
+                                            </span>
+                                        </div>
+
+                                        <!-- Apply button start -->
+                                        <div>
+                                            <button type="button" class="btn btn-primary rounded-pill my-3">
+                                                Apply
+                                            </button>
+                                        </div>
+
+                                        <!-- Apply button end-->
+
+                                        <div class="mb-3">
+                                            <h5>Job Description</h5>
+                                            <p id="preview-description"></p>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Job Responsibilities</h5>
+                                            <textarea class="preview" disabled id="preview-responsibilities"></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Job Requirements</h5>
+                                            <textarea class="preview" disabled id="preview-requirements"></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <h5>Preferences</h5>
+                                            <textarea class="preview" disabled id="preview-preferences"></textarea>
+                                        </div>
+
+                                        <table class="w-100 mx-2 mb-3">
+                                            <tr>
+                                                <th>Working Day</th>
+                                                <th id="preview-working-days"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Working Hours</th>
+                                                <th id="preview-working-hours"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Job Location</th>
+                                                <th id="preview-location"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Job Type</th>
+                                                <th id="preview-type"></th>
+                                            </tr>
+                                        </table>
+
+                                        <div class="about-com-con container-fluid rounded-top py-3 bg-white">
+                                            <h4 class="mb-3">About the company</h4>
+                                            <p class="mb-3">ACE Data Systems Ltd. was founded in 1992 as a small software house and IT training
+                                                center. Nowadays, ACE Data Systems
+                                                Group has grown into a group of twenty-two companies with over eight hundred and fifty employees
+                                                with business
+                                                operations in software development and system integration, outsourcing, IT infrastructure and
+                                                cyber security, education
+                                                services, e-commerce and business consulting.</p>
+                                            <div class="mb-3">
+                                                <h6>Website Link : </h6>
+                                                <a href="http://www.acedatasystems.com" target="_blank"
+                                                   class="default-font">http://www.acedatasystems.com</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <!-- Stomp -->
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- SockJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="/assets/js/pages/dashboard.js"></script>
+    <script src="/assets/js/vacancyform.js"></script>
+    <script src="/assets/js/websocket.js"></script>
+    <script src="/assets/js/main.js"></script>
+</body>
+
+</html>

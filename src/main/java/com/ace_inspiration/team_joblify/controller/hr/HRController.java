@@ -17,4 +17,13 @@ public class HRController {
         return "dashboard";
     }
 
+    @GetMapping("/otp")
+    public String otp() {
+        return "otp";
+    }
+
+    @GetMapping("/invite-mail")
+    public String inviteMail() {
+        return "invite-mail";
+    }
 }

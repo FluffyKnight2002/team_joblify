@@ -6,5 +6,7 @@ public enum Role implements Serializable {
     DEFAULT_HR,
     SENIOR_HR,
     JUNIOR_HR,
-    MANAGEMENT
+    MANAGEMENT,
+    INTERVIEWER,
+    OTHER
 }

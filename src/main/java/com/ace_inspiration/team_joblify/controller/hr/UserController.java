@@ -1,17 +1,24 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
+import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.NoSuchElementException;
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
+    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @GetMapping("/login")
@@ -39,14 +46,34 @@ public class UserController {
     }
 
     @GetMapping("/user-profile-edit")
-    public String showUserProfileEdit(){
+    public String showUserProfileEdit(@RequestParam("id")long id, Model model){
+        User user=userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found"));
+        model.addAttribute("user", user);
         return "user-profile-edit";
     }
 
-    // @GetMapping("/error-403")
-    // public String error403(){
-    //     return "error-403";
-    // }
+    @GetMapping("/password-change")
+    public String showPasswordChangeForm(@RequestParam ("userId") long userId, Model model) {
+        model.addAttribute("id", userId);
+        return "password-change";
+    }
 
-    
+    @GetMapping("/forgot-password-form")
+    public String showForgetPasswordForm(@RequestParam ("userId") long userId, Model model) {
+        model.addAttribute("id", userId);
+        return "forgot-password";
+    }
+
+    @GetMapping("/otp-authentication-form")
+    public String showOTPForm(@RequestParam ("userId") long userId, Model model) {
+        model.addAttribute("id", userId);
+        return "otp-authentication";
+    }
+
+    @GetMapping("/email-check-form")
+    public String showEmailCheckForm() {
+        return "email-check-for-otp";
+    }
+
+
 }

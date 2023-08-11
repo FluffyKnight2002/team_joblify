@@ -9,25 +9,20 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "language_skills")
 public class LanguageSkills implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(length = 30, nullable = true, unique = true)
+    @Column(length = 30, nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "languageSkills", fetch = FetchType.LAZY)
-//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","languageSkills"})
-    @JsonBackReference
+    @ManyToMany(mappedBy = "languageSkills")
     private List<Summary> summary;
 }

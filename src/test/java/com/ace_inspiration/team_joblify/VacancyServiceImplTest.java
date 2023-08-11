@@ -113,7 +113,7 @@ class VacancyServiceImplTest {
         updatedVacancyDto.setPosition("Back-end Developer");
         updatedVacancyDto.setDepartment("Software Development");
         updatedVacancyDto.setAddress("123 Main Street");
-        updatedVacancyDto.setStatus(Status.OPEN);
+        updatedVacancyDto.setStatus("OPEN");
 
         // Define the behavior of the mock repositories and entities
         when(vacancyRepository.findById(updatedVacancyDto.getId())).thenReturn(Optional.of(new Vacancy()));
