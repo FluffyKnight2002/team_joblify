@@ -28,7 +28,7 @@ import com.ace_inspiration.team_joblify.entity.Vacancy;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CandidateDto {
-	
+
 	private long id;
 
 	private String name;
@@ -58,23 +58,23 @@ public class CandidateDto {
 	private String [] languageSkills;
 
 	private String [] techSkills;
-	
+
 	private String selectionStatus;
-	
+
 	private String interviewStatus;
-	
+
 	private LocalDateTime applyDate;
-	
+
 	private MultipartFile resume;
-	
+
 	private String note;
-	
+
 	private Summary summary;
-	
+
 	private List<Interview>interviews=new ArrayList<>();
-	
+
 	private List<Notification>notification=new ArrayList<>();
-	
+
 	private VacancyDto vacancyDto;
 
 }

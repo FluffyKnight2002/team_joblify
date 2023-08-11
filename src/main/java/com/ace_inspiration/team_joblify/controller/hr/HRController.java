@@ -6,12 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HRController {
 
-	
-	@GetMapping("/view-summary-info")
-	public String ViewSummaryinfo() {
-		return"view-summary-info";
-	}
-
     @GetMapping("/dashboard")
     public String showDashboard() {
         return "dashboard";

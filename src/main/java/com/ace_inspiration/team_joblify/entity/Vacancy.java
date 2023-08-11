@@ -34,6 +34,7 @@ public class Vacancy implements Serializable{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "position_id")
+    @JsonManagedReference
     private Position position;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +42,6 @@ public class Vacancy implements Serializable{
     private Department department;
 
     @JsonManagedReference
-    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VacancyInfo> vacancyInfo =new ArrayList<>();
 

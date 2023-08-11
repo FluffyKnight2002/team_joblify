@@ -3,14 +3,20 @@ package com.ace_inspiration.team_joblify.service_implement.candidate_service_imp
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
+
 import java.util.List;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,7 +50,7 @@ public class CandidateServiceImplement implements CandidateService{
     private final LanguageSkillsRepository languageSkillsRepository;
     private final TechSkillsRepository techSkillsRepository;
 
-    
+
 
 
 	@Autowired
@@ -143,11 +149,11 @@ public class CandidateServiceImplement implements CandidateService{
 //		summary.getTechSkills().add(techSkills);
 //
 //		candidateRepository.save(candidate);
-    }
+	}
 
 
-
-
+	
+	
 
 //	public SummaryDto getSummaryFromCandidate(long candidateId) {
 //        Candidate candidate = // Fetch the Candidate entity using candidateId
@@ -191,8 +197,10 @@ public class CandidateServiceImplement implements CandidateService{
 //		return summaryDTO;
 //	}
 
-    public String encodeImageToString(MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        return Base64Utils.encodeToString(bytes);
-    }
+	public String encodeImageToString(MultipartFile file) throws IOException {
+		byte[] bytes = file.getBytes();
+		return Base64.getEncoder().encodeToString(bytes);
+	}
+
+
 }

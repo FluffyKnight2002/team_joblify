@@ -264,4 +264,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         return OnSiteOrRemote.valueOf(onSiteOrRemote);
     }
 
+
+
 }

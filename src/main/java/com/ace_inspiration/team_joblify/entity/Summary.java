@@ -56,7 +56,7 @@ public class Summary implements Serializable {
     private String experience;
 
     @Column(nullable = false)
-    private String expectedSalary;
+    private double expectedSalary;
 
     @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Candidate candidate;
