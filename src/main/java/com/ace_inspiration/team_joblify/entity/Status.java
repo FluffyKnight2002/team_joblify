@@ -3,7 +3,7 @@ package com.ace_inspiration.team_joblify.entity;
 import java.io.Serializable;
 
 public enum Status implements Serializable {
-
+	NONE,
     RECEIVED,
     VIEWED,
     CONSIDERING,
@@ -13,5 +13,5 @@ public enum Status implements Serializable {
     OPEN,
     CLOSE,
     EXPIRED,
-    NONE
+    ACCEPTED
 }

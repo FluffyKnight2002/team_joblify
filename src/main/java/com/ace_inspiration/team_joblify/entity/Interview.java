@@ -8,11 +8,16 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Interview implements Serializable {
 
     @Id
@@ -38,5 +43,7 @@ public class Interview implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "candidate_id")
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","interviews"})
+    @JsonBackReference
     private Candidate candidate;
 }

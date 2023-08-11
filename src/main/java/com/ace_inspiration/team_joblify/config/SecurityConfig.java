@@ -1,7 +1,6 @@
 package com.ace_inspiration.team_joblify.config;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
 
     @Value("${app.remember.me.key}")
     private String rememberMeKey;
@@ -47,7 +45,6 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
-
                         .requestMatchers("/assets/**",
                                 "/assets/css/**",
                                 "/assets/images/**",
@@ -56,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/**", "/ws/**").permitAll()
                         .requestMatchers("/show-upload-vacancy-form").permitAll()
                         .requestMatchers(HttpMethod.POST,"/upload-vacancy").permitAll()
-
+                        .requestMatchers(HttpMethod.POST,"/updateStatus").permitAll()
                         .anyRequest().authenticated()
                 )
                 // .exceptionHandling(exception-> exception
@@ -83,15 +80,24 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("test")
+//                .password("test")
+//                .roles("DEFAULT_HR")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-		return configuration.getAuthenticationManager();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 }

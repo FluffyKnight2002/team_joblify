@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Data
@@ -24,30 +24,35 @@ public class Candidate implements Serializable {
     private long id;
 
     @Column(nullable = false, length = 15)
+    @Enumerated(EnumType.STRING)
     private Status selectionStatus;
 
     @Column(nullable = false, length = 15)
+    @Enumerated(EnumType.STRING)
     private  Status interviewStatus;
 
     @Column(nullable = false)
     private LocalDateTime applyDate;
 
     @Lob
-    @Column(columnDefinition = "longblob", nullable = false)
+    @Column(columnDefinition = "longblob", nullable = true)
     private String resume;
 
     @Column(columnDefinition = "longtext")
     private String note;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "summary_id")
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "summary_id", unique = true)
+    @JsonManagedReference
     private Summary summary;
 
     @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Interview>interviews=new ArrayList<>();
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_info_id")
-    private Vacancyinfo vacancyinfo;
+    @JsonManagedReference
+    private VacancyInfo vacancyInfo;
 }

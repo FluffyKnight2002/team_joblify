@@ -17,7 +17,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vacancyinfo implements Serializable {
+@Table(name = "vacancy_info")
+public class VacancyInfo implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -43,14 +45,15 @@ public class Vacancyinfo implements Serializable {
     @Column(length = 24, nullable = false)
     private String salary;
 
-    @Column(nullable = false)
+    @Column(name = "required_post", nullable = false)
     private int post;
 
     @Column(nullable = false)
     private int hiredPost;
 
-    @Column(length = 10, nullable = false)
-    private String jobType;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
 
     @Column(nullable = false)
     private LocalDate openDate;
@@ -58,28 +61,38 @@ public class Vacancyinfo implements Serializable {
     @Column(nullable = false)
     private LocalDate closeDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime updatedTime;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = false, length = 30)
+    @Column( nullable = false)
     @Enumerated(EnumType.STRING)
     private OnSiteOrRemote onSiteOrRemote;
 
     @Column(columnDefinition = "longtext")
     private String note;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updatedUser_id")
+    @JoinColumn(name = "updated_user_id")
     private User updatedUser;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacancy_id")
     private Vacancy vacancy;
 
-    @OneToMany(mappedBy = "vacancyinfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vacancyInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Candidate> candidate=new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+
 }

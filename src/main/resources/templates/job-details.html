@@ -422,26 +422,26 @@
 						enctype="multipart/form-data">
 
 						<div class="form-floating">
-							<input type="text" class="form-control" th:id="name" th:field="*{name}" placeholder="name">
+							<input type="text" id="name" class="form-control"  th:field="${candidate.name}" placeholder="name">
 							<label for="name" class="ms-2">Name</label>
 						</div>
 
 
 						<div class="form-floating">
-							<input type="email" class="form-control" th:id="email" th:field="*{email}"
+							<input type="email" class="form-control"  th:field="${candidate.email}"
 								placeholder="E-mail">
 							<label for="email" class="ms-2">Email address</label>
 						</div>
 
 						<div class="form-floating">
-							<input type="tel" class="form-control" th:id="phone" th:field="*{phone}"
+							<input type="tel" class="form-control"  th:field="${candidate.phone}"
 								placeholder="Phone Number">
 							<label for="phone" class="ms-2">Phone Number</label>
 						</div>
 
 
 						<div class="form-floating">
-							<input type="date" class="form-control" th:id="dob" th:field="*{dob}" placeholder="date of birth">
+							<input type="date" class="form-control"  th:field="${candidate.dob}" placeholder="date of birth">
 							<label for="dob" class="ms-2">Date Of Birth</label>
 						</div>
 
@@ -452,25 +452,25 @@
 								<label class="form-label">Gender</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input type="radio" class="form-check-input" th:field="*{gender}" th:value="MALE">
+								<input type="radio" id="male" class="form-check-input" th:field="${candidate.gender}" th:value="MALE">
 								<label class="form-check-label" for="male">Male</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input type="radio" class="form-check-input" th:field="*{gender}" th:value="FEMALE">
+								<input type="radio" id="female" class="form-check-input" th:field="${candidate.gender}" th:value="FEMALE">
 								<label class="form-check-label" for="female">Female</label>
 							</div>
 						</div>
 
 
 						<div class="form-floating">
-							<input type="text" class="form-control" th:id="education" th:field="*{education}"
+							<input type="text" id="education" class="form-control"th:field="${candidate.education}"
 								placeholder="Education">
 							<label for="education" class="ms-2">Bachelor Degree/Diploma</label>
 						</div>
 
 
 						<div class="form-floating">
-							<input type="text" class="form-control" th:id="mainSkill" th:field="*{specialistTech}"
+							<input type="text" id="mainSkill" class="form-control" th:field="${candidate.specialistTech}"
 								placeholder="Main Skill">
 							<label for="mainSkill" class="ms-2">Main Specialist Technology</label>
 						</div>
@@ -480,7 +480,7 @@
 
 						<!-- Skill input start -->
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" th:id="techSkills" th:field="*{techSkills}"
+							<input type="text" id="techSkills" class="form-control" th:id="techSkills" th:field="${candidate.techSkills}"
 								placeholder="techanical Skills">
 							<label for="techSkills" class="ms-2">Relative Knowledge</label>
 						</div>
@@ -489,7 +489,7 @@
 						<!-- Skill input end -->
 
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" th:id="languageSkills" th:field="*{languageSkills}"
+							<input type="text" id="languageSkills" class="form-control" th:field="${candidate.languageSkills}"
 								placeholder="techanical Skills">
 							<label for="languageSkills" class="ms-2">Language Skills</label>
 						</div>
@@ -499,13 +499,13 @@
 
 
 						<div class="form-floating">
-							<input type="text" class="form-control" th:id="applyPosition" th:field="*{applyPosition}"
+							<input type="text" id="applyPosition" class="form-control" th:field="${candidate.applyPosition}"
 								placeholder="Position">
 							<label for="applyPosition" class="ms-2">Apply Position</label>
 						</div>
 
 						<div class="form-floating">
-							<select class="form-select" th:id="lvl" th:field="*{lvl}"
+							<select class="form-select" id="experiences" th:field="${candidate.lvl}"
 								aria-label="Floating label select example">
 								<option value="ENTRY_LEVEL" selected>Entry Level</option>
 								<option value="JUNIOR_LEVEL">Junior Level</option>
@@ -520,14 +520,14 @@
 
 
 						<div class="form-floating">
-							<input type="text" class="form-control" th:field="*{experience}" placeholder="experience">
+							<input type="text" id="experience" class="form-control" th:field="${candidate.experience}" placeholder="experience">
 							<label for="experience" class="ms-2">Experience DateTime</label>
 						</div>
 
 
 
 						<div class="form-floating">
-							<input type="text" class="form-control" id="expectedSalary" th:field="*{expectedSalary}"
+							<input type="text" id="salary" class="form-control"  th:field="${candidate.expectedSalary}"
 								placeholder="Salary">
 							<label for="salary" class="ms-2">Excepted salary</label>
 						</div>
@@ -535,7 +535,7 @@
 
 						<div>
 							<label class="form-label" for="resume">Upload CV</label>
-							<input type="file" class="form-control" th:id="resume" th:field="*{resume}"
+							<input type="file" id="resume" class="form-control" th:id="resume" th:field="${candidate.resume}"
 								accept=".pdf,.doc,.docx" />
 						</div>
 

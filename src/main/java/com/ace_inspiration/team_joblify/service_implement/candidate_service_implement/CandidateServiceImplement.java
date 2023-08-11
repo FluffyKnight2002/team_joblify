@@ -5,6 +5,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,81 +30,124 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 
 import lombok.RequiredArgsConstructor;
 
+
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+
 @Service
 @RequiredArgsConstructor
-public class CandidateServiceImplement implements CandidateService {
-	private final CandidateRepository candidateRepository;
-	private final SummaryRepository summaryRepository;
-	private final LanguageSkillsRepository languageSkillsRepository;
-	private final TechSkillsRepository techSkillsRepository;
-	
+public class CandidateServiceImplement implements CandidateService{
+    private final CandidateRepository candidateRepository;
+    private final SummaryRepository summaryRepository;
+    private final LanguageSkillsRepository languageSkillsRepository;
+    private final TechSkillsRepository techSkillsRepository;
+
+    
+
+
+	@Autowired
+    private EntityManager entityManager;
+
 	@Override
-	public List<Candidate> getAllCandidates() {
-		return candidateRepository.findAll();
+	public DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input){
+		return candidateRepository.findAll(input);
+	}
+
+
+	@Override
+	public Optional<Candidate> findByid(long id) {
+		return candidateRepository.findById(id);
+
 	}
 
 	@Override
-	
-	public void saveCandidate(CandidateDto candidateDto) {
-		List<LanguageSkills> languageSkillsList= new ArrayList<>();
-		for(String languageSkill: candidateDto.getLanguageSkills()) {
-		LanguageSkills  languageSkills= new LanguageSkills();
-		languageSkills.setName(languageSkill);
-		languageSkillsList.add(languageSkills);
-		languageSkillsRepository.save(languageSkills);
-		}
-		
-		List<TechSkills> techSkillsList= new ArrayList<>();
-		for(String techSkill: candidateDto.getTechSkills()) {
-		TechSkills  techSkills= new TechSkills();
-		techSkills.setName(techSkill);
-		techSkillsList.add(techSkills);
-		techSkillsRepository.save(techSkills);
-		}
-		
-		
-		
-		Summary summary = new Summary();
-		summary.setName(candidateDto.getName());
-		summary.setDob(candidateDto.getDob());
-		summary.setPhone(candidateDto.getPhone());
-		summary.setEmail(candidateDto.getEmail());
-		summary.setEducation(candidateDto.getEducation());
-		summary.setLvl(Level.valueOf(candidateDto.getLvl()));
-		summary.setGender(Gender.valueOf(candidateDto.getGender()));
-		summary.setApplyPosition(candidateDto.getApplyPosition());
-		summary.setSpecialistTech(candidateDto.getSpecialistTech());
-		summary.setExperience(candidateDto.getExperience());
-		summary.setExpectedSalary(candidateDto.getExpectedSalary());
-		summary.setSpecialistTech(candidateDto.getSpecialistTech());
-		summary.setLanguageSkills(languageSkillsList);
-		summary.setTechSkills(techSkillsList);
-		summaryRepository.save(summary);
-		
-		Candidate candidate=new Candidate();
-		
-		candidate.setSummary(summary);
-		candidate.setSelectionStatus(Status.RECEIVED);
-		candidate.setInterviewStatus(Status.NONE);
-		candidate.setApplyDate(LocalDateTime.now());
-		try {
-			candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		 candidateRepository.save(candidate);
-		
-		
-		
+	@Transactional
+    public void changeStatus(long id) {
+      Candidate candidate = entityManager.find(Candidate.class, id);
+	        if (candidate != null) {
+	            candidate.setSelectionStatus(Status.VIEWED); // Set the new status value
+	            entityManager.persist(candidate); // Save the updated candidate entity
+	        }
+	    }
+
+	@Override
+	@Transactional
+    public void changeInterviewstatus(long id,String status) {
+      Candidate candidate = entityManager.find(Candidate.class, id);
+	        if (candidate != null) {
+	            candidate.setInterviewStatus(Status.valueOf(status)); // Set the new status value
+	            entityManager.persist(candidate); // Save the updated candidate entity
+	        }
+	    }
+    @Override
+    public List<Candidate> getAllCandidates() {
+        return candidateRepository.findAll();
+    }
+
+    @Override
+
+    public void saveCandidate(CandidateDto candidateDto) {
+//        List<LanguageSkills> languageSkillsList= new ArrayList<>();
+//        for(String languageSkill: candidateDto.getLanguageSkills()) {
+//            LanguageSkills  languageSkills= new LanguageSkills();
+//            languageSkills.setName(languageSkill);
+//            languageSkillsList.add(languageSkills);
+//            languageSkillsRepository.save(languageSkills);
+//        }
+//
+//        List<TechSkills> techSkillsList= new ArrayList<>();
+//        for(String techSkill: candidateDto.getTechSkills()) {
+//            TechSkills  techSkills= new TechSkills();
+//            techSkills.setName(techSkill);
+//            techSkillsList.add(techSkills);
+//            techSkillsRepository.save(techSkills);
+//        }
+
+
+
+        Summary summary = new Summary();
+        summary.setName(candidateDto.getName());
+        summary.setDob(candidateDto.getDob());
+        summary.setPhone(candidateDto.getPhone());
+        summary.setEmail(candidateDto.getEmail());
+        summary.setEducation(candidateDto.getEducation());
+        summary.setLvl(Level.valueOf(candidateDto.getLvl()));
+        summary.setGender(Gender.valueOf(candidateDto.getGender()));
+        summary.setApplyPosition(candidateDto.getApplyPosition());
+        summary.setSpecialistTech(candidateDto.getSpecialistTech());
+        summary.setExperience(candidateDto.getExperience());
+        summary.setExpectedSalary(candidateDto.getExpectedSalary());
+        summary.setSpecialistTech(candidateDto.getSpecialistTech());
+        summary.setLanguageSkills(candidateDto.getLanguageSkills());
+        summary.setTechSkills(candidateDto.getTechSkills());
+        summaryRepository.save(summary);
+
+        Candidate candidate=new Candidate();
+
+        candidate.setSummary(summary);
+        candidate.setSelectionStatus(Status.RECEIVED);
+        candidate.setInterviewStatus(Status.NONE);
+        candidate.setApplyDate(LocalDateTime.now());
+        try {
+            candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        candidateRepository.save(candidate);
+
+
+
 //		summary.getLanguageSkills().add(languageSkills);
 //		summary.getTechSkills().add(techSkills);
-//		
-//		candidateRepository.save(candidate);	
-	}
-	
+//
+//		candidateRepository.save(candidate);
+    }
 
-	
-	
+
+
+
 
 //	public SummaryDto getSummaryFromCandidate(long candidateId) {
 //        Candidate candidate = // Fetch the Candidate entity using candidateId
@@ -142,8 +191,8 @@ public class CandidateServiceImplement implements CandidateService {
 //		return summaryDTO;
 //	}
 
-	public String encodeImageToString(MultipartFile file) throws IOException {
-		byte[] bytes = file.getBytes();
-		return Base64Utils.encodeToString(bytes);
-	}
+    public String encodeImageToString(MultipartFile file) throws IOException {
+        byte[] bytes = file.getBytes();
+        return Base64Utils.encodeToString(bytes);
+    }
 }

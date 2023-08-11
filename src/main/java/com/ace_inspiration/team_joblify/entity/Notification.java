@@ -11,11 +11,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Notification implements Serializable {
 
     @Id
@@ -32,5 +36,7 @@ public class Notification implements Serializable {
     private String link;
 
     @OneToMany(mappedBy = "notification",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","notification"})
+    @JsonBackReference
     private List<NotificationStatus> notificationStatuses = new ArrayList<>();
 }

@@ -1,6 +1,8 @@
 package com.ace_inspiration.team_joblify.dto;
 
 import com.ace_inspiration.team_joblify.entity.User;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class NotificationDto {
 

@@ -1,11 +1,10 @@
 package com.ace_inspiration.team_joblify.service_implement;
-
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.repository.VacancyDepartmentRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyinfoRepository;
 import com.ace_inspiration.team_joblify.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
 
-    private final VacancyDepartmentRepository vacancyDepartmentRepository;
+    private final VacancyinfoRepository vacancyDepartmentRepository;
     private final VacancyService vacancyService;
     private final PositionRepository positionRepository;
     private final PositionService positionService;
@@ -28,10 +27,10 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     private final AddressService addressService;
 
     @Override
-    public Vacancyinfo createdVacancyDepartments(VacancyDto vacancyDto) {
+    public VacancyInfo createdVacancyDepartments(VacancyDto vacancyDto) {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         Department department = departmentService.checkAndSetDepartment(vacancyDto.getDepartment());
-        Vacancyinfo vacancyDepartment = Vacancyinfo.builder()
+        VacancyInfo vacancyDepartment = VacancyInfo.builder()
                 .vacancy(vacancyService.createVacancy(vacancyDto))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
@@ -41,7 +40,7 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
                 .hiredPost(0)
                 .workingHours(vacancyDto.getWorkingHours())
                 .workingDays(vacancyDto.getWorkingDays())
-                .jobType(vacancyDto.getType())
+                .jobType(JobType.valueOf(vacancyDto.getType()))
                 .lvl(convertLevel(vacancyDto.getLvl()))
                 .post(vacancyDto.getPost())
                 .salary(vacancyDto.getSalary())
@@ -65,12 +64,12 @@ public class VacancyDepartmentServiceImpl implements VacancyDepartmentService {
     }
 
     @Override
-    public List<Vacancyinfo> selectAllVacancyDepartments() {
+    public List<VacancyInfo> selectAllVacancyDepartments() {
         return null;
     }
 
     @Override
-    public Vacancyinfo updateVacancyDepartments(VacancyDto vacancyDto) {
+    public VacancyInfo updateVacancyDepartments(VacancyDto vacancyDto) {
         return null;
     }
 

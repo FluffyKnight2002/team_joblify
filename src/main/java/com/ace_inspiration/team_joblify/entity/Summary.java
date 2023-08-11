@@ -22,12 +22,24 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Summary implements Serializable {
 
     @Id
@@ -60,7 +72,7 @@ public class Summary implements Serializable {
     @Enumerated(EnumType.STRING)
     private Level lvl;
 
-    @Column(nullable = true, length = 25)
+    @Column(nullable = false, length = 25)
     private String specialistTech;
 
     @Column(nullable = false, length = 25)
@@ -70,15 +82,21 @@ public class Summary implements Serializable {
     private double expectedSalary;
 
     @OneToOne(mappedBy = "summary", fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","summary"})
+    @JsonBackReference
     private Candidate candidate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "summary_languageSkills", joinColumns = @JoinColumn(name = "summary_id"),
     inverseJoinColumns = @JoinColumn(name = "languageSkills_id"))
-    private List<LanguageSkills> languageSkills;
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","summary"})
+    @JsonManagedReference
+    private List<LanguageSkills> languageSkills= new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "summary_techSkills", joinColumns = @JoinColumn(name = "summary_id"),
             inverseJoinColumns = @JoinColumn(name = "techSkills_id"))
+//    @JsonIgnoreProperties(value={"hibernateLazyInitializer","summary"})
+    @JsonManagedReference
     private List<TechSkills> techSkills= new ArrayList<>();
 }
