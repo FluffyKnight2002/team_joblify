@@ -13,6 +13,7 @@ import java.util.List;
 public interface VacancyInfoService {
     VacancyInfo createdVacancyInfo(VacancyDto vacancyDto);
     VacancyInfo reopenVacancyInfo(VacancyDto vacancyDto);
+    VacancyInfo reopenVacancyInfoById(VacancyDto vacancyDto);
     List<VacancyDto> selectAllVacancyInfo();
     List<VacancyDto> selectLastVacancies();
     DataTablesOutput<VacancyView> getVacanciesDataTable(DataTablesInput input);

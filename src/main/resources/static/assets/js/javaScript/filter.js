@@ -61,7 +61,7 @@ function resetFilter(event) {
     $("input[name='includingClosed']").prop("checked", false);
 
     applyFilter();
-    $('#result-count').html("0");
+    $('#result-count').html(0);
 }
 
 // Function to open the filter
@@ -220,7 +220,7 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the previous button
     const startPageButton = `
         <li class="page-item">
-            <a class="page-link me-1 rounded-pill" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
                 <span aria-hidden="true">Start</span>
             </a>
         </li>
@@ -229,7 +229,7 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the next button
     const lastPageButton = `
         <li class="page-item">
-            <a class="page-link ms-1 rounded-pill" href="#" onclick="event.preventDefault();loadVacancies(countLastPage())" aria-label="Next">
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(countLastPage())" aria-label="Next">
                 <span aria-hidden="true">Last</span>
             </a>
         </li>
@@ -241,7 +241,7 @@ function updatePaginationUI(totalPages, currentPage) {
         const activeClass = i === currentPage ? "active-page" : "";
         const pageLink = `
         <li class="page-item text-center">
-            <a class="page-link rounded-circle mx-1 ${activeClass}" style="width: 38px; height: 38px" href="#" onclick="event.preventDefault();loadVacancies(${i-1})">${i}</a>
+            <a class="page-link ${activeClass}" href="#" onclick="event.preventDefault();loadVacancies(${i-1})">${i}</a>
         </li>
     `;
         pageLinks.push(pageLink);
@@ -249,7 +249,7 @@ function updatePaginationUI(totalPages, currentPage) {
 
     // Combine all the components to form the pagination UI
     const paginationUI = `
-        <nav aria-label="Page navigation example">
+        <nav aria-label="Page navigation">
             <ul class="pagination">
                 ${startPageButton}
                 ${pageLinks.join("")}

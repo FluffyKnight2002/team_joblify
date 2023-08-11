@@ -153,4 +153,63 @@ $(document).ready(function() {
     });
     // Preview Modal end
 
+    const $calendar = $('#calendar');
+    const $workingDaysInput = $('#workingDays');
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    let selectedDays = [];
+    $('#calendar-btn').on('click', function () {
+        console.log("CLick");
+        $calendar.toggle();
+    });
+
+    function updateInputValue() {
+        // selectedDays.forEach(checkbox => {
+        //     checkbox.addEventListener('change', () => {
+        //         const selectedDays = [...selectedDays].filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+        //         let workingDaysText = '';
+        //
+        //
+        //
+        //         // workingDaysInput.value = workingDaysText;
+        //     });
+        // });
+        if (selectedDays.length === 5) {
+            $workingDaysInput.val('Mon ~ Fri');
+        } else if (selectedDays.length > 0) {
+            $workingDaysInput.val(selectedDays.join(' ~ '));
+        }
+        // $workingDaysInput.val(selectedDays.join(' ~ '));
+    }
+
+    function updateCalendar() {
+        $calendar.empty();
+
+        daysOfWeek.forEach((day, index) => {
+            const $dayElement = $('<div>', {
+                text: day,
+                class: 'calendar-day'
+            });
+
+            if (selectedDays.includes(day)) {
+                $dayElement.addClass('selected');
+            }
+
+            $dayElement.on('click', () => {
+                if (selectedDays.includes(day)) {
+                    selectedDays = selectedDays.filter(selectedDay => selectedDay !== day);
+                } else {
+                    selectedDays.push(day);
+                }
+
+                updateInputValue();
+                updateCalendar();
+            });
+
+            $calendar.prepend($dayElement);
+        });
+    }
+
+    updateCalendar();
+
 });

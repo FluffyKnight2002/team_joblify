@@ -50,6 +50,13 @@ function fetchJobsAndRenderUI() {
                     // Append the job card to the container
                     $("#job-list-container").append(jobCard);
                 }
+
+                // Initialize Bootstrap tooltips
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip({
+                        placement: 'bottom' // Set the desired placement here
+                    });
+                });
             });
             // Now that the job cards are added, set up the click event handler
             $(".btn-primary").on("click", function() {
@@ -94,17 +101,17 @@ function fetchJobDetails(id) {
                     </div>
                     <div class="content-con">
                         <div class="general-fects">
-                    <span class="my-2 d-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Post(Job type)">
-                        <i class='bx bxs-briefcase'></i>
+                    <span class="my-2 d-block">
+                        <i class='bx bxs-briefcase' data-toggle="tooltip"
+                        data-placement="bottom" title="Post(Job type)"></i>
                         ${data.post} (${data.type})</span>
-                    <span class="my-2 d-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Salary">
-                        <i class='bx bx-money'></i>
+                    <span class="my-2 d-block">
+                        <i class='bx bx-money' data-toggle="tooltip"
+                        data-placement="bottom" title="Salary"></i>
                         ${data.salary}</span>
-                    <span class="my-2 d-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Experience Level">
-                        <i class='bx bxs-award'></i>
+                    <span class="my-2 d-block">
+                        <i class='bx bxs-award' data-toggle="tooltip"
+                        data-placement="bottom" title="Experience Level"></i>
                         ${data.lvl}</span>
                 </div>
 
@@ -176,6 +183,13 @@ function fetchJobDetails(id) {
 
             // Append the new job details content to the container
             jobDetailsContainer.append(jobContainer);
+
+            // Initialize Bootstrap tooltips
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    placement: 'bottom' // Set the desired placement here
+                });
+            });
 
             // Resize textarea elements
             $('.bulletText').each(function() {

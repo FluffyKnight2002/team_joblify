@@ -61,7 +61,7 @@ public class VacancyView implements Serializable {
     private String responsibilities;
 
     @Column(name = "salary")
-    private String salary;
+    private double salary;
 
     @Column(name = "updated_time")
     private LocalDateTime updatedTime;

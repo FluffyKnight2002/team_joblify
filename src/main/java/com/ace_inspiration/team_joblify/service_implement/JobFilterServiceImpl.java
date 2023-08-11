@@ -37,27 +37,6 @@ public class JobFilterServiceImpl {
         System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
         System.out.println("Is Under10 : " + filterRequest.getIsUnder10());
 
-//        if (filterRequest.getSortBy() != null) {
-//            String sortBy = filterRequest.getSortBy();
-//            Sort.Direction sortDirection; // Default sorting direction
-//            if (sortBy.startsWith("-")) {
-//                sortBy = sortBy.substring(1);
-//                sortDirection = Sort.Direction.DESC;
-//            } else {
-//                sortDirection = Sort.Direction.ASC;
-//            }
-//            // Add the sorting condition to the Specification object
-//            final String finalSortBy = sortBy; // Declare the variable as final
-//            spec = spec.and((root, query, builder) -> {
-//                CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//                CriteriaQuery<VacancyView> criteriaQuery = criteriaBuilder.createQuery(VacancyView.class);
-//                Root<VacancyView> sortingRoot = criteriaQuery.from(VacancyView.class);
-//                Path<LocalDate> expression = sortingRoot.get(finalSortBy); // Use the finalSortBy variable
-//                criteriaQuery.orderBy(sortDirection == Sort.Direction.ASC ? criteriaBuilder.asc(expression) : criteriaBuilder.desc(expression));
-//                return criteriaQuery.getRestriction();
-//            });
-//        }
-
         if (filterRequest.getSortBy() != null) {
             String sortBy = filterRequest.getSortBy();
 
