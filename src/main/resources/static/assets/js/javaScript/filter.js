@@ -173,14 +173,6 @@ $("#title-input").autocomplete({
 //     applyFilter();
 // }
 
-function reconvertToString(input) {
-  // Replace underscores with spaces and convert to title case
-  if (input === "ON_SITE") {
-    return "On-site";
-  }
-  return input.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
-}
-
 function updatePaginationUI(totalPages, currentPage) {
     const paginationContainer = $("#pagination-container");
     paginationContainer.empty();
@@ -221,7 +213,7 @@ function updatePaginationUI(totalPages, currentPage) {
     const startPageButton = `
         <li class="page-item">
             <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
-                <span aria-hidden="true">Start</span>
+                <span aria-hidden="true">First</span>
             </a>
         </li>
     `;
@@ -249,13 +241,15 @@ function updatePaginationUI(totalPages, currentPage) {
 
     // Combine all the components to form the pagination UI
     const paginationUI = `
-        <nav aria-label="Page navigation">
+        <div class="sticky-bottom pagination-container">
+            <nav aria-label="Page navigation">
             <ul class="pagination">
                 ${startPageButton}
                 ${pageLinks.join("")}
                 ${lastPageButton}
             </ul>
         </nav>
+        </div>
     `;
 
     paginationContainer.append(paginationUI);
@@ -281,7 +275,7 @@ function showResult() {
                     <div class="card-body">
                         <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${vacancy.salary}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.updatedTime)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
                     </div>
@@ -316,75 +310,6 @@ function applyCardAnimations() {
             "box-shadow": "0px 10px 10px rgba(0, 0, 0, 0.2)"
         });
     });
-}
-
-function timeAgo(time) {
-    const currentTime = new Date();
-    const inputTime = new Date(time);
-    const timeDifferenceInSeconds = Math.floor((currentTime - inputTime) / 1000);
-
-    // Define time units in seconds
-    const minute = 60;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const week = 7 * day;
-    const month = 30 * day;
-
-    if (timeDifferenceInSeconds < minute) {
-        return 'Just now';
-    } else if (timeDifferenceInSeconds < hour) {
-        const minutesAgo = Math.floor(timeDifferenceInSeconds / minute);
-        return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < day) {
-        const hoursAgo = Math.floor(timeDifferenceInSeconds / hour);
-        return `${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < week) {
-        const daysAgo = Math.floor(timeDifferenceInSeconds / day);
-        return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
-        const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
-        return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
-    } else {
-        // Display the date in the format: 'MMM DD YYYY'
-        const formattedDate = inputTime.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        return formattedDate;
-    }
-}
-
-function changeTimeFormat(time) {
-
-    // Parse the date string to a JavaScript Date object
-    var date = new Date(time);
-
-    // Array to map month numbers to month names
-    var monthNames = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-
-    // Get the day of the month
-    var day = date.getDate();
-
-    // Determine the suffix for the day (st, nd, rd, or th)
-    var suffix;
-    if (day >= 11 && day <= 13) {
-        suffix = "th";
-    } else {
-        switch (day % 10) {
-            case 1: suffix = "st"; break;
-            case 2: suffix = "nd"; break;
-            case 3: suffix = "rd"; break;
-            default: suffix = "th";
-        }
-    }
-
-    // Format the date as "Dayth Month Year" (e.g., "27th Jul")
-    var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
-    return formattedDate;
 }
 
 $('#show-result-btn').on('click', function(event) {

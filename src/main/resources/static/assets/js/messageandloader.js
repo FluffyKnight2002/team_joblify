@@ -2,12 +2,40 @@ $('#submit-btn').on('click', function (event) {
     event.preventDefault();
     // Get the formId, successMessage, and errorMessage from the event data attributes
     var formId = $(this).data('form-id');
+    var warningMessage = $(this).data('warning-message');
     var successMessage = $(this).data('success-message');
     var errorMessage = $(this).data('error-message');
 
     console.log("FormId : ",formId);
+    console.log("warningMessage : ", warningMessage);
     console.log("SuccessMessage : ",successMessage);
     console.log("ErrorMessage : ",errorMessage);
+
+    // Show the loader and the message-con modal
+    $('#message-con').html('' +
+        '<div class="loader"></div>' +
+        '<div class="loader-txt">' +
+        '<h3 class="text-white">Are you sure?</h3>' +
+        `<p class="text-center text-white">${warningMessage}</p>` +
+        '<div>' +
+        `<button type="button" class="btn btn-sm btn-light-danger mx-1" data-form-id="${formId}" 
+            data-warning-message="${warningMessage}" data-success-message="${successMessage}" data-error-message="${errorMessage}"
+            onclick="actionToVacancy(this)">Sure</button>` +
+        `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()"">Cancel</button></div>` +
+        '</div>' +
+        '</div>');
+    $('#loadMe').modal({
+        backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
+    }).modal('show');
+});
+
+// Function to submit form
+function actionToVacancy(button) {
+
+    const formId = $(button).data('form-id');
+    const warningMessage = $(button).data('warning-message');
+    const successMessage = $(button).data('success-message');
+    const errorMessage = $(button).data('error-message');
 
     const csrfToken = document.querySelector('#token').value;
     console.log(csrfToken);
@@ -16,7 +44,7 @@ $('#submit-btn').on('click', function (event) {
     console.log(metaCsrfToken);
 
     // Hide #detailModal if it exists
-    var detailModal = $('#detailModal');
+    let detailModal = $('#detailModal');
     if (detailModal.length) {
         console.log("Detail Modal Have")
         detailModal.modal('hide');
@@ -35,7 +63,7 @@ $('#submit-btn').on('click', function (event) {
     }
 
     // Serialize the form data to JSON manually
-    var formData = {};
+    let formData = {};
     $('#' + formId).serializeArray().forEach(item => {
         formData[item.name] = item.value;
     });
@@ -67,11 +95,43 @@ $('#submit-btn').on('click', function (event) {
                 // Handle the response and update the message-con modal for error
                 $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>');
             }
+            if(formId === 'upload-form') {
+
+                console.log("Upload form !!!!")
+
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
+                let startTime = '9:00';
+                let endTime = '18:00';
+
+                function updateInputValue() {
+                    console.log("Mon ~ Fri : ", selectedDays);
+
+                    if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
+                        $('#workingDays').val('Mon ~ Fri');
+                    } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+                        $('#workingDays').val('Weekend');
+                    } else {
+                        let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+                        $('#workingDays').val(textSelectedDays.join(' ~ '));
+                    }
+
+                    console.log("Start Time : ", startTime);
+                    console.log("End Time : ",endTime);
+                    // Format start and end times
+                    const formattedStartTime = formatTime(startTime);
+                    const formattedEndTime = formatTime(endTime);
+
+                    // Update workingHours input value
+                    $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
+                }
+            }
             hideMessageModalAfterDelay();
             // To change back form
             if(formId == 'reopen-form'){
                 $('#submit-btn')
                     .attr('data-form-id', 'update-form')
+                    .attr('data-warning-message', 'Your vacancy will be updated.')
                     .attr('data-success-message', 'Update successful!')
                     .attr('data-error-message', 'Update failed. Please try again.')
                     .html('Update');
@@ -87,22 +147,58 @@ $('#submit-btn').on('click', function (event) {
             console.log("ErrorMessage : ",errorMessage);
         })
         .catch(error => {
+            if(formId === 'upload-form') {
+
+                console.log("Upload form !!!!")
+
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
+                let startTime = '9:00';
+                let endTime = '18:00';
+
+                function updateInputValue() {
+                    console.log("Mon ~ Fri : ", selectedDays);
+
+                    if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
+                        $('#workingDays').val('Mon ~ Fri');
+                    } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+                        $('#workingDays').val('Weekend');
+                    } else {
+                        let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+                        $('#workingDays').val(textSelectedDays.join(' ~ '));
+                    }
+
+                    console.log("Start Time : ", startTime);
+                    console.log("End Time : ",endTime);
+                    // Format start and end times
+                    const formattedStartTime = formatTime(startTime);
+                    const formattedEndTime = formatTime(endTime);
+
+                    // Update workingHours input value
+                    $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
+                }
+            }
             // Handle the error response and update the message-con modal
-            $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>'); // Replace with the content you want to show for error
             hideMessageModalAfterDelay();
+            $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>'); // Replace with the content you want to show for error
         });
-});
+}
 
 // Function to hide the message-con modal after a delay
 function hideMessageModalAfterDelay() {
+
+    if($('#detailModal').length > 0) {
+        $('#detailModal').modal('hide');
+    }
+
     // Remove .modal-backdrop if it exists
-    var modalBackdrop = $('.modal-backdrop');
+    let modalBackdrop = $('.modal-backdrop');
     if (modalBackdrop.length) {
-        modalBackdrop.remove();
+        modalBackdrop.css("background", "transparent");
     }
 
     // Reload #table if it exists
-    var table = $('#table');
+    let table = $('#table');
     if (table.length) {
         console.log("table reloaded")
         table.DataTable().ajax.reload(null, false);
@@ -115,8 +211,8 @@ function hideMessageModalAfterDelay() {
     }, 500); // Adjust the animation speed as needed (800 milliseconds in this case)
 }
 
-function closeModal() {
-    var modal = $('#loadMe');
+function closeModal(formId) {
+    let modal = $('#loadMe');
     if (modal.length) {
         modal.modal('hide');
     }

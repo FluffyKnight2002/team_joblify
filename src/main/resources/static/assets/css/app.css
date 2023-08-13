@@ -29,6 +29,16 @@
     background-color: white;
 }
 
+#timePickerContainer {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 195px;
+    margin-top: 10px;
+}
+
 .calendar {
     position: absolute;
     top: 28px;

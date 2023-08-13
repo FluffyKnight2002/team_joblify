@@ -27,7 +27,7 @@ function fetchJobsAndRenderUI() {
                             (${job.type})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            ${job.salary}</span>
+                            ${convertToLakhs(job.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
                               ${timeAgo(job.updatedTime)}
@@ -108,7 +108,7 @@ function fetchJobDetails(id) {
                     <span class="my-2 d-block">
                         <i class='bx bx-money' data-toggle="tooltip"
                         data-placement="bottom" title="Salary"></i>
-                        ${data.salary}</span>
+                        ${convertToLakhs(data.salary)}</span>
                     <span class="my-2 d-block">
                         <i class='bx bxs-award' data-toggle="tooltip"
                         data-placement="bottom" title="Experience Level"></i>

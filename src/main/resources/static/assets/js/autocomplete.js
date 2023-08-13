@@ -104,6 +104,7 @@ $("#department").autocomplete({
 $("#address").autocomplete({
     minLength: 2,
     source: function(request, response) {
+        addressSpinner.css("top","44px");
         addressSpinner.show();
         console.log("Spinner loading..")
         $.ajax({
@@ -119,7 +120,7 @@ $("#address").autocomplete({
                     console.log("Spinner hide")
                     response(data);
                 }
-                departmentSpinner.hide()
+                addressSpinner.hide()
             }
         });
     },

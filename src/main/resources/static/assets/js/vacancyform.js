@@ -153,39 +153,54 @@ $(document).ready(function() {
     });
     // Preview Modal end
 
-    const $calendar = $('#calendar');
+    const $calendar = $('#calendar').hide();
     const $workingDaysInput = $('#workingDays');
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const $timePickerBtn = $('#timePickerBtn');
+    const $timePickerContainer = $('#timePickerContainer').hide();
+    const $startTimePicker = $('#startTimePicker');
+    const $endTimePicker = $('#endTimePicker');
+    const $workingHoursInput = $('#workingHours'); // Add this line
 
-    let selectedDays = [];
-    $('#calendar-btn').on('click', function () {
-        console.log("CLick");
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
+    let startTime = '9:00';
+    let endTime = '18:00';
+
+    $('#calendar-btn').on('click', function() {
         $calendar.toggle();
     });
 
     function updateInputValue() {
-        // selectedDays.forEach(checkbox => {
-        //     checkbox.addEventListener('change', () => {
-        //         const selectedDays = [...selectedDays].filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
-        //         let workingDaysText = '';
-        //
-        //
-        //
-        //         // workingDaysInput.value = workingDaysText;
-        //     });
-        // });
-        if (selectedDays.length === 5) {
+        console.log("Mon ~ Fri : ", selectedDays);
+
+        if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
             $workingDaysInput.val('Mon ~ Fri');
-        } else if (selectedDays.length > 0) {
-            $workingDaysInput.val(selectedDays.join(' ~ '));
+        } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+            $workingDaysInput.val('Weekend');
+        } else {
+            let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+            $workingDaysInput.val(textSelectedDays.join(' ~ '));
         }
-        // $workingDaysInput.val(selectedDays.join(' ~ '));
+
+        console.log("Start Time : ", startTime);
+        console.log("End Time : ",endTime);
+        // Format start and end times
+        const formattedStartTime = formatTime(startTime);
+        const formattedEndTime = formatTime(endTime);
+
+        // Update workingHours input value
+        $workingHoursInput.val(`${formattedStartTime} ~ ${formattedEndTime}`);
     }
+
+    $endTimePicker.on('change', function() {
+        endTime = $(this).val(); // Update the endTime value from the time picker
+        updateInputValue();
+    });
 
     function updateCalendar() {
         $calendar.empty();
 
-        daysOfWeek.forEach((day, index) => {
+        daysOfWeek.forEach(day => {
             const $dayElement = $('<div>', {
                 text: day,
                 class: 'calendar-day'
@@ -206,10 +221,51 @@ $(document).ready(function() {
                 updateCalendar();
             });
 
-            $calendar.prepend($dayElement);
+            $calendar.append($dayElement);
         });
     }
 
-    updateCalendar();
+    $timePickerBtn.on('click', function() {
+        $timePickerContainer.toggle();
+    });
 
+    $startTimePicker.on('change', function() {
+        startTime = $(this).val();
+        updateInputValue();
+    });
+
+    $endTimePicker.on('change', function() {
+        endTime = $(this).val();
+        updateInputValue();
+    });
+
+    updateCalendar();
+    updateInputValue();
 });
+
+// Attach input event handler to the salary input
+$('#salary').on('input', function() {
+    const inputValue = $(this).val();
+
+    // Remove all non-numeric characters using regex
+    const numericValue = inputValue.replace(/\D/g, '');
+
+    // Update the input value with the cleaned numeric value
+    $(this).val(numericValue);
+});
+
+function formatTime(time) {
+    const [hours, minutes, period] = time.split(/[:\s]/);
+    const numericHours = parseInt(hours); // Convert hours to a number
+
+    if (numericHours === 12) {
+        return `12:${minutes} PM`;
+    } else if (numericHours === 0 || numericHours === 24) {
+        return `12:${minutes} AM`;
+    } else if (numericHours > 12) {
+        return `${numericHours - 12}:${minutes} PM`;
+    } else {
+        return `${numericHours}:${minutes} AM`;
+    }
+}
+

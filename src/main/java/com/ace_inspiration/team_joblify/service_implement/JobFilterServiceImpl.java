@@ -42,7 +42,7 @@ public class JobFilterServiceImpl {
 
             spec = spec.and((root, query, builder) -> {
                 if ("openDate".equals(sortBy)) {
-                    query.orderBy(builder.desc(root.get("openDate")));
+                    query.orderBy(builder.desc(root.get("updatedTime")));
                 } else if ("post".equals(sortBy)) {
                     query.orderBy(builder.desc(root.get("post")));
                 }
