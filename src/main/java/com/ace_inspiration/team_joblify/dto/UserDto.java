@@ -22,6 +22,8 @@ public class UserDto {
     @NotBlank(message = "Name cannot be blank")
     private String name;
 
+    private boolean accountStatus;
+
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Invalid email format")
     private String email;

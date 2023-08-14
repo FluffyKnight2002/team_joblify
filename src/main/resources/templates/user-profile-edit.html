@@ -55,7 +55,7 @@
             </div>
             <div class="card-body">
               <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
+              
                 <div class="row">
                   <div class="form-group position-relative has-icon-left mb-4 col-md-6">
                     <input type="file" class="form-control " id="photo" name="photo" accept="image/*">
@@ -64,29 +64,29 @@
                 </div>
                 <div class="row">
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="hidden" class="form-control" id="id" name="id" th:value="${user.id}">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"  th:value="${user.username}" required>
+                    <input type="hidden" class="form-control" id="id" name="id">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"required>
                     <label for="username"><i class="bi bi-person px-3"></i>Username</label>
                     <div class="invalid-feedback">
                       Please add Username.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Name" id="name" name="name" th:value="${user.name}" required>
+                    <input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
                     <label for="name"><i class="bi bi-person px-3"></i>Name</label>
                     <div class="invalid-feedback">
                       Please add Name.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" th:value="${user.phone}" required>
+                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" required>
                     <label for="phone"><i class="bi bi-phone px-3"></i>Phone</label>
                     <div id="phoneError" class="invalid-feedback">
                       Please add a valid Phone Number.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" th:value="${user.email}" required>
+                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                     <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
                     <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
 
@@ -105,7 +105,7 @@
                     </div>
                   </div>
 
-                  <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
+                  <!-- <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Role" name="role" id="role" required>
                       <option selected disabled value="">Role</option>
                       <option th:selected="${user.role == user.role.SENIOR_HR}" value="SENIOR_HR">Senior HR</option>
@@ -113,7 +113,6 @@
                       <option th:selected="${user.role == user.role.MANAGEMENT}" value="MANAGEMENT">Management</option>
                       <option th:selected="${user.role == user.role.INTERVIEWER}" value="INTERVIEWER">Interviewer</option>
                       <option th:selected="${user.role == user.role.OTHER}" value="OTHER">Other</option>
-                      <!-- Add more options as needed -->
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
                     <div class="invalid-feedback" id="role-error">
@@ -128,17 +127,17 @@
                       <option th:selected="${user.gender == user.gender.MALE}"  value="MALE">Male</option>
                       <option th:selected="${user.gender == user.gender.FEMALE}" value="FEMALE">Female</option>
                       <option th:selected="${user.gender == user.gender.OTHER}" value="OTHER">Other</option>
-                      <!-- Add more options as needed -->
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
                     <div class="invalid-feedback" id="gender-error">
                       Please Choose Role.
                     </div>
-                  </div>
+                  </div> -->
+
                   <div class="row">
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" th:text="${user.address}" required></textarea>
+                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" required></textarea>
                       <label for="address"><span class="px-3">Address</span></label>
                       <div class="invalid-feedback">
                         Please Add Address.
@@ -146,13 +145,14 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px" th:text="${user.note}"></textarea>
+                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px" ></textarea>
                       <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                     </div>
                   </div>
                 </div>
                 <div class="text-end">
+                  <p><a class="font-bold fs-6" th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Forgot password?</a></p>
                   <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 mt-4">Edit</button>
                 </div>
               </form>
@@ -239,7 +239,45 @@
 
 <script src="/assets/js/main.js"></script>
 <script>
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
+  const currentURL = window.location.href;
+        const url = new URL(currentURL);
+        const id = url.searchParams.get("id");
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/get-user-profile?id=' + encodeURIComponent(id),{
+      method:'POST',
+      headers:{
+        [csrfHeader]: csrfToken // Include CSRF token as a request header
+      }     
+    })
+    .then(response => response.json())
+    .then(data =>{
+        const name = document.getElementById('name');
+        const username = document.getElementById('username');
+        const phone = document.getElementById('phone');
+        const email = document.getElementById('email');
+        const department = document.getElementById('department');
+        const address = document.getElementById('address');
+        const note = document.getElementById('note');
+
+        const stringDepartment = data.department.name;
+
+        console.log(stringDepartment);
+
+        name.value = data.name;
+        username.value = data.username;
+        phone.value = data.phone;
+        email.value = data.email;
+        department.value = stringDepartment; // Assign the stringified department name
+        address.value = data.address;
+        note.value = data.note;
+            })
+
+          })
 
   document.querySelector("#registration-form").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
@@ -249,9 +287,7 @@
       return;
     }
 
-    const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-
-    console.log(metaCsrfToken);
+    
     // Get form data
 
     const formData= new FormData(form);
@@ -262,7 +298,7 @@
     fetch('/user-profile-edit', {
       method: 'POST',
       headers: {
-        'X-XSRF-Token': metaCsrfToken
+        [csrfHeader]: csrfToken // Include CSRF token as a request header
       },
       body: formData
     })

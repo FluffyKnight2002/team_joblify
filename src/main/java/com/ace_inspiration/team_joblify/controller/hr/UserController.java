@@ -18,7 +18,6 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @GetMapping("/login")
@@ -46,27 +45,22 @@ public class UserController {
     }
 
     @GetMapping("/user-profile-edit")
-    public String showUserProfileEdit(@RequestParam("id")long id, Model model){
-        User user=userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found"));
-        model.addAttribute("user", user);
+    public String showUserProfileEdit(){
         return "user-profile-edit";
     }
 
     @GetMapping("/password-change")
-    public String showPasswordChangeForm(@RequestParam ("userId") long userId, Model model) {
-        model.addAttribute("id", userId);
+    public String showPasswordChangeForm() {
         return "password-change";
     }
 
     @GetMapping("/forgot-password-form")
-    public String showForgetPasswordForm(@RequestParam ("userId") long userId, Model model) {
-        model.addAttribute("id", userId);
+    public String showForgetPasswordForm() {
         return "forgot-password";
     }
 
     @GetMapping("/otp-authentication-form")
-    public String showOTPForm(@RequestParam ("userId") long userId, Model model) {
-        model.addAttribute("id", userId);
+    public String showOTPForm() {
         return "otp-authentication";
     }
 

@@ -58,10 +58,15 @@ public class User implements Serializable {
     @Column(columnDefinition = "longtext")
     private String note;
 
+    @Column(nullable = false, columnDefinition = "boolean")
+    private boolean accountStatus;
+
     @OneToMany(mappedBy = "createdUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Vacancy> createdVacancies = new ArrayList<>();
 
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<VacancyInfo> updatedJobPosts = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -70,9 +75,11 @@ public class User implements Serializable {
     private Department department;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<NotificationUser> notificationUsers= new ArrayList<>();
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Otp> otps= new ArrayList<>();
 
 }

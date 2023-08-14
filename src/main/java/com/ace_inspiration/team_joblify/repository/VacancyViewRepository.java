@@ -26,4 +26,6 @@ public interface VacancyViewRepository extends DataTablesRepository<VacancyView,
 
     @Query("SELECT vv FROM VacancyView vv ORDER BY vv.updatedTime DESC LIMIT 3")
     List<VacancyView> getLastVacancyView();
+
+
 }

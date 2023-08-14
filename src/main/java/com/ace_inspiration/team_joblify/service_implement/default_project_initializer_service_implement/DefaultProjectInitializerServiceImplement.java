@@ -34,6 +34,8 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
     private final PositionRepository positionRepository;
     private final TechSkillsRepository techSkillsRepository;
     private final LanguageSkillsRepository languageSkillsRepository;
+    private final NotificationUserRepository notificationUserRepository;
+
     @Override
     public void initialize() throws IOException {
 
@@ -73,6 +75,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                     .gender(Gender.FEMALE)
                     .password(passwordEncoder.encode(password))
                     .role(Role.DEFAULT_HR)
+                    .accountStatus(true)
                     .note("This is Default HR Account")
                     .department(defaultDepartment)
                     .createdDate(currentDate)
@@ -83,8 +86,15 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
             Notification notification = new Notification();
             notification.setMessage("Default HR account is created");
             notification.setTime(currentDate);
-            notification.setLink("Mock Link");
+            notification.setLink("/user-profile-edit?id="+defaultUser.getId());
             notificationRepository.save(notification);
+
+            NotificationUser notificationUser = NotificationUser.builder()
+            .notification(notification)
+            .user(defaultUser)
+            .build();
+            notificationUserRepository.save(notificationUser);
+
         }
         if(positionRepository.count() == 0){
             Position position= Position.builder()

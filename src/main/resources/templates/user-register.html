@@ -156,9 +156,7 @@
                                 </div>
 
                             </form>
-                            <div class="text-center mt-3 text-lg fs-6">
-                                <p><a class="font-bold fs-6" th:href="@{/forgot-password}">Forgot password?</a></p>
-                            </div>
+
                         </div>
                     </div>
                 </section>
@@ -243,7 +241,8 @@
 
 <script src="/assets/js/main.js"></script>
 <script>
-
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
     document.querySelector("#registration-form").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the form from submitting normally
@@ -253,9 +252,6 @@
             return;
         }
 
-        const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-
-        console.log(metaCsrfToken);
         // Get form data
 
         const formData= new FormData(form);
@@ -266,7 +262,7 @@
         fetch('/user-register', {
             method: 'POST',
             headers: {
-                'X-XSRF-Token': metaCsrfToken
+                [csrfHeader]: csrfToken // Include CSRF token as a request header
             },
             body: formData
         })

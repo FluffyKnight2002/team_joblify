@@ -3,9 +3,12 @@ package com.ace_inspiration.team_joblify.controller;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
+import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
+import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
 import com.ace_inspiration.team_joblify.service.OtpService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
@@ -19,9 +22,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -31,9 +35,12 @@ public class Api {
     private final UserService userService;
     private final EmailService emailService;
     private final OtpService otpService;
+    private final DepartmentService departmentService;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
+
+        System.out.println(input);
         return userRepository.findAll(input);
     }
 
@@ -58,23 +65,18 @@ public class Api {
     }
 
     @PostMapping("/change-password")
-    public boolean changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("id") long id) {
-
-        return userService.passwordChange(newPassword, id);
+    public boolean changePassword(@RequestParam("newPassword") String newPassword, @RequestParam("email") String email) {
+        return userService.passwordChange(newPassword, email);
     }
 
     @PostMapping("/old-password-check")
-    public boolean oldPasswordCheck(@RequestParam("oldPassword") String oldPassword, @RequestParam("id") Long id) {
-
-        return userService.checkOldPassword(oldPassword, id);
-
+    public boolean oldPasswordCheck(@RequestParam("oldPassword") String oldPassword, @RequestParam("email") String email) {
+        return userService.checkOldPassword(oldPassword, email);
     }
 
     @PostMapping("/sendOTP")
     public String sendEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
-        String otp = UUID.randomUUID().toString().replaceAll("[^A-Z0-9]", "").substring(0, 6);
-
-        emailService.sendForgetPasswordEmail(emailTemplateDto.getTo(), emailTemplateDto.getName(), otp);
+        emailService.sendForgetPasswordEmail(emailTemplateDto.getTo());
         return "Email sent successfully!";
     }
 
@@ -86,26 +88,44 @@ public class Api {
     }
 
     @PostMapping("/otp-submit")
-    public boolean otpSubmit(@RequestParam("otp") String otp, @RequestParam("userId") long userId) {
-        return otpService.otpCheck(otp, userId);
+    public boolean otpSubmit(@RequestParam("otp") String otp, @RequestParam("email") String email) {
+        return otpService.otpCheck(otp, email);
     }
 
     @PostMapping("/search-email")
-    public List<Object> otpSubmit(@RequestParam("email") String email) {
+    public boolean otpSubmit(@RequestParam("email") String email) {
         User user = otpService.emailCheck(email);
-        List<Object> object = new ArrayList<>();
-        if (user != null) {
-            UUID uuid = UUID.randomUUID();
-            String otp = uuid.toString().substring(0, 6).toUpperCase();
+        return user != null;
 
-            otpService.saveOtp(otp, user.getId());
-            object.add(true);
-            object.add(user.getId());
-
-        } else {
-            object.add(false);
-            object.add(null);
-        }
-        return object;
     }
+
+    @PostMapping("/all-department")
+    public List<Department> allDepartment() {
+        return departmentService.selectAllDepartment();
+    }
+
+    @PostMapping("/suspend")
+    public boolean suspend(@RequestParam("id")long id){
+        return userService.suspend(id);
+    }
+
+    @PostMapping("/activate")
+    public boolean activate(@RequestParam("id")long id){
+        return userService.activate(id);
+    }
+
+    @PostMapping("/get-user-profile")
+    public User userProfileData(@RequestParam ("id") long id){
+        User user = userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+        return user;
+    }
+
+
+//    @GetMapping("/filtered-vacancies")
+//    public List <Object[]> getFilteredVacancies() {
+//        List<Object[]> result = vacancyInfoRepository.vacancyFilter("recent", true, null, "BOTH", null, false, "anytime", 1, 1);
+//        System.out.println(result);
+//
+//        return result;
+//    }
 }
