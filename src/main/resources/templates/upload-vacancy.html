@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
@@ -52,7 +53,7 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="post" class="form-label">Post</label>
-                        <input type="text" class="form-control" id="post" name="post">
+                        <input type="number" class="form-control" id="post" name="post">
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                         <label for="department" class="form-label">Department</label>
@@ -65,7 +66,8 @@
                         <select class="form-select" id="type" name="type">
                             <option th:each="type : ${typeList}"
                                     th:value="${type.name()}"
-                                    th:text="${type}">
+                                    th:text="${type}"
+                                    th:selected="FULL_TIME">
                             </option>
                         </select>
                     </div>
@@ -82,11 +84,28 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingDays" class="form-label">Working Days</label>
-                        <input type="text" class="form-control" id="workingDays" name="workingDays" value="Mon ~ Fri">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="workingDays" name="workingDays" value="Mon ~ Fri" readonly>
+                            <button type="button" class="btn btn-sm btn-primary" id="calendar-btn"><i class="bi bi-calendar"></i></button>
+                            <div id="calendar" class="calendar dropdown-menu">
+                            <!-- Days of the week will be added here -->
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingHours" class="form-label">Working Hours</label>
-                        <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00AM ~ 6:00PM">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00 AM ~ 6:00 PM" readonly>
+                            <button class="btn btn-sm btn-primary" type="button" id="timePickerBtn">
+                                <i class="bi bi-clock"></i>
+                            </button>
+                            <div id="timePickerContainer" class="mt-2 dropdown-menu">
+                                <label for="startTimePicker" class="mx-2">Start Time:</label>
+                                <input type="time" id="startTimePicker" class="form-control mx-2">
+                                <label for="endTimePicker" class="mx-2">End Time:</label>
+                                <input type="time" id="endTimePicker" class="form-control mx-2">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="salary" class="form-label">Salary</label>
@@ -166,14 +185,14 @@
                     </div>
                     <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                     <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
-                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-warning-message="Your vacancy will be uploaded." data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
@@ -299,6 +318,7 @@
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <script src="/assets/js/vacancyform.js"></script>
     <script src="/assets/js/autocomplete.js"></script>
     <script src="/assets/js/messageandloader.js"></script>

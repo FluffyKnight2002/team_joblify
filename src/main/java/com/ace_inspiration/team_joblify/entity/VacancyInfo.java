@@ -42,7 +42,7 @@ public class VacancyInfo implements Serializable {
     @Column(length = 30, nullable = false)
     private String workingHours;
 
-    @Column(nullable = false, columnDefinition = "decimal(10,2)")
+    @Column(columnDefinition = "decimal(10,2)", nullable = false)
     private double salary;
 
     @Column(name = "required_post", nullable = false)

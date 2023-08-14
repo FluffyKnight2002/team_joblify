@@ -8,22 +8,25 @@ async function applyFilter() {
   let sortBy = $('input[name="sortBy"]:checked').val();
   let datePosted = $('input[name="datePosted"]:checked').val();
   let position = $('#title-input').val();
-  let jobType = $('input[name="jobType"]:checked').val() === undefined ? null :
-      $('input[name="jobType"]:checked').serializeArray().map(item => item.value);
-  let level = $('input[name="level"]:checked').val() === undefined ? null :
+  let jobType = $('input[name="jobType"]:checked').val();
+  let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
       $('input[name="level"]:checked').serializeArray().map(item => item.value);
-  let under10Applicants = $('input[name="under10"]:checked').val() === undefined ? false : true;
-  let status = $('input[name="status"]:checked').val() === undefined ? "OPEN" : "";
+  // let levelString = levelArray.join(',');
+  let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
+  let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
+  let page = 0;
+  let itemPerPage = 5;
 
   console.log("Sort By Sort By:", sortBy);
   console.log("Sort By Date Posted:", datePosted);
   console.log("Sort By Job Type:", jobType);
-  console.log("Sort By Level:",level);
-  console.log("Under 10 Applicants:",under10Applicants);
-  console.log("Show both :",status);
+  console.log("Sort By Level:",levelArray);
+  console.log("Under 10 Applicants:",isUnder10);
+  console.log("Show both :",isIncludingClosed);
+  console.log("Page from applyJobs :",page);
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, level, under10Applicants, status);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, isIncludingClosed,page,itemPerPage);
         totalPages = data.totalPages;
         resultCount = data.totalElements;
         console.log("Result Count from apply: " + resultCount);
@@ -45,11 +48,20 @@ async function applyFilter() {
   // Replace this with your actual filter implementation
 }
 
-function resetFilter() {
-  // Reset all filter options to their default values
-  document.getElementById("sortRelevant").checked = true;
-  document.getElementById("dateAny").checked = true;
-  document.getElementById("positionInput").value = "";
+function resetFilter(event) {
+    event.preventDefault();
+
+    // Reset all filter options to their default values
+    $("#sortRecent").prop("checked", true);
+    $("#dateAny").prop("checked", true);
+    $("#title-input").val("");
+    $("input[name='level']").prop("checked", false);
+    $("#type-both").prop("checked",true);
+    $("input[name='under10']").prop("checked", false);
+    $("input[name='includingClosed']").prop("checked", false);
+
+    applyFilter();
+    $('#result-count').html(0);
 }
 
 // Function to open the filter
@@ -69,15 +81,15 @@ function closeFilter() {
   }, 300); // 300 milliseconds = transition duration
 }
 
-async function filterJobs(sortBy, datePosted, position, jobType, level, under10Applicants, status) {
+async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder10, isIncludingClosed,page,itemPerPage) {
     let filterData = {
         sortBy: sortBy,
         datePosted: datePosted,
         position: position,
         jobType: jobType,
         level: level,
-        under10Applicants: under10Applicants,
-        status: status
+        isUnder10: isUnder10,
+        isIncludingClosed: isIncludingClosed
     };
 
     console.log("Form : ", JSON.stringify(filterData)); // Log the filter data
@@ -87,7 +99,7 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, under10A
     console.log(csrfToken);
 
     try {
-        const response = await fetch("vacancy/filter", {
+        const response = await fetch(`vacancy/filter?page=${page}&pageSize=${itemPerPage}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -161,14 +173,6 @@ $("#title-input").autocomplete({
 //     applyFilter();
 // }
 
-function reconvertToString(input) {
-  // Replace underscores with spaces and convert to title case
-  if (input === "ON_SITE") {
-    return "On-site";
-  }
-  return input.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
-}
-
 function updatePaginationUI(totalPages, currentPage) {
     const paginationContainer = $("#pagination-container");
     paginationContainer.empty();
@@ -208,8 +212,8 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the previous button
     const startPageButton = `
         <li class="page-item">
-            <a class="page-link" href="#" onclick="loadVacancies(${startPage-1})" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
+                <span aria-hidden="true">First</span>
             </a>
         </li>
     `;
@@ -217,36 +221,44 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the next button
     const lastPageButton = `
         <li class="page-item">
-            <a class="page-link" href="#" onclick="loadVacancies(${endPage-1})" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(countLastPage())" aria-label="Next">
+                <span aria-hidden="true">Last</span>
             </a>
         </li>
     `;
 
-    // Create the page links
+    // Update the page link creation section
     const pageLinks = [];
     for (let i = startPage; i <= endPage; i++) {
         const activeClass = i === currentPage ? "active-page" : "";
         const pageLink = `
-            <li class="page-item">
-                <a class="page-link ${activeClass}" href="#" onclick="loadVacancies(${i-1})">${i}</a>
-            </li>
-        `;
+        <li class="page-item text-center">
+            <a class="page-link ${activeClass}" href="#" onclick="event.preventDefault();loadVacancies(${i-1})">${i}</a>
+        </li>
+    `;
         pageLinks.push(pageLink);
     }
 
     // Combine all the components to form the pagination UI
     const paginationUI = `
-        <nav aria-label="Page navigation example">
+        <div class="sticky-bottom pagination-container">
+            <nav aria-label="Page navigation">
             <ul class="pagination">
                 ${startPageButton}
                 ${pageLinks.join("")}
                 ${lastPageButton}
             </ul>
         </nav>
+        </div>
     `;
 
     paginationContainer.append(paginationUI);
+}
+
+function countLastPage() {
+    let page =(vacancies.length % 5 > 0) ? totalPages : totalPages - 1;
+    console.log("Last page : " , page)
+    return page;
 }
 
 function showResult() {
@@ -262,92 +274,42 @@ function showResult() {
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Salary"><i class='bx bx-money'></i>${vacancy.salary}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> ${timeAgo(vacancy.updatedTime)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip" data-placement="bottom" title="Location"><i class="bi bi-geo-alt-fill"></i>${vacancy.address}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.updatedTime)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
                         <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
-                        <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip" data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> ${changeTimeFormat(vacancy.closeDate)}</span>
+                        <span class="default-font me-4 d-inline-block end-date-text"><i class='bx bx-calendar-exclamation' data-toggle="tooltip" data-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
                     </div>
                 </div>
             `;
     // Append the card to the container
     $("#jobs-container").append(card);
+
+    // Initialize Bootstrap tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            placement: 'bottom' // Set the desired placement here
+        });
+    });
   });
+
+    // Apply the card animations
+    // applyCardAnimations();
 
   // Update the pagination UI
   updatePaginationUI(totalPages, currentPages);
 }
 
-function timeAgo(time) {
-    const currentTime = new Date();
-    const inputTime = new Date(time);
-    const timeDifferenceInSeconds = Math.floor((currentTime - inputTime) / 1000);
-
-    // Define time units in seconds
-    const minute = 60;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const week = 7 * day;
-    const month = 30 * day;
-
-    if (timeDifferenceInSeconds < minute) {
-        return 'Just now';
-    } else if (timeDifferenceInSeconds < hour) {
-        const minutesAgo = Math.floor(timeDifferenceInSeconds / minute);
-        return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < day) {
-        const hoursAgo = Math.floor(timeDifferenceInSeconds / hour);
-        return `${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < week) {
-        const daysAgo = Math.floor(timeDifferenceInSeconds / day);
-        return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
-        const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
-        return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
-    } else {
-        // Display the date in the format: 'MMM DD YYYY'
-        const formattedDate = inputTime.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
+function applyCardAnimations() {
+    $(".card").each(function() {
+        $(this).css({
+            transform: "translateY(-10px)",
+            "box-shadow": "0px 10px 10px rgba(0, 0, 0, 0.2)"
         });
-        return formattedDate;
-    }
-}
-
-function changeTimeFormat(time) {
-
-    // Parse the date string to a JavaScript Date object
-    var date = new Date(time);
-
-    // Array to map month numbers to month names
-    var monthNames = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-
-    // Get the day of the month
-    var day = date.getDate();
-
-    // Determine the suffix for the day (st, nd, rd, or th)
-    var suffix;
-    if (day >= 11 && day <= 13) {
-        suffix = "th";
-    } else {
-        switch (day % 10) {
-            case 1: suffix = "st"; break;
-            case 2: suffix = "nd"; break;
-            case 3: suffix = "rd"; break;
-            default: suffix = "th";
-        }
-    }
-
-    // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
-    var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
-    return formattedDate;
+    });
 }
 
 $('#show-result-btn').on('click', function(event) {
@@ -356,23 +318,26 @@ $('#show-result-btn').on('click', function(event) {
 });
 
 async function loadVacancies(page) {
+    console.log("Page from loadVacancies: ",page)
     // Get selected values
     let sortBy = $('input[name="sortBy"]:checked').val();
     let datePosted = $('input[name="datePosted"]:checked').val();
     let position = $('#title-input').val();
-    let jobType = $('input[name="jobType"]:checked').val() === undefined ? null :
-        $('input[name="jobType"]:checked').serializeArray().map(item => item.value);
-    let level = $('input[name="level"]:checked').val() === undefined ? null :
+    let jobType = $('input[name="jobType"]:checked').val();
+    let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
         $('input[name="level"]:checked').serializeArray().map(item => item.value);
-    let under10Applicants = $('input[name="under10"]:checked').val() === undefined ? false : true;
-    let status = $('input[name="status"]:checked').val() === undefined ? "OPEN" : "";
+    let levelString = levelArray != null ? levelArray.join(',') : null;
+    let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
+    let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
+    let itemPerPage = 5;
 
     try {
-        const data = await applyFilter(sortBy, datePosted, position, jobType, level, under10Applicants, status, page);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10,isIncludingClosed, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
         console.log("Loaded vacancies:", vacancies);
 
+        showResult(vacancies);
         updatePaginationUI(totalPages, page);
     } catch (error) {
         // Handle errors
@@ -388,9 +353,10 @@ $(document).ready(async function () {
     $('input[name="jobType"]').on('change', applyFilter);
     $('input[name="level"]').on('change', applyFilter);
     $('input[name="under10"]').on('change', applyFilter);
-    $('input[name="status"]').on('change', applyFilter);
+    $('input[name="includingClosed"]').on('change', applyFilter);
 
     // vacancies =await applyFilter();
     console.log("Doc ready : " +  vacancies);
-    await loadVacancies();
+    await loadVacancies(0);
+    // showResult(vacancies);
 });

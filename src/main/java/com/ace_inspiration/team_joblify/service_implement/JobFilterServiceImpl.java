@@ -34,35 +34,20 @@ public class JobFilterServiceImpl {
         Specification<VacancyView> spec = Specification.where(null);
 
         System.out.println("Position : " + (filterRequest.getPosition().trim() == ""));
-        System.out.println("Status : " + (filterRequest.getStatus().trim() == ""));
-
-//        if (filterRequest.getSortBy() != null) {
-//            String sortBy = filterRequest.getSortBy();
-//            Sort.Direction sortDirection; // Default sorting direction
-//            if (sortBy.startsWith("-")) {
-//                sortBy = sortBy.substring(1);
-//                sortDirection = Sort.Direction.DESC;
-//            } else {
-//                sortDirection = Sort.Direction.ASC;
-//            }
-//            // Add the sorting condition to the Specification object
-//            final String finalSortBy = sortBy; // Declare the variable as final
-//            spec = spec.and((root, query, builder) -> {
-//                CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//                CriteriaQuery<VacancyView> criteriaQuery = criteriaBuilder.createQuery(VacancyView.class);
-//                Root<VacancyView> sortingRoot = criteriaQuery.from(VacancyView.class);
-//                Path<LocalDate> expression = sortingRoot.get(finalSortBy); // Use the finalSortBy variable
-//                criteriaQuery.orderBy(sortDirection == Sort.Direction.ASC ? criteriaBuilder.asc(expression) : criteriaBuilder.desc(expression));
-//                return criteriaQuery.getRestriction();
-//            });
-//        }
+        System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
+        System.out.println("Is Under10 : " + filterRequest.getIsUnder10());
 
         if (filterRequest.getSortBy() != null) {
             String sortBy = filterRequest.getSortBy();
-            Sort.Direction sortDirection = sortBy.startsWith("-") ? Sort.Direction.DESC : Sort.Direction.ASC;
 
-            final String finalSortBy = sortBy.substring(sortBy.startsWith("-") ? 1 : 0); // Extract without '-' if present
-            spec = spec.and((root, query, builder) -> orderBySpecification(builder, root, finalSortBy, sortDirection));
+            spec = spec.and((root, query, builder) -> {
+                if ("openDate".equals(sortBy)) {
+                    query.orderBy(builder.desc(root.get("updatedTime")));
+                } else if ("post".equals(sortBy)) {
+                    query.orderBy(builder.desc(root.get("post")));
+                }
+                return null;
+            });
         }
 
         if (filterRequest.getPosition() != null && !filterRequest.getPosition().trim().isEmpty()) {
@@ -96,26 +81,20 @@ public class JobFilterServiceImpl {
             }
         }
 
-        if (filterRequest.getJobType() != null && filterRequest.getJobType().length > 0) {
-            String[] jobTypeValues = filterRequest.getJobType();
-            List<JobType> jobTypeEnums = Arrays.stream(jobTypeValues)
-                    .map(strValue -> {
-                        try {
-                            return JobType.valueOf(strValue.toUpperCase()); // Convert to uppercase
-                        } catch (IllegalArgumentException e) {
-                            // Handle invalid string value, e.g., return a default job type or skip it
-                            return null;
-                        }
-                    })
-                    .filter(Objects::nonNull) // Filter out null values (invalid strings)
-                    .collect(Collectors.toList());
 
-            System.out.println("Enum job type: " + jobTypeEnums);
-            if (!jobTypeEnums.isEmpty()) {
-                spec = spec.and((root, query, builder) ->
-                        root.get("jobType").in(jobTypeEnums));
-            }
+        if (filterRequest.getJobType() != null && !filterRequest.getJobType().isEmpty()) {
+            spec = spec.and((root, query, builder) -> {
+                Predicate fullTime = builder.equal(root.get("jobType"), JobType.FULL_TIME);
+                Predicate partTime = builder.equal(root.get("jobType"), JobType.PART_TIME);
+
+                return filterRequest.getJobType().equals("BOTH") ?
+                        builder.or(fullTime, partTime) :
+                        builder.equal(root.get("jobType"), JobType.valueOf(filterRequest.getJobType()));
+            });
+//            spec = spec.and((root, query, builder) ->
+//                    root.get("jobType").in(filterRequest.getJobType()));
         }
+
 
         if (filterRequest.getLevel() != null && filterRequest.getLevel().length > 0) {
             String[] levelValues = filterRequest.getLevel();
@@ -132,20 +111,29 @@ public class JobFilterServiceImpl {
                     .collect(Collectors.toList());
 
             if (!levelEnums.isEmpty()) {
+                System.out.println("Level Enum : " + levelEnums);
                 spec = spec.and((root, query, builder) ->
                         root.get("level").in(levelEnums));
             }
         }
 
-        if (filterRequest.isUnder10Applicants()) {
+        if (filterRequest.getIsUnder10().equals("true")) {
             spec = spec.and((root, query, builder) ->
-                    builder.lessThanOrEqualTo(root.get("applicants"), 10));
+                    builder.lessThanOrEqualTo(root.get("applicants"), 1));
         }
 
-        if ("OPEN".equals(filterRequest.getStatus())) {
-            System.out.println("Status works!!!");
-            spec = spec.and((root, query, builder) ->
-                    builder.equal(root.get("status"), Status.OPEN)); // Change VacancyStatus with your actual enum class
+        if (filterRequest.getIsIncludingClosed() != null && !filterRequest.getIsIncludingClosed().isEmpty()) {
+            System.out.println("Closed works!!!");
+            spec = spec.and((root, query, builder) -> {
+                Predicate openPredicate = builder.equal(root.get("status"), Status.OPEN);
+                Predicate closedPredicate = builder.equal(root.get("status"), Status.CLOSED);
+
+                return filterRequest.getIsIncludingClosed().equals("true") ?
+                        builder.or(openPredicate, closedPredicate) :
+                        openPredicate;
+            });
+//            spec = spec.and((root, query, builder) ->
+//                    root.get("level").in(Status.OPEN, Status.CLOSED));
         }
 
         // ... (other filter conditions)
@@ -163,8 +151,11 @@ public class JobFilterServiceImpl {
         List<VacancyView> results = query.getResultList();
 
         // Count the total number of results without pagination
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        countQuery.select(criteriaBuilder.count(countQuery.from(VacancyView.class)));
+        CriteriaBuilder countCriteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = countCriteriaBuilder.createQuery(Long.class);
+        Root<VacancyView> countRoot = countQuery.from(VacancyView.class);
+        Predicate countPredicate = spec.toPredicate(countRoot, countQuery, countCriteriaBuilder);
+        countQuery.select(countCriteriaBuilder.count(countRoot)).where(countPredicate);
         Long totalResults = entityManager.createQuery(countQuery).getSingleResult();
 
         // Create a Page object using PageImpl
