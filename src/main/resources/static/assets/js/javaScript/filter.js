@@ -288,6 +288,7 @@ function showResult() {
     // Append the card to the container
     $("#jobs-container").append(card);
 
+    updateRecentFilter();
     // Initialize Bootstrap tooltips
     $(function () {
         $('[data-toggle="tooltip"]').tooltip({
@@ -324,9 +325,14 @@ async function loadVacancies(page) {
     let datePosted = $('input[name="datePosted"]:checked').val();
     let position = $('#title-input').val();
     let jobType = $('input[name="jobType"]:checked').val();
+    // Extract selected level values into an array
     let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
         $('input[name="level"]:checked').serializeArray().map(item => item.value);
-    let levelString = levelArray != null ? levelArray.join(',') : null;
+    // let levelArray = $('input[name="level"]:checked').map(function() {
+    //     return $(this).siblings('label').text();
+    // }).get();
+
+    // let levelString = levelArray.length > 0 ? levelArray.join(',') : null;
     let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
     let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
     let itemPerPage = 5;
@@ -343,6 +349,50 @@ async function loadVacancies(page) {
         // Handle errors
         console.log(error);
     }
+}
+
+function updateRecentFilter() {
+    // Get the selected filter options
+    const sortBy = $('input[name="sortBy"]:checked').siblings('label').text();
+    const datePosted = $('input[name="datePosted"]:checked').siblings('label').text();
+    const jobType = $('input[name="jobType"]:checked').siblings('label').text();
+    const levelsArray = $('input[name="level"]:checked').map(function () {
+        return $(this).siblings('label').text();
+    }).get();
+    const under10 = $('input[name="under10"]').is(':checked') ? 'Under 10 applicants' : '';
+    const includingClosed = $('input[name="includingClosed"]').is(':checked') ? 'Including closed' : '';
+
+    // Create an array of filter elements
+    const filterElements = [
+        `<span class="text-muted sub-title me-2"><strong>Filter : </strong></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${sortBy}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${datePosted}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${jobType}</span>`
+    ];
+
+    // Add level filters if levelsArray has values
+    if (levelsArray.length > 0) {
+        levelsArray.forEach(level => {
+            filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${level}</span>`);
+        });
+    } else {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">ALL</span>`);
+    }
+
+    // Add under10 and includingClosed filter elements
+    if (under10) {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${under10}</span>`);
+    }
+    if (includingClosed) {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${includingClosed}</span>`);
+    }
+
+    // Update the recent-filter section with the generated filter elements
+    const recentFilter = $('#filter-data-con');
+    recentFilter.empty(); // Clear previous content
+    filterElements.forEach(element => {
+        recentFilter.append(element);
+    });
 }
 
 $(document).ready(async function () {
