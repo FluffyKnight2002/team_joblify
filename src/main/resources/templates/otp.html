@@ -6,6 +6,15 @@
     <meta name="_csrf" th:content="${_csrf.token}" /> <!-- CSRF token as a meta tag -->
     <meta name="_csrf_header" th:content="${_csrf.headerName}" /> <!-- CSRF header name as a meta tag -->
     <title>Send Email</title>
+    <style>
+        /* Custom CSS to hide background image of validation */
+        .form-control.is-invalid, .was-validated .form-control:invalid {
+          background-image: none !important;
+        }
+        .form-control.is-valid, .was-validated .form-control:valid {
+          background-image: none !important;
+        }
+      </style>
 </head>
 <body>
 <button onclick="sendEmail()">Send Email</button>

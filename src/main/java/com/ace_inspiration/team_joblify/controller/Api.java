@@ -116,8 +116,7 @@ public class Api {
 
     @PostMapping("/get-user-profile")
     public User userProfileData(@RequestParam ("id") long id){
-        User user = userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
-        return user;
+        return userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
     }
 
 

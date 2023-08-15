@@ -47,7 +47,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
                         <span>Users</span>
@@ -140,6 +140,8 @@
                                     <span sec:authorize="authenticated"
                                         sec:authentication="principal.department"></span>
                                 </p>
+
+            
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
@@ -150,7 +152,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                         <li>
-                            <h6 class="dropdown-header">Hello, John!</h6>
+                            <h6 class="dropdown-header">Hello, <span sec:authorize="authenticated"
+                                sec:authentication="principal.name"></span></h6>
                         </li>
                         <li><a class="dropdown-item" th:href="@{/user-profile-edit(id=${#authentication.principal.userId})}"><i class="icon-mid bi bi-person me-2"></i> My
                             Profile</a></li>
