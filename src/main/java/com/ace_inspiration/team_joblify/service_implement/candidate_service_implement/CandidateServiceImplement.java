@@ -59,8 +59,7 @@ public class CandidateServiceImplement implements CandidateService{
 
 
 
-	@Autowired
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
 	@Override
 	public DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input){
@@ -101,21 +100,21 @@ public class CandidateServiceImplement implements CandidateService{
     @Override
 
     public void saveCandidate(CandidateDto candidateDto) {
-//        List<LanguageSkills> languageSkillsList= new ArrayList<>();
-//        for(String languageSkill: candidateDto.getLanguageSkills()) {
-//            LanguageSkills  languageSkills= new LanguageSkills();
-//            languageSkills.setName(languageSkill);
-//            languageSkillsList.add(languageSkills);
-//            languageSkillsRepository.save(languageSkills);
-//        }
-//
-//        List<TechSkills> techSkillsList= new ArrayList<>();
-//        for(String techSkill: candidateDto.getTechSkills()) {
-//            TechSkills  techSkills= new TechSkills();
-//            techSkills.setName(techSkill);
-//            techSkillsList.add(techSkills);
-//            techSkillsRepository.save(techSkills);
-//        }
+        List<LanguageSkills> languageSkillsList= new ArrayList<>();
+        for(String languageSkill: candidateDto.getLanguageSkills()) {
+            LanguageSkills  languageSkills= new LanguageSkills();
+            languageSkills.setName(languageSkill);
+            languageSkillsList.add(languageSkills);
+            languageSkillsRepository.save(languageSkills);
+        }
+
+        List<TechSkills> techSkillsList= new ArrayList<>();
+        for(String techSkill: candidateDto.getTechSkills()) {
+            TechSkills  techSkills= new TechSkills();
+            techSkills.setName(techSkill);
+            techSkillsList.add(techSkills);
+            techSkillsRepository.save(techSkills);
+        }
 
 
 
@@ -132,8 +131,8 @@ public class CandidateServiceImplement implements CandidateService{
         summary.setExperience(candidateDto.getExperience());
         summary.setExpectedSalary(candidateDto.getExpectedSalary());
         summary.setSpecialistTech(candidateDto.getSpecialistTech());
-        summary.setLanguageSkills(candidateDto.getLanguageSkills());
-        summary.setTechSkills(candidateDto.getTechSkills());
+        summary.setLanguageSkills(languageSkillsList);
+        summary.setTechSkills(techSkillsList);
         summaryRepository.save(summary);
 
         Candidate candidate=new Candidate();
