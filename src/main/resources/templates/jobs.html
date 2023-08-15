@@ -34,162 +34,169 @@
     <!-- Jobs list start -->
     <div class="container row mx-auto">
 
-        <form class="my-5 mx-auto d-flex w-75 search-form" style="height: 20px">
+        <div class="sticky-top bg-white search-bar-container">
+            <form class="mx-auto d-flex w-75 search-form" style="height: 20px">
 
-            <!-- Quick search start -->
-            <div class="input-group">
-                <input type="text" class="form-control search-btn" placeholder="Quick Search" />
-                <button type="submit" class="btn btn-outline-dark"><i class='bx bx-search-alt'></i></button>
-            </div>
-            <div class="ms-3">
-                <button type="button" class="btn btn-primary" onclick="openFilter()">Filter</button>
-            </div>
-            <!-- Quick search end -->
+                <!-- Quick search start -->
+                <div class="input-group">
+                    <input type="text" class="form-control search-btn" placeholder="Quick Search" />
+                    <button type="submit" class="btn btn-outline-dark"><i class='bx bx-search-alt'></i></button>
+                </div>
+                <div class="ms-3">
+                    <button type="button" class="btn btn-primary" onclick="openFilter()">Filter</button>
+                </div>
+                <!-- Quick search end -->
 
-            <!-- Filter offcanvas -->
-            <div id="filterOffcanvas" class="offcanvas offcanvas-end">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title">Filter</h5>
-                    <button type="button" class="btn-close" onclick="closeFilter()"></button>
+                <!-- Filter offcanvas -->
+                <div id="filterOffcanvas" class="offcanvas offcanvas-end">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Filter</h5>
+                        <button type="button" class="btn-close" onclick="closeFilter()"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <!-- Filter starts -->
+                        <form class="bg-light p-3 rounded-3 scrollable-container" id="job-filter">
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>Sort by</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="sortRecent" value="openDate" checked>
+                                    <label class="form-check-label" for="sortRecent" >
+                                        Most recent
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="sortBy" id="sortPost" value="post">
+                                    <label class="form-check-label" for="sortPost">
+                                        Most wanted
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>Date posted</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="datePosted" id="dateAny" value="any" checked>
+                                    <label class="form-check-label" for="dateAny">
+                                        Any time
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="datePosted" id="date24Hours" value="24hours">
+                                    <label class="form-check-label" for="date24Hours">
+                                        Past 24 hours
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="datePosted" id="dateWeek" value="week">
+                                    <label class="form-check-label" for="dateWeek">
+                                        Past week
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="datePosted" id="dateMonth" value="month">
+                                    <label class="form-check-label" for="dateMonth">
+                                        Past month
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>Title (Position)</h6>
+                                <div class="position-relative">
+                                    <input type="text" class="form-control" id="title-input" name="position">
+                                    <span class='spinner-border spinner-border-sm spinner title-input-spinner' role='status'></span>
+                                </div>
+                            </div>
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>Sort by</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jobType" id="type-both" value="BOTH" checked>
+                                    <label class="form-check-label" for="type-both" >
+                                        Both
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jobType" id="type-full-time" value="FULL_TIME">
+                                    <label class="form-check-label" for="type-full-time" >
+                                        Full-time
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="jobType" id="type-part-time" value="PART_TIME">
+                                    <label class="form-check-label" for="type-part-time">
+                                        Part-time
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>Level</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
+                                    <label class="form-check-label" for="level-entry">
+                                        Entry level
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
+                                    <label class="form-check-label" for="level-junior">
+                                        Junior level
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
+                                    <label class="form-check-label" for="level-mid">
+                                        Mid level
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
+                                    <label class="form-check-label" for="level-senior">
+                                        Senior level
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
+                                    <label class="form-check-label" for="level-supervisor">
+                                        Supervisor level
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
+                                    <label class="form-check-label" for="level-executive">
+                                        Executive level
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="pb-3">
+                                <div class="form-check form-switch">
+                                    <label class="form-check-label" for="under10">Under 10 applicants</label>
+                                    <input class="form-check-input" type="checkbox" name="under10" id="under10">
+                                </div>
+                            </div>
+                            <div class="pb-3">
+                                <div class="form-check form-switch">
+                                    <label class="form-check-label" for="status-both">Including closed</label>
+                                    <input class="form-check-input" type="checkbox" name="includingClosed" id="status-both">
+                                </div>
+                            </div>
+                            <div class="pb-3 text-end">
+                                <button class="btn btn-sm reset-btn" onclick="resetFilter(event)">Reset</button>
+                                <button class="btn btn-sm btn-primary rounded-pill" id="show-result-btn">Results
+                                    <span class="text-white fw-bold" style="font-size: 0.8rem;" id="result-count">0</span>
+                                </button>
+                            </div>
+                        </form>
+                        <!-- Filter end -->
+                    </div>
                 </div>
-                <div class="offcanvas-body">
-                    <!-- Filter starts -->
-                    <form class="bg-light p-3 rounded-3 scrollable-container" id="job-filter">
-                        <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Sort by</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="sortRecent" value="openDate" checked>
-                                <label class="form-check-label" for="sortRecent" >
-                                    Most recent
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="sortBy" id="sortPost" value="post">
-                                <label class="form-check-label" for="sortPost">
-                                    Most wanted
-                                </label>
-                            </div>
-                        </div>
-                        <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Date posted</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="datePosted" id="dateAny" value="any" checked>
-                                <label class="form-check-label" for="dateAny">
-                                    Any time
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="datePosted" id="date24Hours" value="24hours">
-                                <label class="form-check-label" for="date24Hours">
-                                    Past 24 hours
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="datePosted" id="dateWeek" value="week">
-                                <label class="form-check-label" for="dateWeek">
-                                    Past week
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="datePosted" id="dateMonth" value="month">
-                                <label class="form-check-label" for="dateMonth">
-                                    Past month
-                                </label>
-                            </div>
-                        </div>
-                        <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Title (Position)</h6>
-                            <div class="position-relative">
-                                <input type="text" class="form-control" id="title-input" name="position">
-                                <span class='spinner-border spinner-border-sm spinner title-input-spinner' role='status'></span>
-                            </div>
-                        </div>
-                        <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Sort by</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jobType" id="type-both" value="BOTH" checked>
-                                <label class="form-check-label" for="type-both" >
-                                    Both
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jobType" id="type-full-time" value="FULL_TIME">
-                                <label class="form-check-label" for="type-full-time" >
-                                    Full-time
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="jobType" id="type-part-time" value="PART_TIME">
-                                <label class="form-check-label" for="type-part-time">
-                                    Part-time
-                                </label>
-                            </div>
-                        </div>
-                        <div class="border-2 border-bottom pb-3 mb-3">
-                            <h6>Level</h6>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
-                                <label class="form-check-label" for="level-entry">
-                                    Entry level
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
-                                <label class="form-check-label" for="level-junior">
-                                    Junior level
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
-                                <label class="form-check-label" for="level-mid">
-                                    Mid level
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
-                                <label class="form-check-label" for="level-senior">
-                                    Senior level
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
-                                <label class="form-check-label" for="level-supervisor">
-                                    Supervisor level
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
-                                <label class="form-check-label" for="level-executive">
-                                    Executive level
-                                </label>
-                            </div>
-                        </div>
-                        <div class="pb-3">
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="under10">Under 10 applicants</label>
-                                <input class="form-check-input" type="checkbox" name="under10" id="under10">
-                            </div>
-                        </div>
-                        <div class="pb-3">
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="status-both">Including closed</label>
-                                <input class="form-check-input" type="checkbox" name="includingClosed" id="status-both">
-                            </div>
-                        </div>
-                        <div class="pb-3 text-end">
-                            <button class="btn btn-sm reset-btn" onclick="resetFilter(event)">Reset</button>
-                            <button class="btn btn-sm btn-primary rounded-pill" id="show-result-btn">Results
-                                <span class="text-white fw-bold" style="font-size: 0.8rem;" id="result-count">0</span>
-                            </button>
-                        </div>
-                    </form>
-                    <!-- Filter end -->
-                </div>
+            </form>
+        </div>
+        <div class="d-block mx-auto w-100 container" id="recent-filter">
+            <div id="filter-data-con" class="w-75" style="margin-left: 7%;">
+
             </div>
-        </form>
+        </div>
 
         <!-- Jobs start -->
-        <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px">
+        <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px; margin-bottom: 90px; margin-top: 60px">
 
             <div class="card flex-md-row">
                 <div class="card placeholder-card flex-md-row">

@@ -31,7 +31,7 @@ public class VacancyDto {
     private String workingHours;
     private String onSiteOrRemote;
     private String lvl;
-    private String salary;
+    private double salary;
     private String status;
     private long updatedUserId;
     private String updatedUsername;

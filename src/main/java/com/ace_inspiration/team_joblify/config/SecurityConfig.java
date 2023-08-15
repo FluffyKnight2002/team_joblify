@@ -1,11 +1,12 @@
 package com.ace_inspiration.team_joblify.config;
 
 import lombok.RequiredArgsConstructor;
+
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +14,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.ace_inspiration.team_joblify.entity.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -42,25 +48,27 @@ public class SecurityConfig {
                                 .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
+                .requestMatchers("/all-user-list").hasAuthority(Role.DEFAULT_HR.name())
                         .requestMatchers("/assets/**",
                                 "/assets/css/**",
                                 "/assets/images/**",
                                 "/assets/js/**",
                                 "/assets/vendors/**").permitAll()
                         .requestMatchers("/**", "/ws/**").permitAll()
+                        
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(
-                        exception -> exception.accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/403"))
-                                .authenticationEntryPoint((request, response, authException) -> {
-                            if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-                                response.sendRedirect("/404");
-                            } else if (response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                                response.sendRedirect("/500");
-                            } else {
-                                response.sendRedirect("/login");
-                            }
-                        }))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.sendRedirect("/403");})
+                        .authenticationEntryPoint((request, response, authException) -> {
+                                if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+                                        response.sendRedirect("/404");
+                                } else {
+                                        response.sendRedirect("/login");
+                                }
+                        })        
+                )
 
                 .formLogin(login->login
                         .loginPage("/login")
@@ -92,4 +100,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
 }

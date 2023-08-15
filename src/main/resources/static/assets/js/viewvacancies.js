@@ -40,7 +40,12 @@ $(document).ready(function () {
                         return reconvertToString(row.level);
                     },
                     target: 2 }, // Access object property directly
-                { name: "Salary", data: "salary", target: 3 }, // Access object property directly
+                { name: "Salary",
+                    data: "salary",
+                    render: function (data, type, row, meta) {
+                        return convertToLakhs(row.salary);
+                    },
+                    target: 3 }, // Access object property directly
                 { name: "Status", data: "status", target: 4 }, // Access object property directly
                 { name: "Applicants",
                     data: "applicants",
@@ -110,7 +115,7 @@ $(document).ready(function () {
                     sortable: false
                 }
             ],
-            order: [[0,'asc']],
+            order: [[0,'desc']],
             paging: true,
             lengthMenu: [5,10,20],
             pageLength: 5,
@@ -165,9 +170,10 @@ $(document).ready(function () {
             reopenBtn.removeClass('btn-bright');
             reopenBtn.addClass('btn-un-bright');
             $('#submit-btn')
-                .attr('data-form-id', 'update-form')
-                .attr('data-success-message', 'Update successful!')
-                .attr('data-error-message', 'Update failed. Please try again.')
+                .data('form-id', 'update-form')
+                .data('warning-message', 'Your vacancy will be updated.')
+                .data('success-message', 'Update successful!')
+                .data('error-message', 'Update failed. Please try again.')
                 .html('Update');
                 reopenModeWarn.hide();
                 $('#reopen-form')
@@ -179,9 +185,10 @@ $(document).ready(function () {
             reopenBtn.addClass('btn-bright');
             reopenModeWarn.show();
             $('#submit-btn')
-                .attr('data-form-id', 'reopen-form')
-                .attr('data-success-message', 'Reopen successful!')
-                .attr('data-error-message', 'Reopen failed. Please try again.')
+                .data('form-id', 'reopen-form')
+                .data('warning-message', 'Reopen will make this vacancy open for 30 days again.')
+                .data('success-message', 'Reopen successful!') // Change this as needed
+                .data('error-message', 'Reopen failed. Please try again.') // Change this as needed
                 .html('Reopen');
             // Change form id and action
             $('#update-form')
@@ -203,9 +210,10 @@ $(document).ready(function () {
         }
         // Change the data attributes and button text
         $('#submit-btn')
-            .attr('data-form-id', 'update-vacancy')
-            .attr('data-success-message', 'Update successful!')
-            .attr('data-error-message', 'Update failed. Please try again.')
+            .data('form-id', 'update-form')
+            .data('warning-message', 'Your vacancy will be updated.')
+            .data('success-message', 'Update successful!')
+            .data('error-message', 'Update failed. Please try again.')
             .html('Update');
         $('#reopen-form')
             .attr('id', 'update-form')
@@ -261,9 +269,9 @@ $(document).on("click", ".reopen-vacancy", function (event) {
         '<div class="loader"></div>' +
         '<div class="loader-txt">' +
         '<h3 class="text-white">Are you sure?</h3>' +
-        '<p class="text-center text-white">Reopen will make this vacancy open for 30 days again</p>' +
+        '<p class="text-center text-white">Reopen will make this vacancy open for 30 days again.</p>' +
         '<div>' +
-        '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionToVacancy(href)">Sure</button>' +
+        '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
         '<button class="btn btn-sm btn-light-danger mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
@@ -289,9 +297,9 @@ $(document).on("click", ".close-vacancy", function (event) {
         '<div class="loader"></div>' +
         '<div class="loader-txt">' +
         '<h3 class="text-white">Are you sure?</h3>' +
-        '<p class="text-center text-white">After close, this vacancy cannot be open and only reopen can do</p>' +
+        '<p class="text-center text-white">After closing, no candidate will be allowed to apply this vacancy.</p>' +
         '<div>' +
-        '<button type="button" class="btn btn-sm btn-light-danger mx-1" onclick="actionToVacancy(href)">Sure</button>' +
+        '<button type="button" class="btn btn-sm btn-light-danger mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
         '<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
@@ -301,7 +309,7 @@ $(document).on("click", ".close-vacancy", function (event) {
 
 });
 
-function actionToVacancy(href) {
+function actionForCloseOrReopen(href) {
 
     // Show the loader and the message-con modal
     $('#message-con').html('<div class="loader"></div><div class="loader-txt"><p class="text-white">Processing...</p></div>');
@@ -315,6 +323,7 @@ function actionToVacancy(href) {
 
     console.log(metaCsrfToken);
 
+    console.log("Action was ",href)
     // Submit the form using AJAX
     fetch(href, {
         method: 'POST',
@@ -372,6 +381,10 @@ function toggleColumn() {
 function populateModalWithData(data) {
     // Replace the content of the form fields with the data you received from the server
     // Assuming the data object contains properties with the same names as the form field IDs
+
+    $('#calendar-btn').off('click');
+    $('#timePickerBtn').off('click');
+
     console.log("Id : ", data.id);
     console.log("Type : ", data.type);
     console.log("Lvl : ", data.lvl);
@@ -409,6 +422,155 @@ function populateModalWithData(data) {
     $("#preferences").val(data.preferences);
     $("#address").val(data.address);
 
+    const $calendar = $('#calendar').hide();
+    const $workingDaysInput = $('#workingDays');
+    const $timePickerBtn = $('#timePickerBtn');
+    const $timePickerContainer = $('#timePickerContainer').hide();
+    const $startTimePicker = $('#startTimePicker');
+    const $endTimePicker = $('#endTimePicker');
+    const $workingHoursInput = $('#workingHours'); // Add this line
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    function convertDaysStringToArray(daysString) {
+        if(daysString === 'Mon ~ Fri') {
+            daysString = "Mon ~ Tue ~ Wed ~ Thu ~ Fri";
+        }else if (daysString === 'Weekend') {
+            daysString = "Sun ~ Sat";
+        }
+        return daysString.split(' ~ ');
+    }
+
+    const workingDaysInputValue = $workingDaysInput.val();
+    let selectedDays = convertDaysStringToArray(workingDaysInputValue);
+
+
+    console.log(selectedDays); // Output: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+
+    function convertTimeTo24HourFormat(time) {
+        const [hours, minutes, period] = time.match(/(\d+):(\d+)\s*(\w+)/).slice(1);
+
+        const numericHours = parseInt(hours);
+
+        if (period.toLowerCase() === 'pm' && numericHours !== 12) {
+            return `${numericHours + 12}:${minutes}`;
+        } else if (period.toLowerCase() === 'am' && numericHours === 12) {
+            return `00:${minutes}`;
+        } else {
+            const formattedHours = numericHours.toString().padStart(2, '0'); // Add leading zero if needed
+            return `${formattedHours}:${minutes}`;
+        }
+    }
+
+    const timeRange = $('#workingHours').val();
+    console.log("Time Range : ",timeRange)
+    const [start, end] = timeRange.split(' ~ ');
+
+    let startTime = convertTimeTo24HourFormat(start);
+    let endTime = convertTimeTo24HourFormat(end);
+
+    console.log('Start Time:', startTime); // Output: 09:00
+    console.log('End Time:', endTime);     // Output: 18:00
+
+    $('#calendar-btn').on('click', function() {
+        $calendar.toggle();
+    });
+
+    function updateInputValue() {
+        if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
+            $workingDaysInput.val('Mon ~ Fri');
+        } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+            $workingDaysInput.val('Weekend');
+        } else {
+            let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+            $workingDaysInput.val(textSelectedDays.join(' ~ '));
+        }
+
+        console.log("Start Time : ", startTime);
+        console.log("End Time : ",endTime);
+        // Format start and end times
+        const formattedStartTime = formatTime(startTime);
+        const formattedEndTime = formatTime(endTime);
+
+        // Update workingHours input value
+        $workingHoursInput.val(`${formattedStartTime} ~ ${formattedEndTime}`);
+    }
+
+    $endTimePicker.on('change', function() {
+        endTime = $(this).val(); // Update the endTime value from the time picker
+        updateInputValue();
+    });
+
+    function formatTime(time) {
+        const [hours, minutes, period] = time.split(/[:\s]/);
+        const numericHours = parseInt(hours); // Convert hours to a number
+
+        if (numericHours === 12) {
+            return `12:${minutes} PM`;
+        } else if (numericHours === 0 || numericHours === 24) {
+            return `12:${minutes} AM`;
+        } else if (numericHours > 12) {
+            return `${numericHours - 12}:${minutes} PM`;
+        } else {
+            return `${numericHours}:${minutes} AM`;
+        }
+    }
+
+    function updateCalendar() {
+        $calendar.empty();
+
+        daysOfWeek.forEach(day => {
+            const $dayElement = $('<div>', {
+                text: day,
+                class: 'calendar-day'
+            });
+
+            if (selectedDays.includes(day)) {
+                $dayElement.addClass('selected');
+            }
+
+            $dayElement.on('click', () => {
+                if (selectedDays.includes(day)) {
+                    selectedDays = selectedDays.filter(selectedDay => selectedDay !== day);
+                } else {
+                    selectedDays.push(day);
+                }
+
+                updateInputValue();
+                updateCalendar();
+            });
+
+            $calendar.append($dayElement);
+        });
+    }
+
+
+    $timePickerBtn.on('click', function() {
+        $timePickerContainer.toggle();
+    });
+
+    $startTimePicker.on('change', function() {
+        startTime = $(this).val();
+        updateInputValue();
+    });
+
+    $endTimePicker.on('change', function() {
+        endTime = $(this).val();
+        updateInputValue();
+    });
+
+    updateCalendar();
+    updateInputValue();
+
+    // Attach input event handler to the salary input
+    $('#salary').on('input', function() {
+        const inputValue = $(this).val();
+
+        // Remove all non-numeric characters using regex
+        const numericValue = inputValue.replace(/\D/g, '');
+
+        // Update the input value with the cleaned numeric value
+        $(this).val(numericValue);
+    });
 }
 
 // Function to show the modal for a specific vacancy ID
@@ -434,6 +596,12 @@ function clearIdParameter() {
 
 
 // Enum convert and reconvert
+
+function convertToLakhs(decimalValue) {
+    const lakhsValue = parseFloat(decimalValue) / 100000;
+    const formattedValue = lakhsValue.toFixed(6).replace(/\.?0+$/, ''); // Remove trailing zeros
+    return `${formattedValue} Lakhs`;
+}
 function convertToEnumFormat(input) {
     console.log(input)
     // Replace spaces with underscores and convert to uppercase

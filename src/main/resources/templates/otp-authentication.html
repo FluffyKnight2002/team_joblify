@@ -36,9 +36,8 @@
                       <span>A code has been sent to</span> <small>*******9897</small>
                   </div>
               </div>
-              <form class="otp-submit" method="post">
+              <form id="otp-submit" method="post">
                   <div id="otp" class="inputs d-flex flex-row justify-content-center">
-                      <input type="hidden" id="id" th:value="${id}" />
                       <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="first" maxlength="1" />
                       <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="second" maxlength="1" />
                       <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="third" maxlength="1" />
@@ -56,7 +55,7 @@
                   </div>
               </form>
               <div class="content d-flex justify-content-center align-items-center mt-4">
-                  <span id="resendStatus">Didn't get the code?</span> <a href="#" class="text-decoration-none ms-3" id="resendLink">Resend</a>
+                  <span id="resendStatus"></span> <a href="#" class="text-decoration-none ms-3" id="resendLink">Send</a>
               </div>
           </div>
         </div>
@@ -66,8 +65,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function (event) {
+        const currentURL = window.location.href;
+        const url = new URL(currentURL);
+        const email = url.searchParams.get("email");
+        console.log(email);
+
         let otp;
-        const id= document.getElementById('id');
+        
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
         const msg=document.getElementById('error-msg');
@@ -96,11 +100,12 @@
             }
         }
 
-        function resendOTP() {
+        function countdown() {
             // Disable the resend link and show the resend status
             const resendLink = document.getElementById('resendLink');
             const resendStatus = document.getElementById('resendStatus');
 
+            sendOtp()
             // Start the countdown timer
             let count = 30;
             const countdownTimer = setInterval(function () {
@@ -109,9 +114,10 @@
                     clearInterval(countdownTimer);
                     enableResendButton();
                     resendStatus.innerText = "Didn't get the code?";
+                    resendLink.innerText = "Resend"
                 } else {
                     disableResendButton();
-                    resendStatus.innerText = `OTP is resent. If the message doesn't reach in the next 30 seconds, click Resend again. ${count} seconds...`;
+                    resendStatus.innerText = `OTP is sent. If the message doesn't reach in the next 30 seconds, click Resend again. ${count} seconds...`;
                     count--;
                     if (count === 0) {
                         enableResendButton();
@@ -120,10 +126,34 @@
             }, 1000);
         }
 
+        function sendOtp() {
+
+            fetch('/sendOTP', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    [csrfHeader]: csrfToken // Include CSRF token as a request header
+                },
+                body: JSON.stringify({to: email})
+            })
+                .then(response => response.json())
+                .then(data =>{
+                    if (response.ok) {
+                        console.log('Email sent successfully:', data);
+                    } else if(!response.ok) {
+                        console.error('Failed to send email:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+
+                })
+        }
+
         function onClickResend(event) {
             event.preventDefault();
             disableResendButton();
-            resendOTP();
+            countdown();
         }
 
         function enableResendButton() {
@@ -143,7 +173,7 @@
 
 
         function otpSubmit(){
-            fetch('/otp-submit?otp=' + encodeURIComponent(otp) +'&userId=' + encodeURIComponent(id.value),{
+            fetch('/otp-submit?otp=' + encodeURIComponent(otp) +'&email=' + encodeURIComponent(email),{
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json;charset=utf-8',
@@ -155,7 +185,7 @@
 
                 .then((data) => {
                     if(data === true){
-                        window.location.href= '/forgot-password?userId=' + encodeURIComponent(id.value);
+                        window.location.href= '/forgot-password-form?email=' + encodeURIComponent(email);
                     }else if (data === false) {
                         msg.innerHTML = "<p class='text-center' style='color: red; font-size: 1rem'>OTP is Wrong or Expired</p>"
                     }
@@ -175,7 +205,8 @@
 
                 msg.innerHTML = "<p class='text-center' style='color: red; font-size: 1rem'>Please Fill OTP</p>"
             } else {
-                otp = first + second + third + fourth + fifth + sixth;
+                otp = first.value + second.value + third.value + fourth.value + fifth.value + sixth.value;
+                console.log(otp)
                 otpSubmit();
             }
 

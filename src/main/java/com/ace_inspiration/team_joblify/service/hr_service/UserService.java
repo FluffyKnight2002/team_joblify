@@ -20,8 +20,13 @@ public interface UserService {
 
     boolean emailDuplicationExceptMine(String email, long userId);
 
-    boolean checkOldPassword(String password, long userId);
+    boolean checkOldPassword(String password, String email);
 
-    boolean passwordChange(String newPassword, long id);
+    boolean passwordChange(String newPassword, String email);
+
+    boolean suspend(long id);
+    
+    boolean activate(long id);
+
 
 }

@@ -1,10 +1,8 @@
 package com.ace_inspiration.team_joblify.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -13,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Table(name = "otp")
 public class Otp implements Serializable {
 

@@ -21,5 +21,5 @@ public class EmailTemplateDto {
    private String status;
    private String type;
    private long canId;
-    
+
 }

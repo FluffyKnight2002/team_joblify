@@ -29,6 +29,48 @@
     background-color: white;
 }
 
+#timePickerContainer {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 195px;
+    margin-top: 10px;
+}
+
+.calendar {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 195px;
+    margin-top: 10px;
+}
+
+.calendar-day {
+    margin: 2px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #e0e0e0;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
 .glass-transparent {
     background: linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.5));
     backdrop-filter: blur(10px);

@@ -180,11 +180,28 @@
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="workingDays" class="form-label">Working Days</label>
-                                <input type="text" class="form-control" id="workingDays" name="workingDays">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="workingDays" name="workingDays" value="" readonly>
+                                    <button type="button" class="btn btn-sm btn-primary" id="calendar-btn"><i class="bi bi-calendar"></i></button>
+                                    <div id="calendar" class="calendar dropdown-menu">
+                                        <!-- Days of the week will be added here -->
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="workingHours" class="form-label">Working Hours</label>
-                                <input type="text" class="form-control" id="workingHours" name="workingHours">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="workingHours" name="workingHours" value="" readonly>
+                                    <button class="btn btn-sm btn-primary" type="button" id="timePickerBtn">
+                                        <i class="bi bi-clock"></i>
+                                    </button>
+                                    <div id="timePickerContainer" class="mt-2 dropdown-menu">
+                                        <label for="startTimePicker" class="mx-2">Start Time:</label>
+                                        <input type="time" id="startTimePicker" class="form-control mx-2">
+                                        <label for="endTimePicker" class="mx-2">End Time:</label>
+                                        <input type="time" id="endTimePicker" class="form-control mx-2">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="salary" class="form-label">Salary</label>
@@ -273,7 +290,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="update-form" data-success-message="Update successful!" data-error-message="Update failed. Please try again.">Update</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="update-form" data-warning-message="Your vacancy will be updated." data-success-message="Update successful!" data-error-message="Update failed. Please try again.">Update</button>
                 </div>
             </div>
         </div>

@@ -20,6 +20,22 @@
   <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/assets/css/app.css">
   <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+  <style>
+    /* Custom CSS to hide background image of validation */
+    .form-control.is-invalid, .was-validated .form-control:invalid  {
+      background-image: none !important;
+    }
+    .form-control.is-valid, .was-validated .form-control:valid {
+      background-image: none !important;
+    }
+    .form-select.is-valid, .was-validated .form-select:valid {
+      background-image: none !important;
+    }
+    
+    .form-select.is-invalid, .was-validated .form-select:invalid{
+      background-image: none !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -54,8 +70,8 @@
               <div class="mt-md-3 text-center"><h3 class="success-line"></h3></div>
             </div>
             <div class="card-body">
-              <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
+              <form id="profile-edit-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
+              
                 <div class="row">
                   <div class="form-group position-relative has-icon-left mb-4 col-md-6">
                     <input type="file" class="form-control " id="photo" name="photo" accept="image/*">
@@ -64,29 +80,29 @@
                 </div>
                 <div class="row">
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="hidden" class="form-control" id="id" name="id" th:value="${user.id}">
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"  th:value="${user.username}" required>
+                  
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"required>
                     <label for="username"><i class="bi bi-person px-3"></i>Username</label>
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" id="username-error">
                       Please add Username.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Name" id="name" name="name" th:value="${user.name}" required>
+                    <input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
                     <label for="name"><i class="bi bi-person px-3"></i>Name</label>
-                    <div class="invalid-feedback">
+                    <div class="invalid-feedback" id="name-error">
                       Please add Name.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" th:value="${user.phone}" required>
+                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" required>
                     <label for="phone"><i class="bi bi-phone px-3"></i>Phone</label>
-                    <div id="phoneError" class="invalid-feedback">
+                    <div id="phone-error" class="invalid-feedback">
                       Please add a valid Phone Number.
                     </div>
                   </div>
                   <div class="form-floating mb-3 col-md-6">
-                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" th:value="${user.email}" required>
+                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
                     <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
                     <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
 
@@ -108,12 +124,11 @@
                   <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Role" name="role" id="role" required>
                       <option selected disabled value="">Role</option>
-                      <option th:selected="${user.role == user.role.SENIOR_HR}" value="SENIOR_HR">Senior HR</option>
-                      <option th:selected="${user.role == user.role.JUNIOR_HR}" value="JUNIOR_HR">Junior HR</option>
-                      <option th:selected="${user.role == user.role.MANAGEMENT}" value="MANAGEMENT">Management</option>
-                      <option th:selected="${user.role == user.role.INTERVIEWER}" value="INTERVIEWER">Interviewer</option>
-                      <option th:selected="${user.role == user.role.OTHER}" value="OTHER">Other</option>
-                      <!-- Add more options as needed -->
+                      <option value="SENIOR_HR">Senior HR</option>
+                      <option value="JUNIOR_HR">Junior HR</option>
+                      <option value="MANAGEMENT">Management</option>
+                      <option value="INTERVIEWER">Interviewer</option>
+                      <option value="OTHER">Other</option>
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
                     <div class="invalid-feedback" id="role-error">
@@ -125,34 +140,35 @@
                   <div class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Gender" name="gender" id="gender" required>
                       <option selected disabled value="">Gender</option>
-                      <option th:selected="${user.gender == user.gender.MALE}"  value="MALE">Male</option>
-                      <option th:selected="${user.gender == user.gender.FEMALE}" value="FEMALE">Female</option>
-                      <option th:selected="${user.gender == user.gender.OTHER}" value="OTHER">Other</option>
-                      <!-- Add more options as needed -->
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                      <option value="OTHER">Other</option>
                     </select>
                     <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
                     <div class="invalid-feedback" id="gender-error">
                       Please Choose Role.
                     </div>
                   </div>
+
                   <div class="row">
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" th:text="${user.address}" required></textarea>
+                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" required></textarea>
                       <label for="address"><span class="px-3">Address</span></label>
-                      <div class="invalid-feedback">
+                      <div class="invalid-feedback" id="address-error">
                         Please Add Address.
                       </div>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px" th:text="${user.note}"></textarea>
+                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px" ></textarea>
                       <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                     </div>
                   </div>
                 </div>
                 <div class="text-end">
+                  <p><a class="font-bold fs-6" th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Forgot password?</a></p>
                   <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 mt-4">Edit</button>
                 </div>
               </form>
@@ -239,9 +255,61 @@
 
 <script src="/assets/js/main.js"></script>
 <script>
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+  const currentURL = window.location.href;
+        const url = new URL(currentURL);
+        const id = url.searchParams.get("id");
 
 
-  document.querySelector("#registration-form").addEventListener("submit", function(event) {
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/get-user-profile?id=' + encodeURIComponent(id),{
+      method:'POST',
+      headers:{
+        [csrfHeader]: csrfToken // Include CSRF token as a request header
+      }     
+    })
+    .then(response => response.json())
+    .then(data =>{
+        const name = document.getElementById('name');
+        const username = document.getElementById('username');
+        const phone = document.getElementById('phone');
+        const email = document.getElementById('email');
+        const department = document.getElementById('department');
+        const address = document.getElementById('address');
+        const note = document.getElementById('note');
+
+        const stringDepartment = data.department.name;
+
+        console.log(stringDepartment);
+
+        name.value = data.name;
+        username.value = data.username;
+        phone.value = data.phone;
+        email.value = data.email;
+        department.value = stringDepartment; // Assign the stringified department name
+        address.value = data.address;
+        note.value = data.note;
+
+        const role = document.getElementById('role');
+          for (let option of role.options) {
+            if (option.value === data.role) {
+              option.selected = true;
+            }
+          }
+
+        const gender = document.getElementById('gender');
+          for (let option of gender.options) {
+            if (option.value === data.gender) {
+              option.selected = true;
+            }
+          }
+            })
+
+          })
+
+  document.querySelector("#profile-edit-form").addEventListener("submit", function(event) {
     event.preventDefault(); // Prevent the form from submitting normally
 
     if (!isFormValid()) {
@@ -249,9 +317,7 @@
       return;
     }
 
-    const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-
-    console.log(metaCsrfToken);
+    
     // Get form data
 
     const formData= new FormData(form);
@@ -262,7 +328,7 @@
     fetch('/user-profile-edit', {
       method: 'POST',
       headers: {
-        'X-XSRF-Token': metaCsrfToken
+        [csrfHeader]: csrfToken // Include CSRF token as a request header
       },
       body: formData
     })
@@ -315,45 +381,47 @@
 
 
   // <-----------------------------------------fetch call for user profile dit----------->
-
+    const emailError=document.getElementById('email-error');
+    const mainForm = document.getElementById('profile-edit-form');
+    
   (() => {
     'use strict';
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation');
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
+      
       form.addEventListener('submit', event => {
         if (!form.checkValidity()) {
           event.preventDefault();
           event.stopPropagation();
         }
         form.classList.add('was-validated');
+        emailError.innerHTML="Please Add Email."
       }, false);
     });
   })();
 
-  // Function to check phone number format
-  function checkPhoneNumber() {
+    // Function to check phone number format
+    function checkPhoneNumber() {
     const phoneNumberInput = document.getElementById('phone');
     const phoneNumber = phoneNumberInput.value;
     const phoneNumberLength = phoneNumber.length;
 
-
     // Check if phone number matches the pattern
-    if (!phoneNumber.match(/[+0-9]+/)) {
-      // Show error message and set custom validity
-      phoneNumberInput.setCustomValidity('Please add a valid Phone Number.');
-      phoneNumberInput.classList.add('is-invalid');
-    } else if (phoneNumberLength < 11 || phoneNumberLength > 13) {
-      // Check if phone number is between 11 to 13 digits
-      phoneNumberInput.setCustomValidity('Please add a valid Phone Number.');
+    if (phoneNumberLength === 0) {
+
+      phoneNumberInput.classList.remove('is-invalid');
+    } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
+
       phoneNumberInput.classList.add('is-invalid');
     } else {
-      // Remove error message and custom validity
-      phoneNumberInput.setCustomValidity('');
+
       phoneNumberInput.classList.remove('is-invalid');
     }
+
   }
+
 
   // Add event listener to phone number input
   const phoneNumberInput = document.getElementById('phone');
@@ -361,43 +429,52 @@
 
   // Function to check email format
   function checkEmail() {
-    const idInput = document.getElementById('id');
-    const idValue = idInput.value;
 
+    const u = window.location.href;
+    const url = new URL(u);
+    const id = url.searchParams.get("id");
+    
     const emailInput = document.getElementById('email');
     const emailValue = emailInput.value;
     console.log(emailValue)
-    const emailError=document.getElementById('email-error');
+    
     emailSpinner.style.display = 'inline-block';
     console.log("Spinner loading..")
 
-    fetch(`/fetch-email-except-mine?email=${emailValue}&userId=${idValue}`)
+    fetch('/fetch-email-except-mine?email=' + encodeURIComponent(emailValue) + '&userId=' + encodeURIComponent(id))
             .then((response) => response.json())
 
             .then((data) => {
               console.log(data)
               emailSpinner.style.display = 'none';
               console.log("Spinner hide")
-              if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
+              if(emailValue === ''){
+                emailInput.classList.remove('is-invalid');
+                emailError.innerHTML='';
+
+              } else if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
                 console.log("Email\'s already exist and Email is also not Valid")
                 emailInput.classList.add('is-invalid');
                 emailError.innerHTML='Email\'s already exist and Email is also not Valid';
+                mainForm.classList.remove('was-validated')
 
               } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
                 console.log("Email's already exist")
                 emailInput.classList.add('is-invalid');
                 emailError.innerText='Email\'s already exist.';
+                mainForm.classList.remove('was-validated')
 
               } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
                 emailInput.classList.add('is-invalid');
                 console.log("Email is not Valid")
                 emailError.innerHTML='Email is also not Valid';
+                mainForm.classList.remove('was-validated')
 
               } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)){
                 emailInput.classList.remove('is-invalid');
                 console.log("Email is good to use.")
               }
-
+              
               // Hide the spinner after the response is received
               departmentSpinner.style.display = 'none';
             })

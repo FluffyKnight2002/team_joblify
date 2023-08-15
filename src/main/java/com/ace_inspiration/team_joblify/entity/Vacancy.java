@@ -40,8 +40,6 @@ public class Vacancy implements Serializable{
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @JsonManagedReference
-    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VacancyInfo> vacancyInfo =new ArrayList<>();
 
