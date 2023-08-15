@@ -113,6 +113,10 @@ function fetchJobDetails(id) {
                         <i class='bx bxs-award' data-toggle="tooltip"
                         data-placement="bottom" title="Experience Level"></i>
                         ${data.lvl}</span>
+                    <span class="my-2 d-block">
+                        <i class='bi bi-gear-wide-connected' data-toggle="tooltip"
+                        data-placement="bottom" title="On-site or Remote"></i>
+                        ${data.onSiteOrRemote}</span>
                 </div>
 
                 <!-- Apply button start -->
@@ -132,17 +136,23 @@ function fetchJobDetails(id) {
 
                 <div class="mb-3">
                     <h5>Job Responsibilities</h5>
-                    <textarea class="bulletText" disabled>${data.responsibilities}</textarea>
+                    <div class="bulletText">
+                        ${formatTextAsList(data.responsibilities)}
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <h5>Job Requirements</h5>
-                    <textarea class="bulletText" disabled>${data.requirements}</textarea>
+                    <div class="bulletText">
+                        ${formatTextAsList(data.requirements)}
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <h5>Preferences</h5>
-                    <textarea class="bulletText" disabled>${data.preferences}</textarea>
+                    <div class="bulletText">
+                        ${formatTextAsList(data.preferences)}
+                    </div>
                 </div>
 
                 <table class="w-100 mx-2 mb-3">
@@ -193,6 +203,7 @@ function fetchJobDetails(id) {
 
             // Resize textarea elements
             $('.bulletText').each(function() {
+                this.style.overflow = 'hidden'; // Hide overflow initially
                 this.style.height = 'auto'; // Reset height to "auto" to allow resizing
                 this.style.height = this.scrollHeight + 'px'; // Set the height based on scrollHeight
             });
@@ -203,7 +214,7 @@ function fetchJobDetails(id) {
 }
 
 function changeTimeFormat(time) {
-    var dateString = "2023-07-27";
+    var dateString = time;
 
     // Parse the date string to a JavaScript Date object
     var date = new Date(dateString);
@@ -299,10 +310,27 @@ function changeDetail(id) {
     updateURLParams();
 }
 
+// Convert textarea content to HTML with bullet points
+function formatTextAsList(text) {
+    var lines = text.split("\n");
+    var formattedText = "<ul class='bulletText'>";
+
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (line.startsWith("•")) {
+            formattedText += "<li>" + line.substring(2) + "</li>";
+        } else if (line.startsWith("◦")) {
+            formattedText += '<li style="margin-left: 20px; list-style-type: circle;">' + line.substring(2) + "</li>";
+        }
+    }
+
+    formattedText += "</ul>";
+    return formattedText;
+}
+
 // Call the fetchJobDetails function when the page loads
 $(document).ready(function (){
     console.log(currentId);
-    $('#footer-content').css('margin-top', '85px');
     fetchJobDetails();
     fetchJobsAndRenderUI();
 

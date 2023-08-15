@@ -58,8 +58,12 @@ $(document).ready(function () {
                     data: "createdUsername",
                     data: "createdTime",
                     render: function (data, type, row, meta) {
-                        return '<span class="d-inline-block text-white rounded bg-info p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
-                            '<span class="d-inline-block text-white rounded bg-warning p-1" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) + '</span>';
+                        return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
+                            '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) +
+                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            changeTime(row.createdTime) +
+                            '    <span class="visually-hidden">unread messages</span>' +
+                            '</span>';
                     },
                     target: 6
                 }, // Access object property directly
@@ -67,8 +71,12 @@ $(document).ready(function () {
                     data: "updatedUsername",
                     data: "updatedTime",
                     render: function (data, type, row, meta) {
-                        return '<span class="d-inline-block text-white rounded bg-info p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
-                            '<span class="d-inline-block text-white rounded bg-warning p-1" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) + '</span>';
+                        return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
+                            '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) +
+                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            changeTime(row.updatedTime) +
+                            '    <span class="visually-hidden">unread messages</span>' +
+                            '</span>';
                     },
                     target: 7
                 }, // Access object property directly
@@ -529,6 +537,11 @@ function populateModalWithData(data) {
             }
 
             $dayElement.on('click', () => {
+                if (selectedDays.length === 1 && selectedDays.includes(day)) {
+                    // If there's only one selected day, prevent unselecting it
+                    return;
+                }
+
                 if (selectedDays.includes(day)) {
                     selectedDays = selectedDays.filter(selectedDay => selectedDay !== day);
                 } else {
@@ -542,7 +555,6 @@ function populateModalWithData(data) {
             $calendar.append($dayElement);
         });
     }
-
 
     $timePickerBtn.on('click', function() {
         $timePickerContainer.toggle();
@@ -593,7 +605,6 @@ function clearIdParameter() {
     var newUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
     history.replaceState({}, document.title, newUrl); // Replace the current URL without the "id" parameter
 }
-
 
 // Enum convert and reconvert
 
@@ -648,7 +659,31 @@ function changeTimeFormat(time) {
         }
     }
 
-    // Format the date as "Dayth Month Year" (e.g., "27th Jul")
-    var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
+    // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
+    var formattedDate = day + suffix + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
     return formattedDate;
+}
+
+function changeTime(time) {
+    let dateString = time;
+
+    // Parse the date string to a JavaScript Date object
+    let date = new Date(dateString);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let period = 'AM';
+    if(hours > 12) {
+        hours = hours - 12;
+        period = 'PM';
+    }
+
+    if(hours < 10) {
+        hours = '0' + hours;
+    }
+
+    if(minutes < 10) {
+        minutes = '0' + minutes;
+    }
+    return hours + ":" + minutes + " " + period;
+
 }
