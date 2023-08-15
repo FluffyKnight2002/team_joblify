@@ -85,7 +85,7 @@ public class EmailServiceImplement implements EmailService {
             helper.setSubject("JII");
             helper.setText(templateContent, true);
 
-            javaMailSender.send(message);
+           // javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
             // Handle any email sending errors here

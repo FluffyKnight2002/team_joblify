@@ -1,10 +1,7 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+
+
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -41,6 +38,11 @@ import com.ace_inspiration.team_joblify.service_implement.candidate_service_impl
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 public class CandidateController {
@@ -49,7 +51,7 @@ public class CandidateController {
 
 	private final SummaryServiceImplement summaryServiceImplement;
 
-	
+
 	private final CandidateServiceImplement candidateImpl;
 	
 	private final PositionServiceImpl positioinService;
@@ -66,7 +68,7 @@ public class CandidateController {
 	
 	@GetMapping("/allCandidate")
 	@ResponseBody
-	public DataTablesOutput<InterviewProcess> getAllCandidate(@Valid DataTablesInput input,ModelMap map) {
+	public DataTablesOutput<InterviewProcess> getAllCandidate( DataTablesInput input,ModelMap map) {
    		DataTablesOutput<InterviewProcess> interviewData= interview.findAll(input);
 		return interviewData;
 	}
@@ -108,9 +110,9 @@ public class CandidateController {
 	         	candidate.getVacancyInfo().getVacancy().getPosition().getName()
 	         );
 	         System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+summaryDto.getEmail());
-	   
+
 	     return summaryDto;
-	
+
 	 }else {
 	 	 return null;
 	 }
@@ -157,30 +159,32 @@ public class CandidateController {
 	
 
 	
-	
 	@ModelAttribute("candidate")
 	public CandidateDto getCandidateDto() {
 		return new CandidateDto();
 	}
-//
+
 //	@GetMapping("/job-details")
-//	public String ShowJobDetail() {
-//		return "job-details";
-//	}
+//    public String showJobDetails() {
+//        return "job-details";
+//    }
 
 	@PostMapping("/apply-job")
 	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
-		candidateService.saveCandidate(dto);
+
+		candidateImpl.saveCandidate(dto);
 		return "redirect:/show-job-details";
 
 	}
 
 	@GetMapping("/view-summaryinfo")
 	public String ViewSummaryInfo(Model model) {
-		List<Summary> summaries = summaryServiceImplement.getAllSummarys();
+		java.util.List<Summary> summaries = summaryServiceImplement.getAllSummarys();
 		model.addAttribute("listsummaryinfo", summaries);
 		return "view-summaryinfo";
 
 	}
+
+
 
 }

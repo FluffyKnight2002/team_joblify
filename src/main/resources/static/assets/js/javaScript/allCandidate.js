@@ -1,8 +1,14 @@
 $('.summernote').summernote({
 	tabsize: 2,
-	height: 110,
+	height: 500,
 })
 
+function getCsrfToken() {
+		const metaTag = document.querySelector('meta[name="_csrf"]');
+		return metaTag ? metaTag.getAttribute('content') : null;
+	}
+	const csrfToken = getCsrfToken();
+	
 var table;
 var currentId = new URLSearchParams(window.location.search);
 var id = currentId.get("viId");
@@ -200,14 +206,9 @@ if (id != null) {
 	}
 	
 
-	//Filter end
-
-	function getCsrfToken() {
-		const metaTag = document.querySelector('meta[name="_csrf"]');
-		return metaTag ? metaTag.getAttribute('content') : null;
-	}
-	const csrfToken = getCsrfToken();
-	//end 
+	//Filter end	
+	
+	 
 	table.on('click', 'td.dt-control', async function(e) {
 		let tr = e.target.closest('tr');
 		let row = table.row(tr);
@@ -324,17 +325,14 @@ if (id != null) {
 					this.checked);
 		});
 
-	$('#table1')
-		.on(
-			'change',
-			':checkbox',
+	$('#table1').on('change',':checkbox',
 			function() {
 				var checkboxes = $('#table1')
 					.find(':checkbox');
 				var selectAllCheckbox = $('#selectAll');
 				if (!this.checked) {
 					selectAllCheckbox.prop(
-						'checked', false);
+						'checked', false); 
 
 				} else {
 					selectAllCheckbox
@@ -349,18 +347,190 @@ if (id != null) {
 						this.checked);
 			});
 
-	$('#table1 tbody').on('click', '.btn-outline-primary',
-		function() {
-			var modalTitle = $(this).data(
-				'modal-title');
-			var row = table.row($(this).closest('tr')).data();
-			console.log(email);
-			$('#emailModal .modal-title').text(
-				modalTitle);
-			$('#emailModal .candidatEmail').val(row.email);
-			$("#emailModal .userEmail").val(row.email);
-		});
+	$('#table1 tbody').on('click', '.btn-outline-primary',function() {
+       var modalTitle = $(this).data('modal-title');
+       var row = table.row($(this).closest('tr')).data();
+      
+       var emailContent = `
 
+Dear ${row.name},
+
+Welcome from ACE Data Systems Ltd. We would like to invite for an interview at Zoom Meeting to you for interview to get to know you more detail appointment on (<span style="color:red;" class='date-setting text-bold' ></span> )  <span style="color:red;" class='time-setting text-bold'></span> to <span  style="color:red;" class='end-setting text-bold'></span>.
+Please join below the zoom link. Thanks.
+
+Note.... We want you to be in good condition during the interview with good internet and a quiet environment.
+
+Join Zoom Meeting
+https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09
+
+Meeting ID: 921 9152 8025
+Passcode: 178426
+`;
+	var offermail=`
+<b>Dear ${row.name}.</b>
+ 
+We are pleased to inform you that you are appointed as Software Engineer in Banking and Finance Department of ACE Data Systems Ltd. Please see your entitlement information detail and brief HR rule of company in below.
+
+Entitlement Pay Information
+
+Joined Start Date           	– 
+
+Position                         	– Software Engineer
+
+Basic Pay                      	– 
+
+Project Allowance		– 	
+
+Meal + Transportation Allowance   – 3000 * (Working Days per Month) = Normally 60, 000 MMK
+
+Note for probation period:
+
+*After probation and if you are selected, you must work minimum 2 years contract at ACE
+*If you wish to resign in violation of within 2 years Agreement, you must give three months’ notice and your two months’ current net salary must be refunded.   
+*No leaves are entitled in the probation period.
+*Any leave must be informed in advance by phone.
+*You must inform us 1 month in advance to resign.
+*ACE will inform you 1 month in advance if we want to terminate.
+*You must learn all technical knowledge required by project(.NET, Java or any other technologies)
+
+
+ 
+HR Rule of Company (Brief)
+
+(1)   Working Hour            	: From 9:00 AM To 06:00 PM
+                                                                          : From Monday to Friday (Except gazette holidays)
+(2)  Leave Entitlement (After probation period)
+
+a.     Earn Leave                  	: 10 days per year after one year service history
+                                                                         (Need to apply one month in advance)
+
+
+b.     Casual Leave              	: 10 days per year after probation period 
+                                                                        (Maximum 3 days per Month)
+
+c.     Medical Leave                : 30 days per year (With approved medical certification)
+
+
+(3)   Resignation after Employment Period     :          
+
+a.     The employee shall give not less than three months written notice to the Employer for his/her resignation.
+
+b.     In case the employee for any reason, leave the services of the Company before the agreement period then employee shall pay 3 times of the current net salary.
+
+(4)   Confidentiality                                        :          
+
+a.     The employee agrees not to disclose any of Company’s confidential information, Company’s trademarks or knowledge pertaining to the business of the Company during or after the employment.
+`
+
+
+        $('#emailModal .modal-title').text(modalTitle);
+        $('#emailModal .candidatEmail').val(row.email);
+        $("#emailModal .userEmail").val(row.email);
+	 	$("#emailModal #candidate-id").val(row.id);
+
+      
+		emailContent=emailContent.replace(/\n/g, '<br>');
+		offermail=offermail.replace(/\n/g, '<br>');
+$('#where').on('change', function() {
+    var type = $(this).val();
+    var updatedContent = getEmailContent(type);
+     updatedContent = updatedContent.replace(/\n/g, '<br>');
+    $('#emailModal #data').summernote('code', updatedContent);
+});
+
+function getEmailContent(type) {
+    var onlineText = `
+
+Dear ${row.name},
+
+Welcome from ACE Data Systems Ltd. We would like to invite for an interview at Zoom Meeting to you for interview to get to know you more detail appointment on (<span style="color:red;" class='date-setting text-bold' ></span> )  <span style="color:red;" class='time-setting text-bold'></span> to <span  style="color:red;" class='end-setting text-bold'></span>.
+Please join below the zoom link. Thanks.
+
+Note.... We want you to be in good condition during the interview with good internet and a quiet environment.
+
+Join Zoom Meeting
+https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09
+
+Meeting ID: 921 9152 8025
+Passcode: 178426
+`;
+    var offlineText = `
+
+Dear ${row.name},
+
+Welcome from ACE Data Systems Ltd. We would like to invite for an interview at Zoom Meeting to you for interview to get to know you more detail appointment on (<span style="color:red;" class='date-setting text-bold' ></span> )  <span style="color:red;" class='time-setting text-bold'></span> to <span  style="color:red;" class='end-setting text-bold'></span>.
+Building 18, 7th floor, MICT Park,Hlaing Township, Yangon, Myanmar. Thanks.
+
+Note.... We want you to be in good condition during the interview with good internet and a quiet environment.
+
+Join Zoom Meeting
+https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09
+
+Meeting ID: 921 9152 8025
+Passcode: 178426
+`;
+    
+    if (type == 'OFFLINE') {
+        return offlineText;
+    } else {
+        return onlineText;
+    }
+}
+
+		if(modalTitle=='Interview Invert Mail'){
+		$('#emailModal #data').summernote('code', emailContent);
+		 $('#emailModal .subject').val('Interview Invert Mail');
+		 $('#emailModal .status').show();
+		}else{
+			 $('#emailModal #data').summernote('code',offermail);
+			  $('#emailModal .status').hide();
+			 // ('#emailModal #view-type').hide();
+			  $('#emailModal .subject').val('Job offer Mail');
+		}
+        
+       
+           });
+ $('#date').on('input', function() {
+	  const inputDate = $(this).val();
+    const date = new Date(inputDate);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+    
+    $('.date-setting').html(formattedDate);    });
+ $('#time').on('input',function(){
+	  var inputTime = $(this).val();
+	  var date = new Date();
+    var timeParts = inputTime.split(':');
+    date.setHours(parseInt(timeParts[0], 10));
+    date.setMinutes(parseInt(timeParts[1], 10));
+    
+    // Format time with AM/PM
+    var formattedTime = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+   
+    const endTime = new Date(date.getTime() + 30 * 60000); // 30 minutes in milliseconds
+    const formattedEndTime = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Update the content of the time-setting element
+    $('.time-setting').html(formattedTime);
+    $('.end-setting').html(formattedEndTime);
+	
+ });
+
+    /*function updateDateSetting() {
+        var selectedDate = $('#date').val();
+        var emailContent = $('#emailModal #data').summernote('code');
+			
+        // Update the Date Setting section in the email content
+        emailContent = emailContent.replace(/Date Setting\s+-.*\n/,
+            'Date Setting    - ' + selectedDate + '\n');
+console.log(emailContent)
+        // Replace newline characters with HTML <br> tags
+        //emailContent = emailContent.replace(/\n/g, '<br>');
+
+        // Set the updated content back to the textarea
+        $('#emailModal #data').summernote('code', emailContent);
+    }*/
 	// Function to get the CSRF token from the cookie
 
 
@@ -441,11 +611,11 @@ if (id != null) {
 				}
 			});
 	});
-
-
+	
 
 
 });
+
 const triggerTabList = document.querySelectorAll('#myTab button')
 triggerTabList.forEach(triggerEl => {
   const tabTrigger = new bootstrap.Tab(triggerEl)
@@ -456,13 +626,62 @@ triggerTabList.forEach(triggerEl => {
   })
 })
 
-
+const form = document.getElementById('send-mail');
+const editor = document.getElementById('object');
+const hiddenInput = document.getElementById('content');
+const to = document.getElementById('to');
+const date1=document.getElementById('date');
+const time=document.getElementById('time');
+const type=document.getElementById('where');
+const stage=document.getElementById('interview-status');
+const canid=document.getElementById('candidate-id');
+const fetchValueButton = document.getElementById('fetchValueButton'); // Add the missing button ID
 // Add a click event listener to the button
 fetchValueButton.addEventListener('click', function() {
-	// Get the value of the input with id="time"
-	const timeInputValue = document.getElementById('time').value;
+    // Get the value of the input with id="time"
+    hiddenInput.value =editor.querySelector('.summernote').value
+	console.log( hiddenInput.value)
+	console.log(to)
+    const data = {
+        to: to.value,
+        content:hiddenInput.value,
+        date:date1.value,
+        time:time.value,
+        status:stage.value,
+        type:type.value,
+        canId:canid.value,
+        
+        
+    };
 
-	// Do something with the value (e.g., display it in an alert)
-	alert('Value of time: ' + timeInputValue);
+    try {
+        fetch('/send-invite-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                'X-XSRF-Token': csrfToken // Include CSRF token as a request header
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Email sent successfully:', response);
+            } else {
+                console.error('Failed to send email:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+    } catch (error) {
+        console.error('An error occurred:', error);
+    }
 });
+
+// Get the textarea element by its ID
+
+
+
+/////////////////////////////////////////
+   
 

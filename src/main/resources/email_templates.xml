@@ -81,6 +81,7 @@
                 </div>
                 <br />
                 <strong>Dear {Name},</strong>
+      
                 <p>
                   &nbsp;We have received a forget password request for your account. For
                   security purposes, please verify your identity by providing the

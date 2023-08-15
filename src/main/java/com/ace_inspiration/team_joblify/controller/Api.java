@@ -3,8 +3,13 @@ package com.ace_inspiration.team_joblify.controller;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
+import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.Interview;
+import com.ace_inspiration.team_joblify.entity.InterviewStage;
+import com.ace_inspiration.team_joblify.entity.InterviewType;
 import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
+import com.ace_inspiration.team_joblify.repository.InterviewRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.EmailService;
 import com.ace_inspiration.team_joblify.service.OtpService;
@@ -31,6 +36,7 @@ public class Api {
     private final UserService userService;
     private final EmailService emailService;
     private final OtpService otpService;
+    private final InterviewRepository inter;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -80,8 +86,20 @@ public class Api {
 
     @PostMapping("/send-invite-email")
     public String sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
-
+    	System.err.println(">>>>>>>>>"+emailTemplateDto.getCanId()+">>>"+InterviewType.valueOf(emailTemplateDto.getType()));
         emailService.sendJobOfferEmail(emailTemplateDto.getTo(), emailTemplateDto.getContent());
+        
+        Candidate candidate = new Candidate();
+        candidate.setId(emailTemplateDto.getCanId());
+        
+        Interview interview=new Interview();
+        interview.setInterviewDate(emailTemplateDto.getDate());
+        interview.setInterviewTime(emailTemplateDto.getTime());
+        interview.setType(InterviewType.valueOf(emailTemplateDto.getType()));
+        interview.setInterviewStage(InterviewStage.valueOf(emailTemplateDto.getStatus()));
+        interview.setCandidate(candidate);
+        inter.save(interview);
+        
         return "Email sent successfully!";
     }
 
