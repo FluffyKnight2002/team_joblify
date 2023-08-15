@@ -1,28 +1,98 @@
+
+$(document).ready(function(){
+	$.ajax({
+		url: '/count',
+		type: 'GET',
+		success: function(response){
+			var post4=[];
+			var post5=[];
+			var post6=[];
+			var post7=[];
+			
+			$.each(response, function(index, post){
+				var formattedLabel = post.open + " To " + post.close;
+				post4.push(post.postTotal);
+                post5.push(post.totalCandidates);
+                post6.push(post.hired);
+                post7.push(formattedLabel);
+				console.log(post)
+			});
+		
 var optionsProfileVisit = {
-	annotations: {
-		position: 'back'
-	},
-	dataLabels: {
-		enabled:false
-	},
+	 
+	 series: [{
+          name: 'Total Post',
+          data: post4
+         
+        }, {
+          name: 'Total Candidate',
+          data: post5
+        }, {
+          name: 'Hired',
+          data: post6
+        }],
 	chart: {
-		type: 'bar',
-		height: 300
-	},
-	fill: {
-		opacity:1
+	 width: "100%",
+    height: 380,
+    type: "bar",
+ 
 	},
 	plotOptions: {
+		bar: {
+			horizontal: false,
+			columnWidth: '55%',
+			endingShape: 'rounded'
+		},
 	},
-	series: [{
-		name: 'sales',
-		data: [9,20,30,20,10,20,30,20,10,20,30,20]
-	}],
-	colors: '#435ebe',
+	dataLabels: {
+		enabled: false
+	},
+	stroke: {
+		show: true,
+		width: 2,
+		colors: ['transparent']
+	},
 	xaxis: {
-		categories: ["Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"],
+		categories:post7 
 	},
+	yaxis: {
+		title: {
+			text: 'Detail'
+		}
+	},
+	fill: {
+		opacity: 1
+	},
+	tooltip: {
+		y: {
+			formatter: function(val) {
+				return " " + val + ""
+			}
+		}
+	},
+	 responsive: [
+    {
+      breakpoint: 1000,
+      options: {
+        plotOptions: {
+          bar: {
+            horizontal: true
+          }
+        },
+        legend: {
+          position: "bottom"
+        }
+      }
+    }
+  ]
+};
+var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
+	chartProfileVisit.render();
 }
+	});
+
+});
+
 let optionsVisitorsProfile  = {
 	series: [70, 30],
 	labels: ['Male', 'Female'],
@@ -103,14 +173,15 @@ let optionsIndonesia = {
 
 
 
-var chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
+
 var chartVisitorsProfile = new ApexCharts(document.getElementById('chart-visitors-profile'), optionsVisitorsProfile)
 var chartEurope = new ApexCharts(document.querySelector("#chart-europe"), optionsEurope);
 var chartAmerica = new ApexCharts(document.querySelector("#chart-america"), optionsAmerica);
 var chartIndonesia = new ApexCharts(document.querySelector("#chart-indonesia"), optionsIndonesia);
 
+
 chartIndonesia.render();
 chartAmerica.render();
 chartEurope.render();
-chartProfileVisit.render();
+
 chartVisitorsProfile.render()
