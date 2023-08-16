@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Data
 @Builder
@@ -26,5 +28,6 @@ public class Position implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "position", orphanRemoval = true, cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Vacancy> vacancies =new ArrayList<>();
 }

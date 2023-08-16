@@ -23,10 +23,7 @@ public class VacancyServiceImpl implements VacancyService {
 
     private final VacancyRepository vacancyRepository;
     private final DepartmentService departmentService;
-    private final DepartmentRepository departmentRepository;
     private final PositionService positionService;
-    private final AddressRepository addressRepository;
-    private final AddressService addressService;
     private final UserRepository userRepository;
 
     @Override

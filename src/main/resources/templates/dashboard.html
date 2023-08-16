@@ -16,6 +16,16 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <style>
+    .chart-container {
+    display: flex;
+    flex-wrap: wrap; 
+}
+.chart {
+    flex: 1;
+    margin: 10px;
+}
+    </style>
 </head>
 
 <body>
@@ -106,8 +116,8 @@
                                     <div class="card-header">
                                         <h4>Profile Visit</h4>
                                     </div>
-                                    <div class="card-body">
-                                        <div id="chart-profile-visit"></div>
+                                    <div  class="card-body">
+                                        <div id="chart-profile-visit" class="chart"></div>
                                     </div>
                                 </div>
                             </div>
@@ -304,11 +314,11 @@
             </footer>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
-
     <script src="/assets/js/main.js"></script>
 </body>
 

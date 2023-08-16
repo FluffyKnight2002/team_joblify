@@ -103,7 +103,7 @@ public class EmailServiceImplement implements EmailService {
             helper.setSubject("Job Interview Invitation");
             helper.setText(templateContent, true);
 
-            javaMailSender.send(message);
+           // javaMailSender.send(message);
         } catch (MessagingException e) {
             log.error("Error sending email: {}", e.getMessage());
             // Handle any email sending errors here

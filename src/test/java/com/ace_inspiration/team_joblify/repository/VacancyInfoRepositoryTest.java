@@ -110,7 +110,7 @@ class VacancyInfoRepositoryTest {
                 .updatedUser(user)
                 .hiredPost(0)
                 .workingDays("Mon to Fri")
-                .workingDays("9am to 5pm")
+                .workingHours("9am to 5pm")
                 .responsibilities("asdaassfa")
                 .address(address)
                 .requirements("aaaaaaaa")
