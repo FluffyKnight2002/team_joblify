@@ -6,8 +6,6 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,7 +19,6 @@ import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.DasboardRespository;
 import com.ace_inspiration.team_joblify.entity.AllPost;
@@ -41,6 +38,7 @@ import lombok.RequiredArgsConstructor;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -162,24 +160,13 @@ public class CandidateController {
 	public CandidateDto getCandidateDto() {
 		return new CandidateDto();
 	}
-//
-//	@GetMapping("/job-details")
-//	public String ShowJobDetail() {
-//		return "job-details";
-//	}
+
 
 	@PostMapping("/apply-job")
 	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
+		System.out.println(dto);
 		candidateService.saveCandidate(dto);
 		return "redirect:/show-job-details";
-
-	}
-
-	@GetMapping("/view-summaryinfo")
-	public String ViewSummaryInfo(Model model) {
-		List<Summary> summaries = summaryServiceImplement.getAllSummarys();
-		model.addAttribute("listsummaryinfo", summaries);
-		return "view-summaryinfo";
 
 	}
 

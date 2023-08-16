@@ -74,6 +74,8 @@ public class CandidateDto {
 	private List<Interview>interviews=new ArrayList<>();
 
 	private List<Notification>notification=new ArrayList<>();
+	
+	private String vacancyId;
 
 	private VacancyDto vacancyDto;
 
