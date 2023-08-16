@@ -1,5 +1,6 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,5 +31,6 @@ public class Department implements Serializable {
     private List<User> user=new ArrayList<>();
 
     @OneToMany(mappedBy = "department", orphanRemoval = true , cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Vacancy> vacancies =new ArrayList<>();
 }

@@ -48,7 +48,7 @@ async function applyFilter() {
   // Replace this with your actual filter implementation
 }
 
-function resetFilter(event) {
+async function resetFilter(event) {
     event.preventDefault();
 
     // Reset all filter options to their default values
@@ -60,8 +60,17 @@ function resetFilter(event) {
     $("input[name='under10']").prop("checked", false);
     $("input[name='includingClosed']").prop("checked", false);
 
-    applyFilter();
-    $('#result-count').html("0");
+    let dataOfVacancies =await applyFilter();
+    showResult();
+    console.log(dataOfVacancies.totalElements, "In reset");
+    $('#result-count').html(dataOfVacancies.totalElements);
+    // Check the viewport width
+    const mediaQuery = window.matchMedia('(max-width: 767px)'); // Adjust the breakpoint as needed
+
+    if (mediaQuery.matches) {
+        // Close the offcanvas here
+        closeFilter();
+    }
 }
 
 // Function to open the filter
@@ -120,7 +129,7 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder1
 }
 
 $("#title-input").autocomplete({
-  minLength: 2,
+  minLength: 1,
   source: function(request, response) {
     titleSpinner.show();
     console.log("Spinner loading..")
@@ -173,14 +182,6 @@ $("#title-input").autocomplete({
 //     applyFilter();
 // }
 
-function reconvertToString(input) {
-  // Replace underscores with spaces and convert to title case
-  if (input === "ON_SITE") {
-    return "On-site";
-  }
-  return input.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
-}
-
 function updatePaginationUI(totalPages, currentPage) {
     const paginationContainer = $("#pagination-container");
     paginationContainer.empty();
@@ -220,8 +221,8 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the previous button
     const startPageButton = `
         <li class="page-item">
-            <a class="page-link me-1 rounded-pill" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
-                <span aria-hidden="true">Start</span>
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(0)" aria-label="Previous">
+                <span aria-hidden="true">First</span>
             </a>
         </li>
     `;
@@ -229,7 +230,7 @@ function updatePaginationUI(totalPages, currentPage) {
     // Create the next button
     const lastPageButton = `
         <li class="page-item">
-            <a class="page-link ms-1 rounded-pill" href="#" onclick="event.preventDefault();loadVacancies(countLastPage())" aria-label="Next">
+            <a class="page-link" href="#" onclick="event.preventDefault();loadVacancies(countLastPage())" aria-label="Next">
                 <span aria-hidden="true">Last</span>
             </a>
         </li>
@@ -241,7 +242,7 @@ function updatePaginationUI(totalPages, currentPage) {
         const activeClass = i === currentPage ? "active-page" : "";
         const pageLink = `
         <li class="page-item text-center">
-            <a class="page-link rounded-circle mx-1 ${activeClass}" style="width: 38px; height: 38px" href="#" onclick="event.preventDefault();loadVacancies(${i-1})">${i}</a>
+            <a class="page-link ${activeClass}" href="#" onclick="event.preventDefault();loadVacancies(${i-1})">${i}</a>
         </li>
     `;
         pageLinks.push(pageLink);
@@ -249,13 +250,15 @@ function updatePaginationUI(totalPages, currentPage) {
 
     // Combine all the components to form the pagination UI
     const paginationUI = `
-        <nav aria-label="Page navigation example">
+        <div class="sticky-bottom pagination-container">
+            <nav aria-label="Page navigation">
             <ul class="pagination">
                 ${startPageButton}
                 ${pageLinks.join("")}
                 ${lastPageButton}
             </ul>
         </nav>
+        </div>
     `;
 
     paginationContainer.append(paginationUI);
@@ -271,9 +274,10 @@ function showResult() {
     console.log(vacancies)
   $("#jobs-container").empty();
 
-  // Loop through each vacancy and create the card dynamically
-  vacancies.forEach(function (vacancy) {
-    const card = `
+    if(vacancies.length > 0) {
+        // Loop through each vacancy and create the card dynamically
+        vacancies.forEach(function (vacancy) {
+            const card = `
                 <div class="card flex-md-row">
                     <div class="">
                         <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
@@ -281,7 +285,7 @@ function showResult() {
                     <div class="card-body">
                         <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${vacancy.salary}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.updatedTime)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
                     </div>
@@ -291,22 +295,36 @@ function showResult() {
                     </div>
                 </div>
             `;
-    // Append the card to the container
-    $("#jobs-container").append(card);
+            // Append the card to the container
+            $("#jobs-container").append(card);
 
-    // Initialize Bootstrap tooltips
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            placement: 'bottom' // Set the desired placement here
+            // Initialize Bootstrap tooltips
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    placement: 'bottom' // Set the desired placement here
+                });
+            });
         });
-    });
-  });
 
-    // Apply the card animations
-    // applyCardAnimations();
+        // Apply the card animations
+        // applyCardAnimations();
+    }else {
 
-  // Update the pagination UI
-  updatePaginationUI(totalPages, currentPages);
+        const card = `
+            <div class="d-flex justify-content-center align-items-center">
+                <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+            </div>
+            <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+        `;
+
+        // Append the card to the container
+        $("#jobs-container").append(card);
+    }
+
+    updateRecentFilter();
+
+    // Update the pagination UI
+    updatePaginationUI(totalPages, currentPages);
 }
 
 function applyCardAnimations() {
@@ -318,78 +336,16 @@ function applyCardAnimations() {
     });
 }
 
-function timeAgo(time) {
-    const currentTime = new Date();
-    const inputTime = new Date(time);
-    const timeDifferenceInSeconds = Math.floor((currentTime - inputTime) / 1000);
-
-    // Define time units in seconds
-    const minute = 60;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const week = 7 * day;
-    const month = 30 * day;
-
-    if (timeDifferenceInSeconds < minute) {
-        return 'Just now';
-    } else if (timeDifferenceInSeconds < hour) {
-        const minutesAgo = Math.floor(timeDifferenceInSeconds / minute);
-        return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < day) {
-        const hoursAgo = Math.floor(timeDifferenceInSeconds / hour);
-        return `${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < week) {
-        const daysAgo = Math.floor(timeDifferenceInSeconds / day);
-        return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
-        const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
-        return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
-    } else {
-        // Display the date in the format: 'MMM DD YYYY'
-        const formattedDate = inputTime.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        return formattedDate;
-    }
-}
-
-function changeTimeFormat(time) {
-
-    // Parse the date string to a JavaScript Date object
-    var date = new Date(time);
-
-    // Array to map month numbers to month names
-    var monthNames = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-
-    // Get the day of the month
-    var day = date.getDate();
-
-    // Determine the suffix for the day (st, nd, rd, or th)
-    var suffix;
-    if (day >= 11 && day <= 13) {
-        suffix = "th";
-    } else {
-        switch (day % 10) {
-            case 1: suffix = "st"; break;
-            case 2: suffix = "nd"; break;
-            case 3: suffix = "rd"; break;
-            default: suffix = "th";
-        }
-    }
-
-    // Format the date as "Dayth Month Year" (e.g., "27th Jul")
-    var formattedDate = day + suffix + " " + monthNames[date.getMonth()];
-    return formattedDate;
-}
-
 $('#show-result-btn').on('click', function(event) {
     event.preventDefault();
-    showResult(vacancies);
+    showResult();
+    // Check the viewport width
+    const mediaQuery = window.matchMedia('(max-width: 767px)'); // Adjust the breakpoint as needed
+
+    if (mediaQuery.matches) {
+        // Close the offcanvas here
+        closeFilter();
+    }
 });
 
 async function loadVacancies(page) {
@@ -399,9 +355,14 @@ async function loadVacancies(page) {
     let datePosted = $('input[name="datePosted"]:checked').val();
     let position = $('#title-input').val();
     let jobType = $('input[name="jobType"]:checked').val();
+    // Extract selected level values into an array
     let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
         $('input[name="level"]:checked').serializeArray().map(item => item.value);
-    let levelString = levelArray != null ? levelArray.join(',') : null;
+    // let levelArray = $('input[name="level"]:checked').map(function() {
+    //     return $(this).siblings('label').text();
+    // }).get();
+
+    // let levelString = levelArray.length > 0 ? levelArray.join(',') : null;
     let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
     let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
     let itemPerPage = 5;
@@ -410,14 +371,60 @@ async function loadVacancies(page) {
         const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10,isIncludingClosed, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
+        resultCount = data.totalElements;
+        console.log("RESULT COUNT : ",resultCount);
         console.log("Loaded vacancies:", vacancies);
 
-        showResult(vacancies);
+        showResult();
         updatePaginationUI(totalPages, page);
     } catch (error) {
         // Handle errors
         console.log(error);
     }
+}
+
+function updateRecentFilter() {
+    // Get the selected filter options
+    const sortBy = $('input[name="sortBy"]:checked').siblings('label').text();
+    const datePosted = $('input[name="datePosted"]:checked').siblings('label').text();
+    const jobType = $('input[name="jobType"]:checked').siblings('label').text();
+    const levelsArray = $('input[name="level"]:checked').map(function () {
+        return $(this).siblings('label').text();
+    }).get();
+    const under10 = $('input[name="under10"]').is(':checked') ? 'Under 10 applicants' : '';
+    const includingClosed = $('input[name="includingClosed"]').is(':checked') ? 'Including closed' : '';
+
+    // Create an array of filter elements
+    const filterElements = [
+        `<span class="text-muted sub-title me-2 bg-white p-1 rounded-pill"><strong>Filter : </strong></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${sortBy}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${datePosted}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${jobType}</span>`
+    ];
+
+    // Add level filters if levelsArray has values
+    if (levelsArray.length > 0) {
+        levelsArray.forEach(level => {
+            filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${level}</span>`);
+        });
+    } else {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">ALL</span>`);
+    }
+
+    // Add under10 and includingClosed filter elements
+    if (under10) {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${under10}</span>`);
+    }
+    if (includingClosed) {
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${includingClosed}</span>`);
+    }
+
+    // Update the recent-filter section with the generated filter elements
+    const recentFilter = $('#filter-data-con');
+    recentFilter.empty(); // Clear previous content
+    filterElements.forEach(element => {
+        recentFilter.append(element);
+    });
 }
 
 $(document).ready(async function () {
@@ -433,5 +440,6 @@ $(document).ready(async function () {
     // vacancies =await applyFilter();
     console.log("Doc ready : " +  vacancies);
     await loadVacancies(0);
+    $('#result-count').html(resultCount)
     // showResult(vacancies);
 });

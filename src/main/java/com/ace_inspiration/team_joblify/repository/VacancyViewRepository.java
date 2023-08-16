@@ -4,9 +4,12 @@ import com.ace_inspiration.team_joblify.entity.VacancyView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface VacancyViewRepository extends DataTablesRepository<VacancyView,Long> {
@@ -20,4 +23,9 @@ public interface VacancyViewRepository extends DataTablesRepository<VacancyView,
                                       @Param("under_10") boolean under10,
                                       @Param("including_closed") boolean includingClosed,
                                       Pageable pageable);
+
+    @Query("SELECT vv FROM VacancyView vv ORDER BY vv.updatedTime DESC LIMIT 3")
+    List<VacancyView> getLastVacancyView();
+
+
 }

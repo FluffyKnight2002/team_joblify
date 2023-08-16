@@ -3,7 +3,6 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.entity.JobType;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.OnSiteOrRemote;
@@ -65,6 +64,30 @@ public class VacancyController {
         vacancyDto.setOpenDate(LocalDate.now());
         vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
         VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfo(vacancyDto);
+        if(vacancyInfo != null) {
+            NotificationDto notificationDto = new NotificationDto();
+            String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
+            String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
+            createNotification(myUserDetails,message,link);
+            return true;
+        }
+        return false;
+    }
+
+    @PostMapping("/reopen-vacancy-by-id")
+    @ResponseBody
+    public boolean reopenVacancyById(@RequestParam("id")String id, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        VacancyDto vacancyDto = new VacancyDto();
+        vacancyDto.setCreatedUserId(myUserDetails.getUserId());
+        vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
+        vacancyDto.setStatus("OPEN");
+        // For close date plus 30
+        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
+        vacancyDto.setId(Long.valueOf(id));
+        System.out.println("ID : " + vacancyDto.getId());
+        VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfoById(vacancyDto);// By Id mean findBy id and update in service
         if(vacancyInfo != null) {
             NotificationDto notificationDto = new NotificationDto();
             String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";

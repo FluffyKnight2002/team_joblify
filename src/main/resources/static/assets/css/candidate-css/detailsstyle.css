@@ -67,6 +67,12 @@
     width: 100%;
 }
 
+.bulletText li {
+    white-space: normal;
+    word-wrap: break-word;
+    max-width: 100%;
+}
+
 @media (max-width: 768px) {
 
     /* Styles for small screens */

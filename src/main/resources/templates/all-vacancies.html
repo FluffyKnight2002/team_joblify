@@ -131,31 +131,32 @@
                             <label for="title" class="form-label">
                                 Title(Position)
                                 <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Modify position was not allow in reopen mode!"
-                                >
+                                      title="Modify position was not allow in reopen mode!">
                                     <i class="bi bi-exclamation-circle-fill"></i>
                                 </span>
                             </label>
-                            <input type="text" class="form-control input-to-disable" id="title" name="position">
+                            <input type="text" class="form-control custom-autocomplete input-to-disable" id="title" name="position" required>
                             <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
+                            <div class="feedback-message"></div>
                             <div id="title-suggestions"></div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="post" class="form-label">Post</label>
-                                <input type="text" class="form-control" id="post" name="post">
+                                <input type="number" class="form-control" id="post" name="post" required>
+                                <div class="feedback-message"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                                 <label for="department" class="form-label">
                                     Department
                                     <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                          title="Modify department was not allow in reopen mode!"
-                                    >
+                                          title="Modify department was not allow in reopen mode!">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </span>
                                 </label>
-                                <input type="text" class="form-control input-to-disable" id="department" name="department">
+                                <input type="text" class="form-control custom-autocomplete input-to-disable" id="department" name="department" required>
                                 <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                                <div class="feedback-message"></div>
                                 <div id="department-suggestions"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -180,15 +181,34 @@
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="workingDays" class="form-label">Working Days</label>
-                                <input type="text" class="form-control" id="workingDays" name="workingDays">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="workingDays" name="workingDays" readonly>
+                                    <button type="button" class="btn btn-sm btn-primary" id="calendar-btn"><i class="bi bi-calendar"></i></button>
+                                    <div id="calendar" class="calendar dropdown-menu">
+                                        <!-- Days of the week will be added here -->
+                                    </div>
+                                    <div class="feedback-message"></div>
+                                </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="workingHours" class="form-label">Working Hours</label>
-                                <input type="text" class="form-control" id="workingHours" name="workingHours">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="workingHours" name="workingHours" value="" readonly>
+                                    <button class="btn btn-sm btn-primary" type="button" id="timePickerBtn">
+                                        <i class="bi bi-clock"></i>
+                                    </button>
+                                    <div id="timePickerContainer" class="mt-2 dropdown-menu">
+                                        <label for="startTimePicker" class="mx-2">Start Time:</label>
+                                        <input type="time" id="startTimePicker" class="form-control mx-2">
+                                        <label for="endTimePicker" class="mx-2">End Time:</label>
+                                        <input type="time" id="endTimePicker" class="form-control mx-2">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="salary" class="form-label">Salary</label>
-                                <input type="text" class="form-control" id="salary" name="salary">
+                                <input type="text" class="form-control" id="salary" name="salary" required>
+                                <div class="feedback-message"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
@@ -201,7 +221,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="descriptions" class="form-label">Descriptions</label>
-                            <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
+                            <textarea class="form-control" id="descriptions" name="descriptions" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="responsibilities" class="form-label">
@@ -221,7 +242,8 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3"></textarea>
+                            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="requirements" class="form-label">
@@ -241,7 +263,8 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                            <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="preferences" class="form-label">
@@ -261,19 +284,21 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
+                            <textarea class="form-control" id="preferences" name="preferences" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                            <textarea class="form-control custom-autocomplete" id="address" name="address" rows="3" required></textarea>
                             <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
+                            <div class="feedback-message"></div>
                             <div id="address-suggestions"></div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="update-form" data-success-message="Update successful!" data-error-message="Update failed. Please try again.">Update</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="update-form" data-warning-message="Your vacancy will be updated." data-success-message="Update successful!" data-error-message="Update failed. Please try again.">Update</button>
                 </div>
             </div>
         </div>
@@ -300,6 +325,7 @@
 <script src="/assets/js/jquery.spring-friendly.js"></script>
 <script src="/assets/js/viewvacancies.js"></script>
 <script src="/assets/js/autocomplete.js"></script>
+<script src="/assets/js/texteditor.js"></script>
 <script src="/assets/js/messageandloader.js"></script>
 <script src="/assets/js/websocket.js"></script>
 <script src="/assets/js/main.js"></script>

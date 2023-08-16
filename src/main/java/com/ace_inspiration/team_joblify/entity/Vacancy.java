@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -41,7 +40,6 @@ public class Vacancy implements Serializable{
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "vacancy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VacancyInfo> vacancyInfo =new ArrayList<>();
 

@@ -16,47 +16,59 @@
 </head>
 <style>
     .inputs input {
-        width: 11%; /* You can adjust the width percentage based on your preference */
+        width: 10%; /* You can adjust the width percentage based on your preference */
         height: 2.5em; /* You can adjust the height in em units based on your preference */
     }
 
     .form-control {
-    border-color: #1e497b; /* You can adjust the color code to your preference */
+        border-color: #1e497b; /* You can adjust the color code to your preference */
+        padding: 0%;
+    }
+
+    .form-control.is-invalid, .was-validated .form-control:invalid  {
+        padding-right: 0;
+        background-image: none !important;
+    }
+    .form-control.is-valid, .was-validated .form-control:valid {
+        padding-right: 0;
+        background-image: none !important;
     }
 </style>
 <body>
     <div id="auth">
 
         <div class="row h-100 justify-content-center align-items-center">
-          <div class="py-4 px-3 px-md-4 px-lg-5 shadow-lg col-12 col-sm-8 col-md-6 col-lg-4" style="border-radius: 30px;">
+          <div class="py-4 px-3 px-md-4 px-lg-5 shadow-lg col-6 col-sm-6 col-md-6 col-lg-4" style="border-radius: 30px;">
               <div class="auth-title text-center pb-4">
                   <h1>OTP Authentication</h1>
                   <h6 class="mt-4">Please enter the one-time password <br> to verify your account</h6>
                   <div class="mt-4">
-                      <span>A code has been sent to</span> <small>*******9897</small>
+                      <span>A code will send to</span> <small id="phoneNumberPlaceholder"></small>
                   </div>
               </div>
-              <form class="otp-submit" method="post">
-                  <div id="otp" class="inputs d-flex flex-row justify-content-center">
-                      <input type="hidden" id="id" th:value="${id}" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="first" maxlength="1" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="second" maxlength="1" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="third" maxlength="1" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="fourth" maxlength="1" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="fifth" maxlength="1" />
-                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="sixth" maxlength="1" />
+              <form id="otp-submit" method="post" class="needs-validation" novalidate>
+                  <div id="otp" class="inputs d-flex row justify-content-center">
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="first" maxlength="1" required>
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="second" maxlength="1" required>
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="third" maxlength="1" required>
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="fourth" maxlength="1" required>
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="fifth" maxlength="1" required>
+                      <input class="m-2 text-center form-control rounded col-2 col-md-1" type="text" id="sixth" maxlength="1" required>
+                       <div class="invalid-feedback mt-2" style="padding-left: 31%;" id="error-msg">
+                        Please Fill Full OTP Code.
+                      </div>
                   </div>
                   <div class="d-flex justify-content-center align-items-center">
-                      <div id="error-msg">
-
-                      </div>
+                      
                       <div class="d-grid gap-2 col-8">
-                          <button type="submit" class="btn btn-primary rounded-pill mt-4">Submit</button>
-                      </div>
+                        <button type="submit" class="btn btn-primary rounded-pill mt-2">Submit</button>
+                    </div>
+                    
                   </div>
               </form>
-              <div class="content d-flex justify-content-center align-items-center mt-4">
-                  <span id="resendStatus">Didn't get the code?</span> <a href="#" class="text-decoration-none ms-3" id="resendLink">Resend</a>
+              <div class="content d-flex justify-content-center mt-4">
+                  <span id="resendStatus"></span> 
+                  <a href="#" class="text-decoration-none ms-3" id="resendLink">Send</a>
               </div>
           </div>
         </div>
@@ -65,11 +77,61 @@
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script>
+
+
+
+
     document.addEventListener("DOMContentLoaded", function (event) {
-        let otp;
-        const id= document.getElementById('id');
+        
+
+        const currentURL = window.location.href;
+        const url = new URL(currentURL);
+        const email = url.searchParams.get("email");
+
+
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+        
+        fetch('find-phonenumber-by-email?email=' + encodeURIComponent(email), {
+            method: 'POST',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Response from server:', data); // Log the response to the console
+            const phoneNumberPlaceholder = document.getElementById('phoneNumberPlaceholder');
+            phoneNumberPlaceholder.innerText = `********${data.slice(-3)}`;
+            
+        })
+        .catch(error => {
+            console.error('An error occurred:', error);
+        });
+        
+        (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+        })()
+
+        let otp;
+        
+        
         const msg=document.getElementById('error-msg');
         console.log(csrfToken)
         function OTPInput() {
@@ -96,11 +158,12 @@
             }
         }
 
-        function resendOTP() {
+        function countdown() {
             // Disable the resend link and show the resend status
             const resendLink = document.getElementById('resendLink');
             const resendStatus = document.getElementById('resendStatus');
 
+            sendOtp()
             // Start the countdown timer
             let count = 30;
             const countdownTimer = setInterval(function () {
@@ -109,9 +172,11 @@
                     clearInterval(countdownTimer);
                     enableResendButton();
                     resendStatus.innerText = "Didn't get the code?";
+                    resendLink.innerText = "Resend"
                 } else {
                     disableResendButton();
-                    resendStatus.innerText = `OTP is resent. If the message doesn't reach in the next 30 seconds, click Resend again. ${count} seconds...`;
+                    resendStatus.innerText = `OTP is sent. If the message doesn't reach in the next 30 seconds, click Resend again. ${count} seconds...`;
+                    resendLink.innerText = "Resend"
                     count--;
                     if (count === 0) {
                         enableResendButton();
@@ -120,10 +185,33 @@
             }, 1000);
         }
 
+        function sendOtp() {
+
+            fetch('/sendOTP', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    [csrfHeader]: csrfToken // Include CSRF token as a request header
+                },
+                body: JSON.stringify({to: email})
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Email sent successfully:', response);
+                    } else if(!response.ok) {
+                        console.error('Failed to send email:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+
+                })
+        }
+
         function onClickResend(event) {
             event.preventDefault();
             disableResendButton();
-            resendOTP();
+            countdown();
         }
 
         function enableResendButton() {
@@ -143,7 +231,7 @@
 
 
         function otpSubmit(){
-            fetch('/otp-submit?otp=' + encodeURIComponent(otp) +'&userId=' + encodeURIComponent(id.value),{
+            fetch('/otp-submit?otp=' + encodeURIComponent(otp) +'&email=' + encodeURIComponent(email),{
                 method:'POST',
                 headers:{
                     'Content-Type': 'application/json;charset=utf-8',
@@ -155,9 +243,11 @@
 
                 .then((data) => {
                     if(data === true){
-                        window.location.href= '/forgot-password?userId=' + encodeURIComponent(id.value);
+                        window.location.href= '/forgot-password-form?email=' + encodeURIComponent(email);
                     }else if (data === false) {
-                        msg.innerHTML = "<p class='text-center' style='color: red; font-size: 1rem'>OTP is Wrong or Expired</p>"
+                        console.log('OTP is Wrong or Expired');
+                        msg.classList.add('invalid-feedback');
+                        msg.innerHTML = "OTP is Wrong or Expired"
                     }
                 })
         }
@@ -171,13 +261,15 @@
             const fifth=document.getElementById('fifth');
             const sixth=document.getElementById('sixth');
 
-            if(first.value === null || second.value === null || third.value === null || fourth.value === null || fifth.value === null ||  sixth.value === null ){
-
-                msg.innerHTML = "<p class='text-center' style='color: red; font-size: 1rem'>Please Fill OTP</p>"
-            } else {
-                otp = first + second + third + fourth + fifth + sixth;
+            if (first.value !== '' && second.value !== '' && third.value !== '' && fourth.value !== '' && fifth.value !== '' && sixth.value !== '') {
+                otp = first.value + second.value + third.value + fourth.value + fifth.value + sixth.value;
+                console.log(otp);
                 otpSubmit();
+            } else {
+                msg.innerHTML = "Please Fill Full OTP code";
+                console.log("Please Fill Full OTP.");
             }
+
 
         })
         OTPInput();

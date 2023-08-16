@@ -1,14 +1,21 @@
 package com.ace_inspiration.team_joblify.service_implement.candidate_service_implement;
 
+import java.util.List;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
@@ -27,7 +34,13 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 
 import lombok.RequiredArgsConstructor;
 
-
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
+import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.entity.Status;
+import com.ace_inspiration.team_joblify.repository.CandidateRepository;
+import com.ace_inspiration.team_joblify.repository.PositionRepository;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -40,9 +53,11 @@ public class CandidateServiceImplement implements CandidateService{
     private final SummaryRepository summaryRepository;
     private final LanguageSkillsRepository languageSkillsRepository;
     private final TechSkillsRepository techSkillsRepository;
-    
-    @Autowired
-    private EntityManager entityManager;
+
+
+
+
+    private final EntityManager entityManager;
 
 	@Override
 	public DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input){
@@ -116,8 +131,7 @@ public class CandidateServiceImplement implements CandidateService{
         summary.setLanguageSkills(languageSkillsList);
         summary.setTechSkills(techSkillsList);
         summaryRepository.save(summary);
-        
-        
+
         Candidate candidate=new Candidate();
         candidate.setSummary(summary);
         candidate.setSelectionStatus(Status.RECEIVED);

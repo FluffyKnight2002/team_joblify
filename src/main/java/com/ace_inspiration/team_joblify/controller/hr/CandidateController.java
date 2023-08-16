@@ -3,9 +3,12 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 
 
+import com.ace_inspiration.team_joblify.entity.*;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,12 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.DasboardRespository;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
@@ -46,9 +45,10 @@ public class CandidateController {
 
 	private final CandidateService candidateService;
 
-	private final CandidateServiceImplement candidateImpl;
-
 	private final SummaryServiceImplement summaryServiceImplement;
+
+
+	private final CandidateServiceImplement candidateImpl;
 
 	private final PositionServiceImpl positioinService;
 	
@@ -117,7 +117,7 @@ public class CandidateController {
 	@PostMapping("/changeInterview")
 	@ResponseBody
 	public ResponseEntity<?> changeInterview(@RequestParam("id") long id,@RequestParam("status") String status) {
-		
+
 		candidateImpl.changeInterviewstatus(id, status);
 		return ResponseEntity.ok("okokok");
 	}
@@ -140,7 +140,7 @@ public class CandidateController {
 	        dto.setId((long) result[0]);
 	        
 	        // Convert java.sql.Date to LocalDate
-	        dto.setClose(( (Date) result[1]).toLocalDate()); 
+	        dto.setClose(( (Date) result[1]).toLocalDate());
 	        dto.setOpen(( (Date) result[2]).toLocalDate());
 	        
 	        dto.setPostTotal((int) result[3]);
@@ -155,19 +155,33 @@ public class CandidateController {
 	
 
 	
-	
+
 	@ModelAttribute("candidate")
 	public CandidateDto getCandidateDto() {
 		return new CandidateDto();
 	}
 
+//	@GetMapping("/job-details")
+//    public String showJobDetails() {
+//        return "job-details";
+//    }
 
 	@PostMapping("/apply-job")
 	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
-		System.out.println(dto);
+
 		candidateService.saveCandidate(dto);
 		return "redirect:/show-job-details";
 
 	}
+
+	@GetMapping("/view-summaryinfo")
+	public String ViewSummaryInfo(Model model) {
+		java.util.List<Summary> summaries = summaryServiceImplement.getAllSummarys();
+		model.addAttribute("listsummaryinfo", summaries);
+		return "view-summaryinfo";
+
+	}
+
+
 
 }

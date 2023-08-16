@@ -30,8 +30,8 @@ public class FetchVacancyController {
     private final VacancyInfoService vacancyInfoService;
 
     @GetMapping("/show-last")
-    public List<VacancyDto> showLastVacancies() {
-        List<VacancyDto> lastVacancies = vacancyInfoService.selectLastVacancies();
+    public List<VacancyView> showLastVacancies() {
+        List<VacancyView> lastVacancies = vacancyViewRepository.getLastVacancyView();
         return lastVacancies;
     }
 

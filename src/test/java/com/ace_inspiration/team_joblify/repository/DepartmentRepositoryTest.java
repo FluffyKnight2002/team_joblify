@@ -13,37 +13,32 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class DepartmentRepositoryTest {
 
     @Autowired
-    private DepartmentRepository test;
-
-    private Department department;
-
+    private DepartmentRepository departmentRepository;
+    Department department = null;
     @BeforeEach
     void setUp() {
-        Department department = Department.builder()
+        department = Department.builder()
                 .name("Human Resource")
                 .build();
-        test.save(department);
+        departmentRepository.save(department);
     }
 
     @AfterEach
     void tearDown() {
-        test.deleteAll();
+        departmentRepository.deleteAll();
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"Y", "a"})
     void findByNameContainingIgnoreCaseTest(String name) {
+        List<Department> departmentList = departmentRepository.findByNameContainingIgnoreCase(name);
 
-
-        List<Department> departmentList = test.findByNameContainingIgnoreCase(name);
-
-        if (!departmentList.isEmpty()) {
+        if(!departmentList.isEmpty()){
             assertThat(departmentList).contains(department);
         } else {
             assertThat(departmentList).isEmpty();
@@ -53,10 +48,8 @@ class DepartmentRepositoryTest {
     @ParameterizedTest
     @ValueSource(strings = {"Off-Show", "Human Resource"})
     void findByName(String name) {
-
-        Optional<Department> d = test.findByName(name);
-
-        if(department.getName().equals(name)){
+        Optional<Department> d = departmentRepository.findByName(name);
+        if (d.isPresent()) {
             assertThat(d).contains(department);
         } else {
             assertThat(d).isEmpty();

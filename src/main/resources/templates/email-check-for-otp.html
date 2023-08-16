@@ -13,6 +13,14 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="/assets/css/pages/auth.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+    <style>
+        .form-control.is-invalid, .was-validated .form-control:invalid  {
+      background-image: none !important;
+    }
+    .form-control.is-valid, .was-validated .form-control:valid {
+      background-image: none !important;
+    }
+    </style>
 </head>
 
 <body>
@@ -25,7 +33,7 @@
 
                 <form id="check-email" method="post" class="needs-validation" novalidate>
                     <div class="form-floating form-group position-relative has-icon-left mb-4">
-                        <input type="text" class="form-control" placeholder="Email" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+                        <input type="text" class="form-control" placeholder="Email" id="email" name="email" required>
                         <label for="email">
                             <i class="bi bi-mailbox"></i>
                             Email
@@ -38,7 +46,7 @@
 
                     <div class="d-flex justify-content-center align-items-center">
                         <div class="d-grid gap-2 col-8">
-                            <button type="submit" class="btn btn-primary rounded-pill mt-4">Send</button>
+                            <button type="submit" class="btn btn-primary rounded-pill mt-4">Search</button>
                         </div>
                     </div>
                 </form>
@@ -49,6 +57,32 @@
 </div>
 <script src="/assets/js/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script>
+
+    const emailInput = document.getElementById('email');
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const mainForm = document.getElementById('check-email');
+    const emailError = document.getElementById('email-error');
+
+    emailInput.addEventListener('input', () => {
+        if (emailInput.value === '') {
+            emailError.innerHTML = '';
+            emailInput.classList.remove('is-invalid');
+            mainForm.classList.remove('was-validated');
+
+        } 
+        else if (!emailPattern.test(emailInput.value)) {
+            emailError.innerHTML = 'Please add Valid Email Address.';
+            emailInput.classList.add('is-invalid');
+            mainForm.classList.remove('was-validated');
+        } else if(emailPattern.test(emailInput.value)){
+            emailError.innerHTML = '';
+            emailInput.classList.remove('is-invalid');
+            mainForm.classList.remove('was-validated');
+
+        }
+    });
+
+
 
     (() => {
         'use strict';
@@ -61,7 +95,10 @@
                     event.preventDefault();
                     event.stopPropagation();
                 }
+            
                 form.classList.add('was-validated');
+                emailError.innerHTML="Please Add Email."
+
             }, false);
         });
     })();
@@ -74,10 +111,12 @@
 
     document.querySelector('#check-email').addEventListener('submit', (event) => {
         event.preventDefault(); // Prevent the default form submission
-        const email= document.getElementById('email').value
-
-        console.log(email)
-        fetch('/search-email?email=' + email,{
+        
+            const email = emailInput.value;
+        
+            console.log(email);
+            if(email === '' && emailPattern.test(emailInput.value)){  
+        fetch('/search-email?email=' + encodeURIComponent(email),{
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,22 +126,21 @@
         })
             .then(response => response.json())
             .then(data => {
-                const isSuccess = data[0]; // Get the first element (true/false)
-                const userId = data[1];   // Get the second element (user ID or null)
-
-                if (isSuccess === true) {  // You can also use 'if (isSuccess)' since it's a boolean
-                    window.location.href = '/otp-authentication-form?userId=' + userId;
+                if (data === true) {  // You can also use 'if (isSuccess)' since it's a boolean
+                    window.location.href = '/otp-authentication-form?email=' + email;
                 } else {
-                    const emailInput = document.getElementById('email');
+                    
                     emailInput.classList.add('is-invalid');
+                    emailError.innerHTML = 'Email doesn\'t exist! Please Try Again';
+                    mainForm.classList.remove('was-validated');
                 }
             })
             .catch(error => {
                 // Handle any errors that occur during the fetch request
                 console.error('Error:', error);
             });
-
-    })
+        }}
+    )
 </script>
 </body>
 

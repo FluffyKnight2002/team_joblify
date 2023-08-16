@@ -4,15 +4,18 @@ import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.NotificationRepository;
+import com.ace_inspiration.team_joblify.repository.NotificationUserRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -24,6 +27,7 @@ public class UserServiceImplement implements UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final NotificationRepository notificationRepository;
+    private final NotificationUserRepository notificationUserRepository;
 
     @Value("${app.default.user.password}")
     private String password;
@@ -50,6 +54,7 @@ public class UserServiceImplement implements UserService {
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.valueOf(userDto.getRole()));
         user.setNote(userDto.getNote());
+        user.setAccountStatus(true);
         user.setDepartment(department);
         user.setCreatedDate(currentDate);
         user.setLastUpdatedDate(currentDate);
@@ -59,12 +64,17 @@ public class UserServiceImplement implements UserService {
 
         Notification notification = new Notification();
 
-        User actionUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException(notFound));
-        notification.setMessage(userDto.getName() + " is created by " + actionUser.getName());
+        
+        notification.setMessage(user.getName() + " is created by Admin");
         notification.setTime(currentDate);
-        notification.setLink("aaa");
+        notification.setLink("/user-profile-edit?id="+ user.getId());
         notificationRepository.save(notification);
+
+        NotificationUser notificationUser = NotificationUser.builder()
+        .notification(notification)
+        .user(user)
+        .build();
+        notificationUserRepository.save(notificationUser);
 
         return user;
 
@@ -133,6 +143,7 @@ public class UserServiceImplement implements UserService {
         user.setRole(Role.valueOf(userDto.getRole()));
         user.setNote(userDto.getNote());
         user.setDepartment(department);
+        user.setAccountStatus(userDto.isAccountStatus());
         user.setLastUpdatedDate(currentDate);
         user.setGender(Gender.valueOf(userDto.getGender()));
 
@@ -148,24 +159,44 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public boolean emailDuplicationExceptMine(String email, long userId) {
-        User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
+        List<User> user = userRepository.findByEmailAndIdNot(email, userId);
 
-        return user != null;
+        return !user.isEmpty();
     }
 
     @Override
-    public boolean checkOldPassword(String password, long userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        assert user != null;
-
+    public boolean checkOldPassword(String password, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoSuchElementException("User not Found."));
         return passwordEncoder.matches(password, user.getPassword());
     }
 
     @Override
-    public boolean passwordChange(String newPassword, long id){
-        User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User not Found"));
+    public boolean passwordChange(String newPassword, String email){
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User not Found"));
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public boolean suspend(long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+        user.setAccountStatus(false);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean activate(long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+        user.setAccountStatus(true);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+        return user;
     }
 }

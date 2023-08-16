@@ -20,7 +20,22 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
-
+    <style>
+        /* Custom CSS to hide background image of validation */
+    .form-control.is-invalid, .was-validated .form-control:invalid  {
+      background-image: none !important;
+    }
+    .form-control.is-valid, .was-validated .form-control:valid {
+      background-image: none !important;
+    }
+    .form-select.is-valid, .was-validated .form-select:valid {
+      background-image: none !important;
+    }
+    
+    .form-select.is-invalid, .was-validated .form-select:invalid{
+      background-image: none !important;
+    }
+      </style>
 </head>
 
 <body>
@@ -56,7 +71,7 @@
                         </div>
                         <div class="card-body">
                             <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
-                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
+                               
                                 <div class="row">
                                     <div class="form-group position-relative has-icon-left mb-4 col-md-6">
                                         <input type="file" class="form-control " id="photo" name="photo" accept="image/*">
@@ -156,9 +171,7 @@
                                 </div>
 
                             </form>
-                            <div class="text-center mt-3 text-lg fs-6">
-                                <p><a class="font-bold fs-6" th:href="@{/forgot-password}">Forgot password?</a></p>
-                            </div>
+
                         </div>
                     </div>
                 </section>
@@ -243,7 +256,8 @@
 
 <script src="/assets/js/main.js"></script>
 <script>
-
+const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
     document.querySelector("#registration-form").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent the form from submitting normally
@@ -253,20 +267,17 @@
             return;
         }
 
-        const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-
-        console.log(metaCsrfToken);
         // Get form data
 
         const formData= new FormData(form);
-
+            
 
 
         // Make the registration request
         fetch('/user-register', {
             method: 'POST',
             headers: {
-                'X-XSRF-Token': metaCsrfToken
+                [csrfHeader]: csrfToken // Include CSRF token as a request header
             },
             body: formData
         })
@@ -319,7 +330,8 @@
     }
 
     // <-----------------------------------------fetch call for user registration----------->
-
+        const emailError = document.getElementById('email-error');
+        const mainForm = document.getElementById('registration-form');
     (() => {
         'use strict';
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -332,32 +344,31 @@
                     event.stopPropagation();
                 }
                 form.classList.add('was-validated');
+                emailError.innerHTML="Please Add Email."
             }, false);
         });
     })();
 
     // Function to check phone number format
     function checkPhoneNumber() {
-        const phoneNumberInput = document.getElementById('phone');
-        const phoneNumber = phoneNumberInput.value;
-        const phoneNumberLength = phoneNumber.length;
-        const phoneError = document.getElementById('phoneError');
+    const phoneNumberInput = document.getElementById('phone');
+    const phoneNumber = phoneNumberInput.value;
+    const phoneNumberLength = phoneNumber.length;
 
-        // Check if phone number matches the pattern
-        if (!phoneNumber.match(/[+0-9]+/)) {
-            // Show error message and set custom validity
-            phoneNumberInput.setCustomValidity('Please add a valid Phone Number.');
-            phoneNumberInput.classList.add('is-invalid');
-        } else if (phoneNumberLength < 11 || phoneNumberLength > 13) {
-            // Check if phone number is between 11 to 13 digits
-            phoneNumberInput.setCustomValidity('Please add a valid Phone Number.');
-            phoneNumberInput.classList.add('is-invalid');
-        } else {
-            // Remove error message and custom validity
-            phoneNumberInput.setCustomValidity('');
-            phoneNumberInput.classList.remove('is-invalid');
-        }
+    // Check if phone number matches the pattern
+    if (phoneNumberLength === 0) {
+    
+      phoneNumberInput.classList.remove('is-invalid');
+    } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
+
+      phoneNumberInput.classList.add('is-invalid');
+      mainForm.classList.remove('was-validated')
+    } else {
+
+      phoneNumberInput.classList.remove('is-invalid');
     }
+    
+  }
 
     // Add event listener to phone number input
     const phoneNumberInput = document.getElementById('phone');
@@ -368,7 +379,7 @@
         const emailInput = document.getElementById('email');
         const emailValue = emailInput.value;
         console.log(emailValue)
-        const emailError=document.getElementById('email-error');
+        
         emailSpinner.style.display = 'inline-block';
         console.log("Spinner loading..")
 
@@ -379,26 +390,34 @@
                 console.log(data)
                 emailSpinner.style.display = 'none';
                 console.log("Spinner hide")
-                if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
-                    console.log("Email\'s already exist and Email is also not Valid")
-                    emailInput.classList.add('is-invalid');
-                    emailError.innerHTML='Email\'s already exist and Email is also not Valid';
+
+                if(emailValue === ''){
+                emailInput.classList.remove('is-invalid');
+                emailError.innerHTML='';
+
+                } else if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
+                console.log("Email\'s already exist and Email is also not Valid")
+                emailInput.classList.add('is-invalid');
+                emailError.innerHTML='Email\'s already exist and Email is also not Valid';
+                mainForm.classList.remove('was-validated')
 
                 } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
-                    console.log("Email's already exist")
-                    emailInput.classList.add('is-invalid');
-                    emailError.innerText='Email\'s already exist.';
+                console.log("Email's already exist")
+                emailInput.classList.add('is-invalid');
+                emailError.innerText='Email\'s already exist.';
+                mainForm.classList.remove('was-validated')
 
                 } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
-                    emailInput.classList.add('is-invalid');
-                    console.log("Email is not Valid")
-                    emailError.innerHTML='Email is also not Valid';
+                emailInput.classList.add('is-invalid');
+                console.log("Email is not Valid")
+                emailError.innerHTML='Email is also not Valid';
+                mainForm.classList.remove('was-validated')
 
                 } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)){
-                    emailInput.classList.remove('is-invalid');
-                    console.log("Email is good to use.")
+                emailInput.classList.remove('is-invalid');
+                console.log("Email is good to use.")
                 }
-
+                
                 // Hide the spinner after the response is received
                 departmentSpinner.style.display = 'none';
             })
