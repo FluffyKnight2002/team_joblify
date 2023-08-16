@@ -124,6 +124,7 @@
                   <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
                     <select class="form-select" aria-label="Role" name="role" id="role" required>
                       <option selected disabled value="">Role</option>
+                      <option value="DEFAULT_HR">Default HR</option>
                       <option value="SENIOR_HR">Senior HR</option>
                       <option value="JUNIOR_HR">Junior HR</option>
                       <option value="MANAGEMENT">Management</option>
@@ -167,9 +168,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="text-end">
-                  <p><a class="font-bold fs-6" th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Forgot password?</a></p>
-                  <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 mt-4">Edit</button>
+                <div class="text-end mt-4">
+                  <p><a class="font-bold fs-6" th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Password Change</a></p>
+                  <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 ">Edit</button>
                 </div>
               </form>
             </div>
@@ -260,11 +261,11 @@
 
   const currentURL = window.location.href;
         const url = new URL(currentURL);
-        const id = url.searchParams.get("id");
+        const email = url.searchParams.get("email");
 
 
   document.addEventListener('DOMContentLoaded', function() {
-    fetch('/get-user-profile?id=' + encodeURIComponent(id),{
+    fetch('/get-user-profile?email=' + encodeURIComponent(email),{
       method:'POST',
       headers:{
         [csrfHeader]: csrfToken // Include CSRF token as a request header

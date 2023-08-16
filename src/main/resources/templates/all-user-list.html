@@ -190,7 +190,7 @@
                 {name: "Department", data: "department.name", targets: 5},
                 {
                     targets: 6,
-                    data: "id",
+                    data: "email",
                     data: "accountStatus",
                     
                     render: function (data, type, row) {
@@ -202,8 +202,8 @@
                             <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
-                            <div class="dropdown-menu"> <
-                                <a class="dropdown-item" href="/user-profile-edit?id=${row.id}">Profile</a>
+                            <div class="dropdown-menu"> 
+                                <a class="dropdown-item" href="/user-profile-edit?email=${row.email}">Profile</a>
                                 <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>
                             </div>
                         </div>`;

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface UserService {
     User userCreate(UserDto userDto, long userId) throws IOException;
+
     Optional<User> findById(long userId);
 
     void savePassword(String password, long userId);
@@ -28,5 +29,5 @@ public interface UserService {
     
     boolean activate(long id);
 
-
+    User findByEmail(String email);
 }
