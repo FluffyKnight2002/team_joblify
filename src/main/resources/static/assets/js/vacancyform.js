@@ -15,12 +15,12 @@ $(document).ready(function() {
 
         // Check if the textarea is empty or only contains whitespace
         if (textarea.val().trim() === "") {
-            textarea.val("• "); // Add a bullet to the textarea
+            textarea.val("•  "); // Add a bullet to the textarea
         }
     });
     $("#requirements, #responsibilities, #preferences").keydown(function(event) {
-        var bullet = (event.which === 13) ? "\n• " : '\n\t◦ ';
-        var cursorPos = (event.which === 13) ? 3 : 4;
+        var bullet = (event.which === 13) ? "\n•  " : "\n\t◦  ";
+        var cursorPos = (event.which === 13) ? 4 : 5;
         if (event.which === 13 || event.which == 9) {
             event.preventDefault();
             var textarea = $(this)[0];
@@ -94,17 +94,17 @@ $(document).ready(function() {
         });
     }
 
-    handleBulletButton('#responsibilities', '#setBulletButton1', '• ', '');
-    handleBulletButton('#responsibilities', '#addSubListButton1', '◦ ', '\t');
-    handleRemoveBulletButton('#responsibilities', '#removeBulletButton1', { bullet: '• ', subBullet: '◦ ' });
+    handleBulletButton('#responsibilities', '#setBulletButton1', '•  ', '');
+    handleBulletButton('#responsibilities', '#addSubListButton1', '◦  ', '\t');
+    handleRemoveBulletButton('#responsibilities', '#removeBulletButton1', { bullet: '•  ', subBullet: '◦  ' });
 
-    handleBulletButton('#requirements', '#setBulletButton2', '• ', '');
-    handleBulletButton('#requirements', '#addSubListButton2', '◦ ', '\t');
-    handleRemoveBulletButton('#requirements', '#removeBulletButton2', { bullet: '• ', subBullet: '◦ ' });
+    handleBulletButton('#requirements', '#setBulletButton2', '•  ', '');
+    handleBulletButton('#requirements', '#addSubListButton2', '◦  ', '\t');
+    handleRemoveBulletButton('#requirements', '#removeBulletButton2', { bullet: '•  ', subBullet: '◦  ' });
 
-    handleBulletButton('#preferences', '#setBulletButton3', '• ', '');
-    handleBulletButton('#preferences', '#addSubListButton3', '◦ ', '\t');
-    handleRemoveBulletButton('#preferences', '#removeBulletButton3', { bullet: '• ', subBullet: '◦ ' });
+    handleBulletButton('#preferences', '#setBulletButton3', '•  ', '');
+    handleBulletButton('#preferences', '#addSubListButton3', '◦  ', '\t');
+    handleRemoveBulletButton('#preferences', '#removeBulletButton3', { bullet: '•  ', subBullet: '◦  ' });
     // Set bullet list end
 
     // Text area session end
@@ -124,14 +124,16 @@ $(document).ready(function() {
         var requirements = $("#requirements").val();
         var responsibilities = $("#responsibilities").val();
         var preferences = $("#preferences").val();
+        var onSiteOrRemote = $("#onSiteOrRemote").val();
 
         // Set form field values in the preview modal with replaced newlines and tabs
         $("#preview-title").text(title);
-        $("#preview-post-type").text(post + '(' + type + ')');
+        $("#preview-post-type").text(post + '(' + reconvertToString(type) + ')');
         $("#preview-department").text(department);
         $("#preview-address").text(address);
         $("#preview-salary").text(salary);
-        $("#preview-level").text(lvl);
+        $("#preview-level").text(reconvertToString(lvl));
+        $("#preview-on-site-or-remote").text(reconvertToString(onSiteOrRemote));
         $("#preview-description").text(description);
         $("#preview-requirements").val(requirements);
         $("#preview-responsibilities").val(responsibilities);
@@ -139,6 +141,7 @@ $(document).ready(function() {
         $("#preview-working-days").text(workingDays);
         $("#preview-working-hours").text(workingHours);
         $("#preview-location").text(address);
+        $("#preview-type").text(reconvertToString(type));
 
         // Adjust textarea height in the preview modal
         $("#previewModal").on("shown.bs.modal", function() {
@@ -164,9 +167,10 @@ $(document).ready(function() {
     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
     let startTime = '9:00';
-    let endTime = '18:00';
+    let endTime = '17:00';
 
     $('#calendar-btn').on('click', function() {
+
         $calendar.toggle();
     });
 
@@ -211,6 +215,11 @@ $(document).ready(function() {
             }
 
             $dayElement.on('click', () => {
+                if (selectedDays.length === 1 && selectedDays.includes(day)) {
+                    // If there's only one selected day, prevent unselecting it
+                    return;
+                }
+
                 if (selectedDays.includes(day)) {
                     selectedDays = selectedDays.filter(selectedDay => selectedDay !== day);
                 } else {
@@ -269,3 +278,60 @@ function formatTime(time) {
     }
 }
 
+// Enum convert and reconvert
+
+function convertToLakhs(decimalValue) {
+    const lakhsValue = parseFloat(decimalValue) / 100000;
+    const formattedValue = lakhsValue.toFixed(6).replace(/\.?0+$/, ''); // Remove trailing zeros
+    return `${formattedValue} Lakhs`;
+}
+function convertToEnumFormat(input) {
+    console.log(input)
+    // Replace spaces with underscores and convert to uppercase
+    if(input == "On-site") {
+        return "ON_SITE";
+    }
+    return input.replaceAll(" ", "_").toUpperCase();
+}
+
+function reconvertToString(input) {
+    // Replace underscores with spaces and convert to title case
+    if (input === "ON_SITE") {
+        return "On-site";
+    }
+    return input.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
+}
+
+// Change time format
+function changeTimeFormat(time) {
+    var dateString = time;
+
+    // Parse the date string to a JavaScript Date object
+    var date = new Date(dateString);
+
+    // Array to map month numbers to month names
+    var monthNames = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    // Get the day of the month
+    var day = date.getDate();
+
+    // Determine the suffix for the day (st, nd, rd, or th)
+    var suffix;
+    if (day >= 11 && day <= 13) {
+        suffix = "th";
+    } else {
+        switch (day % 10) {
+            case 1: suffix = "st"; break;
+            case 2: suffix = "nd"; break;
+            case 3: suffix = "rd"; break;
+            default: suffix = "th";
+        }
+    }
+
+    // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
+    var formattedDate = day + suffix + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+    return formattedDate;
+}

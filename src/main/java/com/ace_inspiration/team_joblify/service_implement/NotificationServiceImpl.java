@@ -29,15 +29,18 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void createNotifications(NotificationDto notificationDto) {
+
         List<User> users = userRepository.findAll();
+        Notification notification = new Notification();
+        notification.setMessage(notificationDto.getMessage());
+        notification.setLink(notificationDto.getLink());
+        notification.setTime(notificationDto.getTime());
+
+        Notification savedNotification = notificationRepository.save(notification);
         for(User user: users) {
 
             NotificationUser notificationUser = new NotificationUser();
-            Notification notification = new Notification();
-            notification.setMessage(notificationDto.getMessage());
-            notification.setLink(notificationDto.getLink());
-            notification.setTime(notificationDto.getTime());
-            notificationUser.setNotification(notificationRepository.save(notification));
+            notificationUser.setNotification(savedNotification);
             notificationUser.setUser(user);
             notificationUserRepository.save(notificationUser);
         }

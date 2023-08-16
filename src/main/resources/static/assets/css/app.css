@@ -1,3 +1,25 @@
+/* Custom styling for the autocomplete dropdown */
+.ui-autocomplete {
+    max-height: 200px; /* Set a maximum height for the dropdown */
+    overflow-y: auto; /* Enable vertical scrolling when necessary */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    position: absolute;
+    z-index: 1500; /* Ensure it's above other elements */
+}
+
+.ui-autocomplete li {
+    list-style: none;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.ui-autocomplete li.ui-state-focus {
+    color: whitesmoke;
+    background-color: rgba(15, 94, 196, 0.56);
+}
+
 .btn-bright {
     cursor: pointer;
     background: radial-gradient(circle, #0f5ec4 40%, rgba(15, 94, 196, 0.7));
@@ -84,6 +106,10 @@
 
 .department-spinner {
     right: 22px;
+}
+
+.address-spinner {
+    top: 38%;
 }
 
 .loading {
