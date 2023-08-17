@@ -159,6 +159,11 @@
     border: 3px solid #1e497b;
 }
 
+.selectedNotification {
+    background: linear-gradient(to bottom, rgba(47, 135, 243, 0.71), rgba(47, 135, 243, 0.6));
+    color: whitesmoke;
+}
+
 /* Custom CSS to make the dropdown responsive and stay in the middle */
 @media (max-width: 654px) {
     .notification-dropdown {
