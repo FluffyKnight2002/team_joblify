@@ -193,4 +193,10 @@ public class UserServiceImplement implements UserService {
         userRepository.save(user);
         return true;
     }
+
+    @Override
+    public User findByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+        return user;
+    }
 }

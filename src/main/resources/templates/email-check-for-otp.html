@@ -115,7 +115,7 @@
             const email = emailInput.value;
         
             console.log(email);
-            if( email === '' && emailPattern.test(emailInput.value)){  
+            if(email === '' && emailPattern.test(emailInput.value)){  
         fetch('/search-email?email=' + encodeURIComponent(email),{
             method:'POST',
             headers: {

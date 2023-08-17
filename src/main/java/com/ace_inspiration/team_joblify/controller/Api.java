@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @RestController
@@ -131,8 +130,16 @@ public class Api {
     }
 
     @PostMapping("/get-user-profile")
-    public User userProfileData(@RequestParam ("id") long id){
-        return userService.findById(id).orElseThrow(()-> new NoSuchElementException("User Not Found."));
+    public User userProfileData(@RequestParam ("email") String email){
+        return userService.findByEmail(email);
+    }
+
+    @PostMapping("/find-phonenumber-by-email")
+    public String findPhoneNumberByEmail(@RequestParam ("email") String email){
+        
+        User user = userService.findByEmail(email);
+        System.out.println(user.getPhone());
+        return user.getPhone();
     }
 
 

@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 
 
+import com.ace_inspiration.team_joblify.entity.*;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.DasboardRespository;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
@@ -53,7 +49,7 @@ public class CandidateController {
 
 
 	private final CandidateServiceImplement candidateImpl;
-	
+
 	private final PositionServiceImpl positioinService;
 	
 	private final DasboardRespository dasboard;
@@ -68,7 +64,7 @@ public class CandidateController {
 	
 	@GetMapping("/allCandidate")
 	@ResponseBody
-	public DataTablesOutput<InterviewProcess> getAllCandidate( DataTablesInput input,ModelMap map) {
+	public DataTablesOutput<InterviewProcess> getAllCandidate(@Valid DataTablesInput input,ModelMap map) {
    		DataTablesOutput<InterviewProcess> interviewData= interview.findAll(input);
 		return interviewData;
 	}
@@ -121,7 +117,7 @@ public class CandidateController {
 	@PostMapping("/changeInterview")
 	@ResponseBody
 	public ResponseEntity<?> changeInterview(@RequestParam("id") long id,@RequestParam("status") String status) {
-		
+
 		candidateImpl.changeInterviewstatus(id, status);
 		return ResponseEntity.ok("okokok");
 	}
@@ -144,7 +140,7 @@ public class CandidateController {
 	        dto.setId((long) result[0]);
 	        
 	        // Convert java.sql.Date to LocalDate
-	        dto.setClose(( (Date) result[1]).toLocalDate()); 
+	        dto.setClose(( (Date) result[1]).toLocalDate());
 	        dto.setOpen(( (Date) result[2]).toLocalDate());
 	        
 	        dto.setPostTotal((int) result[3]);
@@ -159,6 +155,7 @@ public class CandidateController {
 	
 
 	
+
 	@ModelAttribute("candidate")
 	public CandidateDto getCandidateDto() {
 		return new CandidateDto();
@@ -172,7 +169,7 @@ public class CandidateController {
 	@PostMapping("/apply-job")
 	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
 
-		candidateImpl.saveCandidate(dto);
+		candidateService.saveCandidate(dto);
 		return "redirect:/show-job-details";
 
 	}
