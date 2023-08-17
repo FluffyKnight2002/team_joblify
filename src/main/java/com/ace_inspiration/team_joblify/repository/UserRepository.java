@@ -11,9 +11,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends DataTablesRepository<User, Long> {
     Optional<User> findByUsername(String username);
-
+    Optional<User> findByRole(Role role);
     Optional<User> findByEmail(String email);
-
     List<User> findByEmailAndIdNot(String email, Long id);
 
     Optional<User> findByRole(Role role);

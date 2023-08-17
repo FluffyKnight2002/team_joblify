@@ -7,25 +7,21 @@ import com.ace_inspiration.team_joblify.entity.JobType;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.OnSiteOrRemote;
 import com.ace_inspiration.team_joblify.entity.VacancyInfo;
-import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
 public class VacancyController {
 
     private final VacancyInfoService vacancyInfoService;
-    private final NotificationService notificationService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final NotificationCreator notificationCreator;
 
     @GetMapping("/show-upload-vacancy-form")
     public String showUploadVacancyForm(){
@@ -47,7 +43,7 @@ public class VacancyController {
 
             String message = myUserDetails.getName() + " create a " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
             return true;
         }
         return false;
@@ -68,7 +64,7 @@ public class VacancyController {
 
             String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
             return true;
         }
         return false;
@@ -92,7 +88,7 @@ public class VacancyController {
 
             String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
             return true;
         }
         return false;
@@ -126,7 +122,7 @@ public class VacancyController {
             NotificationDto notificationDto = new NotificationDto();
             String message = authentication.getName() + " update " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
             return true;
         }
         return false;
@@ -142,7 +138,7 @@ public class VacancyController {
             NotificationDto notificationDto = new NotificationDto();
             String message = authentication.getName() + " close " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
-            createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
             return true;
         }
         return false;
@@ -162,18 +158,6 @@ public class VacancyController {
     @ModelAttribute("typeList")
     public JobType[] getTypeList() {
         return JobType.values();
-    }
-
-    // Create notification
-    public void createNotification(MyUserDetails myUserDetails, String message, String link) {
-        NotificationDto notificationDto = new NotificationDto();
-        notificationDto.setMessage(message);
-        notificationDto.setLink(link);
-        notificationDto.setUserId(myUserDetails.getUserId());
-        notificationDto.setUsername(myUserDetails.getUsername());
-        notificationDto.setTime(LocalDateTime.now());
-        notificationService.createNotifications(notificationDto);
-        messagingTemplate.convertAndSend("/all/notifications", notificationDto);
     }
 
 }
