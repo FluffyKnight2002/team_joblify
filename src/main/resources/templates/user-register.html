@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/pages/photo.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <style>
         /* Custom CSS to hide background image of validation */
@@ -35,6 +36,18 @@
     .form-select.is-invalid, .was-validated .form-select:invalid{
       background-image: none !important;
     }
+
+        /* Custom CSS to style form controls in the was-validated state */
+    .was-validated .form-control.is-invalid {
+        background-image: none; /* Remove any background image */
+        border-color: #dc3545; /* Customize the border color for invalid state */
+    }
+
+    /* Additional custom styling for valid form controls */
+    .was-validated .form-control.is-valid {
+        background-image: none; /* Remove any background image */
+        border-color: #28a745; /* Customize the border color for valid state */
+}
       </style>
 </head>
 
@@ -67,17 +80,33 @@
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Create New Account for Users</h4>
-                            <div class="mt-md-3 text-center"><h3 class="success-line"></h3></div>
+                           
                         </div>
                         <div class="card-body">
                             <form id="registration-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
                                
-                                <div class="row">
-                                    <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                                        <input type="file" class="form-control " id="photo" name="photo" accept="image/*">
+                                <div class="uploader-main">
+                                    <div class="uploader-inner">
+                                        <div class="preview-wrapper">
+                                            <div class="preview-inner">
+                                                <div class="preview">
+                                                    <div style="width: 200px; height: 200px; top: 0px; left: 0px; position: absolute;">
+                                                        <img id="uploadedImage" src="" class="" style="height: 100%; width: 100%;">
+                                                        <div class="preview-drop">
+                                                            <ul>
+                                                                <li class="li" onclick="openUploader()">Upload photo
+                                                                    <input id="uploadImage" name="photo" type="file" accept="image/gif,image/jpeg,image/jpg,image/png" style="visibility: hidden; opacity: 0;" onchange="uploadHandler()" required>
+                                                                </li>
+                                                                <li onclick="removeImage()">Remove photo</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-<!--                                    image-resize-filepond-->
                                 </div>
+                            
                                 <div class="row">
                                     <div class="form-floating mb-3 col-md-6">
                                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
@@ -212,67 +241,116 @@
 
 <!-- filepond -->
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-<script>
-    // register desired plugins...
-    FilePond.registerPlugin(
-        // validates the size of the file...
-        FilePondPluginFileValidateSize,
-        // validates the file type...
-        FilePondPluginFileValidateType,
-
-        // calculates & dds cropping info based on the input image dimensions and the set crop ratio...
-        FilePondPluginImageCrop,
-        // preview the image file type...
-        FilePondPluginImagePreview,
-        // filter the image file
-        FilePondPluginImageFilter,
-        // corrects mobile image orientation...
-        FilePondPluginImageExifOrientation,
-        // calculates & adds resize information...
-        FilePondPluginImageResize,
-    );
-
-    const photoInput = document.querySelector('.image-resize-filepond');
-    const form = document.getElementById('registration-form');
-
-    // Filepond: Image Resize
-    FilePond.create( photoInput, {
-        allowImagePreview: true,
-        allowImageFilter: false,
-        allowImageExifOrientation: false,
-        allowImageCrop: false,
-        allowImageResize: true,
-        imageResizeTargetWidth: 200,
-        imageResizeTargetHeight: 200,
-        imageResizeMode: 'cover',
-        imageResizeUpscale: true,
-        acceptedFileTypes: ['image/png','image/jpg','image/jpeg'],
-        fileValidateTypeDetectType: (source, type) => new Promise((resolve, reject) => {
-            // Do custom type detection here and return with promise
-            resolve(type);
-        })
-    });
-</script>
 
 <script src="/assets/js/main.js"></script>
+<script src="/assets/js/javaScript/photo.js"></script>
 <script>
+const form = document.getElementById('registration-form');
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
-    document.querySelector("#registration-form").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+document.querySelector("#registration-form").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-        if (!isFormValid()) {
+    if (!isFormValid()) {
             console.log("Form data is not valid. Please fill all required fields.");
             return;
         }
+        else {
 
+    showConfirmationModal();
+        }
+});
+function showConfirmationModal() {
+    
+    const confirmationModal = `
+            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text center" style="background: #0c233d">
+                            <div class="loader"></div>
+                            <div class="loader-txt text-center">
+                                <h3 class="text-white">Are you sure to Create New Account?</h3>
+
+                                <div>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    $(document.body).append(confirmationModal);
+          // Append the modal to the document
+        
+    function showProcessingModal() {
+        const processingMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(processingMessage);
+    }
+
+    function showSuccessModal() {
+        const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Process successful!</p>
+                        <div class="text-center">
+                            <button id="close" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(successMessage);
+    }
+
+    function showFailModal() {
+        const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Process Fail!</p>
+                        <div class="text-center">
+                            <button id="close" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(successMessage);
+    }
+
+    function resetModal() {
+        const reset = `<div class="modal-body text center" style="background: #0c233d">
+                            <div class="loader"></div>
+                            <div class="loader-txt text-center">
+                                <h3 class="text-white">Are you sure to Create New Account?</h3>
+
+                                <div>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>`
+        $('.modal-content .modal-body').replaceWith(reset);                
+    }
+
+    $("#close").one("click", function () {
+        resetModal();
+    });
+
+
+    $("#confirmYes").one("click", function () {
         // Get form data
 
         const formData= new FormData(form);
-            
 
 
+        showProcessingModal();
         // Make the registration request
         fetch('/user-register', {
             method: 'POST',
@@ -287,43 +365,47 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
             if (response.ok) {
                 // Registration successful, handle the response
                 console.log("Registration successful");
-                // You can redirect to another page or show a success message here
-                const successLine = document.querySelector('.success-line');
-                successLine.innerHTML='Register Success!';
-                successLine.style.display = 'inline-block';
-                successLine.style.color= 'lawngreen';
-
+                
+                showSuccessModal();
+                form.reset();
+                form.classList.remove('was-validated')
+                    
             } else {
                 // Registration failed, handle the error
                 console.error("Registration failed");
-                // You can show an error message to the user here
-                const successLine = document.querySelector('.success-line');
-                successLine.innerHTML='Register Fail!';
-                successLine.style.display = 'inline-block';
-                successLine.style.color= 'red';
+                
+                showFailModal();
+                
             }
         })
         .catch(error => {
             // An error occurred, handle the error
             console.error("An error occurred during registration:", error);
             // You can show an error message to the user here
+            showFailModal();
+            
         });
+
+        
     });
 
+    $('#confirmationModal').modal('show');
+}
     // Function to check if the form data is valid
     function isFormValid() {
         // Get all required input fields, textareas, and select elements
         const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
-
+        
         // Check if all required fields have values (except the "Note" textarea)
         for (const field of requiredFields) {
             if (field.tagName === 'TEXTAREA' && field.id === 'note') {
                 // Skip the "Note" textarea from validation
                 continue;
             }
-            if (!field.value.trim()) {
+            if (!field.value.trim() || !checkPhoneNumber() || checkE === false) {
                 return false; // Form data is not valid
             }
+
         }
 
         return true; // Form data is valid
@@ -344,7 +426,14 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
                     event.stopPropagation();
                 }
                 form.classList.add('was-validated');
+                if(checkE === false){
                 emailError.innerHTML="Please Add Email."
+                
+                emailInput.classList.add("is-invalid");
+                
+                }
+                
+                
             }, false);
         });
     })();
@@ -359,13 +448,17 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
     if (phoneNumberLength === 0) {
     
       phoneNumberInput.classList.remove('is-invalid');
+      return false;
     } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
 
       phoneNumberInput.classList.add('is-invalid');
-      mainForm.classList.remove('was-validated')
+      mainForm.classList.remove('was-validated');
+      return false;
+
     } else {
 
       phoneNumberInput.classList.remove('is-invalid');
+      return true;
     }
     
   }
@@ -374,48 +467,54 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
     const phoneNumberInput = document.getElementById('phone');
     phoneNumberInput.addEventListener('input', checkPhoneNumber);
 
+    let checkE;
     // Function to check email format
-    function checkEmail() {
+    async function checkEmail() {
+
         const emailInput = document.getElementById('email');
         const emailValue = emailInput.value;
         console.log(emailValue)
         
         emailSpinner.style.display = 'inline-block';
         console.log("Spinner loading..")
-
-        fetch(`/fetch-email?email=${emailValue}`)
+        console.log("Start Working......");
+        checkE =await fetch(`/fetch-email?email=${emailValue}`)
             .then((response) => response.json())
-
             .then((data) => {
-                console.log(data)
+                console.log("Working......");
                 emailSpinner.style.display = 'none';
                 console.log("Spinner hide")
 
                 if(emailValue === ''){
                 emailInput.classList.remove('is-invalid');
                 emailError.innerHTML='';
+                return false;
 
                 } else if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
                 console.log("Email\'s already exist and Email is also not Valid")
                 emailInput.classList.add('is-invalid');
                 emailError.innerHTML='Email\'s already exist and Email is also not Valid';
                 mainForm.classList.remove('was-validated')
+                return false;
 
                 } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
                 console.log("Email's already exist")
                 emailInput.classList.add('is-invalid');
                 emailError.innerText='Email\'s already exist.';
                 mainForm.classList.remove('was-validated')
-
+                return false;        
+                    
                 } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
                 emailInput.classList.add('is-invalid');
                 console.log("Email is not Valid")
                 emailError.innerHTML='Email is also not Valid';
                 mainForm.classList.remove('was-validated')
+                return false;
 
                 } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)){
                 emailInput.classList.remove('is-invalid');
                 console.log("Email is good to use.")
+                return true;
                 }
                 
                 // Hide the spinner after the response is received
@@ -427,8 +526,10 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
                 // Hide the spinner even if there's an error
                 departmentSpinner.style.display = 'none';
                 emailInput.classList.add('is-invalid');
+                return false;
             });
-
+            
+            console.log("End Working......");
 
     }
 

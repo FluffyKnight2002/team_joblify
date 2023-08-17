@@ -1,6 +1,7 @@
 package com.ace_inspiration.team_joblify.controller;
 
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
+import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.Candidate;
@@ -43,6 +44,7 @@ public class Api {
     private final DepartmentService departmentService;
     private final InterviewRepository inter;
     private final NotificationService notificationService;
+    private final NotificationCreator notificationCreator;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -56,7 +58,7 @@ public class Api {
         if(user != null){
             String message = myUserDetails.getName() + " create a new User named" + user.getName();
             String link = "/user-profile-edit?id=" + user.getId();
-//            notificationService.createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails,message,link);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

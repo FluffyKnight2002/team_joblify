@@ -216,33 +216,6 @@
             stateSave: true
         });
 
-        function showProcessingModal() {
-            const processingMessage = `
-                <div class="modal-body text-center" style="background: #0c233d">
-                    <div class="loader"></div>
-                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
-                </div>`;
-
-            $('.modal-content .modal-body').replaceWith(processingMessage);
-        }
-
-        function showSuccessModal() {
-            const successMessage = `
-                <div class="modal-body text-center" style="background: #0c233d">
-                    <div class="loader"></div>
-                    <div class="loader-txt"><p class="text-white">Process successful!</p>
-                        <div class="text-center">
-                            <button class="btn btn-sm btn-light" onclick="closeModal()">Close
-                                </button>
-                            </div>
-                        </div>
-                </div>`;
-
-            $('.modal-content .modal-body').replaceWith(successMessage);
-        }
-
-       
-
         function showConfirmationModal(action, id) {
             const confirmationModal = `
             <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -262,10 +235,32 @@
                     </div>
                 </div>
             </div>`;
-    
             $(document.body).append(confirmationModal); // Append the modal to the document
 
+            function showProcessingModal() {
+                const processingMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
+                </div>`;
 
+                $('.modal-content .modal-body').replaceWith(processingMessage);
+            }
+
+            function showSuccessModal() {
+                const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Process successful!</p>
+                        <div class="text-center">
+                            <button class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+                $('.modal-content .modal-body').replaceWith(successMessage);
+            }
             
 
             // Attach event listener for the "Yes" button inside the modal
