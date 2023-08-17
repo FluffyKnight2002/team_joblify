@@ -15,6 +15,7 @@ import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
+import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.OtpService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class Api {
     private final OtpService otpService;
     private final DepartmentService departmentService;
     private final InterviewRepository inter;
+    private final NotificationService notificationService;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -51,6 +53,11 @@ public class Api {
     public ResponseEntity<User> userRegister(UserDto userDto, Authentication authentication) throws IOException {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userService.userCreate(userDto, myUserDetails.getUserId());
+        if(user != null){
+            String message = myUserDetails.getName() + " create a new User named" + user.getName();
+            String link = "/user-profile-edit?id=" + user.getId();
+//            notificationService.createNotification(myUserDetails,message,link);
+        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

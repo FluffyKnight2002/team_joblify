@@ -1,4 +1,4 @@
-package com.ace_inspiration.team_joblify.service.default_project_initializer_service;
+package com.ace_inspiration.team_joblify.service;
 
 import java.io.IOException;
 

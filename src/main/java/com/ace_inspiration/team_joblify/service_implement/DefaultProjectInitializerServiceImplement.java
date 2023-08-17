@@ -1,8 +1,8 @@
-package com.ace_inspiration.team_joblify.service_implement.default_project_initializer_service_implement;
+package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.*;
-import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
+import com.ace_inspiration.team_joblify.service.DefaultProjectInitializerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -40,26 +41,15 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
     public void initialize() throws IOException {
 
         LocalDateTime currentDate= LocalDateTime.now();
-        if(departmentRepository.count() ==0) {
-            Department department = Department.builder()
-                    .name("Human Resources")
-                    .build();
+        Department department = Department.builder()
+                .name("Human Resources")
+                .build();
+
+        if (departmentRepository.count() == 0 || departmentRepository.findByName("Human Resources").isEmpty()) {
             departmentRepository.save(department);
-
-            Department department1 = Department.builder()
-                    .name("Banking")
-                    .build();
-            departmentRepository.save(department1);
-
-            Department department2 = Department.builder()
-                    .name("Retail")
-                    .build();
-            departmentRepository.save(department2);
         }
 
-        Department defaultDepartment=departmentRepository.findByName("Human Resources").orElseThrow(null);
-
-        if (userRepository.count() == 0) {
+        if (userRepository.count() == 0 || userRepository.findByRole(Role.DEFAULT_HR).isEmpty()) {
 
                 Resource resource = resourceLoader.getResource("classpath:static/assets/images/faces/5.jpg");
                 InputStream inputStream = resource.getInputStream();
@@ -77,7 +67,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                     .role(Role.DEFAULT_HR)
                     .accountStatus(true)
                     .note("This is Default HR Account")
-                    .department(defaultDepartment)
+                    .department(department)
                     .createdDate(currentDate)
                     .lastUpdatedDate(currentDate)
                     .build();

@@ -42,6 +42,7 @@ public class NotificationServiceImpl implements NotificationService {
             NotificationUser notificationUser = new NotificationUser();
             notificationUser.setNotification(savedNotification);
             notificationUser.setUser(user);
+
             notificationUserRepository.save(notificationUser);
         }
 

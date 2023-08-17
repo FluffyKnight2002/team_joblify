@@ -1,5 +1,6 @@
 package com.ace_inspiration.team_joblify.repository;
 
+import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface UserRepository extends DataTablesRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     List<User> findByEmailAndIdNot(String email, Long id);
+
+    Optional<User> findByRole(Role role);
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserService {
     User userCreate(UserDto userDto, long userId) throws IOException;
 
-    Optional<User> findById(long userId);
+    User findById(long userId);
 
     void savePassword(String password, long userId);
 
