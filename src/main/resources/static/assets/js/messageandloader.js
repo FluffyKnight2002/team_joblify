@@ -104,6 +104,8 @@ function actionToVacancy(button) {
                     .attr('data-success-message', 'Update successful!')
                     .attr('data-error-message', 'Update failed. Please try again.')
                     .html('Update');
+                reopenBtn.removeClass('btn-bright');
+                reopenBtn.addClass('btn-un-bright');
                 reopenModeWarn.hide();
                 $('#reopen-form')
                     .attr('id', 'update-form')

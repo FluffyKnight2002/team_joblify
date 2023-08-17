@@ -14,6 +14,7 @@ public class NotificationDto {
     private String message;
     private String link;
     private boolean isSeen;
+    private boolean isDeleted;
     private long userId;
     private String username;
     private LocalDateTime time;
