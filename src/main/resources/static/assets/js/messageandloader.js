@@ -19,6 +19,12 @@ function actionToVacancy(button) {
         detailModal.modal('hide');
     }
 
+    let applyForm = $('#apply-form');
+    if (applyForm.length) {
+        console.log("Apply Modal Have")
+        applyForm.modal('hide');
+    }
+
     // Show the loader and the message-con modal
     $('#message-con').html('<div class="loader"></div><div class="loader-txt"><p class="text-white">Processing...</p></div>');
     $('#loadMe').modal({

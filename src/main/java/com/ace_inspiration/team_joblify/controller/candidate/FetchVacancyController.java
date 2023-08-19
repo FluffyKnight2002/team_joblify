@@ -62,7 +62,9 @@ public class FetchVacancyController {
 
 
     @GetMapping("/show-all-data")
-    public DataTablesOutput<VacancyView> getDataTable(@Valid DataTablesInput input) {
+    public DataTablesOutput<VacancyView> getDataTable(@RequestParam(required = false) String title,
+                                                      @RequestParam(required = false) String department,
+                                                      @Valid DataTablesInput input) {
         return vacancyViewRepository.findAll(input);
     }
 

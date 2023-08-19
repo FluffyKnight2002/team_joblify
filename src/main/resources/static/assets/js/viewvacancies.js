@@ -29,6 +29,11 @@ $(document).ready(function () {
             "ajax": {
                 url: '/vacancy/show-all-data',
                 type: 'GET',
+                data: function (d) {
+                    d.title = $('#title').val(); // Get the value from your input fields
+                    d.department = $('#department').val(); // Get the value from your input fields
+                    // Add other filter parameters if needed
+                }
             },
             "columns": [
                 // { name: "No", data: null, render: function (data, type, row, meta) { return meta.row + 1; }, target: 0 },
@@ -128,7 +133,6 @@ $(document).ready(function () {
             lengthMenu: [5,10,20],
             pageLength: 5,
         });
-
 
         // Function to toggle column visibility
         // Show columns 0 to 6 and the last column (index 10)
@@ -233,9 +237,166 @@ $(document).ready(function () {
 
     reopenModeWarn.hide();
 
+    // Create reset filter button
+    let resetFilterButton = `
+        <div id="reset-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 reset-filter"  
+            onclick="resetFilters()">
+                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            </span>
+        </div>
+    `;
+
+    // Create and append the custom filter inputs and button
+    let customFilterHtml = `
+        <div id="custom-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
+                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
+             data-bs-placement="right" title="Add filter"></i>
+            </span>
+            <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
+                <li class="dropdown-item filter-items date-posted-dropdown-item">
+                    <span class="date-posted">Date posted</span>
+                    <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
+                        <li class="dropdown-item">
+                            <span>Custom</span>
+                            <div class="dropdown-menu dropdown-submenu customDatePicker p-2 pe-4">
+                                <label for="startTimePicker" class="mx-2">Start Date:</label>
+                                <input type="date" id="startTimePicker" class="form-control mx-2">
+                                <label for="endTimePicker" class="mx-2">End Date:</label>
+                                <input type="date" id="endTimePicker" class="form-control mx-2">
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items position-dropdown-item">
+                    <span>Position</span>
+                    <ul class="dropdown-menu dropdown-submenu positionDropdown scrollable-submenu" id="position-dropdown-submenu">
+                        <li class="dropdown-item filter-items"></li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items department-dropdown-item">
+                    <span>Department</span>
+                    <ul class="dropdown-menu dropdown-submenu scrollable-submenu" id="department-dropdown-submenu">
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items job-type-dropdown-item">
+                    <span>Job type</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="job-type-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createJopTypeFilterButton($(this));checkAndToggleFilterButton();">Full time</li>
+                        <li class="dropdown-item filter-items" onclick="createJopTypeFilterButton($(this));checkAndToggleFilterButton();">Part time</li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items level-dropdown-item">
+                    <span>Level</span>
+                    <ul class="dropdown-menu dropdown-submenu ps-3" id="level-dropdown-submenu" style="top: -20px">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
+                            <label class="form-check-label" for="level-entry">
+                                Entry level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
+                            <label class="form-check-label" for="level-junior">
+                                Junior level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
+                            <label class="form-check-label" for="level-mid">
+                                Mid level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
+                            <label class="form-check-label" for="level-senior">
+                                Senior level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
+                            <label class="form-check-label" for="level-supervisor">
+                                Supervisor level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
+                            <label class="form-check-label" for="level-executive">
+                                Executive level
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center py-2">
+                            <span class="filter-items btn btn-sm btn-outline-primary rounded-pill px-2 py-1 me-3" style="font-size: 0.8rem" onclick="createLevelFilterButton($(this))">Confirm</span>
+                        </div>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items salary-dropdown-item">
+                    <span>Salary</span>
+                <ul class="dropdown-menu dropdown-submenu p-2" id="salary-dropdown-submenu">
+                    <div id="rangeBar" class="custom-slider"></div>
+                    <div class="d-flex justify-content-around text-center">
+                        <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Min: <span id="sliderValue1" class="d-block">100000</span></span>
+                        <span id="selected-salary-label" style="font-size: 0.7rem;max-height: 30px;margin-top: 10px" 
+                        class="col-4 bg-primary text-white rounded-pill d-flex justify-content-center align-items-center" onclick="createSalaryFilterButton($(this));checkAndToggleFilterButton();">Confirm</span>
+                        <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Max: <span id="sliderValue2" class="d-block">9000000</span></span>
+                    </div>
+                </ul>
+                </li>
+                <li class="dropdown-item filter-items applicants-dropdown-item">
+                    <span>Applicants</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="applicants-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Over require</li>
+                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Doesn't reach half</li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items status-dropdown-item">
+                    <span>Status</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu" style="top: -90px">
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Open</li>
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Closed</li>
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Expired</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    `;
+
+    fetchTitleAndGenerateHTML().then(submenuHTML => {
+        // Use the generated submenuHTML as needed
+        $('#position-dropdown-submenu').html(submenuHTML);
+    });
+
+    fetchDepartmentAndGenerateHTML().then(submenuHTML => {
+        // Use the generated submenuHTML as needed
+        $('#department-dropdown-submenu').html(submenuHTML);
+    });
+
+    // Attach hover event to elements with class .date-posted
+    // $('.date-posted').hover(function () {
+    //     // Find the closest dropdown-menu and show it
+    //     $(this).closest('.dropdown-menu').addClass('show');
+    // }, function () {
+    //     // Hide the dropdown-menu when the mouse leaves
+    //     $(this).closest('.dropdown-menu').removeClass('show');
+    // });
+
+    // Find the search input's parent div.row and append the custom filter inputs
+    var searchRow = $('#table_filter').closest('.row');
+    var recentFilterDropdownCon = `<div class="col-11" id="recent-filter-dropdown-con"></div>`;
+    $(customFilterHtml).appendTo(searchRow);
+    $(resetFilterButton).appendTo(searchRow);
+    $('#reset-filter').hide();
+    $(recentFilterDropdownCon).appendTo(searchRow);
+
+    activeRangeBar();
+
     // Initialize Bootstrap tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
@@ -672,16 +833,20 @@ function changeTime(time) {
     let hours = date.getHours();
     let minutes = date.getMinutes();
     let period = 'AM';
-    if(hours > 12) {
+
+    if (hours === 12) {
+        hours = 12;
+        period = 'AM';
+    } else if (hours > 12) {
         hours = hours - 12;
         period = 'PM';
     }
 
-    if(hours < 10) {
+    if (hours < 10) {
         hours = '0' + hours;
     }
 
-    if(minutes < 10) {
+    if (minutes < 10) {
         minutes = '0' + minutes;
     }
     return hours + ":" + minutes + " " + period;

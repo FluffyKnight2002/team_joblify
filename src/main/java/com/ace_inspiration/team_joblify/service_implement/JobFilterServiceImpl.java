@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +30,28 @@ public class JobFilterServiceImpl {
 
     private final VacancyViewRepository vacancyViewRepository;
     private final EntityManager entityManager; // Added EntityManager dependency
+
+    public List<VacancyView> getFilteredVacancies(String title, String department) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<VacancyView> criteriaQuery = criteriaBuilder.createQuery(VacancyView.class);
+        Root<VacancyView> root = criteriaQuery.from(VacancyView.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (title != null && !title.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.get("position"), "%" + title + "%"));
+        }
+
+        if (department != null && !department.isEmpty()) {
+            predicates.add(criteriaBuilder.equal(root.get("department"), department));
+        }
+
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<VacancyView> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
 
     public Page<VacancyView> filterJobs(JobFilterRequest filterRequest, Pageable pageable) {
         Specification<VacancyView> spec = Specification.where(null);
