@@ -42,7 +42,7 @@ class UserServiceImplementTest {
     private UserServiceImplement implement;
     @BeforeEach
     void setUp() {
-        implement = new UserServiceImplement(passwordEncoder, userRepository, departmentRepository, notificationRepository, notificationUserRepository);
+        implement = new UserServiceImplement(passwordEncoder, userRepository, departmentRepository);
 
     }
 

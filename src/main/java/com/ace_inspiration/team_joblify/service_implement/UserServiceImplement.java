@@ -9,7 +9,6 @@ import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -26,8 +25,6 @@ public class UserServiceImplement implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
-    private final NotificationRepository notificationRepository;
-    private final NotificationUserRepository notificationUserRepository;
 
     @Value("${app.default.user.password}")
     private String password;
@@ -198,5 +195,11 @@ public class UserServiceImplement implements UserService {
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public boolean checkPhoneDuplicate(String phone) {
+        User user = userRepository.findByPhone(phone).orElse(null);
+        return user != null;
     }
 }

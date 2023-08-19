@@ -14,7 +14,7 @@ public interface UserRepository extends DataTablesRepository<User, Long> {
     Optional<User> findByRole(Role role);
     Optional<User> findByEmail(String email);
     List<User> findByEmailAndIdNot(String email, Long id);
-
+    Optional<User> findByPhone(String phone);
 
 }
 

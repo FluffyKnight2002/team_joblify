@@ -151,6 +151,13 @@ public class Api {
         return user.getPhone();
     }
 
+    @GetMapping("/phone-duplicate")
+    public boolean checkPhoneDuplicate(@RequestParam("phone")String phone){
+        return userService.checkPhoneDuplicate(phone);
+    }
+
+
+
 
 //    @GetMapping("/filtered-vacancies")
 //    public List <Object[]> getFilteredVacancies() {

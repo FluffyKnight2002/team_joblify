@@ -137,4 +137,17 @@ class UserRepositoryTest {
             assertThat(u).isEmpty();
         }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"09777159555", "09773137253"})
+    void findByPhone(String phone) {
+
+        Optional<User> u = userRepository.findByPhone(phone);
+        if(!u.isEmpty()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
 }

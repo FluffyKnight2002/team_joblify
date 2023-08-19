@@ -4,7 +4,6 @@ import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.User;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public interface UserService {
     User userCreate(UserDto userDto, long userId) throws IOException;
@@ -30,4 +29,6 @@ public interface UserService {
     boolean activate(long id);
 
     User findByEmail(String email);
+
+    boolean checkPhoneDuplicate(String phone);
 }

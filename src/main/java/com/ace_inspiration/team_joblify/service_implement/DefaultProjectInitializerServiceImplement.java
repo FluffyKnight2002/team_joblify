@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -45,16 +45,20 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
                 .name("Human Resources")
                 .build();
 
-        if (departmentRepository.count() == 0 || departmentRepository.findByName("Human Resources").isEmpty()) {
+        Optional<Department> d = departmentRepository.findByName("Human Resources");
+        if (d.isEmpty()) {
             departmentRepository.save(department);
         }
 
-        if (userRepository.count() == 0 || userRepository.findByRole(Role.DEFAULT_HR).isEmpty()) {
-
-                Resource resource = resourceLoader.getResource("classpath:static/assets/images/faces/5.jpg");
+        Optional<User> u = userRepository.findByRole(Role.DEFAULT_HR);
+        if (u.isEmpty()) {
+            Resource resource = resourceLoader.getResource("classpath:static/assets/images/faces/5.jpg");
+            byte[] photoBytes = null;
+                if(resource != null) {
                 InputStream inputStream = resource.getInputStream();
-                byte [] photoBytes = IOUtils.toByteArray(inputStream);
 
+                photoBytes = IOUtils.toByteArray(inputStream);
+            }
             User defaultUser = User.builder()
                     .username("Admin")
                     .name("Admin")
