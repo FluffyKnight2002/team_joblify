@@ -114,8 +114,6 @@ public class JobFilterServiceImpl {
                         builder.or(fullTime, partTime) :
                         builder.equal(root.get("jobType"), JobType.valueOf(filterRequest.getJobType()));
             });
-//            spec = spec.and((root, query, builder) ->
-//                    root.get("jobType").in(filterRequest.getJobType()));
         }
 
 

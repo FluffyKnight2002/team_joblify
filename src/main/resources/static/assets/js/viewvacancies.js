@@ -8,6 +8,11 @@ let defaultPosition = null;
 let defaultDepartment = null;
 let href;
 let vacancyId;
+let table;
+let rangeBar1;
+let sliderValue1;
+let sliderValue2;
+let tooltipsEnabled1 = false;
 $(document).ready(function () {
 
     // Check if the currentId is the same as the previousId
@@ -21,8 +26,8 @@ $(document).ready(function () {
     console.log("Input To Disable : ", inputsToDisable)
 
     // Store the initial visibility status of each column
-        var columnVisibility = [true, true, true, true, true, true, false, false, true];
-        var table = $('table#table').DataTable({
+        let columnVisibility = [true, true, true, true, true, true, false, false, true];
+        table = $('table#table').DataTable({
             "serverSide": true,
             "processing": true,
             "stateSave": true,
@@ -30,9 +35,16 @@ $(document).ready(function () {
                 url: '/vacancy/show-all-data',
                 type: 'GET',
                 data: function (d) {
-                    d.title = $('#title').val(); // Get the value from your input fields
-                    d.department = $('#department').val(); // Get the value from your input fields
-                    // Add other filter parameters if needed
+                    d.datePosted = $('#filter-date-posted').val(),
+                    d.title = $('#filter-title').val(),
+                    d.department = $('#filter-department').val(),
+                    d.startDate = $('#filter-start-date').val(),
+                    d.endDate = $('#filter-end-date').val(),
+                    d.jobType = $('#filter-jobType').val(),
+                    d.level = $('#filter-level').val(),
+                    d.minAndMax = $('#filter-minAndMax').val(),
+                    d.applicants = $('#filter-applicants').val(),
+                    d.status = $('#filter-status').val()
                 }
             },
             "columns": [
@@ -261,13 +273,18 @@ $(document).ready(function () {
                         <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
                         <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
                         <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
-                        <li class="dropdown-item">
+                        <li class="dropdown-item filter-items">
                             <span>Custom</span>
                             <div class="dropdown-menu dropdown-submenu customDatePicker p-2 pe-4">
                                 <label for="startTimePicker" class="mx-2">Start Date:</label>
-                                <input type="date" id="startTimePicker" class="form-control mx-2">
+                                <input type="date" id="startTimePicker" class="form-control mx-2 startTimePicker">
                                 <label for="endTimePicker" class="mx-2">End Date:</label>
-                                <input type="date" id="endTimePicker" class="form-control mx-2">
+                                <input type="date" id="endTimePicker" class="form-control mx-2 endTimePicker">
+                                <div class="mt-2 text-end">
+                                    <span id="confirmDateFilter" class="btn btn-outline-primary px-2"
+                                     style="font-size: 0.7rem" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton()">
+                                     Confirm</span>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -294,37 +311,37 @@ $(document).ready(function () {
                     <span>Level</span>
                     <ul class="dropdown-menu dropdown-submenu ps-3" id="level-dropdown-submenu" style="top: -20px">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
                             <label class="form-check-label" for="level-entry">
                                 Entry level
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
                             <label class="form-check-label" for="level-junior">
                                 Junior level
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
                             <label class="form-check-label" for="level-mid">
                                 Mid level
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
                             <label class="form-check-label" for="level-senior">
                                 Senior level
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
                             <label class="form-check-label" for="level-supervisor">
                                 Supervisor level
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
                             <label class="form-check-label" for="level-executive">
                                 Executive level
                             </label>
@@ -337,7 +354,7 @@ $(document).ready(function () {
                 <li class="dropdown-item filter-items salary-dropdown-item">
                     <span>Salary</span>
                 <ul class="dropdown-menu dropdown-submenu p-2" id="salary-dropdown-submenu">
-                    <div id="rangeBar" class="custom-slider"></div>
+                    <div id="rangeBar1" class="custom-slider"></div>
                     <div class="d-flex justify-content-around text-center">
                         <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Min: <span id="sliderValue1" class="d-block">100000</span></span>
                         <span id="selected-salary-label" style="font-size: 0.7rem;max-height: 30px;margin-top: 10px" 
@@ -392,7 +409,66 @@ $(document).ready(function () {
     $('#reset-filter').hide();
     $(recentFilterDropdownCon).appendTo(searchRow);
 
-    activeRangeBar();
+    rangeBar1 = document.getElementById('rangeBar1');
+    sliderValue1 = document.getElementById('sliderValue1');
+    sliderValue2 = document.getElementById('sliderValue2');
+    tooltipsEnabled1 = false;
+
+    noUiSlider.create(rangeBar1, {
+        start: [250000, 800000], // Initial range values
+        connect: true,   // Connect the two handles
+        range: {         // Set the range
+            'min': 100000,
+            'max': 1000000
+        },
+        step: 10000,         // Add a step of 5
+        // Disable tooltips initially
+        tooltips: [false, false],
+        css: [
+            // Change the color of the range bar
+            "background: linear-gradient(to right, #007BFF, #007BFF) !important;",
+            // Change the color of the range buttons and dots
+            ".noUi-connect { background: #007BFF !important; }",
+            ".noUi-handle { background: #007BFF !important; }",
+            ".noUi-tooltip { background: #007BFF !important; }",
+        ],
+    });
+
+    rangeBar1.noUiSlider.on('update', function (values, handle) {
+        sliderValue1.innerText = values[0];
+        sliderValue2.innerText = values[1];
+    });
+
+    // Enable tooltips when handle is pressed
+    rangeBar1.noUiSlider.on('start', function () {
+        if (!tooltipsEnabled1) {
+            rangeBar1.noUiSlider.updateOptions({
+                tooltips: [true, true]
+            });
+            tooltipsEnabled1 = true;
+        }
+    });
+
+    // Disable tooltips when handle is released
+    rangeBar1.noUiSlider.on('end', function () {
+        if (tooltipsEnabled1) {
+            rangeBar1.noUiSlider.updateOptions({
+                tooltips: [false, false]
+            });
+            tooltipsEnabled1 = false;
+        }
+    });
+
+    // Prevent dropdown-submenu from closing when interacting with the range slider
+    $(rangeBar1).on('click', function (event) {
+        event.stopPropagation();
+    });
+
+    // Prevent dropdown-submenu from closing when interacting with the range slider values
+    $('#sliderValue1, #sliderValue2').on('click', function (event) {
+        event.stopPropagation();
+    });
+
 
     // Initialize Bootstrap tooltips
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -400,6 +476,12 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+});
+
+// Prevent the dropdown from closing when date inputs are clicked
+$('.startTimePicker, .endTimePicker').on('click', function (e) {
+    e.stopPropagation(); // Stop the event from propagating
+    $(this).closest('.dropdown-submenu').dropdown('toggle'); // Show the dropdown
 });
 
 // Add an event listener for the "Detail" link
