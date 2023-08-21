@@ -227,6 +227,7 @@ $(document).ready(function () {
     // Validate inputs on input change
     function  validate() {
         $('input[type="text"],input[type="number"],input#post, textarea').on('input', function() {
+            console.log("Descriptions  :", $('#descriptions'))
             let inputElement = $(this);
             if ($.trim(inputElement.val()) === '') {
                 showFeedback(inputElement);

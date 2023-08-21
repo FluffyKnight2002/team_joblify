@@ -13,6 +13,7 @@ let rangeBar1;
 let sliderValue1;
 let sliderValue2;
 let tooltipsEnabled1 = false;
+let currentLi = null;
 $(document).ready(function () {
 
     // Check if the currentId is the same as the previousId
@@ -38,8 +39,8 @@ $(document).ready(function () {
                     d.datePosted = $('#filter-date-posted').val(),
                     d.title = $('#filter-title').val(),
                     d.department = $('#filter-department').val(),
-                    d.startDate = $('#filter-start-date').val(),
-                    d.endDate = $('#filter-end-date').val(),
+                    d.startDateInput = $('#filter-start-date').val(),
+                    d.endDateInput = $('#filter-end-date').val(),
                     d.jobType = $('#filter-jobType').val(),
                     d.level = $('#filter-level').val(),
                     d.minAndMax = $('#filter-minAndMax').val(),
@@ -274,18 +275,7 @@ $(document).ready(function () {
                         <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
                         <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
                         <li class="dropdown-item filter-items">
-                            <span>Custom</span>
-                            <div class="dropdown-menu dropdown-submenu customDatePicker p-2 pe-4">
-                                <label for="startTimePicker" class="mx-2">Start Date:</label>
-                                <input type="date" id="startTimePicker" class="form-control mx-2 startTimePicker">
-                                <label for="endTimePicker" class="mx-2">End Date:</label>
-                                <input type="date" id="endTimePicker" class="form-control mx-2 endTimePicker">
-                                <div class="mt-2 text-end">
-                                    <span id="confirmDateFilter" class="btn btn-outline-primary px-2"
-                                     style="font-size: 0.7rem" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton()">
-                                     Confirm</span>
-                                </div>
-                            </div>
+                            <input type="text" class="px-2 rounded datefilter" name="datefilter" value="" placeholder="Custom" />
                         </li>
                     </ul>
                 </li>
@@ -392,15 +382,6 @@ $(document).ready(function () {
         $('#department-dropdown-submenu').html(submenuHTML);
     });
 
-    // Attach hover event to elements with class .date-posted
-    // $('.date-posted').hover(function () {
-    //     // Find the closest dropdown-menu and show it
-    //     $(this).closest('.dropdown-menu').addClass('show');
-    // }, function () {
-    //     // Hide the dropdown-menu when the mouse leaves
-    //     $(this).closest('.dropdown-menu').removeClass('show');
-    // });
-
     // Find the search input's parent div.row and append the custom filter inputs
     var searchRow = $('#table_filter').closest('.row');
     var recentFilterDropdownCon = `<div class="col-11" id="recent-filter-dropdown-con"></div>`;
@@ -408,6 +389,13 @@ $(document).ready(function () {
     $(resetFilterButton).appendTo(searchRow);
     $('#reset-filter').hide();
     $(recentFilterDropdownCon).appendTo(searchRow);
+
+    $('.dropdown-menu > li').hover(function () {
+        $(this).children('.dropdown-submenu').css('display', 'block');
+    }
+    , function () {
+        $(this).children('.dropdown-submenu').css('display', '');
+    });
 
     rangeBar1 = document.getElementById('rangeBar1');
     sliderValue1 = document.getElementById('sliderValue1');
@@ -468,6 +456,44 @@ $(document).ready(function () {
     $('#sliderValue1, #sliderValue2').on('click', function (event) {
         event.stopPropagation();
     });
+
+    // Date range picker
+    $(function() {
+        // Initialize the daterangepicker
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        // Handle apply event to update the input value and set start and end times
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            const startDate = picker.startDate.format('MM/DD/YYYY');
+            const endDate = picker.endDate.format('MM/DD/YYYY');
+
+            $(this).val(startDate + ' - ' + endDate);
+
+            // Set the start and end times in your input fields
+            createDatePostedFilterButton('Custom',startDate,endDate);
+            checkAndToggleFilterButton();
+            $('.datePostedDropdown').hide();
+        });
+
+        // Handle cancel event to clear the input value and reset start and end times
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+            $('#filter-start-time').val('');
+            $('#filter-end-time').val('');
+        });
+
+        $('.daterangepicker').hover(function () {
+            $('.datePostedDropdown').css('display', 'block');
+        },function() {
+            $('.datePostedDropdown').css('display', '');
+        });
+    });
+
 
 
     // Initialize Bootstrap tooltips

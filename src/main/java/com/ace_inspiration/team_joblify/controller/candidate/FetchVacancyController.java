@@ -88,10 +88,14 @@ public class FetchVacancyController {
         Specification<VacancyView> specification = (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
+            // Inside your getDataTable method
             if (datePosted != null && !datePosted.isEmpty()) {
                 LocalDate currentDate = LocalDate.now();
                 LocalDate startDate = null;
                 LocalDate endDate = null;
+
+                System.out.println("Start Date Input : " + startDateInput);
+                System.out.println("End Date Input : " + endDateInput);
 
                 if (datePosted.equals("Last 24 hours")) {
                     // Calculate the start date as 1 day ago from the current date
@@ -103,14 +107,17 @@ public class FetchVacancyController {
                     // Calculate the start date as 30 days ago from the current date
                     startDate = currentDate.minusDays(30);
                 } else if (datePosted.equals("Custom")) {
-                    // Parse the start and end dates into LocalDate objects
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    // Check if both startDateInput and endDateInput are provided
+                    if (startDateInput != null && endDateInput != null) {
+                        // Parse the start and end dates into LocalDate objects
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-                    try {
-                        startDate = LocalDate.parse(startDateInput, formatter);
-                        endDate = LocalDate.parse(endDateInput, formatter);
-                    } catch (DateTimeParseException e) {
-                        // Handle date parsing error
+                        try {
+                            startDate = LocalDate.parse(startDateInput, formatter);
+                            endDate = LocalDate.parse(endDateInput, formatter);
+                        } catch (DateTimeParseException e) {
+                            // Handle date parsing error
+                        }
                     }
                 }
 
@@ -128,6 +135,9 @@ public class FetchVacancyController {
                             predicate, criteriaBuilder.lessThanOrEqualTo(root.get("openDate"), endDate)
                     );
                 }
+
+                System.out.println("Start Date : " + startDate);
+                System.out.println("End Date : " + endDate);
             }
 
             if (title != null && !title.isEmpty()) {

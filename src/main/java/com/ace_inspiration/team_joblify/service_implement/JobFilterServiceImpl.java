@@ -104,7 +104,6 @@ public class JobFilterServiceImpl {
             }
         }
 
-
         if (filterRequest.getJobType() != null && !filterRequest.getJobType().isEmpty()) {
             spec = spec.and((root, query, builder) -> {
                 Predicate fullTime = builder.equal(root.get("jobType"), JobType.FULL_TIME);

@@ -8,7 +8,6 @@ let filterElements = [
     {name: 'applicants-dropdown-item', isRemove: false, filterId: 'filter-applicants'},
     {name: 'status-dropdown-item', isRemove: false, filterId: 'filter-status'}
 ];
-
 let selectedLevels = [];
 let minValue;
 let maxValue;
@@ -59,22 +58,33 @@ function resetFilters() {
 
 // Update the text of the recent filter dropdown button when an option is selected
 function changeSelectedFilterName(item) {
-    let selectedValue = $(item).text(); // Get the selected value from the clicked item
-    let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
+    if (item) {
+        let selectedValue = $(item).text(); // Get the selected value from the clicked item
+        let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
-    let filterId = $(item).data('filter-id');
-    // Find and update the isRemove property in filterElements
-    console.log(filterId)
-    for (let i = 0; i < filterElements.length; i++) {
-        console.log(filterElements[i].filterId)
-        if (filterElements[i].filterId === filterId) {
-            $('#'+filterElements[i].filterId).val($.trim(selectedValue));
-            break; // Exit the loop once the element is found
+        let filterId = $(item).data('filter-id');
+
+        // Find and update the isRemove property in filterElements
+        console.log(filterId)
+        for (let i = 0; i < filterElements.length; i++) {
+            console.log(filterElements[i].filterId)
+            if (filterElements[i].filterId === filterId) {
+                $('#' + filterElements[i].filterId).val($.trim(selectedValue));
+                break; // Exit the loop once the element is found
+            }
         }
-    }
 
-    button.text(selectedValue); // Update the text of the button
-    updateDataTable();
+        if ($('input[name="datefilter2"]').length > 0) {
+            if(selectedValue != 'Custom') {
+                $('input[name="datefilter2"]').val('');
+                button.text(selectedValue); // Update the text of the button
+            }else {
+                $('.date-posted-filter-btn').text('Custom');
+            }
+        }
+
+        updateDataTable();
+    }
 }
 
 // Function to remove selected dropdown and new button
@@ -103,27 +113,20 @@ function showSelectedDropdownRemoveButton(button) {
     removeButton.show();
 }
 
-function createDatePostedFilterButton(selectedValue) {
+function createDatePostedFilterButton(selectedValue,startDate,endDate) {
 
     filterElements[0].isRemove = true;
     $('.date-posted-dropdown-item').hide();
-    let selectedText = selectedValue.text();
 
-    if(selectedText.value === 'Confirm') {
-        // Event listener for the "Confirm" button
-        $('#confirmDateFilter').on('click', function () {
-            // Get the selected start and end dates
-            var startDate = $('#startTimePicker').val();
-            var endDate = $('#endTimePicker').val();
+    let selectedText = null;
 
-            // Apply the date filter to your data table here
-            // Example: You can use the "startDate" and "endDate" to filter your data
-
-            // Finally, close the dropdown if needed
-            $('#datePostedDropdown').dropdown('toggle');
-        });
-        selectedText = 'Custom';
+    if(selectedValue === 'Custom') {
+        $('#filter-start-date').val(startDate);
+        $('#filter-end-date').val(endDate);
+        selectedText = selectedValue;
+        $('#filter-date-posted').val(selectedText);
     }else {
+        selectedText =  selectedValue.text();
         $('#filter-date-posted').val(selectedText);
     }
 
@@ -140,23 +143,61 @@ function createDatePostedFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items recent-filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last 24 hours</li>
-                <li class="dropdown-item filter-items recent-filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last week</li>
-                <li class="dropdown-item filter-items recent-filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last month</li>
-                <li class="dropdown-item">
-                    <span>Custom</span>
-                    <div class="dropdown-menu dropdown-submenu customDatePicker p-2 pe-4">
-                        <label for="startTimePicker" class="mx-2">Start Date:</label>
-                        <input type="date" id="startTimePicker" class="form-control mx-2">
-                        <label for="endTimePicker" class="mx-2">End Date:</label>
-                        <input type="date" id="endTimePicker" class="form-control mx-2">
-                    </div>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last 24 hours</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last week</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last month</li>
+                <li class="dropdown-item filter-items">
+                    <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
                 </li>
             </ul>
         </div>`;
 
     // Append the selectedDropdown to the appropriate container
     $('#recent-filter-dropdown-con').append(selectedDropdown);
+
+    $(function() {
+        // Replace value of date range
+        replaceDateFilter2Value();
+        // Initialize the daterangepicker
+        $('input[name="datefilter2"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        // Handle apply event to update the input value and set start and end times
+        $('input[name="datefilter2"]').on('apply.daterangepicker', function(ev, picker) {
+            const startDate = picker.startDate.format('MM/DD/YYYY');
+            const endDate = picker.endDate.format('MM/DD/YYYY');
+
+            $(this).val(startDate + ' - ' + endDate);
+
+            $('#filter-start-date').val(startDate);
+            $('#filter-end-date').val(endDate);
+            $('.datePostedDropdown').hide();
+
+            // Get the selected item with a data-filter-id attribute
+            const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-date-posted">Custom</li>');
+
+            // Call the function and pass the selected item
+            changeSelectedFilterName(selectedFilterItem);
+
+        });
+
+        // Handle cancel event to clear the input value and reset start and end times
+        $('input[name="datefilter2"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+            $('#filter-start-time').val('');
+            $('#filter-end-time').val('');
+        });
+
+        $('.daterangepicker').hover(function () {
+            $('.datePostedDropdown').css('display', 'block');
+        },function() {
+            $('.datePostedDropdown').css('display', '');
+        });
+    });
 
     // Hide other remove buttons and show the recent-filter-dropdown-btn
     $('.selected-dropdown-remove-button').hide();
@@ -319,37 +360,37 @@ function createLevelFilterButton(selectedValue) {
             </span>
             <ul class="dropdown-menu dropdown-submenu ps-3" id="level-filter-dropdown-submenu">
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
                     <label class="form-check-label" for="level-entry">
                         Entry level
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
                     <label class="form-check-label " for="level-junior">
                         Junior level
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
                     <label class="form-check-label" for="level-mid">
                         Mid level
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
                     <label class="form-check-label" for="level-senior">
                         Senior level
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
                     <label class="form-check-label" for="level-supervisor">
                         Supervisor level
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input level-checkbox" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
+                    <input class="form-check-input level-filter-checkbox" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
                     <label class="form-check-label" for="level-executive">
                         Executive level
                     </label>
@@ -366,23 +407,12 @@ function createLevelFilterButton(selectedValue) {
         filterElements[4].isRemove = true;
         $('.level-dropdown-item').hide();
 
-        updateFilterLevel();
-
         checkAndToggleFilterButton();
 
         // Append the selectedDropdown to the appropriate container
         $('#recent-filter-dropdown-con').append(selectedDropdown);
-        $('.level-checkbox').prop('checked', false);
 
-        console.log("selectedLevels ", selectedLevels)
-        $('.level-checkbox').each(function () {
-            var checkbox = $(this);
-            console.log("checkbox.val() ", checkbox.val());
-            console.log("checked : ", checkbox.is(":checked"));
-            if (selectedLevels.includes(checkbox.val())) {
-                checkbox.prop('checked', true); // Check the checkbox
-            }
-        });
+        updateFilterLevel();
 
         // Hide other remove buttons and show the recent-filter-dropdown-btn
         $('.selected-dropdown-remove-button').hide();
@@ -422,8 +452,8 @@ function createSalaryFilterButton(selectedValue) {
                 <div class="d-flex justify-content-around text-center">
                     <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Min: <span id="sliderValue3" class="d-block">100000</span></span>
                     <span class="selected-salary-label" style="font-size: 0.7rem;max-height: 30px;margin-top: 10px" 
-                    class="col-4 bg-primary text-white rounded-pill d-flex justify-content-center align-items-center" 
-                    onclick="updateFilterValueAndClose(document.getElementById('rangeBar2'));">Confirm</span>
+                    id="confirm-btn" 
+                    onclick="updateFilterValueAndClose(document.getElementById('rangeBar2')); updateDataTable();">Confirm</span>
                     <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Max: <span id="sliderValue4" class="d-block">9000000</span></span>
                 </div>
             </ul>
@@ -431,6 +461,8 @@ function createSalaryFilterButton(selectedValue) {
 
     // Append the selectedDropdown to the appropriate container
     $('#recent-filter-dropdown-con').append(selectedDropdown);
+    $('#confirm-btn').addClass('col-4 bg-primary text-white rounded-pill d-flex justify-content-center align-items-center');
+    $('#confirm-btn').css('cursor', 'pointer');
     updateFilterValueAndClose(rangeBar1);
 
     var rangeBar2 = document.getElementById('rangeBar2');
@@ -659,24 +691,47 @@ async function fetchDepartmentAndGenerateHTML() {
 
 function updateFilterLevel() {
 
-    selectedLevels = [];
+    const selectedLevels = [];
 
     // Select all checkboxes with class 'level-checkbox' that are checked
     const checkboxes = $('.level-checkbox:checked');
+    const checkboxes2 = $('.level-filter-checkbox:checked');
 
     // Iterate through the checked checkboxes and collect their values
     checkboxes.each(function () {
         selectedLevels.push($(this).val());
     });
 
-    if (selectedLevels.length > 0) {
-        $('#filter-level').val(selectedLevels.join(', '));
+    // If no checkboxes are checked in checkboxes, use checkboxes2
+    if (selectedLevels.length === 0) {
+        checkboxes2.each(function () {
+            selectedLevels.push($(this).val());
+        });
+    }else {
+        console.log("selectedLevels ", selectedLevels)
+        $('.level-filter-checkbox').each(function () {
+            var checkbox = $(this);
+            console.log("level-filter-checkbox.val() ", checkbox.val());
+            console.log("checked : ", checkbox.is(":checked"));
+            if (selectedLevels.includes(checkbox.val())) {
+                checkbox.prop('checked', true); // Check the checkbox
+            }
+        });
+
+        $('.level-checkbox').prop('checked', false);
     }
 
-    console.log("Selected Levels : ", selectedLevels)
+    console.log("Selected Levels : ", selectedLevels);
 
     // Optionally, close the dropdown menu if needed
     // $('#level-dropdown-submenu').dropdown('hide');
+
+    if (selectedLevels.length > 0) {
+        $('#filter-level').val(selectedLevels.join(', '));
+    } else {
+        // Handle the case where no checkboxes are checked
+        $('#filter-level').val(""); // Set to an empty string or any default value
+    }
 }
 
 // Function to update the filter value and close the dropdown submenu
@@ -688,6 +743,15 @@ function updateFilterValueAndClose(rangeBar) {
     maxValue = rangeBar.noUiSlider.get()[1];
     const filterValue = minValue + ',' + maxValue;
     $('#filter-minAndMax').val(filterValue);
+
+    console.log("Filter Min Max", $('#filter-minAndMax').val())
+}
+
+// Function to replace datefilter2 with the value from datefilter
+function replaceDateFilter2Value() {
+    const dateFilterValue = $('input[name="datefilter"]').val();
+    $('input[name="datefilter2"]').val(dateFilterValue);
+    $('input[name="datefilter"]').val('')
 }
 
 
