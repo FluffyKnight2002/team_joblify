@@ -1,0 +1,92 @@
+.uploader-main {
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  margin-top: 28px;
+  margin-bottom: 28px;
+}
+
+.uploader-inner {
+  position: relative;
+}
+
+.preview-wrapper:hover .preview-drop {
+  visibility: visible;
+  top: 0;
+  bottom: 0; /* Transition to fully cover the wrapper */
+  opacity: 1;
+}
+
+.preview-wrapper {
+  background-color: #2962FF;
+  margin-left: auto;
+  margin-right: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url('http://2.bp.blogspot.com/-V31y2Ef4Ad0/VZservQf70I/AAAAAAAAdu8/ErI--hbXwfE/s1600/OpenCamera1.png');
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+  width: 200px;
+  border: 3px solid #1e497b;
+}
+
+.preview-inner {
+  left: 0;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* .preview-wrapper:hover .preview-inner {
+  background: rgba(0, 0, 0, 0.86);
+  padding: 1px;
+} */
+
+.preview {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+.preview-drop {
+  position: absolute;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  top: 100%;
+  left: 0;
+  right: 0;
+  bottom: 100%; /* Initial position, hidden above the wrapper */
+  z-index: 1;
+  background-color: rgba(85, 85, 90, 0.86);
+  text-align: center;
+}
+
+
+
+
+  .preview-drop ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
+
+  .preview-drop li {
+      padding: -5px;
+      color: white;
+      cursor: pointer;
+  }
+
+  .li {
+    padding-top: 30%;
+  }

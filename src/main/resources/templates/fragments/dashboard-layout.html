@@ -2,6 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Title</title>
 </head>
 <body>
@@ -137,28 +139,28 @@
                         <div class="user-menu d-flex">
                             <div class="user-name text-end me-3">
                                 <h6 class="mb-0 text-gray-600">
-                                    <span sec:authorize="authenticated"
-                                          sec:authentication="principal.name"></span></h6>
+                                    <span id="authenticated-name"></span></h6>
                                 <p class="mb-0 text-sm text-gray-600">
-                                    <span sec:authorize="authenticated"
-                                        sec:authentication="principal.department"></span>
+                                    <span id="authenticated-department"></span>
                                 </p>
 
             
                             </div>
                             <div class="user-img d-flex align-items-center">
                                 <div class="avatar avatar-md">
-                                    <img src="/assets/images/faces/1.jpg">
+                                    <img id="profile-img" alt="User Photo" style="border: 1px solid black;">
+                                    
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                         <li>
-                            <h6 class="dropdown-header">Hello, <span sec:authorize="authenticated"
-                                sec:authentication="principal.name"></span></h6>
+                            <h6 class="dropdown-header">Hello, <span id="authenticated-username"></span></h6>
                         </li>
-                        <li><a class="dropdown-item" th:href="@{/user-profile-edit(id=${#authentication.principal.userId})}"><i class="icon-mid bi bi-person me-2"></i> My
+                        <li><a class="dropdown-item" id="profile-link"><i class="icon-mid bi bi-person me-2"></i> My
                             Profile</a></li>
                         <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
                             Settings</a></li>

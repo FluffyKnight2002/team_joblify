@@ -9,6 +9,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -114,10 +115,56 @@ class UserRepositoryTest {
     }
 
     @ParameterizedTest
-    @ValueSource(longs = {1, 3})
-    void findByEmailAndIdNot(long id) {
+    @EnumSource(Role.class)
+    void findByRole(Role role) {
 
-        List<User> u = userRepository.findByEmailAndIdNot("ace@gmail.com", id);
+        Optional<User> u = userRepository.findByRole(role);
+        if(u.isPresent()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"09777159555", "09773137253"})
+    void findByPhone(String phone) {
+
+        Optional<User> u = userRepository.findByPhone(phone);
+        if(!u.isEmpty()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByUsernameExceptHimself(long userId) {
+        Optional<User> u = userRepository.findByUsernameAndIdNot("Admin", userId);
+        if(u.isPresent()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByEmailExceptHimself(long userId) {
+        Optional<User> u = userRepository.findByEmailAndIdNot("ace@gmail.com", userId);
+        if(u.isPresent()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByPhoneExceptHimself(long userId) {
+
+        Optional<User> u = userRepository.findByPhoneAndIdNot("09777159555", userId);
         if(!u.isEmpty()){
             assertThat(u).contains(user);
         } else {
