@@ -18,8 +18,6 @@ public interface UserService {
 
     boolean emailDuplication(String email);
 
-    boolean emailDuplicationExceptMine(String email, long userId);
-
     boolean checkOldPassword(String password, String email);
 
     boolean passwordChange(String newPassword, String email);
@@ -31,4 +29,6 @@ public interface UserService {
     User findByEmail(String email);
 
     boolean checkPhoneDuplicate(String phone);
+
+    boolean checkUsernameDuplicate(String username);
 }

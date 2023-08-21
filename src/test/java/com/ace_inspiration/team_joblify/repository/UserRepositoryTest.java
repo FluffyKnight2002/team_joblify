@@ -115,18 +115,6 @@ class UserRepositoryTest {
     }
 
     @ParameterizedTest
-    @ValueSource(longs = {1, 3})
-    void findByEmailAndIdNot(long id) {
-
-        List<User> u = userRepository.findByEmailAndIdNot("ace@gmail.com", id);
-        if(!u.isEmpty()){
-            assertThat(u).contains(user);
-        } else {
-            assertThat(u).isEmpty();
-        }
-    }
-
-    @ParameterizedTest
     @EnumSource(Role.class)
     void findByRole(Role role) {
 
@@ -149,5 +137,6 @@ class UserRepositoryTest {
             assertThat(u).isEmpty();
         }
     }
+
 
 }

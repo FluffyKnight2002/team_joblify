@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +41,6 @@ public class Api {
     private final OtpService otpService;
     private final DepartmentService departmentService;
     private final InterviewRepository inter;
-    private final NotificationService notificationService;
     private final NotificationCreator notificationCreator;
 
     @GetMapping("/get-all-user")
@@ -157,7 +154,16 @@ public class Api {
     }
 
 
+    @GetMapping("/username-duplicate")
+    public boolean checkUsernameDuplicate(@RequestParam("username")String username){
+        return userService.checkUsernameDuplicate(username);
+    }
 
+    @GetMapping("/email-duplicate")
+    @ResponseBody
+    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
+        return userService.emailDuplication(email);
+}
 
 //    @GetMapping("/filtered-vacancies")
 //    public List <Object[]> getFilteredVacancies() {

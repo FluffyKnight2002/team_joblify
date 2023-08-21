@@ -1,5 +1,6 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
+import com.ace_inspiration.team_joblify.config.ProfileGenerator;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -31,7 +34,16 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public User userCreate(UserDto userDto, long userId) throws IOException {
-        // First, check if the department exists in the repository.
+        
+        byte[] imageBytes;
+
+        if(userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+
+        } else {
+            imageBytes = userDto.getPhoto().getBytes();
+        }
+
         Optional<Department> departmentOptional = departmentRepository.findByName(userDto.getDepartment());
 
         Department department;
@@ -52,7 +64,7 @@ public class UserServiceImplement implements UserService {
         user.setEmail(userDto.getEmail());
         user.setPhone(userDto.getPhone());
         user.setAddress(userDto.getAddress());
-        user.setPhoto(Base64.getEncoder().encodeToString(userDto.getPhoto().getBytes()));
+        user.setPhoto(Base64.getEncoder().encodeToString(imageBytes));
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.valueOf(userDto.getRole()));
         user.setNote(userDto.getNote());
@@ -82,6 +94,13 @@ public class UserServiceImplement implements UserService {
     @Override
     public User adminProfileEdit(UserDto userDto, long userId) throws IOException {
         LocalDateTime currentDate = LocalDateTime.now();
+        byte[] imageBytes;
+        if(userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+
+        } else {
+            imageBytes = userDto.getPhoto().getBytes();
+        }
 
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
@@ -103,7 +122,7 @@ public class UserServiceImplement implements UserService {
             user.setEmail(userDto.getEmail());
             user.setPhone(userDto.getPhone());
             user.setAddress(userDto.getAddress());
-            user.setPhoto(Base64.getEncoder().encodeToString(userDto.getPhoto().getBytes()));
+            user.setPhoto(Base64.getEncoder().encodeToString(imageBytes));
             user.setPassword(passwordEncoder.encode(password));
             user.setRole(Role.valueOf(userDto.getRole()));
             user.setNote(userDto.getNote());
@@ -121,20 +140,27 @@ public class UserServiceImplement implements UserService {
     public User userProfileEdit(UserDto userDto, long userId) throws IOException {
 
         LocalDateTime currentDate = LocalDateTime.now();
+        byte[] imageBytes;
+
+        if(userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+
+        } else {
+            imageBytes = userDto.getPhoto().getBytes();
+        }
 
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
+            
             user.setUsername(userDto.getUsername());
             user.setName(userDto.getName());
             user.setEmail(userDto.getEmail());
             user.setPhone(userDto.getPhone());
             user.setAddress(userDto.getAddress());
-            user.setPhoto(Base64.getEncoder().encodeToString(userDto.getPhoto().getBytes()));
-            user.setRole(Role.valueOf(userDto.getRole()));
+            user.setPhoto(Base64.getEncoder().encodeToString(imageBytes));
             user.setNote(userDto.getNote());
-            user.setAccountStatus(userDto.isAccountStatus());
             user.setLastUpdatedDate(currentDate);
             user.setGender(Gender.valueOf(userDto.getGender()));
 
@@ -147,13 +173,6 @@ public class UserServiceImplement implements UserService {
         User user = userRepository.findByEmail(email).orElse(null);
 
         return user != null;
-    }
-
-    @Override
-    public boolean emailDuplicationExceptMine(String email, long userId) {
-        List<User> user = userRepository.findByEmailAndIdNot(email, userId);
-
-        return !user.isEmpty();
     }
 
     @Override
@@ -200,6 +219,12 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean checkPhoneDuplicate(String phone) {
         User user = userRepository.findByPhone(phone).orElse(null);
+        return user != null;
+    }
+
+    @Override
+    public boolean checkUsernameDuplicate(String username) {
+       User user = userRepository.findByUsername(username).orElse(null);
         return user != null;
     }
 }
