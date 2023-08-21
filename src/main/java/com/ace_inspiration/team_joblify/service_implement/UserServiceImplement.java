@@ -92,7 +92,7 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public User adminProfileEdit(UserDto userDto, long userId) throws IOException {
+    public User adminProfileEdit(UserDto userDto, String email) throws IOException {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
         if(userDto.getPhoto().isEmpty()){
@@ -102,7 +102,7 @@ public class UserServiceImplement implements UserService {
             imageBytes = userDto.getPhoto().getBytes();
         }
 
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
@@ -137,7 +137,7 @@ public class UserServiceImplement implements UserService {
 
 
     @Override
-    public User userProfileEdit(UserDto userDto, long userId) throws IOException {
+    public User userProfileEdit(UserDto userDto, String email) throws IOException {
 
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
@@ -149,7 +149,7 @@ public class UserServiceImplement implements UserService {
             imageBytes = userDto.getPhoto().getBytes();
         }
 
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
@@ -225,6 +225,26 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean checkUsernameDuplicate(String username) {
        User user = userRepository.findByUsername(username).orElse(null);
+        return user != null;
+    }
+
+    @Override
+    public boolean emailDuplicationExceptHimself(String email, long userId) {
+        User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
+
+        return user != null;
+    }
+
+    @Override
+    public boolean checkPhoneDuplicateExceptHimself(String phone, long userId) {
+        User user = userRepository.findByPhoneAndIdNot(phone, userId).orElse(null);
+        return user != null;
+    }
+
+    @Override
+    public boolean checkUsernameDuplicateExceptHimself(String username, long userId) {
+       User user = userRepository.findByUsernameAndIdNot(username, userId).orElse(null);
+
         return user != null;
     }
 }

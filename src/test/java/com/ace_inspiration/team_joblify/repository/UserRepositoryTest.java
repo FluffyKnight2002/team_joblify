@@ -138,5 +138,37 @@ class UserRepositoryTest {
         }
     }
 
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByUsernameExceptHimself(long userId) {
+        Optional<User> u = userRepository.findByUsernameAndIdNot("Admin", userId);
+        if(u.isPresent()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
 
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByEmailExceptHimself(long userId) {
+        Optional<User> u = userRepository.findByEmailAndIdNot("ace@gmail.com", userId);
+        if(u.isPresent()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {1, 2})
+    void findByPhoneExceptHimself(long userId) {
+
+        Optional<User> u = userRepository.findByPhoneAndIdNot("09777159555", userId);
+        if(!u.isEmpty()){
+            assertThat(u).contains(user);
+        } else {
+            assertThat(u).isEmpty();
+        }
+    }
 }

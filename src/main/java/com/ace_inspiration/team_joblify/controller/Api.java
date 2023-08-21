@@ -25,7 +25,9 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -61,16 +63,26 @@ public class Api {
     }
 
     @PostMapping(value = "/user-profile-edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<User> userProfileEdit(UserDto userDto, @RequestParam("userId") long userId, Authentication authentication) throws IOException {
+    public ResponseEntity<User> userProfileEdit(UserDto userDto, @RequestParam("currentEmail") String currentEmail, Authentication authentication) throws IOException {
+        System.out.println(userDto);
+        System.out.println(currentEmail);
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user;
         if (myUserDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))) {
-            User user = userService.adminProfileEdit(userDto, userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            user = userService.adminProfileEdit(userDto, currentEmail);
+            
         } else {
-            User user = userService.userProfileEdit(userDto, userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            user = userService.userProfileEdit(userDto, currentEmail);
+            
         }
 
+        if (myUserDetails.getEmail().equals(currentEmail)) {
+            MyUserDetails myNewUserDetails = new MyUserDetails(user);
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(myNewUserDetails, myNewUserDetails.getPassword(), myNewUserDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+        }
+        
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
@@ -160,9 +172,31 @@ public class Api {
     }
 
     @GetMapping("/email-duplicate")
-    @ResponseBody
     public boolean emailDuplicateSearch(@RequestParam("email") String email) {
         return userService.emailDuplication(email);
+}
+
+    @GetMapping("/phone-duplicate-except-himself")
+    public boolean checkPhoneDuplicateExceptHimself(@RequestParam("newPhone")String newPhone, @RequestParam("userId")long userId){
+        System.out.println(userId);
+        return userService.checkPhoneDuplicateExceptHimself(newPhone, userId);
+    }
+
+
+    @GetMapping("/username-duplicate-except-himself")
+    public boolean checkUsernameDuplicateExceptHimself(@RequestParam("newUsername")String newUsername, @RequestParam("userId")long userId){
+        return userService.checkUsernameDuplicateExceptHimself(newUsername, userId);
+    }
+
+    @GetMapping("/email-duplicate-except-himself")
+    public boolean emailDuplicateSearchExceptHimself(@RequestParam("newEmail") String newEmail, @RequestParam("userId")long userId) {
+        return userService.emailDuplicationExceptHimself(newEmail, userId);
+}
+
+    @PostMapping("/authenticated-user-data")
+    public MyUserDetails loginUserData(Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails)authentication.getPrincipal();
+        return myUserDetails;
 }
 
 //    @GetMapping("/filtered-vacancies")

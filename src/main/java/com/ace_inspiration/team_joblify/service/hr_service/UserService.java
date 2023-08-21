@@ -12,23 +12,30 @@ public interface UserService {
 
     void savePassword(String password, long userId);
 
-    User adminProfileEdit(UserDto userDto, long userId) throws IOException;
+    User adminProfileEdit(UserDto userDto, String email) throws IOException;
 
-    User userProfileEdit(UserDto userDto, long userId) throws IOException;
-
-    boolean emailDuplication(String email);
+    User userProfileEdit(UserDto userDto, String email) throws IOException;
 
     boolean checkOldPassword(String password, String email);
 
     boolean passwordChange(String newPassword, String email);
 
     boolean suspend(long id);
-    
+
     boolean activate(long id);
 
     User findByEmail(String email);
 
+    boolean emailDuplication(String email);
+
     boolean checkPhoneDuplicate(String phone);
 
     boolean checkUsernameDuplicate(String username);
+
+    boolean emailDuplicationExceptHimself(String email, long userId);
+
+    boolean checkPhoneDuplicateExceptHimself(String phone, long userId);
+
+    boolean checkUsernameDuplicateExceptHimself(String username, long userId);
+
 }

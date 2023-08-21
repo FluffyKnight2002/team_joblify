@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
-    
+
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -135,7 +135,7 @@
                                                                             type="file"
                                                                             accept="image/gif,image/jpeg,image/jpg,image/png"
                                                                             style="visibility: hidden; opacity: 0;"
-                                                                            onchange="uploadHandler()" required>
+                                                                            onchange="uploadHandler()">
                                                                     </li>
                                                                     <li id="removeIcon" style="display: none;"
                                                                         onclick="removeImage()"><i class='bx bx-x'
@@ -281,7 +281,7 @@
             </div>
         </div>
     </div>
-
+    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
@@ -291,8 +291,6 @@
     <!-- toastify -->
     <script src="/assets/vendors/toastify/toastify.js"></script>
 
-    <!-- filepond -->
-    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 
     <script src="/assets/js/main.js"></script>
     <script src="/assets/js/javaScript/photo.js"></script>
@@ -312,8 +310,7 @@
 
 
         const form = document.getElementById('registration-form');
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+       
 
         document.querySelector("#registration-form").addEventListener("submit", function (event) {
             event.preventDefault();
@@ -406,16 +403,16 @@
                 $('.modal-content .modal-body').replaceWith(reset);
             }
 
-            $("#close").one("click", function () {
+            $(document).on("click", "#close", function () {
+                
                 resetModal();
             });
 
-
-            $("#confirmYes").one("click", function () {
+            $(document).on("click", "#confirmYes", function () {
                 // Get form data
 
                 const formData = new FormData(form);
-
+                
 
                 showProcessingModal();
                 // Make the registration request
@@ -515,12 +512,12 @@
 
 
         async function checkPhoneNumber() {
-            
+
             const phoneNumber = phoneNumberInput.value;
             const phoneNumberLength = phoneNumber.length;
 
-            
-            
+
+
             if (phoneNumber === '') {
                 phoneNumberInput.classList.remove('is-invalid');
 

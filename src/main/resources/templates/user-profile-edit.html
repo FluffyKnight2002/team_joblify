@@ -245,10 +245,9 @@
                     </div>
                   </div>
                   <div class="text-end mt-4">
-                    <p><a class="font-bold fs-6"
-                        th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Password Change</a>
+                    <p><a id="password-change-link" class="font-bold fs-6">Password Change</a>
                     </p>
-                    <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 ">Edit</button>
+                    <button type="submit" class="btn btn-primary rounded-pill ms-auto col-auto col-md-2 ">Edit</button>
                   </div>
                 </form>
               </div>
@@ -270,6 +269,7 @@
       </div>
     </div>
   </div>
+  <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
   <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="/assets/js/bootstrap.bundle.min.js"></script>
@@ -289,8 +289,11 @@
     const url = new URL(currentURL);
     const email = url.searchParams.get("email");
 
-    let usernameFetch = document.getElementById('username');
-    let phoneFetch = document.getElementById('phone');
+
+
+    let currentEmail;
+    let userId;
+    let passwordChangeLink = document.getElementById('password-change-link');
 
     document.addEventListener('DOMContentLoaded', function () {
       fetch('/get-user-profile?email=' + encodeURIComponent(email), {
@@ -303,25 +306,29 @@
         .then(data => {
           const name = document.getElementById('name');
 
-
+          const username = document.getElementById('username');
           const email = document.getElementById('email');
+          const phone = document.getElementById('phone');
           const department = document.getElementById('department');
           const address = document.getElementById('address');
           const note = document.getElementById('note');
           let preview = document.getElementById('uploadedImage');
           const stringDepartment = data.department.name;
+          
 
-          console.log(stringDepartment);
-
+          userId = data.id;
           name.value = data.name;
-          usernameFetch.value = data.username;
-          phoneFetch.value = data.phone;
+          username.value = data.username;
+          phone.value = data.phone;
           email.value = data.email;
           department.value = stringDepartment; // Assign the stringified department name
           address.value = data.address;
           note.value = data.note;
           preview.src = 'data:image/jpeg;base64,' + data.photo;
+          passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(data.email);
 
+          currentEmail = data.email;
+          console.log(currentEmail);
           const role = document.getElementById('role');
           for (let option of role.options) {
             if (option.value === data.role) {
@@ -352,8 +359,7 @@
     const departmentSpinner = document.querySelector('.department-spinner');
 
     const form = document.getElementById('profile-edit-form');
-    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
 
     document.querySelector("#profile-edit-form").addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent the form from submitting normally
@@ -362,6 +368,7 @@
         console.log("Form data is not valid. Please fill all required fields.");
         return;
       } else {
+
         showConfirmationModal();
       }
 
@@ -447,19 +454,19 @@
         $('.modal-content .modal-body').replaceWith(reset);
       }
 
-      $("#close").one("click", function () {
+      $(document).on("click", "#close", function () {
+        
         resetModal();
       });
 
-
-      $("#confirmYes").one("click", function () {
+      $(document).on("click", "#confirmYes", function () {
 
         const formData = new FormData(form);
 
 
-
+        showProcessingModal();
         // Make the registration request
-        fetch('/user-profile-edit', {
+        fetch('/user-profile-edit?currentEmail=' + encodeURIComponent(currentEmail), {
           method: 'POST',
           headers: {
             [csrfHeader]: csrfToken // Include CSRF token as a request header
@@ -473,9 +480,18 @@
               // Registration successful, handle the response
               console.log("Profile Edit successful");
               showSuccessModal();
-              form.reset();
+
+              authenticatedUserData();
+
               form.classList.remove('was-validated')
-              removeImage();
+              const currentUrl = window.location.href;
+              const newEmail = document.getElementById('email');
+              const updatedUrl = currentUrl.replace(/email=([^&]+)/, "email=" + encodeURIComponent(newEmail.value));
+              // Update the browser's URL to the modified URL
+              window.history.replaceState({}, '', updatedUrl);
+
+              
+              passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(newEmail.value);
 
             } else {
               // Registration failed, handle the error
@@ -490,6 +506,7 @@
             showFailModal();
           });
       });
+      $('#confirmationModal').modal('show');
     }
     function isFormValid() {
       // Get all required input fields, textareas, and select elements
@@ -558,11 +575,6 @@
         phoneSpinner.style.display = 'none';
         return false;
 
-      } else if (phoneNumber === phoneFetch) {
-        phoneNumberError.innerHTML = "Phone Number is Already Exist."
-        phoneNumberInput.classList.add('is-invalid');
-        return false;
-
       } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
         phoneNumberInput.classList.add('is-invalid');
         phoneNumberError.innerHTML = "Phone Number is not valid."
@@ -571,7 +583,7 @@
 
       } else {
         try {
-          const response = await fetch('/phone-duplicate?phone=' + encodeURIComponent(phoneNumber));
+          const response = await fetch('/phone-duplicate-except-himself?newPhone=' + encodeURIComponent(phoneNumber) + '&userId=' + encodeURIComponent(userId));
           const data = await response.json();
 
           if (data === false) {
@@ -627,17 +639,12 @@
         emailSpinner.style.display = 'none';
         return false;
 
-      } else if (emailInput.value === email) {
-        emailInput.classList.add('is-invalid');
-        emailError.innerHTML = 'Email\'s already exist.';
-        form.classList.remove('was-validated');
-        emailSpinner.style.display = 'none';
-        return false;
+
 
       } else {
 
         try {
-          const response = await fetch('/email-duplicate?email=' + encodeURIComponent(emailValue))
+          const response = await fetch('/email-duplicate-except-himself?newEmail=' + encodeURIComponent(emailValue) + '&userId=' + encodeURIComponent(userId))
           const data = await response.json();
           if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
             console.log("Email\'s already exist and Email is also not Valid")
@@ -762,17 +769,10 @@
         usernameSpinner.style.display = 'none';
         return false;
 
-      } else if (username === usernameFetch) {
-        console.log("exist");
-        usernameInput.classList.add('is-invalid')
-        usernameError.innerHTML = 'Username is already exist.'
-        usernameSpinner.style.display = 'none';
-        return false;
-
       } else {
 
         try {
-          const response = await fetch('/username-duplicate?username=' + encodeURIComponent(username))
+          const response = await fetch('/username-duplicate-except-himself?newUsername=' + encodeURIComponent(username) + '&userId=' + encodeURIComponent(userId))
           const data = await response.json()
 
           if (data === true) {
@@ -782,6 +782,7 @@
             return false;
 
           } else if (data == false) {
+            usernameInput.classList.remove('is-invalid')
             console.log("dont exist");
             usernameError.innerHTML = '';
             return true;

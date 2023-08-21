@@ -1,3 +1,4 @@
+
 function updateCookieExpiration(cookieName, newExpiration) {
     const existingCookie = getCookie(cookieName);
     
@@ -12,8 +13,9 @@ function updateCookieExpiration(cookieName, newExpiration) {
 function getCookie(cookieName) {
     let name = cookieName + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
-    console.log(decodedCookie);
+    console.log(document.cookie);
     let ca = decodedCookie.split(';');
+    console.log(ca);
     for(let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) == ' ') {
