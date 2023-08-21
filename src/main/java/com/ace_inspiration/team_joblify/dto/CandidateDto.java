@@ -30,7 +30,7 @@ import com.ace_inspiration.team_joblify.entity.Vacancy;
 public class CandidateDto {
 
 	private long id;
-
+	
 	private String name;
 
 	private LocalDate dob;
@@ -71,12 +71,7 @@ public class CandidateDto {
 
 	private Summary summary;
 
-	private List<Interview>interviews=new ArrayList<>();
-
-	private List<Notification>notification=new ArrayList<>();
 	
-	private String vacancyId;
 
-	private VacancyDto vacancyDto;
 
 }

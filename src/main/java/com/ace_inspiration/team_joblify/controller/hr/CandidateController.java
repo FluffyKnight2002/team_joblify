@@ -103,7 +103,7 @@ public class CandidateController {
 	             candidate.getSummary().getLvl(),
 	             candidate.getSummary().getPhone(),
 	             candidate.getSummary().getSpecialistTech(),
-	         	candidate.getVacancyInfo().getVacancy().getPosition().getName()
+					 candidate.getVacancyInfo().getVacancy().getPosition().getName()
 	         );
 	         System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+summaryDto.getEmail());
 
