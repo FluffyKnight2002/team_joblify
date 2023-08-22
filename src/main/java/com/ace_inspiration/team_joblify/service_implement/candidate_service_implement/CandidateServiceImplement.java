@@ -1,49 +1,25 @@
 package com.ace_inspiration.team_joblify.service_implement.candidate_service_implement;
 
-import java.util.List;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
-import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Gender;
-import com.ace_inspiration.team_joblify.entity.LanguageSkills;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.TechSkills;
+import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
 import com.ace_inspiration.team_joblify.repository.SummaryRepository;
 import com.ace_inspiration.team_joblify.repository.TechSkillsRepository;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
-
-import lombok.RequiredArgsConstructor;
-
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.repository.CandidateRepository;
-import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
-
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service

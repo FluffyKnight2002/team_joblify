@@ -40,8 +40,8 @@ public class VacancyController {
         vacancyDto.setStatus("OPEN");
         VacancyInfo vacancyInfo = vacancyInfoService.createdVacancyInfo(vacancyDto);
         if(vacancyInfo != null) {
-            NotificationDto notificationDto = new NotificationDto();
-            String message = authentication.getName() + " create a " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
+
+            String message = myUserDetails.getName() + " create a " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
             notificationCreator.createNotification(myUserDetails,message,link);
             return true;
@@ -61,7 +61,7 @@ public class VacancyController {
         vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
         VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfo(vacancyDto);
         if(vacancyInfo != null) {
-            NotificationDto notificationDto = new NotificationDto();
+
             String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
             notificationCreator.createNotification(myUserDetails,message,link);
@@ -85,7 +85,7 @@ public class VacancyController {
         System.out.println("ID : " + vacancyDto.getId());
         VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfoById(vacancyDto);// By Id mean findBy id and update in service
         if(vacancyInfo != null) {
-            NotificationDto notificationDto = new NotificationDto();
+
             String message = authentication.getName() + " reopen " + vacancyInfo.getVacancy().getPosition().getName() + " vacancy.";
             String link = "/show-all-vacancies-page?id=" + vacancyInfo.getId();
             notificationCreator.createNotification(myUserDetails,message,link);

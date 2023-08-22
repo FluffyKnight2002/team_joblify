@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="_csrf" th:content="${_csrf.token}"/>
-  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
   <title>User Profile Edit</title>
 
   <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -13,550 +13,794 @@
   <link rel="stylesheet" href="/assets/css/bootstrap.css">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
-  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-  <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
   <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/assets/css/app.css">
+  <link rel="stylesheet" href="/assets/css/pages/photo.css">
   <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
   <style>
     /* Custom CSS to hide background image of validation */
-    .form-control.is-invalid, .was-validated .form-control:invalid  {
+    .form-control.is-invalid,
+    .was-validated .form-control:invalid {
       background-image: none !important;
     }
-    .form-control.is-valid, .was-validated .form-control:valid {
+
+    .form-control.is-valid,
+    .was-validated .form-control:valid {
       background-image: none !important;
     }
-    .form-select.is-valid, .was-validated .form-select:valid {
+
+    .form-select.is-valid,
+    .was-validated .form-select:valid {
       background-image: none !important;
     }
-    
-    .form-select.is-invalid, .was-validated .form-select:invalid{
+
+    .form-select.is-invalid,
+    .was-validated .form-select:invalid {
       background-image: none !important;
+    }
+
+    /* Custom CSS to style form controls in the was-validated state */
+    .was-validated .form-control.is-invalid {
+      background-image: none;
+      /* Remove any background image */
+      border-color: #dc3545;
+      /* Customize the border color for invalid state */
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .was-validated .form-control.is-invalid:focus {
+      border-color: #dc3545;
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5);
+    }
+
+    /* Additional custom styling for valid form controls */
+    .was-validated .form-control.is-valid {
+      background-image: none;
+      /* Remove any background image */
+      border-color: #28a745;
+      /* Customize the border color for valid state */
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .was-validated .form-control.is-valid:focus {
+      border-color: #28a745;
+      box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.5);
+    }
+
+    .spinner.input {
+      right: 22px !important;
+
+    }
+
+    .spinner {
+      top: 40% !important;
+      display: none;
     }
   </style>
 </head>
 
 <body>
-<div id="app">
-  <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
-  <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
-  <div id="main">
-    <div id="main-content">
+  <div id="app">
+    <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+    <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+    <div id="main">
+      <div id="main-content">
 
-      <div class="page-heading">
-        <div class="page-title">
-          <div class="row">
-            <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-              <h3>User Profile Edit</h3>
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last mb-3">
+                <h3>User Profile Edit</h3>
 
-            </div>
-            <div class="col-12 col-md-6 order-md-2 order-first">
-              <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">User Profile Edit
-                  </li>
-                </ol>
-              </nav>
+              </div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">User Profile Edit
+                    </li>
+                  </ol>
+                </nav>
+              </div>
             </div>
           </div>
-        </div>
-        <section class="section">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Edit User Account Here</h4>
-              <div class="mt-md-3 text-center"><h3 class="success-line"></h3></div>
-            </div>
-            <div class="card-body">
-              <form id="profile-edit-form" enctype="multipart/form-data" method="post" class="needs-validation" novalidate>
-              
-                <div class="row">
-                  <div class="form-group position-relative has-icon-left mb-4 col-md-6">
-                    <input type="file" class="form-control " id="photo" name="photo" accept="image/*">
-                  </div>
-                  <!--                                    image-resize-filepond-->
+          <section class="section">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Edit User Account Here</h4>
+                <div class="mt-md-3 text-center">
+                  <h3 class="success-line"></h3>
                 </div>
-                <div class="row">
-                  <div class="form-floating mb-3 col-md-6">
-                  
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Username"required>
-                    <label for="username"><i class="bi bi-person px-3"></i>Username</label>
-                    <div class="invalid-feedback" id="username-error">
-                      Please add Username.
-                    </div>
-                  </div>
-                  <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
-                    <label for="name"><i class="bi bi-person px-3"></i>Name</label>
-                    <div class="invalid-feedback" id="name-error">
-                      Please add Name.
-                    </div>
-                  </div>
-                  <div class="form-floating mb-3 col-md-6">
-                    <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" required>
-                    <label for="phone"><i class="bi bi-phone px-3"></i>Phone</label>
-                    <div id="phone-error" class="invalid-feedback">
-                      Please add a valid Phone Number.
-                    </div>
-                  </div>
-                  <div class="form-floating mb-3 col-md-6">
-                    <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
-                    <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
-                    <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
+              </div>
+              <div class="card-body">
+                <form id="profile-edit-form" enctype="multipart/form-data" method="post" class="needs-validation"
+                  novalidate>
 
-                    <div id="email-error" class="invalid-feedback">
-                      Please provide a valid email.
+                  <div class="uploader-main">
+                    <div class="uploader-inner">
+                      <div class="preview-wrapper">
+                        <div class="preview-inner">
+                          <div class="preview">
+                            <div style="width: 200px; height: 200px; top: -3px; left: -3px; position: absolute;">
+                              <img id="uploadedImage" src="" class="" style="height: 100%; width: 100%;">
+                              <div class="preview-drop">
+                                <ul>
+                                  <li class="li" onclick="openUploader()"><i class='bx bxs-image-add'
+                                      style="font-size: 35px;"></i>
+                                    <input id="uploadImageInput" name="photo" type="file"
+                                      accept="image/gif,image/jpeg,image/jpg,image/png"
+                                      style="visibility: hidden; opacity: 0;" onchange="uploadHandler()">
+
+                                  </li>
+                                  <li id="removeIcon" style="display: none;" onclick="removeImage()"><i class='bx bx-x'
+                                      style="font-size: 35px;"></i></li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div class="form-floating mb-3 col-md-6">
-
-                    <input type="text" class="form-control" placeholder="Department" id="department" name="department" required>
-                    <label for="department"><i class="bi bi-card-list px-3"></i>Department</label>
-                    <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
-                    <div id="department-suggestions"></div>
-                    <div class="invalid-feedback" id="department-error">
-                      Please Choose Department.
-                    </div>
-                  </div>
-
-                  <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
-                    <select class="form-select" aria-label="Role" name="role" id="role" required>
-                      <option selected disabled value="">Role</option>
-                      <option value="DEFAULT_HR">Default HR</option>
-                      <option value="SENIOR_HR">Senior HR</option>
-                      <option value="JUNIOR_HR">Junior HR</option>
-                      <option value="MANAGEMENT">Management</option>
-                      <option value="INTERVIEWER">Interviewer</option>
-                      <option value="OTHER">Other</option>
-                    </select>
-                    <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
-                    <div class="invalid-feedback" id="role-error">
-                      Please Choose Role.
-                    </div>
-                  </div>
-
-
-                  <div class="form-floating mb-3 col-md-6">
-                    <select class="form-select" aria-label="Gender" name="gender" id="gender" required>
-                      <option selected disabled value="">Gender</option>
-                      <option value="MALE">Male</option>
-                      <option value="FEMALE">Female</option>
-                      <option value="OTHER">Other</option>
-                    </select>
-                    <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
-                    <div class="invalid-feedback" id="gender-error">
-                      Please Choose Role.
-                    </div>
-                  </div>
-
                   <div class="row">
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="address" name="address" placeholder="Address" style="height: 100px" required></textarea>
-                      <label for="address"><span class="px-3">Address</span></label>
-                      <div class="invalid-feedback" id="address-error">
-                        Please Add Address.
+                      <input type="text" class="form-control" id="username" name="username" placeholder="Username"
+                        required>
+                      <label for="username"><i class="bi bi-person px-3"></i>Username</label>
+                      <span class='spinner-border spinner-border-sm input spinner username-spinner'
+                        role='status'></span>
+                      <div class="invalid-feedback" id="username-error">
+                        Please add Username.
                       </div>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
+                      <input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
+                      <label for="name"><i class="bi bi-person px-3"></i>Name</label>
+                      <div class="invalid-feedback" id="name-error">
+                        Please add Name.
+                      </div>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
+                      <input type="text" class="form-control" placeholder="Phone" id="phone" name="phone" required>
+                      <label for="phone"><i class="bi bi-phone px-3"></i>Phone</label>
+                      <span class='spinner-border spinner-border-sm input spinner phone-spinner' role='status'></span>
+                      <div id="phone-error" class="invalid-feedback">
+                        Please add a valid Phone Number.
+                      </div>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
+                      <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
+                      <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
+                      <span class='spinner-border spinner-border-sm input spinner email-spinner' role='status'></span>
+                      <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
 
-                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px" ></textarea>
-                      <label for="note"><span class="px-3">Note(Optional)</span></label>
+                      <div id="email-error" class="invalid-feedback">
+                        Please provide a valid email.
+                      </div>
+                    </div>
 
+                    <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
+
+                      <input type="text" class="form-control" placeholder="Department" id="department" name="department"
+                        required>
+                      <label for="department"><i class="bi bi-card-list px-3"></i>Department</label>
+                      <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                      <div id="department-suggestions"></div>
+                      <div class="invalid-feedback" id="department-error">
+                        Please Choose Department.
+                      </div>
+                    </div>
+
+                    <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
+                      <select class="form-select" aria-label="Role" name="role" id="role" required>
+                        <option selected disabled value="">Role</option>
+                        <option value="DEFAULT_HR">Default HR</option>
+                        <option value="SENIOR_HR">Senior HR</option>
+                        <option value="JUNIOR_HR">Junior HR</option>
+                        <option value="MANAGEMENT">Management</option>
+                        <option value="INTERVIEWER">Interviewer</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                      <label for="role"><i class="bi bi-person-fill px-3"></i>Role</label>
+                      <div class="invalid-feedback" id="role-error">
+                        Please Choose Role.
+                      </div>
+                    </div>
+
+
+                    <div class="form-floating mb-3 col-md-6">
+                      <select class="form-select" aria-label="Gender" name="gender" id="gender" required>
+                        <option selected disabled value="">Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                      <label for="role"><i class="bi bi-person-fill px-3"></i>Gender</label>
+                      <div class="invalid-feedback" id="gender-error">
+                        Please Choose Role.
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-floating mb-3 col-md-6">
+
+                        <textarea class="form-control" id="address" name="address" placeholder="Address"
+                          style="height: 100px" required></textarea>
+                        <label for="address"><span class="px-3">Address</span></label>
+                        <div class="invalid-feedback" id="address-error">
+                          Please Add Address.
+                        </div>
+                      </div>
+                      <div class="form-floating mb-3 col-md-6">
+
+                        <textarea class="form-control" id="note" name="note" placeholder="Note"
+                          style="height: 100px"></textarea>
+                        <label for="note"><span class="px-3">Note(Optional)</span></label>
+
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="text-end mt-4">
-                  <p><a class="font-bold fs-6" th:href="@{/password-change(email=${#authentication.principal.getEmail})}">Password Change</a></p>
-                  <button type="submit" class="btn btn-primary ms-auto col-auto col-md-2 ">Edit</button>
-                </div>
-              </form>
+                  <div class="text-end mt-4">
+                    <p><a id="password-change-link" class="font-bold fs-6">Password Change</a>
+                    </p>
+                    <button type="submit" class="btn btn-primary rounded-pill ms-auto col-auto col-md-2 ">Edit</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <footer>
+          <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+              <p>2023 &copy; Ace Data System Co.ltd</p>
+            </div>
+            <div class="float-end">
+              <p>Created <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
+                by Team Joblify</p>
             </div>
           </div>
-        </section>
+        </footer>
       </div>
-
-      <footer>
-        <div class="footer clearfix mb-0 text-muted">
-          <div class="float-start">
-            <p>2023 &copy; Ace Data System Co.ltd</p>
-          </div>
-          <div class="float-end">
-            <p>Created <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-              by Team Joblify</p>
-          </div>
-        </div>
-      </footer>
     </div>
   </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="/assets/js/bootstrap.bundle.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
-<!-- filepond validation -->
-<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-
-<!-- image editor -->
-<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-filter/dist/filepond-plugin-image-filter.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-<script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
-
-<!-- toastify -->
-<script src="/assets/vendors/toastify/toastify.js"></script>
-
-<!-- filepond -->
-<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-<script>
-  // register desired plugins...
-  FilePond.registerPlugin(
-          // validates the size of the file...
-          FilePondPluginFileValidateSize,
-          // validates the file type...
-          FilePondPluginFileValidateType,
-
-          // calculates & dds cropping info based on the input image dimensions and the set crop ratio...
-          FilePondPluginImageCrop,
-          // preview the image file type...
-          FilePondPluginImagePreview,
-          // filter the image file
-          FilePondPluginImageFilter,
-          // corrects mobile image orientation...
-          FilePondPluginImageExifOrientation,
-          // calculates & adds resize information...
-          FilePondPluginImageResize,
-  );
-
-  const photoInput = document.querySelector('.image-resize-filepond');
-  const form = document.getElementById('registration-form');
-
-  // Filepond: Image Resize
-  FilePond.create( photoInput, {
-    allowImagePreview: true,
-    allowImageFilter: false,
-    allowImageExifOrientation: false,
-    allowImageCrop: false,
-    allowImageResize: true,
-    imageResizeTargetWidth: 200,
-    imageResizeTargetHeight: 200,
-    imageResizeMode: 'cover',
-    imageResizeUpscale: true,
-    acceptedFileTypes: ['image/png','image/jpg','image/jpeg'],
-    fileValidateTypeDetectType: (source, type) => new Promise((resolve, reject) => {
-      // Do custom type detection here and return with promise
-      resolve(type);
-    })
-  });
-</script>
-
-<script src="/assets/js/main.js"></script>
-<script>
-  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-
-  const currentURL = window.location.href;
-        const url = new URL(currentURL);
-        const email = url.searchParams.get("email");
+  <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+  <!-- toastify -->
+  <script src="/assets/vendors/toastify/toastify.js"></script>
 
 
-  document.addEventListener('DOMContentLoaded', function() {
-    fetch('/get-user-profile?email=' + encodeURIComponent(email),{
-      method:'POST',
-      headers:{
-        [csrfHeader]: csrfToken // Include CSRF token as a request header
-      }     
-    })
-    .then(response => response.json())
-    .then(data =>{
-        const name = document.getElementById('name');
-        const username = document.getElementById('username');
-        const phone = document.getElementById('phone');
-        const email = document.getElementById('email');
-        const department = document.getElementById('department');
-        const address = document.getElementById('address');
-        const note = document.getElementById('note');
 
-        const stringDepartment = data.department.name;
 
-        console.log(stringDepartment);
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/javaScript/photo.js"></script>
+  <script>
 
-        name.value = data.name;
-        username.value = data.username;
-        phone.value = data.phone;
-        email.value = data.email;
-        department.value = stringDepartment; // Assign the stringified department name
-        address.value = data.address;
-        note.value = data.note;
 
-        const role = document.getElementById('role');
+    const currentURL = window.location.href;
+    const url = new URL(currentURL);
+    const email = url.searchParams.get("email");
+
+
+
+    let currentEmail;
+    let userId;
+    let passwordChangeLink = document.getElementById('password-change-link');
+
+    document.addEventListener('DOMContentLoaded', function () {
+      fetch('/get-user-profile?email=' + encodeURIComponent(email), {
+        method: 'POST',
+        headers: {
+          [csrfHeader]: csrfToken // Include CSRF token as a request header
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          const name = document.getElementById('name');
+
+          const username = document.getElementById('username');
+          const email = document.getElementById('email');
+          const phone = document.getElementById('phone');
+          const department = document.getElementById('department');
+          const address = document.getElementById('address');
+          const note = document.getElementById('note');
+          let preview = document.getElementById('uploadedImage');
+          const stringDepartment = data.department.name;
+          
+
+          userId = data.id;
+          name.value = data.name;
+          username.value = data.username;
+          phone.value = data.phone;
+          email.value = data.email;
+          department.value = stringDepartment; // Assign the stringified department name
+          address.value = data.address;
+          note.value = data.note;
+          preview.src = 'data:image/jpeg;base64,' + data.photo;
+          passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(data.email);
+
+          currentEmail = data.email;
+          console.log(currentEmail);
+          const role = document.getElementById('role');
           for (let option of role.options) {
             if (option.value === data.role) {
               option.selected = true;
             }
           }
 
-        const gender = document.getElementById('gender');
+          const gender = document.getElementById('gender');
           for (let option of gender.options) {
             if (option.value === data.gender) {
               option.selected = true;
             }
           }
-            })
+        })
 
-          })
-
-  document.querySelector("#profile-edit-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent the form from submitting normally
-
-    if (!isFormValid()) {
-      console.log("Form data is not valid. Please fill all required fields.");
-      return;
-    }
-
-    
-    // Get form data
-
-    const formData= new FormData(form);
-
-
-
-    // Make the registration request
-    fetch('/user-profile-edit', {
-      method: 'POST',
-      headers: {
-        [csrfHeader]: csrfToken // Include CSRF token as a request header
-      },
-      body: formData
     })
 
 
-            .then(response => {
-              if (response.ok) {
-                // Registration successful, handle the response
-                console.log("Profile Edit successful");
-                // You can redirect to another page or show a success message here
-                const successLine = document.querySelector('.success-line');
-                successLine.innerHTML='Profile Edit Success!';
-                successLine.style.display = 'inline-block';
-                successLine.style.color= 'lawngreen';
+    const emailSpinner = document.querySelector('.email-spinner');
 
-              } else {
-                // Registration failed, handle the error
-                console.error("Profile Edit failed");
-                // You can show an error message to the user here
-                const successLine = document.querySelector('.success-line');
-                successLine.innerHTML='Profile Edit Fail!';
-                successLine.style.display = 'inline-block';
-                successLine.style.color= 'red';
-              }
-            })
-            .catch(error => {
-              // An error occurred, handle the error
-              console.error("An error occurred during registration:", error);
-              // You can show an error message to the user here
-            });
-  });
 
-  function isFormValid() {
-    // Get all required input fields, textareas, and select elements
-    const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+    const usernameSpinner = document.querySelector('.username-spinner');
 
-    // Check if all required fields have values (except the "Note" textarea)
-    for (const field of requiredFields) {
-      if (field.tagName === 'TEXTAREA' && field.id === 'note') {
-        // Skip the "Note" textarea from validation
-        continue;
+
+    const phoneSpinner = document.querySelector('.phone-spinner');
+
+
+    const departmentSpinner = document.querySelector('.department-spinner');
+
+    const form = document.getElementById('profile-edit-form');
+
+
+    document.querySelector("#profile-edit-form").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the form from submitting normally
+
+      if (!isFormValid()) {
+        console.log("Form data is not valid. Please fill all required fields.");
+        return;
+      } else {
+
+        showConfirmationModal();
       }
-      if (!field.value.trim()) {
-        return false; // Form data is not valid
+
+    });
+
+
+    function showConfirmationModal() {
+
+      const confirmationModal = `
+            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text center" style="background: #0c233d">
+                            <div class="loader"></div>
+                            <div class="loader-txt text-center">
+                                <h3 class="text-white">Are you sure to Edit this Account?</h3>
+
+                                <div>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+      $(document.body).append(confirmationModal);
+
+      // Append the modal to the document
+
+      function showProcessingModal() {
+        const processingMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(processingMessage);
       }
+
+      function showSuccessModal() {
+        const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Profile Edit successful!</p>
+                        <div class="text-center">
+                            <button id="close" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(successMessage);
+      }
+
+      function showFailModal() {
+        const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Profile Edit Fail!</p>
+                        <div class="text-center">
+                            <button id="close" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+        $('.modal-content .modal-body').replaceWith(successMessage);
+      }
+
+      function resetModal() {
+        const reset = `<div class="modal-body text center" style="background: #0c233d">
+                            <div class="loader"></div>
+                            <div class="loader-txt text-center">
+                                <h3 class="text-white">Are you sure to edit this Account?</h3>
+
+                                <div>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>`
+        $('.modal-content .modal-body').replaceWith(reset);
+      }
+
+      $(document).on("click", "#close", function () {
+        
+        resetModal();
+      });
+
+      $(document).on("click", "#confirmYes", function () {
+
+        const formData = new FormData(form);
+
+
+        showProcessingModal();
+        // Make the registration request
+        fetch('/user-profile-edit?currentEmail=' + encodeURIComponent(currentEmail), {
+          method: 'POST',
+          headers: {
+            [csrfHeader]: csrfToken // Include CSRF token as a request header
+          },
+          body: formData
+        })
+
+
+          .then(response => {
+            if (response.ok) {
+              // Registration successful, handle the response
+              console.log("Profile Edit successful");
+              showSuccessModal();
+
+              authenticatedUserData();
+
+              form.classList.remove('was-validated')
+              const currentUrl = window.location.href;
+              const newEmail = document.getElementById('email');
+              const updatedUrl = currentUrl.replace(/email=([^&]+)/, "email=" + encodeURIComponent(newEmail.value));
+              // Update the browser's URL to the modified URL
+              window.history.replaceState({}, '', updatedUrl);
+
+              
+              passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(newEmail.value);
+
+            } else {
+              // Registration failed, handle the error
+              console.error("Profile Edit failed");
+              showFailModal();
+            }
+          })
+          .catch(error => {
+            // An error occurred, handle the error
+            console.error("An error occurred during registration:", error);
+            // You can show an error message to the user here
+            showFailModal();
+          });
+      });
+      $('#confirmationModal').modal('show');
+    }
+    function isFormValid() {
+      // Get all required input fields, textareas, and select elements
+      const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
+
+      // Check if all required fields have values (except the "Note" textarea)
+      for (const field of requiredFields) {
+        if (field.tagName === 'TEXTAREA' && field.id === 'note') {
+          // Skip the "Note" textarea from validation
+          continue;
+        }
+        if (!field.value.trim() || !checkPhoneNumber() || !checkEmail() || !usernameDuplicate()) {
+          return false; // Form data is not valid
+        }
+      }
+
+      return true; // Form data is valid
     }
 
-    return true; // Form data is valid
-  }
 
+    // <-----------------------------------------fetch call for user profile dit----------->
+    const emailError = document.getElementById('email-error');
+    const usernameError = document.getElementById("username-error");
+    const phoneNumberError = document.getElementById('phone-error');
 
-  // <-----------------------------------------fetch call for user profile dit----------->
-    const emailError=document.getElementById('email-error');
-    const mainForm = document.getElementById('profile-edit-form');
-    
-  (() => {
-    'use strict';
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    const forms = document.querySelectorAll('.needs-validation');
-    // Loop over them and prevent submission
-    Array.from(forms).forEach(form => {
-      
-      form.addEventListener('submit', event => {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-        emailError.innerHTML="Please Add Email."
-      }, false);
-    });
-  })();
+    (() => {
+      'use strict';
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      const forms = document.querySelectorAll('.needs-validation');
+      // Loop over them and prevent submission
+      Array.from(forms).forEach(form => {
+
+        form.addEventListener('submit', event => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          form.classList.add('was-validated');
+
+          if (emailInput.value === '') {
+            emailError.innerHTML = "Please Add Email."
+          }
+
+          if (usernameInput.value === '') {
+            usernameError.innerHTML = "Please Add Username."
+          }
+
+          if (phoneNumberInput.value === '') {
+            phoneNumberError.innerHTML = "Please Add Phone Number"
+          }
+        }, false);
+      });
+    })();
 
     // Function to check phone number format
-    function checkPhoneNumber() {
+    async function checkPhoneNumber() {
+
+      const phoneNumber = phoneNumberInput.value;
+      const phoneNumberLength = phoneNumber.length;
+
+      if (phoneNumber === '') {
+        phoneNumberInput.classList.remove('is-invalid');
+
+        phoneNumberError.innerHTML = "Please Add Phone Number."
+        phoneSpinner.style.display = 'none';
+        return false;
+
+      } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
+        phoneNumberInput.classList.add('is-invalid');
+        phoneNumberError.innerHTML = "Phone Number is not valid."
+        phoneSpinner.style.display = 'none';
+        return false;
+
+      } else {
+        try {
+          const response = await fetch('/phone-duplicate-except-himself?newPhone=' + encodeURIComponent(phoneNumber) + '&userId=' + encodeURIComponent(userId));
+          const data = await response.json();
+
+          if (data === false) {
+            console.log("success");
+            phoneNumberInput.classList.remove('is-invalid');
+
+            return true;
+
+          } else {
+            console.log("fail");
+            phoneNumberError.innerHTML = "Phone Number is Already Exist."
+            phoneNumberInput.classList.add('is-invalid');
+
+            return false;
+          }
+        } catch {
+          console.error('An error occurred:', data.error);
+
+          return false;
+
+        } finally {
+          phoneSpinner.style.display = 'none';
+        }
+
+      }
+    }
+
+
+    let delayTimer;
+    // Add event listener to phone number input
     const phoneNumberInput = document.getElementById('phone');
-    const phoneNumber = phoneNumberInput.value;
-    const phoneNumberLength = phoneNumber.length;
+    phoneNumberInput.addEventListener('input', function () {
+      clearTimeout(delayTimer); // Clear the previous timer (if any)
+      delayTimer = setTimeout(checkPhoneNumber, 300);
+      phoneSpinner.style.display = 'inline-block'; // Set a new timer with a delay of 500 milliseconds
+    });
 
-    // Check if phone number matches the pattern
-    if (phoneNumberLength === 0) {
 
-      phoneNumberInput.classList.remove('is-invalid');
-    } else if (!phoneNumber.match(/[+0-9]+/) || phoneNumberLength < 11 || phoneNumberLength > 13) {
+    // Function to check email format
+    async function checkEmail() {
 
-      phoneNumberInput.classList.add('is-invalid');
-    } else {
+      const emailInput = document.getElementById('email');
+      const emailValue = emailInput.value;
+      console.log(emailValue)
 
-      phoneNumberInput.classList.remove('is-invalid');
+      console.log("Working......");
+      emailSpinner.style.display = 'inline-block';
+      console.log("Spinner hide")
+
+      if (emailValue === '') {
+        emailInput.classList.remove('is-invalid');
+        emailError.innerHTML = 'Please Add Email.';
+        emailSpinner.style.display = 'none';
+        return false;
+
+
+
+      } else {
+
+        try {
+          const response = await fetch('/email-duplicate-except-himself?newEmail=' + encodeURIComponent(emailValue) + '&userId=' + encodeURIComponent(userId))
+          const data = await response.json();
+          if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
+            console.log("Email\'s already exist and Email is also not Valid")
+            emailInput.classList.add('is-invalid');
+            emailError.innerHTML = 'Email\'s already exist and Email is also not Valid';
+
+            return false;
+
+          } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
+            console.log("Email already exists")
+            emailInput.classList.add('is-invalid');
+            emailError.innerText = 'Email already exists.';
+
+            return false;
+
+          } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
+            emailInput.classList.add('is-invalid');
+            console.log("Email is not Valid")
+            emailError.innerHTML = 'Email is also not Valid.';
+
+            return false;
+
+          } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)) {
+            emailInput.classList.remove('is-invalid');
+            console.log("Email is good to use.")
+            return true;
+          }
+
+
+        } catch {
+          console.error('Error fetching Email:' + data.error);
+          emailInput.classList.add('is-invalid');
+          return false;
+
+        } finally {
+          emailSpinner.style.display = 'none';
+          console.log("End Working......");
+        }
+      }
+
     }
-
-  }
-
-
-  // Add event listener to phone number input
-  const phoneNumberInput = document.getElementById('phone');
-  phoneNumberInput.addEventListener('input', checkPhoneNumber);
-
-  // Function to check email format
-  function checkEmail() {
-
-    const u = window.location.href;
-    const url = new URL(u);
-    const id = url.searchParams.get("id");
-    
+    // Add event listener to email input
     const emailInput = document.getElementById('email');
-    const emailValue = emailInput.value;
-    console.log(emailValue)
-    
-    emailSpinner.style.display = 'inline-block';
-    console.log("Spinner loading..")
-
-    fetch('/fetch-email-except-mine?email=' + encodeURIComponent(emailValue) + '&userId=' + encodeURIComponent(id))
-            .then((response) => response.json())
-
-            .then((data) => {
-              console.log(data)
-              emailSpinner.style.display = 'none';
-              console.log("Spinner hide")
-              if(emailValue === ''){
-                emailInput.classList.remove('is-invalid');
-                emailError.innerHTML='';
-
-              } else if (data === true && !emailValue.match(/\S+@\S+\.\S+/)) {
-                console.log("Email\'s already exist and Email is also not Valid")
-                emailInput.classList.add('is-invalid');
-                emailError.innerHTML='Email\'s already exist and Email is also not Valid';
-                mainForm.classList.remove('was-validated')
-
-              } else if (data === true && emailValue.match(/\S+@\S+\.\S+/)) {
-                console.log("Email's already exist")
-                emailInput.classList.add('is-invalid');
-                emailError.innerText='Email\'s already exist.';
-                mainForm.classList.remove('was-validated')
-
-              } else if (data === false && !emailValue.match(/\S+@\S+\.\S+/)) {
-                emailInput.classList.add('is-invalid');
-                console.log("Email is not Valid")
-                emailError.innerHTML='Email is also not Valid';
-                mainForm.classList.remove('was-validated')
-
-              } else if (data === false && emailValue.match(/\S+@\S+\.\S+/)){
-                emailInput.classList.remove('is-invalid');
-                console.log("Email is good to use.")
-              }
-              
-              // Hide the spinner after the response is received
-              departmentSpinner.style.display = 'none';
-            })
-            .catch((error) => {
-              console.error('Error fetching departments:', error);
-
-              // Hide the spinner even if there's an error
-              departmentSpinner.style.display = 'none';
-              emailInput.classList.add('is-invalid');
-            });
+    emailInput.addEventListener('input', function () {
+      clearTimeout(delayTimer); // Clear the previous timer (if any)
+      delayTimer = setTimeout(checkEmail, 300); // Set a new timer with a delay of 500 milliseconds
+    });
 
 
-  }
-
-  const emailSpinner = document.querySelector('.email-spinner');
-  emailSpinner.style.display = 'none';
-
-  // Add event listener to email input
-  const emailInput = document.getElementById('email');
-  emailInput.addEventListener('input', checkEmail);
+    // <------------------------Validation end here----------------------------->
 
 
-  // <------------------------Validation end here----------------------------->
+    // Function to fetch department suggestions using the fetch API
+    async function fetchDepartments(request, response) {
+      departmentSpinner.style.display = 'inline-block';
+      console.log("Spinner loading..")
+      try {
+        const responses = await fetch('/fetch-departments?term=' + encodeURIComponent(request.term));
+        const data = await responses.json();
+        if (data.length === 0) {
+          console.log(" + Add new ");
+          response(["+ Add new"]);
+        } else {
+          console.log("Spinner hide");
+          response(data);
+        }
 
 
-  // Function to fetch department suggestions using the fetch API
-  function fetchDepartments(request, response) {
-    // Show the spinner
-    departmentSpinner.style.display = 'inline-block';
-    console.log("Spinner loading..")
+      }
+      catch {
+        console.error('Error fetching departments:', data.error);
 
-    fetch(`/fetch-departments?term=${request.term}`)
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.length === 0) {
-                console.log(" + Add new ");
-                response(["+ Add new"]);
-              } else {
-                console.log("Spinner hide")
-                response(data);
-              }
-
-              // Hide the spinner after the response is received
-              departmentSpinner.style.display = 'none';
-            })
-            .catch((error) => {
-              console.error('Error fetching departments:', error);
-
-              // Hide the spinner even if there's an error
-              departmentSpinner.style.display = 'none';
-            });
-  }
-
-  // Hide the spinner at the start
-  const departmentSpinner = document.querySelector('.department-spinner');
-  departmentSpinner.style.display = 'none';
-
-  // Add event listener to department input field to trigger the autocomplete
-  $("#department").autocomplete({
-    minLength: 1,
-    source: fetchDepartments,
-    open: function(event, ui) {
-      const menu = $(this).autocomplete("widget");
-      menu.css({
-        "font-size": "1rem",
-        "border-radius": "0.5rem",
-      });
-      menu.find(".ui-menu-item").css({
-        "color": "#6c757d"
-      });
-    },
-    select: function(e, ui) {
-      const departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
-      $('#department').val(departmentValue);
-      return false;
+      }
+      finally {
+        departmentSpinner.style.display = 'none';
+      }
     }
-  });
 
-  // <----------------------Departmrnt Suggestion end here----------------------->
 
-</script>
+
+    // Add event listener to department input field to trigger the autocomplete
+    $("#department").autocomplete({
+
+      minLength: 1,
+      source: fetchDepartments,
+
+      open: function (event, ui) {
+        var menu = $(this).autocomplete("widget");
+        menu.css({
+          "font-size": "1rem",
+          "border-radius": "0.5rem",
+        });
+        menu.find(".ui-menu-item").css({
+          "color": "#6c757d"
+        });
+      },
+      select: function (e, ui) {
+        var departmentValue = (ui.item.value === "+ Add new") ? $('#department').val() : ui.item.value;
+        $('#department').val(departmentValue);
+        return false;
+      }
+    });
+
+    // <----------------------Departmrnt Suggestion end here----------------------->
+
+    const usernameInput = document.getElementById('username');
+    usernameInput.addEventListener('input', function () {
+      clearTimeout(delayTimer); // Clear the previous timer (if any)
+      delayTimer = setTimeout(usernameDuplicate, 300); // Set a new timer with a delay of 500 milliseconds
+    });
+
+
+
+    async function usernameDuplicate() {
+
+
+      const username = usernameInput.value;
+      usernameSpinner.style.display = 'inline-block';
+      if (username === '') {
+        usernameInput.classList.remove('is-invalid')
+        usernameError.innerHTML = 'Please Add Username.';
+        usernameSpinner.style.display = 'none';
+        return false;
+
+      } else {
+
+        try {
+          const response = await fetch('/username-duplicate-except-himself?newUsername=' + encodeURIComponent(username) + '&userId=' + encodeURIComponent(userId))
+          const data = await response.json()
+
+          if (data === true) {
+            console.log("exist");
+            usernameInput.classList.add('is-invalid')
+            usernameError.innerHTML = 'Username is already exist.'
+            return false;
+
+          } else if (data == false) {
+            usernameInput.classList.remove('is-invalid')
+            console.log("dont exist");
+            usernameError.innerHTML = '';
+            return true;
+
+          }
+
+        }
+        catch {
+
+          console.error('Error fetching username:', data.error);
+
+        }
+        finally {
+          usernameSpinner.style.display = 'none';
+        }
+      }
+    }
+  </script>
 
 </body>
 

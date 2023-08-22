@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Dashboard - Mazer Admin Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,14 +19,15 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <style>
-    .chart-container {
-    display: flex;
-    flex-wrap: wrap; 
-}
-.chart {
-    flex: 1;
-    margin: 10px;
-}
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .chart {
+            flex: 1;
+            margin: 10px;
+        }
     </style>
 </head>
 
@@ -116,7 +119,7 @@
                                     <div class="card-header">
                                         <h4>Profile Visit</h4>
                                     </div>
-                                    <div  class="card-body">
+                                    <div class="card-body">
                                         <div id="chart-profile-visit" class="chart"></div>
                                     </div>
                                 </div>
@@ -314,12 +317,16 @@
             </footer>
         </div>
     </div>
+    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/main.js"></script>
+    
+    
+    
 </body>
 
 </html>

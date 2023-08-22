@@ -80,17 +80,7 @@ public class SuggestionsController {
         return suggestions;
     }
 
-    @GetMapping("/fetch-email")
-    @ResponseBody
-    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
-        return userService.emailDuplication(email);
-}
 
-    @GetMapping("/fetch-email-except-mine")
-    @ResponseBody
-    public boolean emailDuplicateSearchExceptMine(@RequestParam("email") String email, @RequestParam("userId") long userId) {
-        return userService.emailDuplicationExceptMine(email, userId);
-    }
 
 
 }

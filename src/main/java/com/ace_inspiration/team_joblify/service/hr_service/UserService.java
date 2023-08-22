@@ -4,30 +4,38 @@ import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.User;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public interface UserService {
     User userCreate(UserDto userDto, long userId) throws IOException;
 
-    Optional<User> findById(long userId);
+    User findById(long userId);
 
     void savePassword(String password, long userId);
 
-    User adminProfileEdit(UserDto userDto, long userId) throws IOException;
+    User adminProfileEdit(UserDto userDto, String email) throws IOException;
 
-    User userProfileEdit(UserDto userDto, long userId) throws IOException;
-
-    boolean emailDuplication(String email);
-
-    boolean emailDuplicationExceptMine(String email, long userId);
+    User userProfileEdit(UserDto userDto, String email) throws IOException;
 
     boolean checkOldPassword(String password, String email);
 
     boolean passwordChange(String newPassword, String email);
 
     boolean suspend(long id);
-    
+
     boolean activate(long id);
 
     User findByEmail(String email);
+
+    boolean emailDuplication(String email);
+
+    boolean checkPhoneDuplicate(String phone);
+
+    boolean checkUsernameDuplicate(String username);
+
+    boolean emailDuplicationExceptHimself(String email, long userId);
+
+    boolean checkPhoneDuplicateExceptHimself(String phone, long userId);
+
+    boolean checkUsernameDuplicateExceptHimself(String username, long userId);
+
 }
