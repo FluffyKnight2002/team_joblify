@@ -1,13 +1,15 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HRController {
 
     @GetMapping("/dashboard")
-    public String showDashboard() {
+    public String showDashboard(Model model) {
+        model.addAttribute("currentPage", "/dashboard");
         return "dashboard";
     }
 

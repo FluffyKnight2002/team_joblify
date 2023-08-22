@@ -457,6 +457,9 @@ $(document).ready(function () {
         event.stopPropagation();
     });
 
+    // Get the current date
+    const currentDate = moment();
+
     // Date range picker
     $(function() {
         // Initialize the daterangepicker
@@ -464,8 +467,11 @@ $(document).ready(function () {
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear'
-            }
+            },
+            maxDate: currentDate // Set the maximum date initially to the current date
         });
+
+        console.log($('#date-posted-dropdown-submenu'));
 
         // Handle apply event to update the input value and set start and end times
         $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
@@ -477,7 +483,6 @@ $(document).ready(function () {
             // Set the start and end times in your input fields
             createDatePostedFilterButton('Custom',startDate,endDate);
             checkAndToggleFilterButton();
-            $('.datePostedDropdown').hide();
         });
 
         // Handle cancel event to clear the input value and reset start and end times
@@ -488,13 +493,71 @@ $(document).ready(function () {
         });
 
         $('.daterangepicker').hover(function () {
-            $('.datePostedDropdown').css('display', 'block');
-        },function() {
-            $('.datePostedDropdown').css('display', '');
+            $('#date-posted-dropdown-submenu').css('display', 'block');
         });
+
+        $('.daterangepicker th').each(function() {
+            console.log("TH:",$(this))
+            $(this).on('click', function(event) {
+                console.log("Click!!!!")
+                event.stopPropagation();
+                $('#date-posted-dropdown-submenu').css('display', 'block');
+            });
+        });
+
     });
 
-
+    // $(function() {
+    //     // Initialize the daterangepicker
+    //     $('input[name="datefilter"]').daterangepicker({
+    //         autoUpdateInput: false,
+    //         locale: {
+    //             cancelLabel: 'Clear'
+    //         },
+    //         maxDate: currentDate // Set the maximum date initially to the current date
+    //     });
+    //
+    //     // Store a flag to track whether the dropdown should be open or closed
+    //     var dropdownOpen = false;
+    //
+    //     // Handle apply event to update the input value and set start and end times
+    //     $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+    //         const startDate = picker.startDate.format('MM/DD/YYYY');
+    //         const endDate = picker.endDate.format('MM/DD/YYYY');
+    //
+    //         $(this).val(startDate + ' - ' + endDate);
+    //
+    //         // Set the start and end times in your input fields
+    //         createDatePostedFilterButton('Custom', startDate, endDate);
+    //         checkAndToggleFilterButton();
+    //
+    //         // Close the dropdown programmatically
+    //         dropdownOpen = false;
+    //         $('.datePostedDropdown').css('display', '');
+    //     });
+    //
+    //     // Handle cancel event to clear the input value and reset start and end times
+    //     $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+    //         $(this).val('');
+    //         $('#filter-start-time').val('');
+    //         $('#filter-end-time').val('');
+    //
+    //         // Close the dropdown programmatically
+    //         dropdownOpen = false;
+    //         $('.datePostedDropdown').css('display', '');
+    //     });
+    //
+    //     // Handle click on the date filter input to toggle the dropdown
+    //     $('input[name="datefilter"]').on('click', function() {
+    //         dropdownOpen = !dropdownOpen;
+    //         $('.datePostedDropdown').css('display', dropdownOpen ? 'block' : '');
+    //     });
+    //
+    //     // Prevent the previous and next month buttons from closing the dropdown
+    //     $('.daterangepicker th').click(function (event) {
+    //         event.stopPropagation();
+    //     });
+    // });
 
     // Initialize Bootstrap tooltips
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
