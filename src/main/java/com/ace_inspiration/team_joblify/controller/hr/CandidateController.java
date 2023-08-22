@@ -6,6 +6,8 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.entity.*;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,7 @@ import com.ace_inspiration.team_joblify.service_implement.candidate_service_impl
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -166,12 +169,12 @@ public class CandidateController {
 //        return "job-details";
 //    }
 
-	@PostMapping("/apply-job")
-	public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
-
-		candidateService.saveCandidate(dto);
-		return "redirect:/show-job-details";
-
+	@PostMapping(value = "/apply-job", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<Candidate> applyJob(CandidateDto candidateDto) throws IOException{	
+	System.err.println("MMMMMMMMMMMMMMMMMMMMMMMMMM");
+		
+		Candidate candidate=candidateService.saveCandidate(candidateDto);
+	return new ResponseEntity<>(candidate, HttpStatus.OK);
 	}
 
 	@GetMapping("/view-summaryinfo")

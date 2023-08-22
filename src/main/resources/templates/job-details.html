@@ -213,80 +213,109 @@
 				</div>
 				<div class="modal-body">
 
-					<form id="job-apply" class="row g-3 needs-validation" novalidate>
+					<form id="job-apply" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
 						<input type="hidden" id="form-id" name="id">
+						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="name" placeholder="Name">
+							<input type="text" class="form-control" id="name" name="name" placeholder="Name">
 							<label for="name" class="ms-2">Name</label>
 						</div>
+						
 						<div class="form-floating">
-							<input type="email" class="form-control" id="email" placeholder="E-mail">
-							<label for="email" class="ms-2">Email address</label>
+							<input type="date" class="form-control" id="dob" name="dob" placeholder="Date of Birth">
+							<label for="dob" class="ms-2">Date of Birth</label>
 						</div>
+						
 						<div>
 							<div class="form-check form-check-inline w-50">
-								<label class="form-label">Sex</label>
+								<label class="form-label">Gender</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input type="radio" class="form-check-input" id="male" name="gender" value="Male">
+								<input type="radio" class="form-check-input" id="male" name="gender" value="MALE">
 								<label class="form-check-label" for="male">Male</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input type="radio" class="form-check-input" id="female" name="gender" value="Female">
+								<input type="radio" class="form-check-input" id="female" name="gender" value="FEMALE">
 								<label class="form-check-label" for="female">Female</label>
 							</div>
 						</div>
+						
+						
 						<div class="form-floating">
-							<input type="tel" class="form-control" id="phoneNo" placeholder="Phone Number">
-							<label for="phoneNo" class="ms-2">Phone Number</label>
+							<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+							<label for="phone" class="ms-2">Phone Number</label>
 						</div>
 						<div class="form-floating">
-							<input type="text" class="form-control" id="position" placeholder="Position">
-							<label for="position" class="ms-2">Position</label>
+							<input type="email" class="form-control" id="email" name="email" placeholder="E-mail">
+							<label for="email" class="ms-2">Email address</label>
 						</div>
+						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="education" placeholder="Education">
-							<label for="education" class="ms-2">Education</label>
+							<input type="text" class="form-control" id="education" name="education" placeholder="Education">
+							<label for="education" class="ms-2">Bachelor Degree/Disploma</label>
 						</div>
+						
+						<div class="form-floating mb-1">
+							<input type="text" class="form-control" id="techSkills" name="techSkills" placeholder="TechSkills">
+							<label for="skill" class="ms-2">Techanical Skills</label>
+						</div>
+						
+						<div class="form-floating mb-1">
+							<input type="text" class="form-control" id="languageSkills" name="languageSkills" placeholder="TanguageSkills">
+							<label for="skill" class="ms-2">Language Skills</label>
+						</div>
+						
+						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="mainSkill" placeholder="Main Skill">
-							<label for="mainSkill" class="ms-2">Main Skill</label>
+							<input type="text" class="form-control" id="applyPosition" name="applyPosition" placeholder="Position">
+							<label for="applyPosition" class="ms-2">Position</label>
+						</div>
+						
+						<div class="form-floating">
+							<select class="form-select" id="lvl" name="lvl" aria-label="Floating label select example">
+								<option value="ENTRY_LEVEL">Entry Level</option>
+								<option value="JUNIOR_LEVEL">Junior Level</option>
+								<option value="MID_LEVEL">Mid Level</option>
+								<option value="SENIOR_LEVEL">Senior Level</option>
+								<option value="SUPERVISOR_LEVEL">Supervisor Level</option>
+								<option value="EXECUTIVE_LEVEL">Executive Level</option>
+							</select>
+							<label for="experiences" class="ms-2">Level</label>
+						</div>
+					
+						
+						<div class="form-floating">
+							<input type="text" class="form-control" id="specialistTech" name="specialistTech" placeholder="Main Skill">
+							<label for="specialistTech" class="ms-2">Main Skill</label>
 						</div>
 
 						<!-- Skill input start -->
+						
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" id="skill" placeholder="Skill">
-							<label for="skill" class="ms-2">Skill</label>
+							<input type="text" class="form-control" id="experience" name="experience" placeholder="Experience">
+							<label for="experience" class="ms-2">Experience</label>
 						</div>
-						<div class="d-flex flex-wrap px-1 skill-block">
-						</div>
-						<!-- Skill input end -->
-
+						
+						
+						
+						
 						<div class="form-floating">
-							<select class="form-select" id="experiences" aria-label="Floating label select example">
-								<option value="Internship">Internship</option>
-								<option value="Entry level">Entry level</option>
-								<option value="Mid-Senior level">Mid-Senior level</option>
-								<option value="Director">Director</option>
-								<option value="Executive">Executive</option>
-							</select>
-							<label for="experiences" class="ms-2">Experiences level</label>
+							<input type="number" class="form-control" id="expectedSalary" name="expectedSalary" placeholder="Salary">
+							<label for="expectedSalary" class="ms-2">Excepted salary</label>
 						</div>
-						<div class="form-floating">
-							<input type="text" class="form-control" id="salary" placeholder="Salary">
-							<label for="salary" class="ms-2">Excepted salary</label>
-						</div>
+						
+						
 						<div>
 							<label class="form-label" for="resume">Upload CV</label>
-							<input type="file" class="form-control" id="resume" name="resume">
+							<input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx">
 						</div>
 
 					</form>
 				</div>
+				
+				
 				<div class="modal-footer">
-					<button class="btn btn-primary" type="submit" data-form-id="apply-form" data-warning-message="Your
-						data will me apply and we will contact soon." data-success-message="Apply successful."
-						data-error-message="Apply faile."><i class='bx bxs-navigation'></i></button>
+					<input class="btn btn-primary" id="submit-job" type="submit"><i class='bx bxs-navigation'></i></input>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				</div>
 			</div>
@@ -303,6 +332,42 @@
 	<script src="/assets/js/javaScript/app.js"></script>
 	<script src="/assets/js/javaScript/skillblock.js"></script>
 	<script src="/assets/js/javascript/jobdetails.js"></script>
-	</body>
+	<script>
+		const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+		const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+		const form = document.getElementById('job-apply');
+		document.getElementById("submit-job").addEventListener("click", function (event) {
+			event.preventDefault(); // Prevent the form from submitting normall
+			const formData = new FormData(form);
+			console.log(form);
+			fetch('/apply-job', {
+				method: 'POST',
+				headers: {
+					[csrfHeader]: csrfToken // Include CSRF token as a request header
+				},
+				body: formData
+			})
+
+
+				.then(response => {
+					if (response.ok) {
+						// Registration successful, handle the response
+						console.log("Your Apply successful");
+
+					} else {
+						// Registration failed, handle the error
+						console.error("Your Apply failed");
+
+					}
+				})
+				.catch(error => {
+					// An error occurred, handle the error
+					console.error("An error occurred during registration:", error);
+					// You can show an error message to the user here
+				});
+		});
+
+	</script>
+</body>
 
 </html>

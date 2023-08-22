@@ -30,47 +30,54 @@ import com.ace_inspiration.team_joblify.entity.Vacancy;
 public class CandidateDto {
 
 	private long id;
-	
-	private String name;
 
-	private LocalDate dob;
+	  private String name;
 
-	private String gender;
+	  private LocalDate dob;
 
-	private String phone;
+	  private String gender;
 
-	private String email;
+	  private String phone;
 
-	private String education;
+	  private String email;
 
-	private String applyPosition;
+	  private String education;
 
-	private String lvl;
+	  private String applyPosition;
 
-	private String specialistTech;
+	  private String lvl;
 
-	private String experience;
+	  private String specialistTech;
 
-	private double expectedSalary;
+	  private String experience;
 
-	private Candidate candidate;
+	  private double expectedSalary;
 
-	private String [] languageSkills;
+	  private Candidate candidate;
 
-	private String [] techSkills;
+	  private String [] languageSkills;
 
-	private String selectionStatus;
+	  private String [] techSkills;
 
-	private String interviewStatus;
+	  private String selectionStatus;
 
-	private LocalDateTime applyDate;
+	  private String interviewStatus;
 
-	private MultipartFile resume;
+	  private LocalDateTime applyDate;
+	  
+	  private String type;
 
-	private String note;
+	  private MultipartFile resume;
 
-	private Summary summary;
+	  private String note;
 
+	  private Summary summary;
+
+	  private List<Interview>interviews=new ArrayList<>();
+
+	  private List<Notification>notification=new ArrayList<>();
+
+	  private VacancyDto vacancyDto;
 	
 
 
