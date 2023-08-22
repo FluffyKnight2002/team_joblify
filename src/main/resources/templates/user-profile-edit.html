@@ -309,37 +309,40 @@
           const username = document.getElementById('username');
           const email = document.getElementById('email');
           const phone = document.getElementById('phone');
-          const department = document.getElementById('department');
           const address = document.getElementById('address');
           const note = document.getElementById('note');
           let preview = document.getElementById('uploadedImage');
           const stringDepartment = data.department.name;
-          
+
+          console.log("Data : ", data);
 
           userId = data.id;
           name.value = data.name;
           username.value = data.username;
           phone.value = data.phone;
           email.value = data.email;
-          department.value = stringDepartment; // Assign the stringified department name
           address.value = data.address;
           note.value = data.note;
           preview.src = 'data:image/jpeg;base64,' + data.photo;
           passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(data.email);
 
-          currentEmail = data.email;
-          console.log(currentEmail);
-          const role = document.getElementById('role');
-          for (let option of role.options) {
-            if (option.value === data.role) {
-              option.selected = true;
-            }
+          if($('#department').length > 0) {
+            $('#department').val(stringDepartment); // Assign the stringified department name
           }
 
           const gender = document.getElementById('gender');
           for (let option of gender.options) {
             if (option.value === data.gender) {
               option.selected = true;
+            }
+          }
+          currentEmail = data.email;
+          console.log(currentEmail);
+          if($('#role').length > 0) {
+            for (let option of $('#role').options) {
+              if (option.value === data.role) {
+                option.selected = true;
+              }
             }
           }
         })
