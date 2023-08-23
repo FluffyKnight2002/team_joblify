@@ -11,7 +11,7 @@ public class ProfileGenerator {
     public static byte[] generateAvatar(String username) {
         try {
             // Construct the API URL
-            String apiUrl = "https://ui-avatars.com/api/?name=" + username + "&background=random&size=512&font-size=0.4&length=3&rounded=true";
+            String apiUrl = "https://ui-avatars.com/api/?name=" + username + "&background=random&size=512&font-size=0.33&length=3&rounded=true";
 
             // Make a request to the API and retrieve the avatar URL
             RestTemplate restTemplate = new RestTemplate();
