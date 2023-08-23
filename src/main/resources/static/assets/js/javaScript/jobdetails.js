@@ -1,10 +1,12 @@
 var currentId = new URLSearchParams(window.location.search).get("id");
+const formId = document.getElementById('form-id');
+formId.value = currentId;
 // Function to fetch job data and create job card UI
 function fetchJobsAndRenderUI() {
 
     fetch("/vacancy/show-others")
         .then((response) => response.json())
-        .then(data => {
+        .then(data =>{
         // Assuming 'data' is an array of job objects with properties like title, applicants, jobType, salary, postedTime, location, and closeDate
         // Loop through the job data to create job cards
             $("#job-list-container").empty();
@@ -122,7 +124,7 @@ function fetchJobDetails(id) {
                 <!-- Apply button start -->
                 <div>
                     <button type="button" class="btn btn-primary rounded-pill my-3" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">
+                        data-bs-target="#apply-form">
                         Apply
                     </button>
                 </div>

@@ -27,6 +27,11 @@ async function authenticatedUserData() {
         department.innerHTML = data.department;
         profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(data.email);
         profileImg.src = 'data:image/png;base64,' + data.photo;
+        const loader = document.getElementById('loader');
+        const credentials = document.getElementById('credentials');
+
+        loader.remove();
+        credentials.style.display = 'inline-block';
 
     } catch (error) {
         console.error("Error at fetching authenticated User Data: " + error);

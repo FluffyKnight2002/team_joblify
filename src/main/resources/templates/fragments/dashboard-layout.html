@@ -1,186 +1,206 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    
     <title>Title</title>
+    
 </head>
+
 <body>
 
-<!-- Sidebar -->
-<div id="sidebar" class="active" th:fragment="sidebar">
-    <div class="sidebar-wrapper active">
-        <div class="sidebar-header">
-            <div class="d-flex justify-content-between">
-                <div style="height: auto">
-                    <a href="/dashboard" class="text-primary" style="height: 80px !important;">
-                        <img style="position: static;width: auto;height: 65px;" src="/assets/images/candidate-images/ace_logo.png" alt="Ace Data System"/>
-                    </a>
-                </div>
-                <div class="toggler">
-                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+    <!-- Sidebar -->
+    <div id="sidebar" class="active" th:fragment="sidebar">
+        <div class="sidebar-wrapper active">
+            <div class="sidebar-header">
+                <div class="d-flex justify-content-between">
+                    <div style="height: auto">
+                        <a href="/dashboard" class="text-primary" style="height: 80px !important;">
+                            <img style="position: static;width: auto;height: 65px;"
+                                src="/assets/images/candidate-images/ace_logo.png" alt="Ace Data System" />
+                        </a>
+                    </div>
+                    <div class="toggler">
+                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="sidebar-menu">
-            <ul class="menu">
-                <li class="sidebar-title">Menu</li>
+            <div class="sidebar-menu">
+                <ul class="menu">
+                    <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active">
-                    <a th:href="@{/dashboard}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                    <li class="sidebar-item active">
+                        <a th:href="@{/dashboard}" class='sidebar-link'>
+                            <i class="bi bi-grid-fill"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
 
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-file-post-fill"></i>
-                        <span>Vacancies</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a th:href="show-upload-vacancy-form">Upload</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a th:href="show-all-vacancies-page">View list</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-person-fill"></i>
-                        <span>Users</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a th:href="@{/user-register}">Register</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a th:href="@{/all-user-list}">User list</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-file-person-fill"></i>
-                        <span>Candidates</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a th:href="view-summaryinfo">View list</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-clipboard-data"></i>
-                        <span>Interviews</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a th:href="@{/interviewProcess}">View position & candidate</a>
-                            <a th:href="@{/CandidateViewSummary}">View status details</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
-    </div>
-</div>
-
-<!-- Navbar -->
-<header class='layout-navbar glass-transparent sticky' th:fragment="layout-navbar">
-    <nav class="navbar navbar-expand navbar-light ">
-        <div class="container-fluid">
-            <a href="#" class="burger-btn d-block">
-                <i class="bi bi-justify fs-3"></i>
-            </a>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="offset-4 nav-item dropdown me-3">
-                        <div id="view-noti-btn" class="nav-link active pe-4" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <i class='bi bi-bell bi-sub fs-4 text-gray-600 position-relative' style="cursor: pointer">
-                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle" id="noti-light">
-                              <span class="visually-hidden">New alerts</span>
-                            </span>
-                            </i>
-                        </div>
-                        <ul class="dropdown-menu notification-dropdown dropdown-menu-end rounded-3 shadow-lg" id="noti-dropdown" aria-labelledby="dropdownMenuButton">
-                            <li>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h6 class="dropdown-header">Notifications</h6>
-                                    <div>
-                                        <button class="btn btn-sm btn-light-secondary rounded-pill mx-1 text-center" id="delete-noti-btn" style="font-size: 0.8rem">Delete All<i class="bi bi-trash-fill"></i></button>
-                                        <button class="btn btn-sm btn-danger rounded-pill me-4" onclick="makeAllAsRead()" style="min-width: 93.22px;font-size: 0.8rem">Mark as read</button>
-                                    </div>
-                                </div>
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-file-post-fill"></i>
+                            <span>Vacancies</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a th:href="show-upload-vacancy-form">Upload</a>
                             </li>
-                            <li>
-                                <div id="notifications-container" style="min-width: 354.87px;"></div>
+                            <li class="submenu-item ">
+                                <a th:href="show-all-vacancies-page">View list</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-person-fill"></i>
+                            <span>Users</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a th:href="@{/user-register}">Register</a>
+                            </li>
+                            <li class="submenu-item ">
+                                <a th:href="@{/all-user-list}">User list</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-file-person-fill"></i>
+                            <span>Candidates</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a th:href="view-summaryinfo">View list</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item  has-sub">
+                        <a href="#" class='sidebar-link'>
+                            <i class="bi bi-clipboard-data"></i>
+                            <span>Interviews</span>
+                        </a>
+                        <ul class="submenu ">
+                            <li class="submenu-item ">
+                                <a th:href="@{/interviewProcess}">View position & candidate</a>
+                                <a th:href="@{/CandidateViewSummary}">View status details</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <div class="dropdown">
-                    <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="user-menu d-flex">
-                            <div class="user-name text-end me-3">
-                                <h6 class="mb-0 text-gray-600">
-                                    <span id="authenticated-name"></span></h6>
-                                <p class="mb-0 text-sm text-gray-600">
-                                    <span id="authenticated-department"></span>
-                                </p>
+            </div>
+            <!-- <button class="sidebar-toggler btn x"><i data-feather="x"></i></button> -->
+        </div>
+    </div>
 
-            
-                            </div>
-                            <div class="user-img d-flex align-items-center">
-                                <div class="avatar avatar-md">
-                                    <img id="profile-img" alt="User Photo" style="border: 1px solid black;">
-                                    
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                        <li>
-                            <h6 class="dropdown-header">Hello, <span id="authenticated-username"></span></h6>
-                        </li>
-                        <li><a class="dropdown-item" id="profile-link"><i class="icon-mid bi bi-person me-2"></i> My
-                            Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
-                            Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li>
-                            <form th:action="@{/logout}" method="post">
+    <!-- Navbar -->
+    <header class='layout-navbar glass-transparent sticky' th:fragment="layout-navbar">
+        <nav class="navbar navbar-expand navbar-light ">
+            <div class="container-fluid">
+                <a href="#" class="burger-btn d-block">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
 
-                                <button type="submit" class="dropdown-item">
-                                    <i class="icon-mid bi bi-box-arrow-left me-2"></i>Logout
-                                </button>
-                            </form>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="offset-4 nav-item dropdown me-3">
+                            <div id="view-noti-btn" class="nav-link active pe-4" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class='bi bi-bell bi-sub fs-4 text-gray-600 position-relative'
+                                    style="cursor: pointer">
+                                    <span
+                                        class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"
+                                        id="noti-light">
+                                        <span class="visually-hidden">New alerts</span>
+                                    </span>
+                                </i>
+                            </div>
+                            <ul class="dropdown-menu notification-dropdown dropdown-menu-end rounded-3 shadow-lg"
+                                id="noti-dropdown" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="dropdown-header">Notifications</h6>
+                                        <div>
+                                            <button class="btn btn-sm btn-light-secondary rounded-pill mx-1 text-center"
+                                                id="delete-noti-btn" style="font-size: 0.8rem">Delete All<i
+                                                    class="bi bi-trash-fill"></i></button>
+                                            <button class="btn btn-sm btn-danger rounded-pill me-4"
+                                                onclick="makeAllAsRead()"
+                                                style="min-width: 93.22px;font-size: 0.8rem">Mark as read</button>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div id="notifications-container" style="min-width: 354.87px;"></div>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
+                    <div id="credentials" class="dropdown" style="display: none;">
+                        <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-menu d-flex">
+                                <div class="user-name text-end me-3">
+                                    <h6 class="mb-0 text-gray-600">
+                                        <span id="authenticated-name"></span>
+                                    </h6>
+                                    <p class="mb-0 text-sm text-gray-600">
+                                        <span id="authenticated-department"></span>
+                                    </p>
+
+
+                                </div>
+                                <div class="user-img d-flex align-items-center">
+                                    <div class="avatar avatar-md">
+                                        <img id="profile-img" alt="User Photo" style="border: 1px solid gray;">
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li>
+                                <h6 class="dropdown-header">Hello, <span id="authenticated-username"></span></h6>
+                            </li>
+                            <li><a class="dropdown-item" id="profile-link"><i class="icon-mid bi bi-person me-2"></i> My
+                                    Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="icon-mid bi bi-gear me-2"></i>
+                                    Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="icon-mid bi bi-box-arrow-left me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="loader" style="min-width: 168.95px; min-height: 40.19px;" class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-grow text-danger me-2" role="status"></div>
+                          <div class="spinner-grow text-warning me-2" role="status"></div>
+                          <div class="spinner-grow text-info" role="status"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
-</header>
+        </nav>
+    </header>
 
 </body>
+
 </html>
