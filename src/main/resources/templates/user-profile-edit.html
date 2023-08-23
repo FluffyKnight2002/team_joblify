@@ -338,8 +338,10 @@
           }
           currentEmail = data.email;
           console.log(currentEmail);
+          const role = $('#role');
+   
           if($('#role').length > 0) {
-            for (let option of $('#role').options) {
+            for (let option of role.options) {
               if (option.value === data.role) {
                 option.selected = true;
               }

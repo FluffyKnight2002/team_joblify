@@ -5,7 +5,7 @@ const removeIcon = document.getElementById('removeIcon');
 
 // Initialize the display of remove icon based on image presence
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(preview.classList);
+    console.log(preview.src);
     if (preview.src.startsWith('http://localhost:8080/')) {
         removeIcon.style.display = 'none';
     } else {

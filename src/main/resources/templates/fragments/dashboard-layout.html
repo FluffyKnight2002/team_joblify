@@ -27,7 +27,7 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item" >
+                <li class="sidebar-item active">
                     <a th:href="@{/dashboard}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
@@ -110,7 +110,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="offset-4 nav-item dropdown me-3">
-                        <div class="nav-link active pe-4" id="notification-bell-btn" data-bs-toggle="dropdown"
+                        <div id="view-noti-btn" class="nav-link active pe-4" data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <i class='bi bi-bell bi-sub fs-4 text-gray-600 position-relative' style="cursor: pointer">
                             <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle" id="noti-light">
@@ -118,8 +118,7 @@
                             </span>
                             </i>
                         </div>
-                        <ul class="dropdown-menu notification-dropdown dropdown-menu-end rounded-3 shadow-lg"
-                            style="left: -300px" aria-labelledby="notification-bell-btn">
+                        <ul class="dropdown-menu notification-dropdown dropdown-menu-end rounded-3 shadow-lg" id="noti-dropdown" aria-labelledby="dropdownMenuButton">
                             <li>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="dropdown-header">Notifications</h6>
@@ -182,6 +181,6 @@
         </div>
     </nav>
 </header>
-<script src="/assets/js/main.js"></script>
+
 </body>
 </html>
