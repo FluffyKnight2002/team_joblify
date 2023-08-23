@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,8 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         }
         // Update the properties of the existingVacancy based on vacancyDto
         VacancyInfo vacancyInfo = VacancyInfo.builder()
-                .vacancy(vacancyService.updateVacancy(vacancyDto))
+                .vacancy(vacancyRepository.findById(vacancyDto.getVacancyId()).orElseThrow(
+                        ()-> new NoSuchElementException("No vacancy found")))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
                 .requirements(vacancyDto.getRequirements())
@@ -167,7 +169,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         existingVacancy = vacancyInfoRepository.findById(vacancyId).orElse(null);
         // Update the properties of the existingVacancy based on vacancyDto
-        existingVacancy.setVacancy(vacancyService.updateVacancy(vacancyDto));
+//        existingVacancy.setVacancy(vacancyService.updateVacancy(vacancyDto));
         existingVacancy.setDescription(vacancyDto.getDescriptions());
         existingVacancy.setRequirements(vacancyDto.getRequirements());
         existingVacancy.setResponsibilities(vacancyDto.getResponsibilities());

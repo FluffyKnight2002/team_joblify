@@ -61,16 +61,16 @@ public class VacancyServiceImpl implements VacancyService {
         return vacancies;
     }
 
-    @Override
-    public Vacancy updateVacancy(VacancyDto updatedVacancyDto) {
-        Position position = positionService.checkAndSetPosition(updatedVacancyDto.getPosition());
-        Department department = departmentService.checkAndSetDepartment(updatedVacancyDto.getDepartment());
-        System.out.println("VacancyId : " + updatedVacancyDto.getVacancyId());
-        Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getVacancyId()).get();
-        vacancy.setPosition(position);
-        vacancy.setDepartment(department);
-        return vacancyRepository.save(vacancy);
-    }
+//    @Override
+//    public Vacancy updateVacancy(VacancyDto updatedVacancyDto) {
+//        Position position = positionService.checkAndSetPosition(updatedVacancyDto.getPosition());
+//        Department department = departmentService.checkAndSetDepartment(updatedVacancyDto.getDepartment());
+//        System.out.println("VacancyId : " + updatedVacancyDto.getVacancyId());
+//        Vacancy vacancy = vacancyRepository.findById(updatedVacancyDto.getVacancyId()).get();
+//        vacancy.setPosition(position);
+//        vacancy.setDepartment(department);
+//        return vacancyRepository.save(vacancy);
+//    }
 
     @Override
     public void deleteVacancy(long id) {

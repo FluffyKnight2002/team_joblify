@@ -48,20 +48,20 @@
                     <label for="title" class="form-label">Title(Position)</label>
                     <input type="text" class="form-control" id="title" name="position" required>
                     <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Title can't be empty</div>
                     <div id="title-suggestions"></div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="post" class="form-label">Post</label>
                         <input type="number" class="form-control" id="post" name="post" required>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Post can't be empty</div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                         <label for="department" class="form-label">Department</label>
                         <input type="text" class="form-control" id="department" name="department" required>
                         <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Department can't be empty</div>
                         <div id="department-suggestions"></div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -93,14 +93,12 @@
                             <div id="calendar" class="calendar dropdown-menu">
                             <!-- Days of the week will be added here -->
                             </div>
-                            <div class="feedback-message"></div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingHours" class="form-label">Working Hours</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00 AM ~ 6:00 PM" required readonly>
-                            <div class="feedback-message"></div>
                             <button class="btn btn-sm btn-primary" type="button" id="timePickerBtn">
                                 <i class="bi bi-clock"></i>
                             </button>
@@ -115,7 +113,7 @@
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="salary" class="form-label">Salary</label>
                         <input type="text" class="form-control" id="salary" name="salary" required>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Salary can't be empty</div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
@@ -130,7 +128,7 @@
                 <div class="mb-3">
                     <label for="descriptions" class="form-label">Descriptions</label>
                     <textarea class="form-control" id="descriptions" name="descriptions" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Descriptions can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="responsibilities" class="form-label">
@@ -151,7 +149,7 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Responsibilities can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="requirements" class="form-label">
@@ -172,7 +170,7 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Requirements can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="preferences" class="form-label">
@@ -193,13 +191,13 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="preferences" name="preferences" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Preferences can't be empty</div>
                 </div>
                 <div class="mb-3 position-relative">
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
                     <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Address can't be empty</div>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>

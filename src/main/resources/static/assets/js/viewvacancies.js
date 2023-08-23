@@ -2,8 +2,8 @@ let currentId = new URLSearchParams(window.location.search).get("id");
 const reopenBtn = $('#reopen-btn');
 const closeBtn = $('#close-btn');
 const resetButton = $('#reset-repoen-btn');
-const reopenModeWarn = $('.reopen-mode-warn');
-const inputsToDisable = $('.input-to-disable');
+// const reopenModeWarn = $('.reopen-mode-warn');
+// const inputsToDisable = $('.input-to-disable');
 let defaultPosition = null;
 let defaultDepartment = null;
 let href;
@@ -24,7 +24,7 @@ $(document).ready(function () {
 
     console.log($('#title'))
     console.log($('#department'))
-    console.log("Input To Disable : ", inputsToDisable)
+    // console.log("Input To Disable : ", inputsToDisable)
 
     // Store the initial visibility status of each column
         let columnVisibility = [true, true, true, true, true, true, false, false, true];
@@ -200,7 +200,7 @@ $(document).ready(function () {
                 .data('success-message', 'Update successful!')
                 .data('error-message', 'Update failed. Please try again.')
                 .html('Update');
-                reopenModeWarn.hide();
+                // reopenModeWarn.hide();
                 $('#reopen-form')
                     .attr('id', 'update-form')
                     .attr('action', 'update-vacancy');
@@ -208,7 +208,7 @@ $(document).ready(function () {
             // If the button is in the "off" state, switch it on
             reopenBtn.removeClass('btn-un-bright');
             reopenBtn.addClass('btn-bright');
-            reopenModeWarn.show();
+            // reopenModeWarn.show();
             $('#submit-btn')
                 .data('form-id', 'reopen-form')
                 .data('warning-message', 'Reopen will make this vacancy open for 30 days again.')
@@ -220,9 +220,9 @@ $(document).ready(function () {
                 .attr('id', 'reopen-form')
                 .attr('action', 'reopen-vacancy');
         }
-        inputsToDisable.each(function() {
-            $(this).prop('disabled', !$(this).prop('disabled')); // Toggle the disabled property
-        });
+        // inputsToDisable.each(function() {
+        //     $(this).prop('disabled', !$(this).prop('disabled')); // Toggle the disabled property
+        // });
     });
     // Click event handler for the reset button
     resetButton.on('click', function() {
@@ -244,11 +244,11 @@ $(document).ready(function () {
             .attr('id', 'update-form')
             .attr('action', 'update-vacancy');
         // Disable the inputs
-        reopenModeWarn.hide();
-        inputsToDisable.prop('disabled', false);
+        // reopenModeWarn.hide();
+        // inputsToDisable.prop('disabled', false);
     });
 
-    reopenModeWarn.hide();
+    // reopenModeWarn.hide();
 
     // Create reset filter button
     let resetFilterButton = `
@@ -507,58 +507,6 @@ $(document).ready(function () {
 
     });
 
-    // $(function() {
-    //     // Initialize the daterangepicker
-    //     $('input[name="datefilter"]').daterangepicker({
-    //         autoUpdateInput: false,
-    //         locale: {
-    //             cancelLabel: 'Clear'
-    //         },
-    //         maxDate: currentDate // Set the maximum date initially to the current date
-    //     });
-    //
-    //     // Store a flag to track whether the dropdown should be open or closed
-    //     var dropdownOpen = false;
-    //
-    //     // Handle apply event to update the input value and set start and end times
-    //     $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
-    //         const startDate = picker.startDate.format('MM/DD/YYYY');
-    //         const endDate = picker.endDate.format('MM/DD/YYYY');
-    //
-    //         $(this).val(startDate + ' - ' + endDate);
-    //
-    //         // Set the start and end times in your input fields
-    //         createDatePostedFilterButton('Custom', startDate, endDate);
-    //         checkAndToggleFilterButton();
-    //
-    //         // Close the dropdown programmatically
-    //         dropdownOpen = false;
-    //         $('.datePostedDropdown').css('display', '');
-    //     });
-    //
-    //     // Handle cancel event to clear the input value and reset start and end times
-    //     $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
-    //         $(this).val('');
-    //         $('#filter-start-time').val('');
-    //         $('#filter-end-time').val('');
-    //
-    //         // Close the dropdown programmatically
-    //         dropdownOpen = false;
-    //         $('.datePostedDropdown').css('display', '');
-    //     });
-    //
-    //     // Handle click on the date filter input to toggle the dropdown
-    //     $('input[name="datefilter"]').on('click', function() {
-    //         dropdownOpen = !dropdownOpen;
-    //         $('.datePostedDropdown').css('display', dropdownOpen ? 'block' : '');
-    //     });
-    //
-    //     // Prevent the previous and next month buttons from closing the dropdown
-    //     $('.daterangepicker th').click(function (event) {
-    //         event.stopPropagation();
-    //     });
-    // });
-
     // Initialize Bootstrap tooltips
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -579,7 +527,8 @@ $(document).on("click", ".show-detail-btn", function (event) {
 
     // Get the vacancy ID from the link's href attribute
     href = $(this).attr("href");
-    vacancyId = href.split("=")[1]; // Assuming the URL is like "view-vacancy-detail?id=123"
+    vacancyId = href.split("=")[1];
+    $('#reset-form').attr('data-vacancy-id', vacancyId);
 
     // Fetch the vacancy details using AJAX
     var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
@@ -590,6 +539,53 @@ $(document).on("click", ".show-detail-btn", function (event) {
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");
+            let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+                return $.trim($(this).val()) === '' && $.trim($(this).val()) === '0' && $(this).prop('required'); // Only consider required fields
+            });
+
+            console.log("Empty Inputs : ",emptyInputs)
+            emptyInputs.each(function () {
+                console.log("Element : ", $(this))
+                if($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid');
+                }else if($(this).hasClass('is-valid')) {
+                    $(this).removeClass('is-valid');
+                }
+                $(this).addClass('is-valid');
+            });
+        });
+});
+
+$(document).on("click", "#reset-form", function (event) {
+    event.preventDefault(); // Prevent the default behavior of the link
+
+    vacancyId = $(this).data('vacancy-id');
+
+    // Fetch the vacancy details using AJAX
+    var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Handle the successful response and display the details in the modal
+            let inputsToReset = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+                return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
+            });
+
+            // if(inputsToReset.hasClass('is-invalid')) {
+            //     inputsToReset.removeClass('is-invalid');
+            //     inputsToReset.addClass('is-valid');
+            // }
+
+            inputsToReset.each(function () {
+                if($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid');
+                }
+                $(this).addClass('is-valid');
+            });
+
+            $('.feedback-message').css('display','none');
+            populateModalWithData(data); // Call the function to populate the modal with data
         });
 });
 
@@ -900,6 +896,10 @@ function populateModalWithData(data) {
     $endTimePicker.on('change', function() {
         endTime = $(this).val();
         updateInputValue();
+    });
+
+    let inputsToReset = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+        return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
     });
 
     updateCalendar();
