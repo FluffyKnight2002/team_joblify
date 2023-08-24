@@ -4,6 +4,7 @@ import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.entity.Notification;
 import com.ace_inspiration.team_joblify.entity.NotificationUser;
+import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.NotificationRepository;
 import com.ace_inspiration.team_joblify.repository.NotificationUserRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,19 +31,32 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void createNotifications(NotificationDto notificationDto) {
+
         List<User> users = userRepository.findAll();
+        Notification notification = new Notification();
+        notification.setMessage(notificationDto.getMessage());
+        notification.setLink(notificationDto.getLink());
+        notification.setTime(notificationDto.getTime());
+
+        Notification savedNotification = notificationRepository.save(notification);
+        if(notificationDto.getLink().contains("user-profile-edit")) {
+            users = new ArrayList<>();
+            User currentUser = userRepository.findById(notificationDto.getUserId()).orElseThrow(() -> new NoSuchElementException("No such user."));
+            users.add(userRepository.findByRole(Role.DEFAULT_HR).get());
+            if(!currentUser.getRole().equals(Role.DEFAULT_HR)) {
+                users.add(userRepository.findById(notificationDto.getUserId()).get());
+            }
+        }
+
         for(User user: users) {
 
             NotificationUser notificationUser = new NotificationUser();
-            Notification notification = new Notification();
-            notification.setMessage(notificationDto.getMessage());
-            notification.setLink(notificationDto.getLink());
-            notification.setTime(notificationDto.getTime());
-            notificationUser.setNotification(notificationRepository.save(notification));
+            notificationUser.setNotification(savedNotification);
+            notificationUser.setSeen(false);
             notificationUser.setUser(user);
+
             notificationUserRepository.save(notificationUser);
         }
-
     }
 
     @Override
@@ -55,7 +70,9 @@ public class NotificationServiceImpl implements NotificationService {
         // Map each Notification entity to a NotificationDto using the NotificationService's mapToDto method
         for (Notification notification : notificationList) {
             NotificationDto notificationDto = mapToDto(notification);
-            notificationDtoList.add(notificationDto);
+            if(!notificationDto.isDeleted()) {
+                notificationDtoList.add(notificationDto);
+            }
         }
 
         return notificationDtoList;
@@ -76,6 +93,16 @@ public class NotificationServiceImpl implements NotificationService {
         notificationRepository.deleteById(id);
     }
 
+    @Override
+    public void updateNotification(long id) {
+        Optional<Notification> optionalNotification = notificationRepository.findById(id);
+        Notification notification = optionalNotification.orElseThrow(() -> new NoSuchElementException("No such element found."));
+        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findByNotification(notification);
+        NotificationUser notificationUser = optionalNotificationUser.orElseThrow(()-> new NoSuchElementException("No such element found"));
+        notificationUser.setSeen(true);
+        notificationUserRepository.save(notificationUser);
+    }
+
     @Transactional
     @Override
     public void findDeleteAllNotificationUserByUserId(Long userId) {
@@ -83,6 +110,65 @@ public class NotificationServiceImpl implements NotificationService {
         notificationUserRepository.deleteAllByUser(user);
     }
 
+    @Override
+    public boolean findNotificationSeenByIdAndUserId(Long notificationId, Long userId) {
+        Notification notification = Notification.builder().id(notificationId).build();
+        User user = User.builder().id(userId).build();
+        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findNotificationUserByNotificationAndUser(notification,user);
+
+        if (optionalNotificationUser.isPresent()) {
+            NotificationUser notificationUser = optionalNotificationUser.get();
+            return notificationUser.isSeen();
+        }
+
+        return true;
+    }
+
+    // Method to find a notification by both notification_id and user_id
+    @Override
+    public void findNotificationByIdAndUserIdAndDelete(Long notificationId, Long userId) {
+        Notification notification = Notification.builder().id(notificationId).build();
+        User user = User.builder().id(userId).build();
+        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findNotificationUserByNotificationAndUser(notification,user);
+
+        if (optionalNotificationUser.isPresent()) {
+            NotificationUser notificationUser = optionalNotificationUser.get();
+            notificationUserRepository.deleteById(notificationUser.getId());
+
+        }
+    }
+
+    @Override
+    public void findAllNotificationUserByUserIdAndUpdate(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("No such element found"));
+        List<NotificationUser> notificationUsers = notificationUserRepository.findNotificationUserByUser(user);
+
+        for (NotificationUser notificationUser : notificationUsers) {
+            notificationUser.setSeen(true);
+        }
+
+        notificationUserRepository.saveAll(notificationUsers);
+
+    }
+
+    @Override
+    public void findNotificationByIdAndUserIdAndUpdate(Long notificationId, Long userId) {
+        Notification notification = Notification.builder().id(notificationId).build();
+        User user = User.builder().id(userId).build();
+        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findNotificationUserByNotificationAndUser(notification,user);
+
+        if (optionalNotificationUser.isPresent()) {
+            NotificationUser notificationUser = optionalNotificationUser.get();
+            notificationUser.setSeen(true);
+            notificationUserRepository.save(notificationUser);
+
+        }
+    }
+
+    @Override
+    public void findNotificationByIdAndUserIdAndUpdate(List<Long> notificationIds, Long userId) {
+
+    }
 
     public NotificationDto mapToDto(Notification notification) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,14 +178,23 @@ public class NotificationServiceImpl implements NotificationService {
                 .message(notification.getMessage())
                 .link(notification.getLink())
                 .isSeen(false)
+                .isDeleted(false)
                 .time(notification.getTime())
                 .build();
 
         // Check if both user_id and notificationUser_id exist in the join table
         boolean bothExist = checkUserNotificationAssociation(notification.getId(), userDetails.getUserId());
-
         // Set isRead to false if both user_id and notification_id exist in the join table
-        notificationDto.setSeen(bothExist);
+        System.out.println("Both exit" + bothExist);
+        if(bothExist == true) {
+            System.out.println("Both exit.");
+//            NotificationUser notificationUser =
+            notificationDto.setSeen(findNotificationSeenByIdAndUserId(notification.getId(),userDetails.getUserId()));
+            notificationDto.setDeleted(false);
+        }else {
+            notificationDto.setSeen(true);
+            notificationDto.setDeleted(true);
+        }
 
         return notificationDto;
     }
@@ -124,20 +219,5 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         return isExit;
-    }
-
-
-    // Method to find a notification by both notification_id and user_id
-    @Override
-    public void findNotificationByIdAndUserIdAndDelete(Long notificationId, Long userId) {
-        Notification notification = Notification.builder().id(notificationId).build();
-        User user = User.builder().id(userId).build();
-        Optional<NotificationUser> optionalNotificationUser = notificationUserRepository.findNotificationUserByNotificationAndUser(notification,user);
-
-        if (optionalNotificationUser.isPresent()) {
-            NotificationUser notificationUser = optionalNotificationUser.get();
-            notificationUserRepository.deleteById(notificationUser.getId());
-
-        }
     }
 }

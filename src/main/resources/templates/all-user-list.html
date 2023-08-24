@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Vertical Navbar</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
-    
+
     <style>
         /* Default Bootstrap modal fade animation */
         .modal.fade .modal-dialog {
@@ -30,221 +30,196 @@
             transform: translateY(0);
             opacity: 1;
         }
-
     </style>
 </head>
 
 <body>
-<div id="app">
-    <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
-    <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
-    <div id="main" >
+    <div id="app">
+        <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+        <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+        <div id="main">
 
-        <div id="main-content" class="rounded-3 p-3" style="background: #fff">
+            <div id="main-content" class="rounded-3 p-3" style="background: #fff">
 
-            <div class="page-heading">
-                <div class="page-title">
-                    <div class="row">
-                        <div class="col-12 col-md-6 order-md-1">
-                            <h3>All Vacancies</h3>
-                        </div>
-                        <div class="col-12 col-md-6 order-md-2 order-first">
-                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <h4><a href="javascript:history.back()"><i class="fa-solid fa-reply"></i> Go Back</a></h4>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-                <section class="section">
-                    <div class="card">               
-                        <div class="card-body pt-1">
-                            <div class="table-responsive">
-                                <div class="form-group col-md-3">
-                                    <label for="departmentSelector">Department</label>
-                                    <select class="form-select" id="departmentSelector">
-                                        <!-- Add your options here -->
-                                    </select>
-                                </div>
-                                
-                                
-
-                                <table id="table" class="table table-striped" style="width: 100%;" aria-describedby="myDesc">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>Department</th>
-                                    <th>Profile</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
+                <div class="page-heading">
+                    <div class="page-title">
+                        <div class="row">
+                            <div class="col-12 col-md-6 order-md-1">
+                                <h3>All Vacancies</h3>
+                            </div>
+                            <div class="col-12 col-md-6 order-md-2 order-first">
+                                <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                    <h4><a href="javascript:history.back()"><i class="fa-solid fa-reply"></i> Go
+                                            Back</a></h4>
+                                </nav>
                             </div>
                         </div>
                     </div>
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body pt-1">
+                                <div class="table-responsive">
+                                    <div class="form-group col-md-3">
+                                        <label for="departmentSelector">Department</label>
+                                        <select class="form-select" id="departmentSelector">
+                                            <!-- Add your options here -->
+                                        </select>
+                                    </div>
 
-                </section>
-            </div>
 
-            <footer>
-                <div class="footer clearfix mb-0 text-muted">
-                    <div class="float-start">
-                        <p>2023 &copy; Ace Data System</p>
-                    </div>
-                    <div class="float-end">
-                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                            by <a href="https://ahmadsaugi.com">Team Joblify</a></p>
-                    </div>
+
+                                    <table id="table" class="table table-striped" style="width: 100%;"
+                                        aria-describedby="myDesc">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <th>Address</th>
+                                                <th>Department</th>
+                                                <th>Profile</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
                 </div>
-            </footer>
+
+                <footer>
+                    <div class="footer clearfix mb-0 text-muted">
+                        <div class="float-start">
+                            <p>2023 &copy; Ace Data System</p>
+                        </div>
+                        <div class="float-end">
+                            <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
+                                by <a href="https://ahmadsaugi.com">Team Joblify</a></p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
-</div>
-<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-<script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
 
-<script src="/assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
 
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 
-<script src="/assets/js/jquery.spring-friendly.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-<script>
+    <script src="/assets/js/jquery.spring-friendly.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <script>
 
-    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+        
 
         // Define the closeModal function in a global scope
-    function closeModal() {
-        $('#confirmationModal').modal('hide');
-    }
+        function closeModal() {
+            $('#confirmationModal').modal('hide');
+        }
 
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        fetch('/all-department', {
-            method: 'POST',
-            headers: {
-                [csrfHeader]: csrfToken
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                const departmentSelector = document.getElementById('departmentSelector');
-                departmentSelector.innerHTML = ''; // Clear existing options
+            fetch('/all-department', {
+                method: 'POST',
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const departmentSelector = document.getElementById('departmentSelector');
+                    departmentSelector.innerHTML = ''; // Clear existing options
 
-                const allOption = document.createElement('option');
-            
-                allOption.textContent = 'All'; // Set the displayed text for the option
-                departmentSelector.appendChild(allOption);
+                    const allOption = document.createElement('option');
 
-                data.forEach(department => {
-                    const option = document.createElement('option');
-                    option.textContent = department.name; // Set the displayed text
-                    departmentSelector.appendChild(option);
+                    allOption.textContent = 'All'; // Set the displayed text for the option
+                    departmentSelector.appendChild(allOption);
+
+                    data.forEach(department => {
+                        const option = document.createElement('option');
+                        option.textContent = department.name; // Set the displayed text
+                        departmentSelector.appendChild(option);
+                    });
+
+                    // Trigger change event to apply initial filter if needed
+                    $('select#departmentSelector').trigger('change');
+                })
+                .catch(error => {
+                    console.error('Error fetching departments:', error);
                 });
 
-                // Trigger change event to apply initial filter if needed
-                $('select#departmentSelector').trigger('change');
-            })
-            .catch(error => {
-                console.error('Error fetching departments:', error);
-            });
 
 
+            function format(d) {
+                return (
+                    'Note: ' +
+                    d.note +
+                    '<br>' +
+                    'The child row can contain any data you wish, including links, images, inner tables etc.'
+                );
+            }
 
-        function format(d) {
-        return (
-            'Note: ' +
-            d.note +
-            '<br>' +
-            'The child row can contain any data you wish, including links, images, inner tables etc.'
-        );
-    }
 
+            const table = $('table#table').DataTable({
 
-        const table = $('table#table').DataTable({
+                ajax: '/get-all-user',
 
-            ajax: '/get-all-user',
+                columns: [
+                    {
+                        target: 0,
+                        class: 'dt-control',
+                        orderable: false,
+                        searchable: false,
+                        data: "id",
+                        defaultContent: ''
+                    },
+                    { name: "Name", data: "name", targets: 1 },
+                    { name: "Email", data: "email", targets: 2 },
+                    { name: "Phone", data: "phone", targets: 3 },
+                    { name: "Address", data: "address", targets: 4 },
+                    { name: "Department", data: "department.name", targets: 5 },
+                    {
+                        targets: 6,
+                        data: "email",
+                        data: "accountStatus",
 
-            columns: [
-                {
-                    target: 0,
-                    class: 'dt-control',
-                    orderable: false,
-                    searchable: false,
-                    data: "id",
-                    defaultContent: ''
-                },
-                {name: "Name", data: "name", targets: 1},
-                {name: "Email", data: "email", targets: 2},
-                {name: "Phone", data: "phone", targets: 3},
-                {name: "Address", data: "address", targets: 4},
-                {name: "Department", data: "department.name", targets: 5},
-                {
-                    targets: 6,
-                    data: "id",
-                    data: "accountStatus",
-                    
-                    render: function (data, type, row) {
+                        render: function (data, type, row) {
 
-                        const buttonText = row.accountStatus ? "Suspend" : "Activate";
-                        const buttonLink = row.accountStatus ? "suspend" : "activate";
+                            const buttonText = row.accountStatus ? "Suspend" : "Activate";
+                            const buttonLink = row.accountStatus ? "suspend" : "activate";
 
-                        return `<div class="dropdown">
+                            return `<div class="dropdown">
                             <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
-                            <div class="dropdown-menu"> <
-                                <a class="dropdown-item" href="/user-profile-edit?id=${row.id}">Profile</a>
+                            <div class="dropdown-menu"> 
+                                <a class="dropdown-item" href="/user-profile-edit?email=${encodeURIComponent(row.email)}">Profile</a>
+
                                 <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>
                             </div>
                         </div>`;
+                        },
+                        sortable: false
                     },
-                    sortable: false
-                },
-            ],
-            serverSide: true,
-            processing: true,
-            stateSave: true
-        });
+                ],
+                serverSide: true,
+                processing: true,
+                stateSave: true
+            });
 
-        function showProcessingModal() {
-            const processingMessage = `
-                <div class="modal-body text-center" style="background: #0c233d">
-                    <div class="loader"></div>
-                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
-                </div>`;
-
-            $('.modal-content .modal-body').replaceWith(processingMessage);
-        }
-
-        function showSuccessModal() {
-            const successMessage = `
-                <div class="modal-body text-center" style="background: #0c233d">
-                    <div class="loader"></div>
-                    <div class="loader-txt"><p class="text-white">Process successful!</p>
-                        <div class="text-center">
-                            <button class="btn btn-sm btn-light" onclick="closeModal()">Close
-                                </button>
-                            </div>
-                        </div>
-                </div>`;
-
-            $('.modal-content .modal-body').replaceWith(successMessage);
-        }
-
-       
-
-        function showConfirmationModal(action, id) {
-            const confirmationModal = `
+            function showConfirmationModal(action, id) {
+                const confirmationModal = `
             <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -262,38 +237,78 @@
                     </div>
                 </div>
             </div>`;
-    
-            $(document.body).append(confirmationModal); // Append the modal to the document
+                $(document.body).append(confirmationModal); // Append the modal to the document
+
+                function showProcessingModal() {
+                    const processingMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Processing...</p></div>
+                </div>`;
+
+                    $('.modal-content .modal-body').replaceWith(processingMessage);
+                }
+
+                function showSuccessModal() {
+                    const successMessage = `
+                <div class="modal-body text-center" style="background: #0c233d">
+                    <div class="loader"></div>
+                    <div class="loader-txt"><p class="text-white">Process successful!</p>
+                        <div class="text-center">
+                            <button id="close" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close
+                                </button>
+                            </div>
+                        </div>
+                </div>`;
+
+                    $('.modal-content .modal-body').replaceWith(successMessage);
+                }
 
 
-            
+                function resetModal() {
+                    const reset = `<div class="modal-body text center" style="background: #0c233d">
+                            <div class="loader"></div>
+                            <div class="loader-txt text-center">
+                                <h3 class="text-white">Are you sure to edit this Account?</h3>
 
-            // Attach event listener for the "Yes" button inside the modal
-            $("#confirmYes").one("click", function () {
-                showProcessingModal();
-                
-                fetch('/' + action + '?id=' + encodeURIComponent(id), {
-                    method: "POST", // Or "PUT", depending on your API design
-                    headers: {
-                        [csrfHeader]: csrfToken
-                    }
-                })
-                .then(response => {
-                    // Handle success, for example, reload the DataTable
-                    table.ajax.reload();
-                    showSuccessModal();
-                })
-                .catch(error => {
-                    // Handle errors
+                                <div>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>`
+                    $('.modal-content .modal-body').replaceWith(reset);
+                }
+                $(document).on("click", "#close", function () {
+                    
+                    resetModal();
                 });
 
-                // Close the modal after triggering the API call
-                // $('#confirmationModal').modal('hide');
-            });
+                $(document).on("click", "#confirmYes", function () {
+                    showProcessingModal();
 
-            // Show the modal when the "Suspend" or "Activate" button is clicked
-            $('#confirmationModal').modal('show');
-        }
+                    fetch('/' + action + '?id=' + encodeURIComponent(id), {
+                        method: "POST", // Or "PUT", depending on your API design
+                        headers: {
+                            [csrfHeader]: csrfToken
+                        }
+                    })
+                        .then(response => {
+                            // Handle success, for example, reload the DataTable
+                            table.ajax.reload();
+                            showSuccessModal();
+                        })
+                        .catch(error => {
+                            // Handle errors
+                        });
+
+                    // Close the modal after triggering the API call
+                    // $('#confirmationModal').modal('hide');
+                });
+
+                // Show the modal when the "Suspend" or "Activate" button is clicked
+                $('#confirmationModal').modal('show');
+            }
 
             $(document).on("click", ".dropdown-item[data-action]", function (event) {
                 event.preventDefault();
@@ -304,72 +319,73 @@
             });
 
 
-        // Attach event listener for the dropdown toggle
-        $(document).on('click', '.drop', function () {
-            const dropdown = $(this).closest('.dropdown');
-            const dropdownMenu = dropdown.find('.dropdown-menu');
-            
-            // Calculate the position of the dropdown menu
-            const toggleOffset = $(this).offset();
-            dropdownMenu.css({
-                top: toggleOffset.top + $(this).outerHeight(),
-                left: toggleOffset.left,
+            // Attach event listener for the dropdown toggle
+            $(document).on('click', '.drop', function () {
+                const dropdown = $(this).closest('.dropdown');
+                const dropdownMenu = dropdown.find('.dropdown-menu');
+
+                // Calculate the position of the dropdown menu
+                const toggleOffset = $(this).offset();
+                dropdownMenu.css({
+                    top: toggleOffset.top + $(this).outerHeight(),
+                    left: toggleOffset.left,
+                });
+
+                dropdownMenu.toggle(); // Toggle the visibility of the dropdown menu
             });
-            
-            dropdownMenu.toggle(); // Toggle the visibility of the dropdown menu
-        });
 
 
 
-        $('select#departmentSelector').change(function () {
-            const selectedOption = $('select#departmentSelector option:selected').text();
-            let filter = '';
+            $('select#departmentSelector').change(function () {
+                const selectedOption = $('select#departmentSelector option:selected').text();
+                let filter = '';
 
-            if (selectedOption !== 'All') {
-                filter = selectedOption;
-            }
-
-            table.column(5).search(filter).draw();
-
-            
-        });
-
-        // Array to track the ids of the details displayed rows
-        const detailRows = [];
-
-        $('#table tbody').on('click', 'tr td.dt-control', function () {
-            const tr = $(this).closest('tr');
-            const row = table.row(tr);
-            const idx = detailRows.indexOf(tr.attr('id'));
-
-            if (row.child.isShown()) {
-                tr.removeClass('details');
-                row.child.hide();
-
-                // Remove from the 'open' array
-                detailRows.splice(idx, 1);
-            }
-            else {
-                tr.addClass('details');
-                row.child(format(row.data())).show();
-
-                // Add to the 'open' array
-                if (idx === -1) {
-                    detailRows.push(tr.attr('id'));
+                if (selectedOption !== 'All') {
+                    filter = selectedOption;
                 }
-            }
-        });
 
-        // On each draw, loop over the `detailRows` array and show any child rows
-        table.on('draw', function () {
-            detailRows.forEach(function (id, i) {
-                $('#' + id + ' td.dt-control').trigger('click');
+                table.column(5).search(filter).draw();
+
+
             });
+
+            // Array to track the ids of the details displayed rows
+            const detailRows = [];
+
+            $('#table tbody').on('click', 'tr td.dt-control', function () {
+                const tr = $(this).closest('tr');
+                const row = table.row(tr);
+                const idx = detailRows.indexOf(tr.attr('id'));
+
+                if (row.child.isShown()) {
+                    tr.removeClass('details');
+                    row.child.hide();
+
+                    // Remove from the 'open' array
+                    detailRows.splice(idx, 1);
+                }
+                else {
+                    tr.addClass('details');
+                    row.child(format(row.data())).show();
+
+                    // Add to the 'open' array
+                    if (idx === -1) {
+                        detailRows.push(tr.attr('id'));
+                    }
+                }
+            });
+
+            // On each draw, loop over the `detailRows` array and show any child rows
+            table.on('draw', function () {
+                detailRows.forEach(function (id, i) {
+                    $('#' + id + ' td.dt-control').trigger('click');
+                });
+            });
+
         });
 
-    });
 
-
-</script>
+    </script>
 </body>
+
 </html>

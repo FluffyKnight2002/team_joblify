@@ -36,7 +36,7 @@ public class Candidate implements Serializable {
     @Lob
     @Column(columnDefinition = "longblob", nullable = false)
     private String resume;
-    
+
     @Column(length = 100, nullable = false)
     private String type;
 

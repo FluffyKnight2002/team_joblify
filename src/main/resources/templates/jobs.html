@@ -189,14 +189,14 @@
                 </div>
             </form>
         </div>
-        <div class="d-block mx-auto w-100 container" id="recent-filter">
+        <div class="sticky-top d-block mx-auto w-100 container" id="recent-filter">
             <div id="filter-data-con" class="w-75" style="margin-left: 7%;">
 
             </div>
         </div>
 
         <!-- Jobs start -->
-        <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px; margin-bottom: 90px; margin-top: 60px">
+        <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px; margin-bottom: 90px; margin-top: 30px">
 
             <div class="card flex-md-row">
                 <div class="card placeholder-card flex-md-row">
@@ -383,11 +383,9 @@
     </div>
     <!-- Jobs list end -->
 
-    <footer class="footer mt-5">
-        <div class="d-flex justify-content-center align-items-center py-3">
-            <p class="text-white m-0" style="font-size: 0.7rem;">© 2023 All rights reserved by ACE Data Systems Ltd.</p>
-        </div>
-    </footer>
+    <!-- Footer start -->
+    <div th:replace="/fragments/layout ::footer"></div>
+    <!-- Footer end -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>

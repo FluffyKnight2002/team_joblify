@@ -20,6 +20,9 @@ public class NotificationUser implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "is_seen", columnDefinition = "boolean default false")
+    private boolean isSeen;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "notification_id")
     private Notification notification;

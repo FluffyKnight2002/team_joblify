@@ -1,3 +1,133 @@
+/* Filter for data table */
+.add-filter {
+    font-size: 1.8rem;
+    cursor:pointer;
+}
+
+.add-filter:hover {
+    color: black;
+}
+
+/* Reset filter for data table */
+.reset-filter {
+    font-size: 1.8rem;
+    cursor:pointer;
+}
+
+.reset-filter:hover {
+    color: black;
+}
+
+.filter-items {
+    cursor: pointer;
+}
+
+.filter-items:hover {
+    color: white;
+    background: #0c233d;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-menu li {
+    position: relative;
+}
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    margin-left: 2px;
+    left: 100%;
+    top: -7px;
+}
+
+.selected-dropdown-remove-button {
+    cursor: pointer;
+    padding: 0 3px;
+    min-width: 15px;
+    color: white;
+    position: absolute;
+    bottom: -15px;
+    right: 10px;
+    border-radius: 0 0 50% 50%;
+    box-shadow: 0px 2px 2px gray;
+    opacity: 0; /* Initially hide the button */
+    transition: opacity 0.3s ease-in-out; /* Add transition effect */
+}
+
+/* Show the button on hover */
+.btn-group:hover .selected-dropdown-remove-button {
+    opacity: 1;
+}
+
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+
+.scrollable-submenu {
+    max-height: 200px; /* Adjust this value as needed */
+    overflow-y: auto; /* Display vertical scrollbar when needed */
+}
+
+/* Custom styling for the range slider */
+
+/* Style the slider between the handles */
+#rangeBar .noUi-connect {
+    background: #1e497b;
+}
+
+.custom-slider {
+    background: linear-gradient(to right, rgba(15, 94, 196, 0.56), rgba(51, 143, 255, 0.51)); /* Change the gradient colors */
+}
+
+/* Custom styling for the range slider handles and tooltips */
+.custom-slider .noUi-handle {
+    background-color: #1f3a62; /* Change the handle color */
+}
+
+.custom-slider .noUi-handle::after {
+    background-color: rgba(95, 95, 95, 0.8); /* Change the dot color */
+}
+
+.custom-slider .noUi-tooltip {
+    background-color: #7f8386; /* Change the tooltip background color */
+    color: #fff;
+}
+
+    /* Custom styling for the autocomplete dropdown */
+.ui-autocomplete {
+    max-height: 200px; /* Set a maximum height for the dropdown */
+    overflow-y: auto; /* Enable vertical scrolling when necessary */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    position: absolute;
+    z-index: 1500; /* Ensure it's above other elements */
+}
+
+.ui-autocomplete li {
+    list-style: none;
+    padding: 5px 0;
+    cursor: pointer;
+}
+
+.ui-autocomplete li.ui-state-focus {
+    color: whitesmoke;
+    background-color: rgba(15, 94, 196, 0.56);
+}
+
+.notifications {
+    background: transparent;
+    /* Other styles */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notifications:hover {
+    transform: translateY(-4px); /* Move the element up */
+}
+
 .btn-bright {
     cursor: pointer;
     background: radial-gradient(circle, #0f5ec4 40%, rgba(15, 94, 196, 0.7));
@@ -86,6 +216,10 @@
     right: 22px;
 }
 
+.address-spinner {
+    top: 38%;
+}
+
 .loading {
     background: url(/static/assets/images/gif/Search.gif) no-repeat right center;
 }
@@ -131,6 +265,11 @@
     background: #1e497b;
     border-radius: 6px;
     border: 3px solid #1e497b;
+}
+
+.selectedNotification {
+    background: linear-gradient(to bottom, rgba(47, 135, 243, 0.71), rgba(47, 135, 243, 0.6));
+    color: whitesmoke;
 }
 
 /* Custom CSS to make the dropdown responsive and stay in the middle */

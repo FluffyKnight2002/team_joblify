@@ -1,34 +1,3 @@
-$('#submit-btn').on('click', function (event) {
-    event.preventDefault();
-    // Get the formId, successMessage, and errorMessage from the event data attributes
-    var formId = $(this).data('form-id');
-    var warningMessage = $(this).data('warning-message');
-    var successMessage = $(this).data('success-message');
-    var errorMessage = $(this).data('error-message');
-
-    console.log("FormId : ",formId);
-    console.log("warningMessage : ", warningMessage);
-    console.log("SuccessMessage : ",successMessage);
-    console.log("ErrorMessage : ",errorMessage);
-
-    // Show the loader and the message-con modal
-    $('#message-con').html('' +
-        '<div class="loader"></div>' +
-        '<div class="loader-txt">' +
-        '<h3 class="text-white">Are you sure?</h3>' +
-        `<p class="text-center text-white">${warningMessage}</p>` +
-        '<div>' +
-        `<button type="button" class="btn btn-sm btn-light-danger mx-1" data-form-id="${formId}" 
-            data-warning-message="${warningMessage}" data-success-message="${successMessage}" data-error-message="${errorMessage}"
-            onclick="actionToVacancy(this)">Sure</button>` +
-        `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()"">Cancel</button></div>` +
-        '</div>' +
-        '</div>');
-    $('#loadMe').modal({
-        backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
-    }).modal('show');
-});
-
 // Function to submit form
 function actionToVacancy(button) {
 
@@ -48,6 +17,19 @@ function actionToVacancy(button) {
     if (detailModal.length) {
         console.log("Detail Modal Have")
         detailModal.modal('hide');
+    }
+    
+    // Hide #detailModal if it exists
+    let applyForm = $('#apply-form');
+    if (applyForm.length) {
+        console.log("Detail Modal Have")
+        applyForm.modal('hide');
+    }
+
+    let applyForm = $('#apply-form');
+    if (applyForm.length) {
+        console.log("Apply Modal Have")
+        applyForm.modal('hide');
     }
 
     // Show the loader and the message-con modal
@@ -135,6 +117,8 @@ function actionToVacancy(button) {
                     .attr('data-success-message', 'Update successful!')
                     .attr('data-error-message', 'Update failed. Please try again.')
                     .html('Update');
+                reopenBtn.removeClass('btn-bright');
+                reopenBtn.addClass('btn-un-bright');
                 reopenModeWarn.hide();
                 $('#reopen-form')
                     .attr('id', 'update-form')
@@ -154,7 +138,7 @@ function actionToVacancy(button) {
                 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
                 let startTime = '9:00';
-                let endTime = '18:00';
+                let endTime = '17:00';
 
                 function updateInputValue() {
                     console.log("Mon ~ Fri : ", selectedDays);
@@ -217,3 +201,115 @@ function closeModal(formId) {
         modal.modal('hide');
     }
 }
+
+$(document).ready(function () {
+
+    let formStatus = false;
+
+    // Function to update formStatus based on input emptiness
+    function updateFormStatus() {
+        let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+            return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
+        });
+
+        formStatus = emptyInputs.length === 0;
+    }
+
+    function showFeedback(inputElement) {
+        inputElement.addClass('is-invalid'); // Apply Bootstrap is-invalid class
+        inputElement.css('background-image', 'none');
+        // Show feedback message here
+        // inputElement.siblings('.feedback-message').text('Field cannot be empty');
+    }
+
+    // Function to show feedback and change border color
+    function clearFeedback(inputElement) {
+        inputElement.removeClass('is-invalid'); // Remove Bootstrap is-invalid class
+        inputElement.removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
+        inputElement.css('background-image', 'none');
+        // Clear feedback message here
+        // Example: inputElement.siblings('.feedback-message').text('');
+    }
+
+    // Validate inputs on input change
+    function  validate() {
+        $('input[type="text"],input[type="number"],input#post, textarea').on('input', function() {
+            console.log("Descriptions  :", $('#descriptions'))
+            let inputElement = $(this);
+            if ($.trim(inputElement.val()) === '') {
+                showFeedback(inputElement);
+            } else {
+                clearFeedback(inputElement);
+                inputElement.addClass('is-valid'); // Apply Bootstrap is-valid class
+                inputElement.css('background-image', 'none');
+            }
+            updateFormStatus(); // Update formStatus
+        });
+    }
+    validate();
+
+    $('#submit-btn').on('click', function (event) {
+        event.preventDefault();
+
+        validate();
+        updateFormStatus();
+        console.log("Form Status : ", formStatus);
+
+        if (!formStatus) {
+            // Find empty inputs and add 'is-invalid' class
+            $('input[type="text"], input[type="number"], input#post, textarea').each(function() {
+                if ($.trim($(this).val()) === '') {
+                    $(this).addClass('is-invalid');
+                    $(this).css('background-image', 'none');
+                }
+            });
+        } else {
+            // Get the formId, successMessage, and errorMessage from the event data attributes
+            var formId = $(this).data('form-id');
+            var warningMessage = $(this).data('warning-message');
+            var successMessage = $(this).data('success-message');
+            var errorMessage = $(this).data('error-message');
+
+            console.log("FormId : ",formId);
+            console.log("warningMessage : ", warningMessage);
+            console.log("SuccessMessage : ",successMessage);
+            console.log("ErrorMessage : ",errorMessage);
+
+            // Show the loader and the message-con modal
+            $('#message-con').html('' +
+                '<div class="loader"></div>' +
+                '<div class="loader-txt">' +
+                '<h3 class="text-white">Are you sure?</h3>' +
+                `<p class="text-center text-white">${warningMessage}</p>` +
+                '<div>' +
+                `<button type="button" class="btn btn-sm btn-light-danger mx-1" data-form-id="${formId}" 
+            data-warning-message="${warningMessage}" data-success-message="${successMessage}" data-error-message="${errorMessage}"
+            onclick="actionToVacancy(this)">Sure</button>` +
+                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()"">Cancel</button></div>` +
+                '</div>' +
+                '</div>');
+            $('#loadMe').modal({
+                backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
+            }).modal('show');
+        }
+    });
+
+    // Close calendar and time picker containers when clicking outside
+    $(document).on('click', function(event) {
+        const $target = $(event.target);
+
+        if ($target.is('#submit-btn')) {
+            event.stopPropagation();
+            return; // Don't execute the rest of the code if the target is the submit button
+        }
+
+        if (!$target.closest('#calendar-btn, #calendar, .calendar-day').length) {
+            $('#calendar').hide();
+        }
+
+        if (!$target.closest('#timePickerBtn, #timePickerContainer').length) {
+            $('#timePickerContainer').hide();
+        }
+    });
+
+});

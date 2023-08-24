@@ -1,33 +1,40 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
-import com.ace_inspiration.team_joblify.entity.User;
-import com.ace_inspiration.team_joblify.service.hr_service.UserService;
+import com.ace_inspiration.team_joblify.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.NoSuchElementException;
+import java.util.Arrays;
+import java.util.Collection;
+
 
 @Controller
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-
     @GetMapping("/login")
     public String showLoginForm(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication != null && authentication.isAuthenticated() && authentication.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("DEFAULT_HR"))) {
-            return "redirect:/dashboard";
-            }
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Get the user's authorities
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
+            // Check if any of the user's authorities match any role in the UserRole Enum
+            boolean hasUserRole = authorities.stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(role -> Arrays.stream(Role.values())
+                            .anyMatch(userRole -> userRole.name().equals(role)));
+
+            if (hasUserRole) {
+                return "redirect:/dashboard";
+            }
+        }
 
         // User is not authenticated or has different authorities, show the login page
         return "login";

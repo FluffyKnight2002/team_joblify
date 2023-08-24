@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent" th:fragment="nav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white" th:fragment="nav">
         <div class="container">
             <a class="navbar-brand" href="#">
                 <img src="/assets/images/candidate-images/ace_logo.png" alt="" width="100" height="auto">
@@ -23,11 +23,9 @@
             </div>
         </div>
     </nav>
-    <footer class="footer mt-5" th:fragment="footer">
-        <div class="sticky-bottom bg-dark py-3 footer-container">
-            <div class="d-flex justify-content-center align-items-center" id="footer-content">
-                <p class="text-white m-0" style="font-size: 0.7rem;">© 2023 All rights reserved by ACE Data Systems Ltd.</p>
-            </div>
+    <footer class="footer mt-5 sticky-bottom py-3 footer-container" th:fragment="footer">
+        <div class="text-center" id="footer-content">
+            <p class="text-white m-0" style="font-size: 0.7rem;">© 2023 All rights reserved by ACE Data Systems Ltd.</p>
         </div>
     </footer>
 </body>

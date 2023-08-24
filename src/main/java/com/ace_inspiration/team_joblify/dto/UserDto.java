@@ -12,8 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-
-    @NotNull(message = "Photo cannot be null")
     private MultipartFile photo;
 
     @NotBlank(message = "Username cannot be blank")

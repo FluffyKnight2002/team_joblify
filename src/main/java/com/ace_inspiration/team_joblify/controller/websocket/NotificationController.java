@@ -5,16 +5,14 @@ import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import com.ace_inspiration.team_joblify.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/notifications")
 public class NotificationController {
 
@@ -23,7 +21,11 @@ public class NotificationController {
 
     @GetMapping("/show")
     public List<NotificationDto> getAllNotifications(){
-        return notificationService.showNotifications();
+        List<NotificationDto> notificationDtos = notificationService.showNotifications();
+        if(notificationDtos.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return notificationDtos;
     }
 
     @GetMapping("/count")
@@ -32,24 +34,34 @@ public class NotificationController {
     }
 
 
-
-    @GetMapping("/makeAsRead")
-    public void makeNotificationAsRead(@RequestParam("id")Long notificationId, Authentication authentication){
-
+    @GetMapping("/delete-notifications")
+    public void deleteNotification(@RequestParam("notifications") List<Long> notificationIds, Authentication authentication){
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         // Find the notification by both notification_id and user_id
-        notificationService.findNotificationByIdAndUserIdAndDelete(notificationId, myUserDetails.getUserId());
+        System.out.println("Reach backend!!!");
+        for (Long id : notificationIds) {
+            System.out.println("Notification id: " + id);
+            notificationService.findNotificationByIdAndUserIdAndDelete(id, myUserDetails.getUserId());
+        }
     }
 
-    @GetMapping("/makeAllAsRead")
-    public void makeAllNotificationAsRead(Authentication authentication) {
+    @GetMapping("/delete-all-notification")
+    public void deleteAllNotification(Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         notificationService.findDeleteAllNotificationUserByUserId(myUserDetails.getUserId());
     }
 
-    @GetMapping("/delete")
-    public void makeAllNotificationAsRead(@RequestParam("id")Long notificationId) {
-        notificationService.removeNotification(notificationId);
+    @GetMapping("/make-as-read")
+    public void makeNotificationAsRead(@RequestParam("id")Long notificationId, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        System.out.println("notification id : " + notificationId + " " + "user id : " + myUserDetails.getUserId());
+        notificationService.findNotificationByIdAndUserIdAndUpdate(notificationId,myUserDetails.getUserId());
+    }
+
+    @GetMapping("/make-all-as-read")
+    public void makeAllNotificationAsRead(Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        notificationService.findAllNotificationUserByUserIdAndUpdate(myUserDetails.getUserId());
     }
 
 }

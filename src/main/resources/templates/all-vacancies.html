@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
+    <!--  Date range picker-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -83,6 +86,38 @@
 
                 </section>
             </div>
+            <div>
+                <!-- Hidden input for 'datePosted' parameter -->
+                <input type="hidden" name="datePosted" id="filter-date-posted" value="">
+
+                <!-- Hidden input for 'datePosted' parameter -->
+                <input type="hidden" name="startDate" id="filter-start-date" value="">
+
+                <!-- Hidden input for 'title' parameter -->
+                <input type="hidden" name="endDate" id="filter-end-date" value="">
+
+                <!-- Hidden input for 'title' parameter -->
+                <input type="hidden" name="title" id="filter-title" value="">
+
+                <!-- Hidden input for 'department' parameter -->
+                <input type="hidden" name="department" id="filter-department" value="">
+
+                <!-- Hidden input for 'jobType' parameter -->
+                <input type="hidden" name="jobType" id="filter-jobType" value="">
+
+                <!-- Hidden input for 'level' parameter (multiple values) -->
+                <input type="hidden" name="level" id="filter-level" value="">
+
+                <!-- Hidden input for 'minAndMax' parameter -->
+                <input type="hidden" name="minAndMax" id="filter-minAndMax" value="">
+
+                <!-- Hidden input for 'applicants' parameter -->
+                <input type="hidden" name="applicants" id="filter-applicants" value="">
+
+                <!-- Hidden input for 'status' parameter -->
+                <input type="hidden" name="status" id="filter-status" value="">
+
+            </div>
 
 <!--            <footer>-->
 <!--                <div class="footer clearfix mb-0 text-muted">-->
@@ -131,31 +166,32 @@
                             <label for="title" class="form-label">
                                 Title(Position)
                                 <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Modify position was not allow in reopen mode!"
-                                >
+                                      title="Modify position was not allow in reopen mode!">
                                     <i class="bi bi-exclamation-circle-fill"></i>
                                 </span>
                             </label>
-                            <input type="text" class="form-control input-to-disable" id="title" name="position">
+                            <input type="text" class="form-control custom-autocomplete input-to-disable" id="title" name="position" required>
                             <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
+                            <div class="feedback-message"></div>
                             <div id="title-suggestions"></div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="post" class="form-label">Post</label>
-                                <input type="text" class="form-control" id="post" name="post">
+                                <input type="number" class="form-control" id="post" name="post" required>
+                                <div class="feedback-message"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                                 <label for="department" class="form-label">
                                     Department
                                     <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                          title="Modify department was not allow in reopen mode!"
-                                    >
+                                          title="Modify department was not allow in reopen mode!">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </span>
                                 </label>
-                                <input type="text" class="form-control input-to-disable" id="department" name="department">
+                                <input type="text" class="form-control custom-autocomplete input-to-disable" id="department" name="department" required>
                                 <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
+                                <div class="feedback-message"></div>
                                 <div id="department-suggestions"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -181,11 +217,12 @@
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="workingDays" class="form-label">Working Days</label>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="workingDays" name="workingDays" value="" readonly>
+                                    <input type="text" class="form-control" id="workingDays" name="workingDays" readonly>
                                     <button type="button" class="btn btn-sm btn-primary" id="calendar-btn"><i class="bi bi-calendar"></i></button>
                                     <div id="calendar" class="calendar dropdown-menu">
                                         <!-- Days of the week will be added here -->
                                     </div>
+                                    <div class="feedback-message"></div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -205,7 +242,8 @@
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="salary" class="form-label">Salary</label>
-                                <input type="text" class="form-control" id="salary" name="salary">
+                                <input type="text" class="form-control" id="salary" name="salary" required>
+                                <div class="feedback-message"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
@@ -218,7 +256,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="descriptions" class="form-label">Descriptions</label>
-                            <textarea class="form-control" id="descriptions" name="descriptions" rows="3"></textarea>
+                            <textarea class="form-control" id="descriptions" name="descriptions" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="responsibilities" class="form-label">
@@ -238,7 +277,8 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3"></textarea>
+                            <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="requirements" class="form-label">
@@ -258,7 +298,8 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                            <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="preferences" class="form-label">
@@ -278,12 +319,14 @@
                                     <i class="bi bi-justify"></i>
                                 </button>
                             </div>
-                            <textarea class="form-control" id="preferences" name="preferences" rows="3"></textarea>
+                            <textarea class="form-control" id="preferences" name="preferences" rows="3" required></textarea>
+                            <div class="feedback-message"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
-                            <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+                            <textarea class="form-control custom-autocomplete" id="address" name="address" rows="3" required></textarea>
                             <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
+                            <div class="feedback-message"></div>
                             <div id="address-suggestions"></div>
                         </div>
                     </form>
@@ -305,6 +348,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <!-- SockJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<!--Date range picker-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <!-- Bootstrap JS Bundle (includes Popper.js) -->
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 <!-- Perfect Scrollbar -->
@@ -313,10 +360,14 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!--Range picker cdn-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.js"></script>
 <!-- Your custom scripts -->
 <script src="/assets/js/jquery.spring-friendly.js"></script>
 <script src="/assets/js/viewvacancies.js"></script>
+<script src="/assets/js/datatablefilter.js"></script>
 <script src="/assets/js/autocomplete.js"></script>
+<script src="/assets/js/texteditor.js"></script>
 <script src="/assets/js/messageandloader.js"></script>
 <script src="/assets/js/websocket.js"></script>
 <script src="/assets/js/main.js"></script>

@@ -48,7 +48,7 @@ async function applyFilter() {
   // Replace this with your actual filter implementation
 }
 
-function resetFilter(event) {
+async function resetFilter(event) {
     event.preventDefault();
 
     // Reset all filter options to their default values
@@ -60,8 +60,17 @@ function resetFilter(event) {
     $("input[name='under10']").prop("checked", false);
     $("input[name='includingClosed']").prop("checked", false);
 
-    applyFilter();
-    $('#result-count').html(0);
+    let dataOfVacancies =await applyFilter();
+    showResult();
+    console.log(dataOfVacancies.totalElements, "In reset");
+    $('#result-count').html(dataOfVacancies.totalElements);
+    // Check the viewport width
+    const mediaQuery = window.matchMedia('(max-width: 767px)'); // Adjust the breakpoint as needed
+
+    if (mediaQuery.matches) {
+        // Close the offcanvas here
+        closeFilter();
+    }
 }
 
 // Function to open the filter
@@ -120,7 +129,7 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder1
 }
 
 $("#title-input").autocomplete({
-  minLength: 2,
+  minLength: 1,
   source: function(request, response) {
     titleSpinner.show();
     console.log("Spinner loading..")
@@ -265,9 +274,10 @@ function showResult() {
     console.log(vacancies)
   $("#jobs-container").empty();
 
-  // Loop through each vacancy and create the card dynamically
-  vacancies.forEach(function (vacancy) {
-    const card = `
+    if(vacancies.length > 0) {
+        // Loop through each vacancy and create the card dynamically
+        vacancies.forEach(function (vacancy) {
+            const card = `
                 <div class="card flex-md-row">
                     <div class="">
                         <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
@@ -285,23 +295,36 @@ function showResult() {
                     </div>
                 </div>
             `;
-    // Append the card to the container
-    $("#jobs-container").append(card);
+            // Append the card to the container
+            $("#jobs-container").append(card);
+
+            // Initialize Bootstrap tooltips
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    placement: 'bottom' // Set the desired placement here
+                });
+            });
+        });
+
+        // Apply the card animations
+        // applyCardAnimations();
+    }else {
+
+        const card = `
+            <div class="d-flex justify-content-center align-items-center">
+                <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+            </div>
+            <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+        `;
+
+        // Append the card to the container
+        $("#jobs-container").append(card);
+    }
 
     updateRecentFilter();
-    // Initialize Bootstrap tooltips
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            placement: 'bottom' // Set the desired placement here
-        });
-    });
-  });
 
-    // Apply the card animations
-    // applyCardAnimations();
-
-  // Update the pagination UI
-  updatePaginationUI(totalPages, currentPages);
+    // Update the pagination UI
+    updatePaginationUI(totalPages, currentPages);
 }
 
 function applyCardAnimations() {
@@ -315,7 +338,14 @@ function applyCardAnimations() {
 
 $('#show-result-btn').on('click', function(event) {
     event.preventDefault();
-    showResult(vacancies);
+    showResult();
+    // Check the viewport width
+    const mediaQuery = window.matchMedia('(max-width: 767px)'); // Adjust the breakpoint as needed
+
+    if (mediaQuery.matches) {
+        // Close the offcanvas here
+        closeFilter();
+    }
 });
 
 async function loadVacancies(page) {
@@ -341,9 +371,11 @@ async function loadVacancies(page) {
         const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10,isIncludingClosed, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
+        resultCount = data.totalElements;
+        console.log("RESULT COUNT : ",resultCount);
         console.log("Loaded vacancies:", vacancies);
 
-        showResult(vacancies);
+        showResult();
         updatePaginationUI(totalPages, page);
     } catch (error) {
         // Handle errors
@@ -364,7 +396,7 @@ function updateRecentFilter() {
 
     // Create an array of filter elements
     const filterElements = [
-        `<span class="text-muted sub-title me-2"><strong>Filter : </strong></span>`,
+        `<span class="text-muted sub-title me-2 bg-white p-1 rounded-pill"><strong>Filter : </strong></span>`,
         `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${sortBy}</span>`,
         `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${datePosted}</span>`,
         `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${jobType}</span>`
@@ -408,5 +440,6 @@ $(document).ready(async function () {
     // vacancies =await applyFilter();
     console.log("Doc ready : " +  vacancies);
     await loadVacancies(0);
+    $('#result-count').html(resultCount)
     // showResult(vacancies);
 });
