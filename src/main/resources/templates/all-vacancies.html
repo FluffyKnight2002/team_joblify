@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!--  Range picker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
     <!--  Date range picker-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -41,12 +42,12 @@
                             <h3>All Vacancies</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
-                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/show-all-vacancies-page}">All Vacancies</a>
-                                    </li>
-                                </ol>
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-end">
+                                <h6>
+                                    <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                                       style="background: #1e497b !important;" href="javascript:history.back()">
+                                        <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                </h6>
                             </nav>
                         </div>
                     </div>
@@ -61,6 +62,7 @@
                                 <table id="table" class="table table-striped" style="width: 100%;" aria-describedby="myDesc">
                                     <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Position</th>
                                         <th>Department</th>
                                         <th>Experience</th>
@@ -90,10 +92,10 @@
                 <!-- Hidden input for 'datePosted' parameter -->
                 <input type="hidden" name="datePosted" id="filter-date-posted" value="">
 
-                <!-- Hidden input for 'datePosted' parameter -->
+                <!-- Hidden input for 'startDate' parameter -->
                 <input type="hidden" name="startDate" id="filter-start-date" value="">
 
-                <!-- Hidden input for 'title' parameter -->
+                <!-- Hidden input for 'endDate' parameter -->
                 <input type="hidden" name="endDate" id="filter-end-date" value="">
 
                 <!-- Hidden input for 'title' parameter -->

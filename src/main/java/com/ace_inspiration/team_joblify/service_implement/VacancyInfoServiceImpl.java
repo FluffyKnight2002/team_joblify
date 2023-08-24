@@ -92,13 +92,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
             return null;
         }
         VacancyInfo savedVacancyInfo = optionalVacancyInfo.get();
-//        VacancyInfo newVacancyInfo = new VacancyInfo();
-//        System.out.println("VacancyInfo ID : " + newVacancyInfo.getId());
-//        newVacancyInfo.setStatus(Status.OPEN);
-//        newVacancyInfo.setOpenDate(vacancyDto.getOpenDate());
-//        newVacancyInfo.setCloseDate(vacancyDto.getCloseDate());
-//        newVacancyInfo.setUpdatedUser(optionalUser.get());
-//        newVacancyInfo.setUpdatedTime(LocalDateTime.now());
         VacancyInfo newVacancyInfo = VacancyInfo.builder()
                 .vacancy(savedVacancyInfo.getVacancy())
                 .description(savedVacancyInfo.getDescription())

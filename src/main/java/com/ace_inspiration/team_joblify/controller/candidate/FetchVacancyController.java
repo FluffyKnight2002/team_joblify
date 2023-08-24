@@ -69,7 +69,6 @@ public class FetchVacancyController {
         return paginatedVacancies;
     }
 
-
     @GetMapping("/show-all-data")
     public DataTablesOutput<VacancyView> getDataTable(
             @RequestParam(required = false) String datePosted,
