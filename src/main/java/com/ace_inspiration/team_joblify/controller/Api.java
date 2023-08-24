@@ -1,6 +1,7 @@
 package com.ace_inspiration.team_joblify.controller;
 
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
+import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.Candidate;
@@ -15,6 +16,7 @@ import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
+import com.ace_inspiration.team_joblify.service.NotificationService;
 import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.OtpService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
@@ -25,13 +27,13 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +45,8 @@ public class Api {
     private final OtpService otpService;
     private final DepartmentService departmentService;
     private final InterviewService interService;
+    private final InterviewRepository inter;
+    private final NotificationCreator notificationCreator;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -53,20 +57,35 @@ public class Api {
     public ResponseEntity<User> userRegister(UserDto userDto, Authentication authentication) throws IOException {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userService.userCreate(userDto, myUserDetails.getUserId());
+        if(user != null){
+            String message = myUserDetails.getName() + " create a new User named" + user.getName();
+            String link = "/user-profile-edit?id=" + user.getId();
+            notificationCreator.createNotification(myUserDetails ,message,link);
+        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping(value = "/user-profile-edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<User> userProfileEdit(UserDto userDto, @RequestParam("userId") long userId, Authentication authentication) throws IOException {
+    public ResponseEntity<User> userProfileEdit(UserDto userDto, @RequestParam("currentEmail") String currentEmail, Authentication authentication) throws IOException {
+        System.out.println(userDto);
+        System.out.println(currentEmail);
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        User user;
         if (myUserDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))) {
-            User user = userService.adminProfileEdit(userDto, userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            user = userService.adminProfileEdit(userDto, currentEmail);
+
         } else {
-            User user = userService.userProfileEdit(userDto, userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            user = userService.userProfileEdit(userDto, currentEmail);
+
         }
 
+        if (myUserDetails.getEmail().equals(currentEmail)) {
+            MyUserDetails myNewUserDetails = new MyUserDetails(user);
+            Authentication newAuthentication = new UsernamePasswordAuthenticationToken(myNewUserDetails, myNewUserDetails.getPassword(), myNewUserDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
@@ -95,7 +114,7 @@ public class Api {
         }else {
         	return false;
         }
-        
+
     }
 
     @PostMapping("/otp-submit")
@@ -132,12 +151,50 @@ public class Api {
 
     @PostMapping("/find-phonenumber-by-email")
     public String findPhoneNumberByEmail(@RequestParam ("email") String email){
-        
+
         User user = userService.findByEmail(email);
         System.out.println(user.getPhone());
         return user.getPhone();
     }
 
+    @GetMapping("/phone-duplicate")
+    public boolean checkPhoneDuplicate(@RequestParam("phone")String phone){
+        return userService.checkPhoneDuplicate(phone);
+    }
+
+
+    @GetMapping("/username-duplicate")
+    public boolean checkUsernameDuplicate(@RequestParam("username")String username){
+        return userService.checkUsernameDuplicate(username);
+    }
+
+    @GetMapping("/email-duplicate")
+    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
+        return userService.emailDuplication(email);
+}
+
+    @GetMapping("/phone-duplicate-except-himself")
+    public boolean checkPhoneDuplicateExceptHimself(@RequestParam("newPhone")String newPhone, @RequestParam("userId")long userId){
+        System.out.println(userId);
+        return userService.checkPhoneDuplicateExceptHimself(newPhone, userId);
+    }
+
+
+    @GetMapping("/username-duplicate-except-himself")
+    public boolean checkUsernameDuplicateExceptHimself(@RequestParam("newUsername")String newUsername, @RequestParam("userId")long userId){
+        return userService.checkUsernameDuplicateExceptHimself(newUsername, userId);
+    }
+
+    @GetMapping("/email-duplicate-except-himself")
+    public boolean emailDuplicateSearchExceptHimself(@RequestParam("newEmail") String newEmail, @RequestParam("userId")long userId) {
+        return userService.emailDuplicationExceptHimself(newEmail, userId);
+}
+
+    @PostMapping("/authenticated-user-data")
+    public MyUserDetails loginUserData(Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails)authentication.getPrincipal();
+        return myUserDetails;
+}
 
 //    @GetMapping("/filtered-vacancies")
 //    public List <Object[]> getFilteredVacancies() {

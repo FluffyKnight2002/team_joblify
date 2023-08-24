@@ -6,6 +6,7 @@ let isDropdownVisible = false;
 let notiDropdown = $('#noti-dropdown');
 let deleteBtn = $('#delete-noti-btn');
 notificationLight.hide();
+
 $(document).ready(function() {
 
     var socket = new SockJS('/ws');
@@ -26,25 +27,25 @@ $(document).ready(function() {
     console.log(notiDropdown)
     fetchNotifications();
 
-    notiDropdown.hasClass('.show', function () {
-        isDropdownVisible = false;
-        console.log("Dropdown is hidden. isDropdownVisible: ", isDropdownVisible);
+    // Attach show.bs.dropdown event handler (this kind of ez give troubles !!!!)
+    $('#notification-bell-btn').on('show.bs.dropdown', function() {
+        console.log('Dropdown is showing');
         updateDeleteButtonAndSelectedNotifications();
     });
 
-        function updateDeleteButtonAndSelectedNotifications() {
-        if (!isDropdownVisible) {
-            deleteBtn.html('Delete All <i class="bi bi-trash-fill"></i>');
-            selectedNotifications = new Set();
-        }
-    }
 });
 
-$('#view-noti-btn').on('click', function(e) {
-    e.preventDefault();
-    console.log("Click");
-    fetchNotifications();
-});
+function updateDeleteButtonAndSelectedNotifications() {
+    $('.notification-items').each(function() {
+        if ($(this).hasClass('selectedNotification')) {
+            $(this).removeClass('selectedNotification');
+        }
+    });
+    deleteBtn.html('Delete All <i class="bi bi-trash-fill"></i>');
+    selectedNotifications = new Set();
+    deleteBtn.html('Delete All <i class="bi bi-trash-fill"></i>');
+    selectedNotifications = new Set();
+}
 
 function fetchNotifications() {
     fetch("/notifications/show")
@@ -85,15 +86,16 @@ function addNotifications(notification) {
     const isDeleted = notification.deleted;
     console.log(isSeen)
     console.log(typeof(isSeen))
-    const notificationElement = $('<div class="pe-3 border-bottom dropdown-item" style="cursor: pointer">').html(`
-    <div class="d-flex justify-content-between mb-2">
+    const notificationElement = $('<div class="pe-3 border-bottom dropdown-item notification-items" style="cursor: pointer">').html(`
+    <div class="d-flex justify-content-between mb-2 notifications">
         <a href="${notification.link}" data-noti-id="${notification.id}" onclick="makeAsRead(${notification.id})" style="cursor: pointer">
             ${notification.message}
         </a>
         ${isSeen === false ? '<span class="d-inline-block badge bg-danger text-white m-1 rounded-pill text-center" style="font-size: 0.6rem">New</span>' : ''}
     </div>
-    <div>
+    <div class="d-flex justify-content-between">
         <h6 class="text-start text-muted" style="font-size: 13px">${timeAgo(notification.time)}<i class="bi bi-clock-history p-1 pt-2"></i></h6>
+        <span class="text-muted text-center sub-title mx-2 select-btn" style="opacity: 0;font-size: 0.7rem">click here to select <br/> or deselect <i class="bi bi-hand-index-fill"></i></span>
     </div>
   `);
 
@@ -122,6 +124,17 @@ function addNotifications(notification) {
     if(isDeleted === false) {
         $('#notifications-container').append(notificationElement);
     }
+
+    $('.notification-items').each(function() {
+        const selectBtn = $(this).find('span.select-btn'); // Cache the select button element
+        $(this).hover(function() {
+            // selectBtn.show(); // Toggle the display of select-btn on hover
+            selectBtn.stop().animate({ opacity: 1 }, 400);
+        }, function() {
+            // selectBtn.hide(); // Toggle it back when hovering out
+            selectBtn.stop().animate({ opacity: 0 }, 400);
+        });
+    });
 }
 
 function handleNewNotification(notification) {

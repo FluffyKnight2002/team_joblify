@@ -54,6 +54,6 @@ public class PageController {
     }
     @GetMapping("/testing")
     public String testing() {
-        return "newEmail";
+        return "test";
     }
 }

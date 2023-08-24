@@ -41,8 +41,11 @@ public class NotificationServiceImpl implements NotificationService {
         Notification savedNotification = notificationRepository.save(notification);
         if(notificationDto.getLink().contains("user-profile-edit")) {
             users = new ArrayList<>();
+            User currentUser = userRepository.findById(notificationDto.getUserId()).orElseThrow(() -> new NoSuchElementException("No such user."));
             users.add(userRepository.findByRole(Role.DEFAULT_HR).get());
-            users.add(userRepository.findById(notificationDto.getUserId()).get());
+            if(!currentUser.getRole().equals(Role.DEFAULT_HR)) {
+                users.add(userRepository.findById(notificationDto.getUserId()).get());
+            }
         }
 
         for(User user: users) {
@@ -51,6 +54,7 @@ public class NotificationServiceImpl implements NotificationService {
             notificationUser.setNotification(savedNotification);
             notificationUser.setSeen(false);
             notificationUser.setUser(user);
+
             notificationUserRepository.save(notificationUser);
         }
     }
@@ -184,7 +188,6 @@ public class NotificationServiceImpl implements NotificationService {
         System.out.println("Both exit" + bothExist);
         if(bothExist == true) {
             System.out.println("Both exit.");
-//            NotificationUser notificationUser =
             notificationDto.setSeen(findNotificationSeenByIdAndUserId(notification.getId(),userDetails.getUserId()));
             notificationDto.setDeleted(false);
         }else {

@@ -3,7 +3,6 @@ package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.service.PositionService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PositionServiceImpl implements PositionService {
+public class PositionServiceImpl implements com.ace_inspiration.team_joblify.service.PositionService{
 
     private final PositionRepository positionRepository;
 

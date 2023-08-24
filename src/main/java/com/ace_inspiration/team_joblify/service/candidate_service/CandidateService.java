@@ -17,7 +17,7 @@ public interface CandidateService {
 	 void changeStatus(long id);
 	 SummaryDto findByid(long id);
 	void changeInterviewstatus(long id,String status);
-    Candidate saveCandidate(CandidateDto candidateDto);
+    public Candidate saveCandidate(CandidateDto candidateDto);
     List<Candidate> getAllCandidates();
     void stage(long id);
     List<Candidate> getFile(List<Long> id);

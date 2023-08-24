@@ -4,6 +4,7 @@ import com.ace_inspiration.team_joblify.entity.Address;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.repository.AddressRepository;
+import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.PositionService;
@@ -25,10 +26,23 @@ public class SuggestionsController {
 
     private final PositionService positionService;
     private final DepartmentService departmentService;
+    private final DepartmentRepository departmentRepository;
     private final UserService userService;
 
     private final PositionRepository positionRepository;
     private final AddressRepository addressRepository;
+
+    @GetMapping("/titles")
+    public List<Position> getTitle() {
+        List<Position> positions = positionRepository.findAll();
+        return positions;
+    }
+
+    @GetMapping("/departments")
+    public List<Department> getDepartments() {
+        List<Department> departments = departmentRepository.findAll();
+        return departments;
+    }
 
     @GetMapping("/fetch-titles")
     public List<String> getTitleSuggestions(@RequestParam("term") String term) {
@@ -40,12 +54,6 @@ public class SuggestionsController {
         }
 
         return suggestions;
-    }
-
-    @GetMapping("/titles")
-    public List<Position> getTitle() {
-        List<Position> positions = positionRepository.findAll();
-        return positions;
     }
 
     @GetMapping("/fetch-departments")
@@ -72,17 +80,7 @@ public class SuggestionsController {
         return suggestions;
     }
 
-    @GetMapping("/fetch-email")
-    @ResponseBody
-    public boolean emailDuplicateSearch(@RequestParam("email") String email) {
-        return userService.emailDuplication(email);
-}
 
-    @GetMapping("/fetch-email-except-mine")
-    @ResponseBody
-    public boolean emailDuplicateSearchExceptMine(@RequestParam("email") String email, @RequestParam("userId") long userId) {
-        return userService.emailDuplicationExceptMine(email, userId);
-    }
 
 
 }

@@ -1,6 +1,6 @@
 package com.ace_inspiration.team_joblify.initializer;
 
-import com.ace_inspiration.team_joblify.service.default_project_initializer_service.DefaultProjectInitializerService;
+import com.ace_inspiration.team_joblify.service.DefaultProjectInitializerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
