@@ -23,14 +23,16 @@
       background-image: none !important;
     }
 
-    .form-check-input.is-valid, .was-validated .form-check-input:valid {
-    border-color: #ccc !important;
-}
+    .form-check-input.is-valid,
+    .was-validated .form-check-input:valid {
+      border-color: #ccc !important;
+    }
 
-    .form-check-input.is-valid:checked, .was-validated .form-check-input:valid:checked {
+    .form-check-input.is-valid:checked,
+    .was-validated .form-check-input:valid:checked {
       background-color: #1e497b !important;
       border-color: #1e497b !important;
-}
+    }
   </style>
 </head>
 
@@ -43,29 +45,29 @@
           style="border-radius: 30px;">
           <h1 class="auth-title text-center pb-4">Log In</h1>
 
-          <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
+          <form id="login-form" th:action="@{/login}" method="post" class="needs-validation" novalidate>
             <div class="form-floating form-group position-relative has-icon-left mb-4">
-              <input type="text" class="form-control" placeholder="Username" id="username" name="username"
-                required>
+              <input type="text" class="form-control" placeholder="Username" id="username" name="username" required>
               <label for="username">
                 <i class="bi bi-person"></i>
                 Username
               </label>
-              <div class="invalid-feedback">
+              <div class="invalid-feedback" id="username-error">
                 Please Add Username.
               </div>
             </div>
 
             <div class="form-floating form-group position-relative has-icon-left mb-3">
-              <input type="password" class="form-control" placeholder="Password" id="password"
-                name="password" required>
+              <input type="password" class="form-control" placeholder="Password" id="password" name="password" required>
               <label for="password">
                 <i class="bi bi-shield-lock"></i>
                 Password
               </label>
-              <div class="invalid-feedback">
+              <div class="invalid-feedback" id="password-error">
                 Please Add Password.
               </div>
+              <div class="invalid-feedback" id="login-error"></div>
+
             </div>
 
             <div class="form-check form-check-lg d-flex align-items-end">
@@ -92,24 +94,70 @@
   <script src="/assets/js/bootstrap.bundle.min.js"></script>
   <script>
 
+    const usernameError = document.getElementById('username-error');
+    const passwordError = document.getElementById('password-error');
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('login-form');
+      const usernameError = document.getElementById('username-error');
+      const passwordError = document.getElementById('password-error');
+      const error = document.getElementById('login-error');
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+
+      // Create a URLSearchParams object with the current URL's query parameters
+      const queryParams = new URLSearchParams(window.location.search);
+
+      // Get the value of the 'error' parameter
+      const isError = queryParams.get('error');
+
+      // Get the value of the 'disabled' parameter
+      const isDisabled = queryParams.get('disabled');
+
+      if (isError) {
+        usernameError.innerHTML = ''
+        passwordError.innerHTML = ''
+
+        error.classList.add('invalid-feedback');
+        error.innerHTML = 'Username or Password is Wrong';
+
+        username.classList.add('is-invalid');
+        password.classList.add('is-invalid');
+
+      } else if (isDisabled) {
+        usernameError.innerHTML = ''
+        passwordError.innerHTML = ''
+
+        error.classList.add('invalid-feedback');
+        error.innerHTML = 'Your Account is Suspended.';
+
+        username.classList.add('is-invalid');
+        password.classList.add('is-invalid');
+      }
+    });
+
     (() => {
       'use strict'
+      const forms = document.querySelectorAll('.needs-validation');
 
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      const forms = document.querySelectorAll('.needs-validation')
-
-      // Loop over them and prevent submission
       Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
           if (!form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
+            event.preventDefault();
+            event.stopPropagation();
           }
 
-          form.classList.add('was-validated')
-        }, false)
-      })
-    })()
+          form.classList.add('was-validated');
+          // Add validation classes to the corresponding elements
+
+          usernameError.classList.add('invalid-feedback');
+          passwordError.classList.add('invalid-feedback');
+
+          usernameError.innerHTML = 'Please Add Username.'
+        passwordError.innerHTML = 'Please Add Password.'
+        }, false);
+      });
+    })();
 
   </script>
 </body>

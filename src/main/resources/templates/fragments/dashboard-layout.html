@@ -49,7 +49,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
+                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
                         <span>Users</span>

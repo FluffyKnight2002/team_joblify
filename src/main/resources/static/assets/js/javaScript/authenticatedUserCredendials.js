@@ -16,19 +16,21 @@ async function authenticatedUserData() {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log(data);
+            const [userDetails, passwordMatches] = await response.json();
+            console.log(userDetails);
+            console.log(passwordMatches);
+            
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
             const profileLink = document.getElementById('profile-link');
             const profileImg = document.getElementById('profile-img');
 
-            name.innerHTML = data.name;
-            username.innerHTML = data.username;
-            department.innerHTML = data.department;
-            profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(data.email);
-            profileImg.src = 'data:image/png;base64,' + data.photo;
+            name.innerHTML = userDetails.name;
+            username.innerHTML = userDetails.username;
+            department.innerHTML = userDetails.department;
+            profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(userDetails.email);
+            profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
 
@@ -37,6 +39,13 @@ async function authenticatedUserData() {
             }
             credentials.style.display = 'inline-block';
 
+            if (passwordMatches) {
+                iziToast.warning({
+                    title: 'Caution',
+                    message: 'Please Change Your Password',
+                    position: 'topCenter'
+                });
+            }
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }

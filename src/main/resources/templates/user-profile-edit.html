@@ -135,8 +135,8 @@
                                       style="visibility: hidden; opacity: 0;" onchange="uploadHandler()">
 
                                   </li>
-                                  <li id="removeIcon" style="display: inline-block;" onclick="removeImage()"><i class='bx bx-x'
-                                      style="font-size: 35px;"></i></li>
+                                  <li id="removeIcon" style="display: inline-block;" onclick="removeImage()"><i
+                                      class='bx bx-x' style="font-size: 35px;"></i></li>
                                 </ul>
                               </div>
                             </div>
@@ -183,7 +183,8 @@
                       </div>
                     </div>
 
-                    <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
+                    <div sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')"
+                      class="form-floating mb-3 col-md-6">
 
                       <input type="text" class="form-control" placeholder="Department" id="department" name="department"
                         required>
@@ -195,7 +196,8 @@
                       </div>
                     </div>
 
-                    <div sec:authorize="hasAuthority('DEFAULT_HR')" class="form-floating mb-3 col-md-6">
+                    <div sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')"
+                      class="form-floating mb-3 col-md-6">
                       <select class="form-select" aria-label="Role" name="role" id="role" required>
                         <option selected disabled value="">Role</option>
                         <option value="DEFAULT_HR">Default HR</option>
@@ -305,7 +307,6 @@
         .then(response => response.json())
         .then(data => {
           const name = document.getElementById('name');
-
           const username = document.getElementById('username');
           const email = document.getElementById('email');
           const phone = document.getElementById('phone');
@@ -326,7 +327,8 @@
           preview.src = 'data:image/jpeg;base64,' + data.photo;
           passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(data.email);
 
-          if($('#department').length > 0) {
+          // Check if department select element exists
+          if ($('#department').length > 0) {
             $('#department').val(stringDepartment); // Assign the stringified department name
           }
 
@@ -338,18 +340,19 @@
           }
           currentEmail = data.email;
           console.log(currentEmail);
-          const role = $('#role');
-   
-          if($('#role').length > 0) {
-            for (let option of role.options) {
-              if (option.value === data.role) {
-                option.selected = true;
-              }
-            }
-          }
-        })
 
-    })
+          // Check if role select element exists using jQuery
+          if ($('#role').length > 0) {
+            const role = $('#role');
+            role.find('option').each(function () {
+              if ($(this).val() === data.role) {
+                $(this).prop('selected', true);
+              }
+            });
+          }
+        });
+    });
+
 
 
     const emailSpinner = document.querySelector('.email-spinner');
@@ -460,7 +463,7 @@
       }
 
       $(document).on("click", "#close", function () {
-        
+
         resetModal();
       });
 
@@ -495,7 +498,7 @@
               // Update the browser's URL to the modified URL
               window.history.replaceState({}, '', updatedUrl);
 
-              
+
               passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(newEmail.value);
 
             } else {

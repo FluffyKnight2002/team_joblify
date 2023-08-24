@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class Api {
     private final InterviewService interService;
     private final InterviewRepository inter;
     private final NotificationCreator notificationCreator;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -69,12 +71,15 @@ public class Api {
         boolean isDefaultHr = myUserDetails.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()));
 
+        boolean isSeniorHr = myUserDetails.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals(Role.SENIOR_HR.name()));
+                
         // Check if the user is trying to edit their own profile
         boolean isEditingOwnProfile = currentEmail.equals(myUserDetails.getEmail());
 
-        if (isDefaultHr || isEditingOwnProfile) {
+        if (isDefaultHr || isEditingOwnProfile || isSeniorHr) {
             // If Default HR or editing own profile, allow profile edit
-            if (isDefaultHr) {
+            if (isDefaultHr || isSeniorHr) {
                 user = userService.adminProfileEdit(userDto, currentEmail);
             } else {
                 user = userService.userProfileEdit(userDto, currentEmail);
@@ -200,9 +205,13 @@ public class Api {
     }
 
     @PostMapping("/authenticated-user-data")
-    public MyUserDetails loginUserData(Authentication authentication) {
+    public Object loginUserData(Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        return myUserDetails;
+
+        String enteredPassword = "ace1122121";  // Replace this with the entered password
+        boolean passwordMatches = passwordEncoder.matches(enteredPassword, myUserDetails.getPassword());
+
+        return new Object[]{myUserDetails, passwordMatches};
     }
 
     // @GetMapping("/filtered-vacancies")
