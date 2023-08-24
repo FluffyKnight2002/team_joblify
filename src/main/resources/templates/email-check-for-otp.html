@@ -126,10 +126,11 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data === true) {  // You can also use 'if (isSuccess)' since it's a boolean
+                if (data === true) { 
+                    console.log("true"); // You can also use 'if (isSuccess)' since it's a boolean
                     window.location.href = '/otp-authentication-form?email=' + email;
                 } else {
-                    
+                    console.log("false");
                     emailInput.classList.add('is-invalid');
                     emailError.innerHTML = 'Email doesn\'t exist! Please Try Again';
                     mainForm.classList.remove('was-validated');

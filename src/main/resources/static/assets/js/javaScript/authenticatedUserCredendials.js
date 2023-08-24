@@ -14,26 +14,33 @@ async function authenticatedUserData() {
                 [csrfHeader]: csrfToken
             }
         });
-        const data = await response.json();
-        console.log(data);
-        const name = document.getElementById('authenticated-name');
-        const username = document.getElementById('authenticated-username');
-        const department = document.getElementById('authenticated-department');
-        const profileLink = document.getElementById('profile-link');
-        const profileImg = document.getElementById('profile-img');
 
-        name.innerHTML = data.name;
-        username.innerHTML = data.username;
-        department.innerHTML = data.department;
-        profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(data.email);
-        profileImg.src = 'data:image/png;base64,' + data.photo;
-        const loader = document.getElementById('loader');
-        const credentials = document.getElementById('credentials');
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            const name = document.getElementById('authenticated-name');
+            const username = document.getElementById('authenticated-username');
+            const department = document.getElementById('authenticated-department');
+            const profileLink = document.getElementById('profile-link');
+            const profileImg = document.getElementById('profile-img');
 
-        loader.remove();
-        credentials.style.display = 'inline-block';
+            name.innerHTML = data.name;
+            username.innerHTML = data.username;
+            department.innerHTML = data.department;
+            profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(data.email);
+            profileImg.src = 'data:image/png;base64,' + data.photo;
+            const loader = document.getElementById('loader');
+            const credentials = document.getElementById('credentials');
 
+            if (loader) {
+                loader.remove();
+            }
+            credentials.style.display = 'inline-block';
+
+        } else {
+            console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
+        }
     } catch (error) {
-        console.error("Error at fetching authenticated User Data: " + error);
+        console.error('An error occurred while fetching authenticated user data:', error);
     }
 }
