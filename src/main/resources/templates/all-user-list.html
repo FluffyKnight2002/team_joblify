@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!--  Date range picker-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
     <style>
@@ -45,12 +47,15 @@
                     <div class="page-title">
                         <div class="row">
                             <div class="col-12 col-md-6 order-md-1">
-                                <h3>All Vacancies</h3>
+                                <h3>All User List</h3>
                             </div>
                             <div class="col-12 col-md-6 order-md-2 order-first">
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                    <h4><a href="javascript:history.back()"><i class="fa-solid fa-reply"></i> Go
-                                            Back</a></h4>
+                                    <h6>
+                                        <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                                           style="background: #1e497b !important;" href="javascript:history.back()">
+                                            <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                    </h6>
                                 </nav>
                             </div>
                         </div>
@@ -59,14 +64,6 @@
                         <div class="card">
                             <div class="card-body pt-1">
                                 <div class="table-responsive">
-                                    <div class="form-group col-md-3">
-                                        <label for="departmentSelector">Department</label>
-                                        <select class="form-select" id="departmentSelector">
-                                            <!-- Add your options here -->
-                                        </select>
-                                    </div>
-
-
 
                                     <table id="table" class="table table-striped" style="width: 100%;"
                                         aria-describedby="myDesc">
@@ -106,15 +103,24 @@
             </div>
         </div>
     </div>
+    <!-- Stomp -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- SockJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/websocket.js"></script>
 
     <script src="/assets/js/main.js"></script>
 
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <!--Date range picker-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     <script src="/assets/js/jquery.spring-friendly.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
@@ -130,37 +136,6 @@
 
         $(document).ready(function () {
 
-            fetch('/all-department', {
-                method: 'POST',
-                headers: {
-                    [csrfHeader]: csrfToken
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const departmentSelector = document.getElementById('departmentSelector');
-                    departmentSelector.innerHTML = ''; // Clear existing options
-
-                    const allOption = document.createElement('option');
-
-                    allOption.textContent = 'All'; // Set the displayed text for the option
-                    departmentSelector.appendChild(allOption);
-
-                    data.forEach(department => {
-                        const option = document.createElement('option');
-                        option.textContent = department.name; // Set the displayed text
-                        departmentSelector.appendChild(option);
-                    });
-
-                    // Trigger change event to apply initial filter if needed
-                    $('select#departmentSelector').trigger('change');
-                })
-                .catch(error => {
-                    console.error('Error fetching departments:', error);
-                });
-
-
-
             function format(d) {
                 return (
                     'Note: ' +
@@ -169,6 +144,7 @@
                     'The child row can contain any data you wish, including links, images, inner tables etc.'
                 );
             }
+
 
 
             const table = $('table#table').DataTable({
@@ -217,6 +193,173 @@
                 processing: true,
                 stateSave: true
             });
+
+            // Create reset filter button
+            let resetFilterButton = `
+        <div id="reset-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 reset-filter"
+            onclick="resetFilters()">
+                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            </span>
+        </div>
+    `;
+
+            // Create and append the custom filter inputs and button
+            let customFilterHtml = `
+        <div id="custom-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
+                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
+             data-bs-placement="right" title="Add filter"></i>
+            </span>
+            <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
+                <li class="dropdown-item filter-items date-posted-dropdown-item">
+                    <span class="date-posted">Date posted</span>
+                    <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
+                        <li class="dropdown-item filter-items">
+                            <input type="text" class="px-2 rounded datefilter" name="datefilter" value="" placeholder="Custom" />
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items department-dropdown-item">
+                    <span>Department</span>
+                    <ul class="dropdown-menu dropdown-submenu scrollable-submenu" id="department-dropdown-submenu">
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items status-dropdown-item">
+                    <span>Status</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu" style="top: -90px">
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Active</li>
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Suspend</li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items role-dropdown-item">
+                    <span>Role</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu" style="top: -90px">
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Senior-HR</li>
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Junior-HR</li>
+                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Other</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    `;
+
+            fetchDepartmentAndGenerateHTML().then(submenuHTML => {
+                // Use the generated submenuHTML as needed
+                $('#department-dropdown-submenu').html(submenuHTML);
+            });
+
+            // Find the search input's parent div.row and append the custom filter inputs
+            var searchRow = $('#table_filter').closest('.row');
+            var recentFilterDropdownCon = `<div class="col-11" id="recent-filter-dropdown-con"></div>`;
+            $(customFilterHtml).appendTo(searchRow);
+            $(resetFilterButton).appendTo(searchRow);
+            $('#reset-filter').hide();
+            $(recentFilterDropdownCon).appendTo(searchRow);
+
+            $('.dropdown-menu > li').hover(function () {
+                    $(this).children('.dropdown-submenu').css('display', 'block');
+                }
+                , function () {
+                    $(this).children('.dropdown-submenu').css('display', '');
+                });
+
+            // Get the current date
+            const currentDate = moment();
+
+            // Date range picker
+            $(function() {
+                // Initialize the daterangepicker
+                $('input[name="datefilter"]').daterangepicker({
+                    autoUpdateInput: false,
+                    locale: {
+                        cancelLabel: 'Clear'
+                    },
+                    maxDate: currentDate // Set the maximum date initially to the current date
+                });
+
+                console.log($('#date-posted-dropdown-submenu'));
+
+                // Handle apply event to update the input value and set start and end times
+                $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+                    const startDate = picker.startDate.format('MM/DD/YYYY');
+                    const endDate = picker.endDate.format('MM/DD/YYYY');
+
+                    $(this).val(startDate + ' - ' + endDate);
+
+                    // Set the start and end times in your input fields
+                    createDatePostedFilterButton('Custom',startDate,endDate);
+                    checkAndToggleFilterButton();
+                });
+
+                // Handle cancel event to clear the input value and reset start and end times
+                $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+                    $(this).val('');
+                    $('#filter-start-time').val('');
+                    $('#filter-end-time').val('');
+                });
+
+                $('.daterangepicker').hover(function () {
+                    $('#date-posted-dropdown-submenu').css('display', 'block');
+                });
+
+                $('.daterangepicker th').each(function() {
+                    console.log("TH:",$(this))
+                    $(this).on('click', function(event) {
+                        console.log("Click!!!!")
+                        event.stopPropagation();
+                        $('#date-posted-dropdown-submenu').css('display', 'block');
+                    });
+                });
+
+            });
+
+            // Initialize Bootstrap tooltips
+            let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            async function fetchDepartmentAndGenerateHTML() {
+                try {
+                    const response = await fetch('departments'); // Replace 'titles' with the actual URL
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data');
+                    }
+
+                    const fetchedData = await response.json();
+
+                    // Sort the data alphabetically
+                    const sortedData = fetchedData.sort();
+
+                    // Create an HTML string to store the submenu content
+                    let submenuHTML = '';
+
+                    let currentLetter = null;
+                    sortedData.forEach(item => {
+                        const startingLetter = item.name[0].toUpperCase();
+                        if (startingLetter !== currentLetter) {
+                            submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
+                            currentLetter = startingLetter;
+                        }
+                        submenuHTML += `<li class="dropdown-item filter-items"
+                onclick="createDepartmentFilterButton('${item.name}');checkAndToggleFilterButton();" data-filter-id="filter-department">
+                    ${item.name}
+                </li>`;
+                    });
+
+                    // Return the generated HTML content
+                    return submenuHTML;
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                    return ''; // Return an empty string in case of an error
+                }
+            }
+
+            //////////////////////////////////////////////
 
             function showConfirmationModal(action, id) {
                 const confirmationModal = `
@@ -336,18 +479,18 @@
 
 
 
-            $('select#departmentSelector').change(function () {
-                const selectedOption = $('select#departmentSelector option:selected').text();
-                let filter = '';
-
-                if (selectedOption !== 'All') {
-                    filter = selectedOption;
-                }
-
-                table.column(5).search(filter).draw();
-
-
-            });
+            // $('select#departmentSelector').change(function () {
+            //     const selectedOption = $('select#departmentSelector option:selected').text();
+            //     let filter = '';
+            //
+            //     if (selectedOption !== 'All') {
+            //         filter = selectedOption;
+            //     }
+            //
+            //     table.column(5).search(filter).draw();
+            //
+            //
+            // });
 
             // Array to track the ids of the details displayed rows
             const detailRows = [];

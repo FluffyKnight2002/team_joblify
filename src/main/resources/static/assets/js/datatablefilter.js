@@ -47,13 +47,18 @@ function resetFilters() {
     for (let i = 0; i < filterElements.length; i++) {
         filterElements[i].isRemove = false;
         $('.' +filterElements[i].name).show();
+        $('#' +filterElements[i].filterId).val('');
     }
     $('.selected-dropdown-remove-button').each(function () {
         $(this).closest('.btn-group').remove();
     });
 
+    rangeBar1.noUiSlider.set([250000, 800000]);
+
     $('#reset-filter').hide();
     $('#custom-filter').show();
+
+    updateDataTable();
 }
 
 // Update the text of the recent filter dropdown button when an option is selected
@@ -99,6 +104,36 @@ $(document).on('click', '.selected-dropdown-remove-button', function () {
             $('#'+filterElements[i].filterId).val('');
             break; // Exit the loop once the element is found
         }
+    }
+
+    console.log("Filter name : ", filterName);
+
+    if(filterName === 'level-dropdown-item') {
+
+        const selectedLevels = [];
+
+        $('.level-checkbox').each(function () {
+
+            let checkbox = $(this);
+            const checkboxes2 = $('.level-filter-checkbox:checked');
+
+            // Iterate through the checked checkboxes and collect their values
+            checkboxes2.each(function () {
+                selectedLevels.push($(this).val());
+            });
+
+            console.log("Selected Levels :",selectedLevels)
+            console.log("It match : ", selectedLevels.includes(checkbox.val()));
+            if (selectedLevels.includes(checkbox.val())) {
+                console.log("checkbox change!!!!")
+                checkbox.prop('checked', true).trigger('change');
+            }
+            console.log("level-checkbox.val() ", checkbox.val());
+            console.log("checked : ", checkbox.is(":checked"));
+        });
+    }else if(filterName === 'salary-dropdown-item') {
+        console.log("Value changed!!!")
+        rangeBar1.noUiSlider.set([minValue, maxValue]);
     }
 
     $(this).closest('.btn-group').remove();
@@ -718,10 +753,10 @@ function updateFilterLevel() {
             }
         });
 
-        $('.level-checkbox').prop('checked', false);
     }
 
     console.log("Selected Levels : ", selectedLevels);
+    checkboxes.prop('checked', false); // Check the checkbox
 
     // Optionally, close the dropdown menu if needed
     // $('#level-dropdown-submenu').dropdown('hide');

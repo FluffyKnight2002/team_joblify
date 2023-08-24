@@ -1,3 +1,9 @@
+.feedback-message {
+    display: none;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+
 /* Filter for data table */
 .add-filter {
     font-size: 1.8rem;
