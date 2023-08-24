@@ -85,7 +85,7 @@ $(document).ready(function () {
                         return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
                             '</br>' +
                             '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) +
-                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
                             changeTime(row.createdTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
@@ -99,7 +99,7 @@ $(document).ready(function () {
                         return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
                             '</br>' +
                             '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) +
-                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
                             changeTime(row.updatedTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
