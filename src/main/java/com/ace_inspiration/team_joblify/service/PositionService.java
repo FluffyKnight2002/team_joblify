@@ -4,6 +4,9 @@ import com.ace_inspiration.team_joblify.entity.Position;
 
 import java.util.List;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
 public interface PositionService {
 
     Position addPosition(Position position);

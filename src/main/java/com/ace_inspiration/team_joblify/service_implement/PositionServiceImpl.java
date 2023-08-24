@@ -1,9 +1,11 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
+
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.repository.PositionRepository;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,4 +59,6 @@ public class PositionServiceImpl implements PositionService {
     public Position findByName(String name){
         return positionRepository.findByName(name).orElse(null);
     }
+    
+
 }

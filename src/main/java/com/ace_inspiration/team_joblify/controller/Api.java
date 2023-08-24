@@ -17,7 +17,9 @@ import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
 import com.ace_inspiration.team_joblify.service.NotificationService;
+import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.OtpService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -36,12 +38,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class Api {
-
+	private final CandidateService candidateService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final EmailService emailService;
     private final OtpService otpService;
     private final DepartmentService departmentService;
+    private final InterviewService interService;
     private final InterviewRepository inter;
     private final NotificationCreator notificationCreator;
 
@@ -70,10 +73,10 @@ public class Api {
         User user;
         if (myUserDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))) {
             user = userService.adminProfileEdit(userDto, currentEmail);
-            
+
         } else {
             user = userService.userProfileEdit(userDto, currentEmail);
-            
+
         }
 
         if (myUserDetails.getEmail().equals(currentEmail)) {
@@ -81,7 +84,7 @@ public class Api {
             Authentication newAuthentication = new UsernamePasswordAuthenticationToken(myNewUserDetails, myNewUserDetails.getPassword(), myNewUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(newAuthentication);
         }
-        
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -102,22 +105,16 @@ public class Api {
     }
 
     @PostMapping("/send-invite-email")
-    public String sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
-    	System.err.println(">>>>>>>>>"+emailTemplateDto.getCanId()+">>>"+InterviewType.valueOf(emailTemplateDto.getType()));
-        emailService.sendJobOfferEmail(emailTemplateDto.getTo(), emailTemplateDto.getContent());
+    public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
+       boolean email=emailService.sendJobOfferEmail(emailTemplateDto);
+        if(email==true) {
+        	interService.saveInterview(emailTemplateDto);
+        	candidateService.stage(emailTemplateDto.getCanId());
+        	return true;
+        }else {
+        	return false;
+        }
 
-        Candidate candidate = new Candidate();
-        candidate.setId(emailTemplateDto.getCanId());
-
-        Interview interview=new Interview();
-        interview.setInterviewDate(emailTemplateDto.getDate());
-        interview.setInterviewTime(emailTemplateDto.getTime());
-        interview.setType(InterviewType.valueOf(emailTemplateDto.getType()));
-        interview.setInterviewStage(InterviewStage.valueOf(emailTemplateDto.getStatus()));
-        interview.setCandidate(candidate);
-        inter.save(interview);
-
-        return "Email sent successfully!";
     }
 
     @PostMapping("/otp-submit")
@@ -154,7 +151,7 @@ public class Api {
 
     @PostMapping("/find-phonenumber-by-email")
     public String findPhoneNumberByEmail(@RequestParam ("email") String email){
-        
+
         User user = userService.findByEmail(email);
         System.out.println(user.getPhone());
         return user.getPhone();
