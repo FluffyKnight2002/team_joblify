@@ -15,7 +15,9 @@ import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
+import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.OtpService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -35,13 +37,13 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class Api {
-
+	private final CandidateService candidateService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final EmailService emailService;
     private final OtpService otpService;
     private final DepartmentService departmentService;
-    private final InterviewRepository inter;
+    private final InterviewService interService;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
@@ -85,22 +87,16 @@ public class Api {
     }
 
     @PostMapping("/send-invite-email")
-    public String sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
-    	System.err.println(">>>>>>>>>"+emailTemplateDto.getCanId()+">>>"+InterviewType.valueOf(emailTemplateDto.getType()));
-        emailService.sendJobOfferEmail(emailTemplateDto.getTo(), emailTemplateDto.getContent());
-
-        Candidate candidate = new Candidate();
-        candidate.setId(emailTemplateDto.getCanId());
-
-        Interview interview=new Interview();
-        interview.setInterviewDate(emailTemplateDto.getDate());
-        interview.setInterviewTime(emailTemplateDto.getTime());
-        interview.setType(InterviewType.valueOf(emailTemplateDto.getType()));
-        interview.setInterviewStage(InterviewStage.valueOf(emailTemplateDto.getStatus()));
-        interview.setCandidate(candidate);
-        inter.save(interview);
-
-        return "Email sent successfully!";
+    public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
+       boolean email=emailService.sendJobOfferEmail(emailTemplateDto);
+        if(email==true) {
+        	interService.saveInterview(emailTemplateDto);
+        	candidateService.stage(emailTemplateDto.getCanId());
+        	return true;
+        }else {
+        	return false;
+        }
+        
     }
 
     @PostMapping("/otp-submit")

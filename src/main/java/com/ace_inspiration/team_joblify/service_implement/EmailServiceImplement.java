@@ -1,10 +1,18 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
+import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
+import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.Interview;
+import com.ace_inspiration.team_joblify.entity.InterviewStage;
+import com.ace_inspiration.team_joblify.entity.InterviewType;
 import com.ace_inspiration.team_joblify.entity.Otp;
 import com.ace_inspiration.team_joblify.entity.User;
+import com.ace_inspiration.team_joblify.repository.InterviewRepository;
 import com.ace_inspiration.team_joblify.repository.OtpRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.EmailService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -26,6 +34,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -33,11 +43,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImplement implements EmailService {
-
+	private final CandidateService candidateService;
     private final UserRepository userRepository;
     private final OtpRepository otpRepository;
     private final JavaMailSender javaMailSender;
     private final ResourceLoader resourceLoader;
+    private final InterviewRepository inter;
 
 
     @Override
@@ -81,35 +92,36 @@ public class EmailServiceImplement implements EmailService {
         }
 
     @Override
-    public void sendJobOfferEmail(String to, String content) {
+    public boolean sendJobOfferEmail(EmailTemplateDto emailTemplateDto) {
         String templateId = "2"; // Your desired template ID
         String templateContent = getEmailTemplateById(templateId);
 
         // Replace placeholders with actual data
-        templateContent = templateContent.replace("{Content}", content);
-        templateContent = templateContent.replace("{Email}", to);
+        templateContent = templateContent.replace("{Content}", emailTemplateDto.getContent());
+        templateContent = templateContent.replace("{Email}", emailTemplateDto.getTo());
 
         // Now send the email using JavaMail
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            String[] ccmail= new String[2];
-            ccmail[0]="cze1122121@gmail.com";
-            ccmail[1]="selfiebrotjers1500@gmail.com";
-
+        	String[] ccmail = emailTemplateDto.getCcmail().split(",");
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
             helper.setCc(ccmail);
-            helper.setTo(to);
-            helper.setSubject("Job Interview Invitation");
+            helper.setTo(emailTemplateDto.getTo());
+            helper.setSubject(emailTemplateDto.getSubject());
             helper.setText(templateContent, true);
 
-           // javaMailSender.send(message);
+            javaMailSender.send(message);
+            return true;
+        
         } catch (MessagingException e) {
             log.error("Error sending email: {}", e.getMessage());
-            // Handle any email sending errors here
+            return false;
         } catch (UnsupportedEncodingException e) {
             log.error("Unsupported encoding: {}", e.getMessage());
+            return false;
         }
+      
     }
 
 

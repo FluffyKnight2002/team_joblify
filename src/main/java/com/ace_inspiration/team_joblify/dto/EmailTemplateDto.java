@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmailTemplateDto {
    private String to;
+   private String ccmail;
+   private String subject;
    private String name;
    private String content;
    private String time;
