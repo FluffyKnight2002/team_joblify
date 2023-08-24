@@ -63,9 +63,9 @@ public class CandidateDto {
 
 	  private String interviewStatus;
 
-	  private LocalDateTime applyDate;
-	  
-	  private String type;
+	private LocalDateTime applyDate;
+
+	private String type;
 
 	  private MultipartFile resume;
 
@@ -79,6 +79,5 @@ public class CandidateDto {
 
 	  private VacancyDto vacancyDto;
 	
-
 
 }

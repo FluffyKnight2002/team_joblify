@@ -3,7 +3,7 @@ $(document).ready(function () {
   $("#skill").keyup(function (event) {
     if (event.keyCode === 13) {
       var skillValue = $(this).val();
-      if (skillValue !== "") {
+      if ($.trim(skillValue) !== "") {
         var count = Math.floor(Math.random() * 1000); // Generate a random number
         var skill =
           '<div class="bg-light rounded-pill row w-auto m-2" id="skill' +

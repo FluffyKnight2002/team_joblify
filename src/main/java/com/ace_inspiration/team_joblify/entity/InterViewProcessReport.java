@@ -20,24 +20,34 @@ import lombok.Data;
 public class InterViewProcessReport {
 	@Id
 	private long id;
+	
 	@Column(name = "close_date")
 	private LocalDate closeDate;
+	
 	@Column(name = "open_date")
 	private LocalDate openDate;
+	
 	@Column(name="position")
 	private String position;
+	
 	@Column(name="total_candidates")
 	private long totalCandidates;
+	
 	@Column(name="interviews_candidate")
 	private long interviewCandidates;
+	
 	@Column(name="passed_candidates")
 	private long passCandidates;
+	
 	@Column(name="pending_candidates")
 	private long pendingCandidates;
+	
 	@Column(name="cancel_candidates")
 	private long cancelCandidates;
+	
 	@Column(name="not_interview_candidates")
 	private long notInterviewCandidates;
+	
 	@Column(name="accepted_candidates")
 	private long acceptedCandidates;
 

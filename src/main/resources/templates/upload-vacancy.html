@@ -41,27 +41,40 @@
             </div>
         </div>
         <div id="main">
-            <form th:action="@{/upload-vacancy}" method="post" class="p-5 rounded-3" id="upload-form" style="background: #fff" th:object="${vacancy}">
-                <h3 class="text-primary mb-5">Vacancy Form</h3>
+            <form th:action="@{/upload-vacancy}" method="post" class="p-3 rounded-3" id="upload-form" style="background: #fff" th:object="${vacancy}">
+                <div class="d-flex justify-content-between">
+                    <h3 class="text-primary mb-5">Vacancy Form</h3>
+                    <div>
+                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                            <h6>
+                                <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                                   style="background: #1e497b !important;" href="javascript:history.back()">
+                                    <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                            </h6>
+                        </nav>
+                    </div>
+                </div>
+
+
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" id="token"/>
                 <div class="mb-3 position-relative">
                     <label for="title" class="form-label">Title(Position)</label>
                     <input type="text" class="form-control" id="title" name="position" required>
                     <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Title can't be empty</div>
                     <div id="title-suggestions"></div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="post" class="form-label">Post</label>
                         <input type="number" class="form-control" id="post" name="post" required>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Post can't be empty</div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                         <label for="department" class="form-label">Department</label>
                         <input type="text" class="form-control" id="department" name="department" required>
                         <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Department can't be empty</div>
                         <div id="department-suggestions"></div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -93,14 +106,12 @@
                             <div id="calendar" class="calendar dropdown-menu">
                             <!-- Days of the week will be added here -->
                             </div>
-                            <div class="feedback-message"></div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="workingHours" class="form-label">Working Hours</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="workingHours" name="workingHours" value="9:00 AM ~ 6:00 PM" required readonly>
-                            <div class="feedback-message"></div>
                             <button class="btn btn-sm btn-primary" type="button" id="timePickerBtn">
                                 <i class="bi bi-clock"></i>
                             </button>
@@ -115,7 +126,7 @@
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="salary" class="form-label">Salary</label>
                         <input type="text" class="form-control" id="salary" name="salary" required>
-                        <div class="feedback-message"></div>
+                        <div class="feedback-message text-danger">Salary can't be empty</div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
@@ -130,7 +141,7 @@
                 <div class="mb-3">
                     <label for="descriptions" class="form-label">Descriptions</label>
                     <textarea class="form-control" id="descriptions" name="descriptions" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Descriptions can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="responsibilities" class="form-label">
@@ -151,7 +162,7 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Responsibilities can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="requirements" class="form-label">
@@ -172,7 +183,7 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Requirements can't be empty</div>
                 </div>
                 <div class="mb-3">
                     <label for="preferences" class="form-label">
@@ -193,13 +204,13 @@
                         </button>
                     </div>
                     <textarea class="form-control" id="preferences" name="preferences" rows="3" required></textarea>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Preferences can't be empty</div>
                 </div>
                 <div class="mb-3 position-relative">
                     <label for="address" class="form-label">Address</label>
                     <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
                     <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
-                    <div class="feedback-message"></div>
+                    <div class="feedback-message text-danger">Address can't be empty</div>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
@@ -323,20 +334,27 @@
         </div>
     </div>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <!-- For JQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <!-- Stomp -->
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- SockJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <!-- User info for navbar -->
+    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+    <!-- For vacancy form -->
     <script src="/assets/js/vacancyform.js"></script>
+    <!-- For auto compelete -->
     <script src="/assets/js/autocomplete.js"></script>
+    <!-- For custom reusable progress loader and show message -->
     <script src="/assets/js/messageandloader.js"></script>
+    <!-- About notification -->
     <script src="/assets/js/websocket.js"></script>
+    <!-- From template -->
     <script src="/assets/js/main.js"></script>
 </body>
 

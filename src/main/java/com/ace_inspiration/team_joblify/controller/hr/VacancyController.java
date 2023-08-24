@@ -24,7 +24,8 @@ public class VacancyController {
     private final NotificationCreator notificationCreator;
 
     @GetMapping("/show-upload-vacancy-form")
-    public String showUploadVacancyForm(){
+    public String showUploadVacancyForm(Model model){
+        model.addAttribute("currentPage" , "/show-upload-vacancy-form");
         return "upload-vacancy";
     }
 

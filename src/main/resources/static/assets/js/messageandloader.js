@@ -18,31 +18,18 @@ function actionToVacancy(button) {
         console.log("Detail Modal Have")
         detailModal.modal('hide');
     }
-    
-    // Hide #detailModal if it exists
-    let applyForm = $('#apply-form');
-    if (applyForm.length) {
-        console.log("Detail Modal Have")
-        applyForm.modal('hide');
-    }
-
-    let applyForm = $('#apply-form');
-    if (applyForm.length) {
-        console.log("Apply Modal Have")
-        applyForm.modal('hide');
-    }
 
     // Show the loader and the message-con modal
     $('#message-con').html('<div class="loader"></div><div class="loader-txt"><p class="text-white">Processing...</p></div>');
     $('#loadMe').modal({
         backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
     }).modal('show');
-    console.warn(inputsToDisable);
+    // console.warn(inputsToDisable);
     // console.log("Result : " ,inputsToDisable != undefined);
-    if (inputsToDisable.length != 0) {
-        inputsToDisable.prop('disabled', false);
-        reopenModeWarn.hide();
-    }
+    // if (inputsToDisable.length != 0) {
+    //     inputsToDisable.prop('disabled', false);
+    //     reopenModeWarn.hide();
+    // }
 
     // Serialize the form data to JSON manually
     let formData = {};
@@ -119,7 +106,7 @@ function actionToVacancy(button) {
                     .html('Update');
                 reopenBtn.removeClass('btn-bright');
                 reopenBtn.addClass('btn-un-bright');
-                reopenModeWarn.hide();
+                // reopenModeWarn.hide();
                 $('#reopen-form')
                     .attr('id', 'update-form')
                     .attr('action', 'update-vacancy');
@@ -175,6 +162,13 @@ function hideMessageModalAfterDelay() {
         $('#detailModal').modal('hide');
     }
 
+    $('input[type="text"],input[type="number"],input#post, textarea').each(function() {
+        // console.log("Descriptions  :", $('#descriptions'))
+        let inputElement = $(this);
+        inputElement.removeClass('is-valid'); // Apply Bootstrap is-valid class
+        inputElement.css('background-image', 'none');
+    });
+
     // Remove .modal-backdrop if it exists
     let modalBackdrop = $('.modal-backdrop');
     if (modalBackdrop.length) {
@@ -212,12 +206,22 @@ $(document).ready(function () {
             return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
         });
 
+        emptyInputs.each(function () {
+            if($(this).val() === '' || $(this).val() === '0') {
+                $(this).closest('.mb-3').find('.feedback-message').css('display','block'); // Show feedback message;
+            }else {
+                $(this).closest('.mb-3').find('.feedback-message').css('display','none');
+            }
+        });
+
         formStatus = emptyInputs.length === 0;
     }
 
     function showFeedback(inputElement) {
         inputElement.addClass('is-invalid'); // Apply Bootstrap is-invalid class
         inputElement.css('background-image', 'none');
+        console.log("Show feed back : " ,inputElement.closest('.mb-3').find('.feedback-message'));
+        inputElement.closest('.mb-3').find('.feedback-message').css('display','block'); // Show feedback message
         // Show feedback message here
         // inputElement.siblings('.feedback-message').text('Field cannot be empty');
     }
@@ -227,6 +231,7 @@ $(document).ready(function () {
         inputElement.removeClass('is-invalid'); // Remove Bootstrap is-invalid class
         inputElement.removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
         inputElement.css('background-image', 'none');
+        inputElement.closest('.mb-3').find('.feedback-message').css('display','none');
         // Clear feedback message here
         // Example: inputElement.siblings('.feedback-message').text('');
     }
@@ -234,24 +239,25 @@ $(document).ready(function () {
     // Validate inputs on input change
     function  validate() {
         $('input[type="text"],input[type="number"],input#post, textarea').on('input', function() {
-            console.log("Descriptions  :", $('#descriptions'))
+            // console.log("Descriptions  :", $('#descriptions'))
             let inputElement = $(this);
-            if ($.trim(inputElement.val()) === '') {
+            if ($.trim(inputElement.val()) === '' || $.trim(inputElement.val()) === '0') {
                 showFeedback(inputElement);
             } else {
                 clearFeedback(inputElement);
                 inputElement.addClass('is-valid'); // Apply Bootstrap is-valid class
                 inputElement.css('background-image', 'none');
             }
-            updateFormStatus(); // Update formStatus
+            // updateFormStatus(); // Update formStatus
         });
     }
+
     validate();
 
     $('#submit-btn').on('click', function (event) {
         event.preventDefault();
 
-        validate();
+        // validate();
         updateFormStatus();
         console.log("Form Status : ", formStatus);
 

@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,8 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         }
         // Update the properties of the existingVacancy based on vacancyDto
         VacancyInfo vacancyInfo = VacancyInfo.builder()
-                .vacancy(vacancyService.updateVacancy(vacancyDto))
+                .vacancy(vacancyRepository.findById(vacancyDto.getVacancyId()).orElseThrow(
+                        ()-> new NoSuchElementException("No vacancy found")))
                 .description(vacancyDto.getDescriptions())
                 .responsibilities(vacancyDto.getResponsibilities())
                 .requirements(vacancyDto.getRequirements())
@@ -90,13 +92,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
             return null;
         }
         VacancyInfo savedVacancyInfo = optionalVacancyInfo.get();
-//        VacancyInfo newVacancyInfo = new VacancyInfo();
-//        System.out.println("VacancyInfo ID : " + newVacancyInfo.getId());
-//        newVacancyInfo.setStatus(Status.OPEN);
-//        newVacancyInfo.setOpenDate(vacancyDto.getOpenDate());
-//        newVacancyInfo.setCloseDate(vacancyDto.getCloseDate());
-//        newVacancyInfo.setUpdatedUser(optionalUser.get());
-//        newVacancyInfo.setUpdatedTime(LocalDateTime.now());
         VacancyInfo newVacancyInfo = VacancyInfo.builder()
                 .vacancy(savedVacancyInfo.getVacancy())
                 .description(savedVacancyInfo.getDescription())
@@ -167,7 +162,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());
         existingVacancy = vacancyInfoRepository.findById(vacancyId).orElse(null);
         // Update the properties of the existingVacancy based on vacancyDto
-        existingVacancy.setVacancy(vacancyService.updateVacancy(vacancyDto));
+//        existingVacancy.setVacancy(vacancyService.updateVacancy(vacancyDto));
         existingVacancy.setDescription(vacancyDto.getDescriptions());
         existingVacancy.setRequirements(vacancyDto.getRequirements());
         existingVacancy.setResponsibilities(vacancyDto.getResponsibilities());
@@ -232,6 +227,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyInfo.setStatus(Status.CLOSED);
         return vacancyInfoRepository.save(vacancyInfo);
     }
+    
 
     private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());

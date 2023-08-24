@@ -82,4 +82,9 @@ public class PageController {
     public String gatewayTimeOut() {
         return "error-504";
     }
+    
+    @GetMapping("/testing")
+    public String testing() {
+        return "test";
+    }
 }
