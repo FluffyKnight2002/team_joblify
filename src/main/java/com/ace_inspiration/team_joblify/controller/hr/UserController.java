@@ -5,6 +5,7 @@ import com.ace_inspiration.team_joblify.entity.Role;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -57,20 +58,25 @@ public class UserController {
     }
 
     @GetMapping("/user-profile-edit")
-    public Object showUserProfileEdit(HttpServletRequest request,@RequestParam("email") String email, Authentication authentication) {
+    public Object showUserProfileEdit(HttpServletResponse response, @RequestParam("email") String email,
+            Authentication authentication) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
         if (myUserDetails.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))) {
+                .anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))
+                || myUserDetails.getAuthorities().stream()
+                        .anyMatch(authority -> authority.getAuthority().equals(Role.SENIOR_HR.name()))) {
             return "user-profile-edit";
-        } else if (myUserDetails.getAuthorities().stream()
+        } else if ((myUserDetails.getAuthorities().stream()
                 .noneMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))
+                || myUserDetails.getAuthorities().stream()
+                        .noneMatch(authority -> authority.getAuthority().equals(Role.SENIOR_HR.name())))
                 && email.equals(myUserDetails.getEmail())) {
             return "user-profile-edit";
         } else {
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 403);
-            return "redirect:/error";
+            return "redirect:/403"; // Forward to the error controller
         }
+
     }
 
     @GetMapping("/password-change")
