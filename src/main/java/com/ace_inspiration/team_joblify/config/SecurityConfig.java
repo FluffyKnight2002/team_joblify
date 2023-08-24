@@ -58,17 +58,7 @@ public class SecurityConfig {
                         
                         .anyRequest().authenticated()
                 )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.sendRedirect("/403");})
-                        .authenticationEntryPoint((request, response, authException) -> {
-                                if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-                                        response.sendRedirect("/404");
-                                } else {
-                                        response.sendRedirect("/login");
-                                }
-                        })        
-                )
+                
 
                 .formLogin(login->login
                         .loginPage("/login")

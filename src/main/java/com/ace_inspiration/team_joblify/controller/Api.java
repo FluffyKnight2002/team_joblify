@@ -57,7 +57,7 @@ public class Api {
         if(user != null){
             String message = myUserDetails.getName() + " create a new User named" + user.getName();
             String link = "/user-profile-edit?id=" + user.getId();
-            notificationCreator.createNotification(myUserDetails,message,link);
+            notificationCreator.createNotification(myUserDetails ,message,link);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

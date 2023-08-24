@@ -25,7 +25,6 @@ public class VacancyServiceImpl implements VacancyService {
     private final DepartmentService departmentService;
     private final PositionService positionService;
     private final UserRepository userRepository;
-
     @Override
     public Vacancy createVacancy(VacancyDto vacancyDto) {
         Position position = positionService.checkAndSetPosition(vacancyDto.getPosition());

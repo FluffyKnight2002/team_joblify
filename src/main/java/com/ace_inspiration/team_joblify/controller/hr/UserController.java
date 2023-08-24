@@ -2,7 +2,6 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 
 import com.ace_inspiration.team_joblify.entity.Role;
-import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,11 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Arrays;
 import java.util.Collection;
 
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserService userService;
 
     @GetMapping("/login")
     public String showLoginForm(){
@@ -37,7 +35,6 @@ public class UserController {
                 return "redirect:/dashboard";
             }
         }
-
 
         // User is not authenticated or has different authorities, show the login page
         return "login";
