@@ -41,7 +41,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+//import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
@@ -60,12 +60,13 @@ import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.DasboardService;
+//import com.ace_inspiration.team_joblify.service.AllPostService;
+//import com.ace_inspiration.team_joblify.service.DasboardService;
+import com.ace_inspiration.team_joblify.service.InterviewProcessService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
-import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import com.ace_inspiration.team_joblify.service_implement.PositionServiceImpl;
 import com.ace_inspiration.team_joblify.service_implement.candidate_service_implement.CandidateServiceImplement;
 import com.ace_inspiration.team_joblify.service_implement.candidate_service_implement.SummaryServiceImplement;
@@ -126,7 +127,7 @@ public class CandidateController {
 	private final AllPostService allPostService;
 
 	
-	private final DasboardService dasboardservice;
+	//private final DasboardService dasboardservice;
 
 	private final InterviewProcessService interviewservice;
 	
@@ -136,7 +137,7 @@ public class CandidateController {
 	
 	private final VacancyInfoRepository vanInfoReopository;
 	
-	private FirstDaySpecification firstDaySpecification;
+//	private FirstDaySpecification firstDaySpecification;
 
 
 	@GetMapping("/allCandidate")
@@ -144,17 +145,17 @@ public class CandidateController {
 	public DataTablesOutput<InterviewProcess> getAllCandidate( DataTablesInput input) {
 
    		DataTablesOutput<InterviewProcess> interviewData= interviewservice.getAll(input);
-   		 firstDaySpecification = new FirstDaySpecification(input);
-
-   		System.out.println(input);
-
-   		if(firstDaySpecification==null) {
-   		 return interviewData;
-   		}
-   		else {
-   			interviewData=repo.findAll(input,firstDaySpecification);
-   			return interviewData;
-   		}
+//   		 firstDaySpecification = new FirstDaySpecification(input);
+//
+//   		System.out.println(input);
+//
+//   		if(firstDaySpecification==null) {
+//   		 return interviewData;
+//   		}
+//   		else {
+//   			interviewData=repo.findAll(input,firstDaySpecification);
+//   		}
+   		return interviewData;
 
    	  }
 

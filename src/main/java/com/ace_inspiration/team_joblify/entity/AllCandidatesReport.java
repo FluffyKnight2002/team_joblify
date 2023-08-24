@@ -29,25 +29,53 @@ import lombok.Data;
 public class AllCandidatesReport {
 		@Id
 	    private long id;
+		
+		@Column(name="name")
 		private String name;
+		
 		@Column(name="apply_date")
 		private String applyDate;
+		
 		@Column(name="interview_date")
 	    private String interViewDate;
+		
 		@Column(name="interview_status")
 		private String interviewStatus;
+		
+		@Column(name="dob")
 	    private LocalDate dob;
+		
 	    @Enumerated(EnumType.STRING)
+	    @Column(name="gender")
+	    
 	    private Gender gender;
+	    @Column(name="phone")
 	    private String phone;
+	    
+	    @Column(name="email")
 	    private String email;
+	    
+	    @Column(name="education")
 	    private String education;
+	    
+	    @Column(name="apply_position")
 	    private String applyPosition;
+	    
 	    @Enumerated(EnumType.STRING)
 	    private Level lvl;
+	    
+	    @Column(name="tech_skills")
 	    private String techSkills;
+	    
+	    @Column(name="specialist_tech")
 	    private String specialistTech;
+	    
+	    @Column(name="experience")
 	    private String experience;
+	    
+	    @Column(name="expected_salary")
 	    private double expectedSalary;
+	    
+	    @Column(name="language_skills")
 	    private String languageSkills;	   
 }

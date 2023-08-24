@@ -160,7 +160,7 @@ public class CandidateServiceImplement implements CandidateService{
 
     @Override
 
-    public void saveCandidate(CandidateDto candidateDto) {
+    public Candidate saveCandidate(CandidateDto candidateDto) {
         List<LanguageSkills> languageSkillsList= new ArrayList<>();
         for(String languageSkill: candidateDto.getLanguageSkills()) {
             LanguageSkills  languageSkills= new LanguageSkills();
@@ -209,11 +209,12 @@ public class CandidateServiceImplement implements CandidateService{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            candidateRepository.save(candidate);
+           candidateRepository.save(candidate);
 
-        }  
-
-       
+          
+        }
+		return candidate;  
+      
 
 
 //		summary.getLanguageSkills().add(languageSkills);
