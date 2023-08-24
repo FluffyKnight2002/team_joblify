@@ -21,16 +21,17 @@ public class JasperReportController {
 	AllCandidatesReportService candidatesReportService;
 	@Autowired
 	AllCandidatesReportRepository candidatesReportRepo;
+	@Autowired
+	InterviewProcessReportService interViewService;
+	@Autowired
+	InterviewProcessReportRepository interViewRepo;
+	
 	@PostMapping("/view_allCandidates/{format}")
 	public String generateReportCandidates(@PathVariable String format,@RequestBody List<AllCandidatesReport> tableData) throws FileNotFoundException, JRException {
 		candidatesReportRepo.saveAll(tableData);
 		return candidatesReportService.exportReport(format);
 
 }
-	@Autowired
-	InterviewProcessReportService interViewService;
-	@Autowired
-	InterviewProcessReportRepository interViewRepo;
 	@PostMapping("/interview_process/{format}")
 	public String generateReportInterview(@PathVariable String format,@RequestBody List<InterViewProcessReport> tableData) throws FileNotFoundException, JRException {
 		
