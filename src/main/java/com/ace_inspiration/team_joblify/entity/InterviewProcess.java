@@ -1,6 +1,8 @@
 package com.ace_inspiration.team_joblify.entity;
 
 
+import java.time.LocalDateTime;
+
 import com.querydsl.core.annotations.Immutable;
 
 import jakarta.persistence.Column;
@@ -42,4 +44,6 @@ public class InterviewProcess  {
 	private Status interviewStatus;
 	
 	private String position;
+	
+	private LocalDateTime date;
 }

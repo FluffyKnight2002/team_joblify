@@ -1,8 +1,9 @@
 package com.ace_inspiration.team_joblify.service;
 
+import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 
 public interface EmailService {
     void sendForgetPasswordEmail(String to);
 
-    void sendJobOfferEmail(String to, String content);
+    boolean sendJobOfferEmail(EmailTemplateDto emailTemplateDto);
 }

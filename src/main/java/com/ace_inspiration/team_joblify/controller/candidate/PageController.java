@@ -52,4 +52,8 @@ public class PageController {
     public String internalServerError() {
         return "error-500";
     }
+    @GetMapping("/testing")
+    public String testing() {
+        return "newEmail";
+    }
 }

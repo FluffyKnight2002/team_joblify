@@ -18,6 +18,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import com.ace_inspiration.team_joblify.entity.Role;
 
@@ -31,64 +32,54 @@ public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
 
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(
-                        csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                )
-                .rememberMe(
-                        rememberMe -> rememberMe
-                                .key(rememberMeKey)
-                                .tokenValiditySeconds(84600)
-                                .rememberMeCookieName("remember-me-cookie")
-                                .rememberMeParameter("remember-me")
-                                .userDetailsService(myUserDetailsService)
-                )
-                .authorizeHttpRequests(authorize->authorize
+            .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+            .rememberMe(rememberMe -> rememberMe
+                .key(rememberMeKey)
+                .tokenValiditySeconds(84600)
+                .rememberMeCookieName("remember-me-cookie")
+                .rememberMeParameter("remember-me")
+                .userDetailsService(myUserDetailsService))
+            .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/all-user-list").hasAuthority(Role.DEFAULT_HR.name())
-                        .requestMatchers("/assets/**",
-                                "/assets/css/**",
-                                "/assets/images/**",
-                                "/assets/js/**",
-                                "/assets/vendors/**").permitAll()
-                        .requestMatchers("/**", "/ws/**").permitAll()
-                        
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(exception -> exception
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.sendRedirect("/403");})
-                        .authenticationEntryPoint((request, response, authException) -> {
-                                if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
-                                        response.sendRedirect("/404");
-                                } else {
-                                        response.sendRedirect("/login");
-                                }
-                        })        
-                )
-
-                .formLogin(login->login
-                        .loginPage("/login")
-                        .usernameParameter("username")
-                        .failureUrl("/login?error=true")
-                        .defaultSuccessUrl("/dashboard?loginSuccess=true")
-                        .permitAll()
-                )
-                .logout(logout->logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logoutSuccess=true")
-                        .deleteCookies("JSESSIONID", "remember-me-cookie")
-                        .clearAuthentication(true)
-                        .invalidateHttpSession(true)
-                        .permitAll()
-                );
-
-
+                .requestMatchers("/assets/**",
+                        "/assets/css/**",
+                        "/assets/images/**",
+                        "/assets/js/**",
+                        "/assets/vendors/**").permitAll()
+                .requestMatchers("/**", "/ws/**").permitAll()
+                .anyRequest().authenticated())
+            .exceptionHandling(exception -> exception
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/403");
+                })
+                .authenticationEntryPoint((request, response, authException) -> {
+                    if (response.getStatus() == HttpStatus.NOT_FOUND.value()) {
+                        response.sendRedirect("/404");
+                    } else {
+                        response.sendRedirect("/login");
+                    }
+                }))
+            .formLogin(login -> login
+                .loginPage("/login")
+                .usernameParameter("username")
+                .failureUrl("/login?error=true")
+                .defaultSuccessUrl("/dashboard?loginSuccess=true")
+                .permitAll())
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logoutSuccess=true")
+                .deleteCookies("JSESSIONID", "remember-me-cookie")
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .permitAll())
+            .httpBasic();
+           
         return http.build();
     }
+
 
 
     @Bean
@@ -100,6 +91,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
+  
 
 }
