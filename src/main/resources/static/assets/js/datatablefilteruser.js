@@ -50,6 +50,7 @@ function resetFilters() {
 
 // Update the text of the recent filter dropdown button when an option is selected
 function changeSelectedFilterName(item) {
+
     if (item) {
         let selectedValue = $(item).text(); // Get the selected value from the clicked item
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
@@ -59,21 +60,21 @@ function changeSelectedFilterName(item) {
         // Find and update the isRemove property in filterElements
         console.log(filterId)
         for (let i = 0; i < filterElements.length; i++) {
-            console.log(filterElements[i].filterId)
+            console.log("Filter Element Name : ",filterElements[i].name)
             if (filterElements[i].filterId === filterId) {
                 $('#' + filterElements[i].filterId).val($.trim(selectedValue));
                 break; // Exit the loop once the element is found
             }
         }
 
-        if ($('input[name="datefilter2"]').length > 0) {
+        // if ($('input[name="datefilter2"]').length > 0) {
             if(selectedValue != 'Custom') {
                 $('input[name="datefilter2"]').val('');
                 button.text(selectedValue); // Update the text of the button
             }else {
                 $('.date-posted-filter-btn').text('Custom');
             }
-        }
+        // }
 
         // updateDataTable();
     }
@@ -206,7 +207,7 @@ function createDepartmentFilterButton(selectedValue) {
     filterElements[1].isRemove = true;
     $('.department-dropdown-item').hide();
 
-    $('#filter-department').val(selectedValue);
+    // $('#filter-department').val(selectedValue);
 
     checkAndToggleFilterButton();
 
@@ -271,10 +272,10 @@ function createRoleFilterButton(selectedValue) {
             <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="role-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
-            <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Open</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Closed</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Expired</li>
+            <ul class="dropdown-menu dropdown-submenu" id="role-filter-dropdown-submenu">
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);">Senior-HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);">Junior-HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);">Other</li>
             </ul>
         </div>`;
 
@@ -311,10 +312,9 @@ function createStatusFilterButton(selectedValue) {
             <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="status-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
-            <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Open</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Closed</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Expired</li>
+            <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu">
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);">Active</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);">Suspend</li>
             </ul>
         </div>`;
 
@@ -363,4 +363,11 @@ async function fetchDepartmentAndGenerateHTML() {
         console.error('An error occurred:', error);
         return ''; // Return an empty string in case of an error
     }
+}
+
+// Function to replace datefilter2 with the value from datefilter
+function replaceDateFilter2Value() {
+    const dateFilterValue = $('input[name="datefilter"]').val();
+    $('input[name="datefilter2"]').val(dateFilterValue);
+    $('input[name="datefilter"]').val('')
 }
