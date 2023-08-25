@@ -1,4 +1,4 @@
-var currentId = new URLSearchParams(window.location.search).get("id");
+let currentId = new URLSearchParams(window.location.search).get("id");
 const formId = document.getElementById('form-id');
 formId.value = currentId;
 // Function to fetch job data and create job card UI

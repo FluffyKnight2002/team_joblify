@@ -89,26 +89,26 @@ public class CandidateController {
 
     private final VacancyInfoRepository vanInfoReopository;
 
-//    private FirstDaySpecification firstDaySpecification;
+    private FirstDaySpecification firstDaySpecification;
 
 
-//    @GetMapping("/allCandidate")
-//    @ResponseBody
-//    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
-//
-//        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
-//        firstDaySpecification = new FirstDaySpecification(input);
-//
-//        System.out.println(input);
-//
-//        if (firstDaySpecification == null) {
-//            return interviewData;
-//        } else {
-//            interviewData = repo.findAll(input, firstDaySpecification);
-//            return interviewData;
-//        }
-//
-//    }
+    @GetMapping("/allCandidate")
+    @ResponseBody
+    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+
+        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+        firstDaySpecification = new FirstDaySpecification(input);
+
+        System.out.println(input);
+
+        if (firstDaySpecification == null) {
+            return interviewData;
+        } else {
+            interviewData = repo.findAll(input, firstDaySpecification);
+            return interviewData;
+        }
+
+    }
 
 
     @GetMapping("/allPositions")
