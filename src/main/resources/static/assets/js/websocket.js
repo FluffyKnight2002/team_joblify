@@ -95,7 +95,7 @@ function addNotifications(notification) {
     </div>
     <div class="d-flex justify-content-between">
         <h6 class="text-start text-muted" style="font-size: 13px">${timeAgo(notification.time)}<i class="bi bi-clock-history p-1 pt-2"></i></h6>
-        <span class="text-muted text-center sub-title mx-2 select-btn" style="font-size: 0.7rem">click here to select <br/> or deselect <i class="bi bi-hand-index-fill"></i></span>
+        <span class="text-muted text-center sub-title mx-2 select-btn" style="opacity: 0;font-size: 0.7rem">click here to select <br/> or deselect <i class="bi bi-hand-index-fill"></i></span>
     </div>
   `);
 
@@ -124,6 +124,17 @@ function addNotifications(notification) {
     if(isDeleted === false) {
         $('#notifications-container').append(notificationElement);
     }
+
+    $('.notification-items').each(function() {
+        const selectBtn = $(this).find('span.select-btn'); // Cache the select button element
+        $(this).hover(function() {
+            // selectBtn.show(); // Toggle the display of select-btn on hover
+            selectBtn.stop().animate({ opacity: 1 }, 400);
+        }, function() {
+            // selectBtn.hide(); // Toggle it back when hovering out
+            selectBtn.stop().animate({ opacity: 0 }, 400);
+        });
+    });
 }
 
 function handleNewNotification(notification) {

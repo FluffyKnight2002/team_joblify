@@ -14,6 +14,7 @@ public interface NotificationUserRepository extends DataTablesRepository<Notific
 
     void deleteAllByUser(User user);
     Optional<NotificationUser> findNotificationUserByNotificationAndUser(Notification notification, User user);
+    Optional<NotificationUser> findAllByNotificationAndUser(Notification notification, User user);
     Optional<NotificationUser> findByNotification(Notification notification);
     List<NotificationUser> findAllByOrderByNotificationDesc();
     List<NotificationUser> findNotificationUserByUser(User user);

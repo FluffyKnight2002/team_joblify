@@ -1,113 +1,108 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head>
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    
     <title>Title</title>
-    
 </head>
-
 <body>
 
-    <!-- Sidebar -->
-    <div id="sidebar" class="active" th:fragment="sidebar">
-        <div class="sidebar-wrapper active">
-            <div class="sidebar-header">
-                <div class="d-flex justify-content-between">
-                    <div style="height: auto">
-                        <a href="/dashboard" class="text-primary" style="height: 80px !important;">
-                            <img style="position: static;width: auto;height: 65px;"
-                                src="/assets/images/candidate-images/ace_logo.png" alt="Ace Data System" />
-                        </a>
-                    </div>
-                    <div class="toggler">
-                        <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                    </div>
+<!-- Sidebar -->
+<div id="sidebar" class="active" th:fragment="sidebar">
+    <div class="sidebar-wrapper active">
+        <div class="sidebar-header">
+            <div class="d-flex justify-content-between">
+                <div style="height: auto">
+                    <a href="/dashboard" class="text-primary" style="height: 80px !important;">
+                        <img style="position: static;width: auto;height: 65px;" src="/assets/images/candidate-images/ace_logo.png" alt="Ace Data System"/>
+                    </a>
+                </div>
+                <div class="toggler">
+                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                 </div>
             </div>
-            <div class="sidebar-menu">
-                <ul class="menu">
-                    <li class="sidebar-title">Menu</li>
-
-                    <li class="sidebar-item active">
-                        <a th:href="@{/dashboard}" class='sidebar-link'>
-                            <i class="bi bi-grid-fill"></i>
-                            <span>Dashboard</span>
-                        </a>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-file-post-fill"></i>
-                            <span>Vacancies</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a th:href="show-upload-vacancy-form">Upload</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a th:href="show-all-vacancies-page">View list</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-person-fill"></i>
-                            <span>Users</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a th:href="@{/user-register}">Register</a>
-                            </li>
-                            <li class="submenu-item ">
-                                <a th:href="@{/all-user-list}">User list</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-file-person-fill"></i>
-                            <span>Candidates</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a th:href="view-summaryinfo">View list</a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="sidebar-item  has-sub">
-                        <a href="#" class='sidebar-link'>
-                            <i class="bi bi-clipboard-data"></i>
-                            <span>Interviews</span>
-                        </a>
-                        <ul class="submenu ">
-                            <li class="submenu-item ">
-                                <a th:href="@{/interviewProcess}">View position & candidate</a>
-                                <a th:href="@{/CandidateViewSummary}">View status details</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- <button class="sidebar-toggler btn x"><i data-feather="x"></i></button> -->
         </div>
+        <div class="sidebar-menu">
+            <ul class="menu">
+                <li class="sidebar-title">Menu</li>
+
+                <li class="sidebar-item" th:classappend="${currentPage == '/dashboard' ? 'active' : ''}">
+                    <a th:href="@{/dashboard}" class='sidebar-link'>
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item  has-sub" th:classappend="${currentPage == '/show-all-vacancies-page' ? 'active' : (currentPage == '/show-upload-vacancy-form') ? 'active' : ''}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-file-post-fill"></i>
+                        <span>Vacancies </span>
+                    </a>
+                    <ul class="submenu ">
+                        <li class="submenu-item ">
+                            <a th:href="show-upload-vacancy-form">Upload</a>
+                        </li>
+                        <li class="submenu-item ">
+                            <a th:href="show-all-vacancies-page">View list</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-person-fill"></i>
+                        <span>Users</span>
+                    </a>
+                    <ul class="submenu ">
+                        <li class="submenu-item ">
+                            <a th:href="@{/user-register}">Register</a>
+                        </li>
+                        <li class="submenu-item ">
+                            <a th:href="@{/all-user-list}">User list</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-file-person-fill"></i>
+                        <span>Candidates</span>
+                    </a>
+                    <ul class="submenu ">
+                        <li class="submenu-item ">
+                            <a th:href="view-summaryinfo">View list</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-clipboard-data"></i>
+                        <span>Interviews</span>
+                    </a>
+                    <ul class="submenu ">
+                        <li class="submenu-item ">
+                            <a th:href="@{/interviewProcess}">View position & candidate</a>
+                            <a th:href="@{/CandidateViewSummary}">View status details</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
     </div>
+</div>
 
-    <!-- Navbar -->
-    <header class='layout-navbar glass-transparent sticky' th:fragment="layout-navbar">
-        <nav class="navbar navbar-expand navbar-light ">
-            <div class="container-fluid">
-                <a href="#" class="burger-btn d-block">
-                    <i class="bi bi-justify fs-3"></i>
-                </a>
+<!-- Navbar -->
+<header class='layout-navbar glass-transparent sticky' th:fragment="layout-navbar">
+    <nav class="navbar navbar-expand navbar-light ">
+        <div class="container-fluid">
+            <a href="#" class="burger-btn d-block">
+                <i class="bi bi-justify fs-3"></i>
+            </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -191,7 +186,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="loader" style="min-width: 168.95px; min-height: 40.19px;" class="d-flex justify-content-center align-items-center">
+                    <div id="loader" style="min-width: 168.95px; min-height: 40.19px; " class="d-flex justify-content-center align-items-center">
                         <div class="spinner-grow text-danger me-2" role="status"></div>
                           <div class="spinner-grow text-warning me-2" role="status"></div>
                           <div class="spinner-grow text-info" role="status"></div>
@@ -202,5 +197,4 @@
     </header>
 
 </body>
-
 </html>

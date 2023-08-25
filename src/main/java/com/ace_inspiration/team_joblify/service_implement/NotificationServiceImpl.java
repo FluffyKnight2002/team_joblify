@@ -188,7 +188,6 @@ public class NotificationServiceImpl implements NotificationService {
         System.out.println("Both exit" + bothExist);
         if(bothExist == true) {
             System.out.println("Both exit.");
-//            NotificationUser notificationUser =
             notificationDto.setSeen(findNotificationSeenByIdAndUserId(notification.getId(),userDetails.getUserId()));
             notificationDto.setDeleted(false);
         }else {

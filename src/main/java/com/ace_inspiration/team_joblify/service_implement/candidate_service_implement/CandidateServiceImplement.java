@@ -159,8 +159,7 @@ public class CandidateServiceImplement implements CandidateService{
     }
 
     @Override
-
-    public void saveCandidate(CandidateDto candidateDto) {
+    public Candidate saveCandidate(CandidateDto candidateDto) {
         List<LanguageSkills> languageSkillsList= new ArrayList<>();
         for(String languageSkill: candidateDto.getLanguageSkills()) {
             LanguageSkills  languageSkills= new LanguageSkills();
@@ -197,7 +196,7 @@ public class CandidateServiceImplement implements CandidateService{
 
         Candidate candidate=new Candidate();
 
-       
+
         if (isWordFile(candidateDto.getResume()) || isPdfFile(candidateDto.getResume()) || isPngFile(candidateDto.getResume()) || isJpgFile(candidateDto.getResume())) {
         	 candidate.setSummary(summary);
              candidate.setSelectionStatus(Status.RECEIVED);
@@ -209,11 +208,12 @@ public class CandidateServiceImplement implements CandidateService{
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            candidateRepository.save(candidate);
+           candidateRepository.save(candidate);
 
-        }  
 
-       
+        }
+		return candidate;
+
 
 
 //		summary.getLanguageSkills().add(languageSkills);

@@ -11,9 +11,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!-- Izitoast for noti -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+    <!--  Range picker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
     <!--  Date range picker-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -41,12 +44,12 @@
                             <h3>All Vacancies</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
-                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a th:href="@{/dashboard}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page"><a th:href="@{/show-all-vacancies-page}">All Vacancies</a>
-                                    </li>
-                                </ol>
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-end">
+                                <h6>
+                                    <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                                       style="background: #1e497b !important;" href="javascript:history.back()">
+                                        <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                </h6>
                             </nav>
                         </div>
                     </div>
@@ -61,6 +64,7 @@
                                 <table id="table" class="table table-striped" style="width: 100%;" aria-describedby="myDesc">
                                     <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Position</th>
                                         <th>Department</th>
                                         <th>Experience</th>
@@ -69,7 +73,7 @@
                                         <th>Applicants</th>
                                         <th>Created User/Time</th>
                                         <th>Updated User/Time</th>
-                                        <th>Open/Close</th>
+                                        <th>Open/Close Date</th>
                                         <th>
                                             <!-- Add a button with an ID "toggleColumnsBtn" -->
                                             <button class="btn btn-sm btn-primary my-3" id="toggleColumnsBtn">Switch</button>
@@ -90,10 +94,10 @@
                 <!-- Hidden input for 'datePosted' parameter -->
                 <input type="hidden" name="datePosted" id="filter-date-posted" value="">
 
-                <!-- Hidden input for 'datePosted' parameter -->
+                <!-- Hidden input for 'startDate' parameter -->
                 <input type="hidden" name="startDate" id="filter-start-date" value="">
 
-                <!-- Hidden input for 'title' parameter -->
+                <!-- Hidden input for 'endDate' parameter -->
                 <input type="hidden" name="endDate" id="filter-end-date" value="">
 
                 <!-- Hidden input for 'title' parameter -->
@@ -151,7 +155,12 @@
             <div class="modal-content">
                 <div class="modal-header" style="background: #0c233d;">
                     <div class="d-flex flex-row">
-                        <h1 class="modal-title fs-5 text-white" id="vacancyDetail">Vacancy Detail</h1>
+                        <h1 class="modal-title fs-5 text-white" id="vacancyDetail">
+                            Vacancy Detail
+                            <i class="bi bi-arrow-clockwise ps-2" id="reset-form" data-vacancy-id=""
+                               data-bs-toggle="tooltip" data-bs-placement="bottom"
+                               title="Reset vacancy information"
+                               style="cursor: pointer;font-size: 1.25rem;font-weight: bolder;"></i></h1>
                         <a class="btn-un-bright mx-3" id="reopen-btn">Reopen</a>
                         <a class="btn btn-sm btn-light-secondary mx-3 close-vacancy" id="close-btn">Close Vacancy</a>
                     </div>
@@ -165,33 +174,33 @@
                         <div class="mb-3 position-relative">
                             <label for="title" class="form-label">
                                 Title(Position)
-                                <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Modify position was not allow in reopen mode!">
+                                <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                      title="Modifying position was not allowed!">
                                     <i class="bi bi-exclamation-circle-fill"></i>
                                 </span>
                             </label>
-                            <input type="text" class="form-control custom-autocomplete input-to-disable" id="title" name="position" required>
+                            <input type="text" class="form-control custom-autocomplete input-to-disable" id="title" name="position" required disabled>
                             <span class='spinner-border spinner-border-sm spinner title-spinner' role='status'></span>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger">Title can't be empty</div>
                             <div id="title-suggestions"></div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="post" class="form-label">Post</label>
                                 <input type="number" class="form-control" id="post" name="post" required>
-                                <div class="feedback-message"></div>
+                                <div class="feedback-message text-danger">Post can't be empty</div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3 position-relative">
                                 <label for="department" class="form-label">
                                     Department
-                                    <span class="text-danger reopen-mode-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                          title="Modify department was not allow in reopen mode!">
+                                    <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
+                                          title="Modifying department was not allowed!">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </span>
                                 </label>
-                                <input type="text" class="form-control custom-autocomplete input-to-disable" id="department" name="department" required>
+                                <input type="text" class="form-control custom-autocomplete input-to-disable" id="department" name="department" required disabled>
                                 <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
-                                <div class="feedback-message"></div>
+                                <div class="feedback-message text-danger">Department can't be empty</div>
                                 <div id="department-suggestions"></div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -222,7 +231,6 @@
                                     <div id="calendar" class="calendar dropdown-menu">
                                         <!-- Days of the week will be added here -->
                                     </div>
-                                    <div class="feedback-message"></div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
@@ -243,7 +251,7 @@
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="salary" class="form-label">Salary</label>
                                 <input type="text" class="form-control" id="salary" name="salary" required>
-                                <div class="feedback-message"></div>
+                                <div class="feedback-message text-danger">Salary can't be empty</div>
                             </div>
                             <div class="col-12 col-md-6 col-lg-3 mb-3">
                                 <label for="onSiteOrRemote" class="form-label">On-Site or Remote</label>
@@ -257,7 +265,7 @@
                         <div class="mb-3">
                             <label for="descriptions" class="form-label">Descriptions</label>
                             <textarea class="form-control" id="descriptions" name="descriptions" rows="3" required></textarea>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger">Descriptions can't be empty</div>
                         </div>
                         <div class="mb-3">
                             <label for="responsibilities" class="form-label">
@@ -278,7 +286,7 @@
                                 </button>
                             </div>
                             <textarea class="form-control" id="responsibilities" name="responsibilities" rows="3" required></textarea>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger">Responsibilities can't be empty</div>
                         </div>
                         <div class="mb-3">
                             <label for="requirements" class="form-label">
@@ -299,7 +307,7 @@
                                 </button>
                             </div>
                             <textarea class="form-control" id="requirements" name="requirements" rows="3" required></textarea>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger">Requirements can't be empty</div>
                         </div>
                         <div class="mb-3">
                             <label for="preferences" class="form-label">
@@ -320,14 +328,24 @@
                                 </button>
                             </div>
                             <textarea class="form-control" id="preferences" name="preferences" rows="3" required></textarea>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger"></div>
                         </div>
                         <div class="mb-3">
                             <label for="address" class="form-label">Address</label>
                             <textarea class="form-control custom-autocomplete" id="address" name="address" rows="3" required></textarea>
                             <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
-                            <div class="feedback-message"></div>
+                            <div class="feedback-message text-danger">Address can't be empty</div>
                             <div id="address-suggestions"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">
+                                Note
+                                <span class="text-info" data-bs-toggle="tooltip" data-bs-placement="right"
+                                      title="Note something important about this vacancy">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </span>
+                            </label>
+                            <textarea class="form-control custom-autocomplete" id="note" name="note" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
@@ -360,16 +378,26 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!-- Izitoast for noti -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
 <!--Range picker cdn-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.js"></script>
 <!-- Your custom scripts -->
 <script src="/assets/js/jquery.spring-friendly.js"></script>
+<!-- User info for navbar -->
+<script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+<!-- For vacancy data table and filter -->
 <script src="/assets/js/viewvacancies.js"></script>
 <script src="/assets/js/datatablefilter.js"></script>
+<!-- For auto compelete -->
 <script src="/assets/js/autocomplete.js"></script>
+<!-- For text editor -->
 <script src="/assets/js/texteditor.js"></script>
+<!-- For custom reusable progress loader and show message -->
 <script src="/assets/js/messageandloader.js"></script>
+<!-- About notification -->
 <script src="/assets/js/websocket.js"></script>
+<!-- From template -->
 <script src="/assets/js/main.js"></script>
 </body>
 </html>

@@ -3,15 +3,15 @@ let uploadInput = document.getElementById('uploadImageInput');
 let preview = document.getElementById('uploadedImage');
 const removeIcon = document.getElementById('removeIcon');
 
-// Initialize the display of remove icon based on image presence
-document.addEventListener('DOMContentLoaded', function() {
-    console.log(preview.src);
-    if (preview.src.startsWith('http://localhost:8080/')) {
-        removeIcon.style.display = 'none';
-    } else {
-        removeIcon.style.display = 'inline-block';
-    }
-});
+// // Initialize the display of remove icon based on image presence
+// document.addEventListener('DOMContentLoaded', function() {
+//     console.log(preview.src);
+//     if (preview.src.startsWith('http://localhost:8080/')) {
+//         removeIcon.style.display = 'none';
+//     } else {
+//         removeIcon.style.display = 'inline-block';
+//     }
+// });
 
 // Function to open the file uploader
 function openUploader() {

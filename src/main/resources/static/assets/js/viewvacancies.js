@@ -2,8 +2,8 @@ let currentId = new URLSearchParams(window.location.search).get("id");
 const reopenBtn = $('#reopen-btn');
 const closeBtn = $('#close-btn');
 const resetButton = $('#reset-repoen-btn');
-const reopenModeWarn = $('.reopen-mode-warn');
-const inputsToDisable = $('.input-to-disable');
+// const reopenModeWarn = $('.reopen-mode-warn');
+// const inputsToDisable = $('.input-to-disable');
 let defaultPosition = null;
 let defaultDepartment = null;
 let href;
@@ -24,10 +24,10 @@ $(document).ready(function () {
 
     console.log($('#title'))
     console.log($('#department'))
-    console.log("Input To Disable : ", inputsToDisable)
+    // console.log("Input To Disable : ", inputsToDisable)
 
     // Store the initial visibility status of each column
-        let columnVisibility = [true, true, true, true, true, true, false, false, true];
+        let columnVisibility = [true,true, true, true, true, true, false, false, false, true];
         table = $('table#table').DataTable({
             "serverSide": true,
             "processing": true,
@@ -49,54 +49,65 @@ $(document).ready(function () {
                 }
             },
             "columns": [
-                // { name: "No", data: null, render: function (data, type, row, meta) { return meta.row + 1; }, target: 0 },
-                { name: "Position", data: "position", target: 0 }, // Access object property directly
-                { name: "Department", data: "department", target: 1 }, // Access object property directly
+                {
+                    className: 'dt-control',
+                    orderable: false,
+                    data: "note",
+                    render: function (data, type, row, meta) {
+                        return "";
+                    },
+                    defaultContent: '',
+                    target: 0
+                },
+                { name: "Position", data: "position", target: 1 }, // Access object property directly
+                { name: "Department", data: "department", target: 2 }, // Access object property directly
                 { name: "Experience",
                     data: "level",
                     render: function (data, type, row, meta) {
                         return reconvertToString(row.level);
                     },
-                    target: 2 }, // Access object property directly
+                    target: 3 }, // Access object property directly
                 { name: "Salary",
                     data: "salary",
                     render: function (data, type, row, meta) {
                         return convertToLakhs(row.salary);
                     },
-                    target: 3 }, // Access object property directly
-                { name: "Status", data: "status", target: 4 }, // Access object property directly
+                    target: 4 }, // Access object property directly
+                { name: "Status", data: "status", target: 5 }, // Access object property directly
                 { name: "Applicants",
                     data: "applicants",
                     render: function (data, type, row, meta) {
                         let applicants =  (row.applicants === 0) ? "-" : row.applicants;
                         return '<p class="text-center">'+applicants+'</p>';
                     },
-                    target: 5 }, // Access object property directly
+                    target: 6 }, // Access object property directly
                 { name: "Created User/Time",
                     data: "createdUsername",
                     data: "createdTime",
                     render: function (data, type, row, meta) {
                         return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
+                            '</br>' +
                             '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) +
-                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
                             changeTime(row.createdTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
                     },
-                    target: 6
+                    target: 7
                 }, // Access object property directly
                 { name: "Updated User/Time",
                     data: "updatedUsername",
                     data: "updatedTime",
                     render: function (data, type, row, meta) {
                         return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
+                            '</br>' +
                             '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) +
-                            '<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
                             changeTime(row.updatedTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
                     },
-                    target: 7
+                    target: 8
                 }, // Access object property directly
                 {
                     name: "Open/Close",
@@ -107,9 +118,10 @@ $(document).ready(function () {
                         var closeDateFormatted = changeTimeFormat(row.closeDate);
 
                         return '<span class="d-inline-block text-white rounded bg-success p-1" style="font-size: 0.7rem">' + openDateFormatted + '</span>' +
+                            '</br>' +
                             '<span class="d-inline-block text-white rounded bg-danger p-1" style="font-size: 0.7rem">' + closeDateFormatted + '</span>';
                     },
-                    target: 8
+                    target: 9
                 },
                 {
                     name: "Switch",
@@ -137,7 +149,7 @@ $(document).ready(function () {
 
                         return dropdown;
                     },
-                    target: 9,
+                    target: 10,
                     sortable: false
                 }
             ],
@@ -146,6 +158,38 @@ $(document).ready(function () {
             lengthMenu: [5,10,20],
             pageLength: 5,
         });
+
+    function format(d) {
+        // `d` is the original data object for the row
+        let note = '';
+        if(d.note === '' || d.note === null) {
+            return '<p class="text-muted sub-title">' + "No note to show." + '</p>'
+        }
+
+        return (
+            '<dl>' +
+            '<dt>Note:</dt>' +
+            '<dd>' +
+            d.note +
+            '</dd>' +
+            '</dl>'
+        );
+    }
+
+    // Add event listener for opening and closing details
+    table.on('click', 'td.dt-control', function (e) {
+        let tr = e.target.closest('tr');
+        let row = table.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+        }
+        else {
+            // Open this row
+            row.child(format(row.data())).show();
+        }
+    });
 
         // Function to toggle column visibility
         // Show columns 0 to 6 and the last column (index 10)
@@ -156,15 +200,15 @@ $(document).ready(function () {
 
         // Bind the button click event to toggle column visibility
         $('#toggleColumnsBtn').on('click', function () {
-            // Toggle columns 6 to 8
-            for (var i = 6; i <= 8; i++) {
+            // Toggle columns 7 to 9
+            for (var i = 7; i <= 9; i++) {
                 var column = table.column(i);
                 var isVisible = column.visible();
                 if (isVisible) {
-                    // Hide columns 7 to 9 and show columns 3 to 6
+                    // Hide columns 8 to 9 and show columns 3 to 7
                     columnVisibility[i] = isVisible;
                     column.visible(false);
-                    for (var j = 2; j <= 5; j++) {
+                    for (var j = 3; j <= 6; j++) {
                         var col = table.column(j);
                         col.visible(true);
                     }
@@ -172,7 +216,7 @@ $(document).ready(function () {
                     // Show columns 7 to 9 and hide columns 3 to 6
                     columnVisibility[i] = isVisible;
                     column.visible(true);
-                    for (var j = 2; j <= 5; j++) {
+                    for (var j = 3; j <= 6; j++) {
                         var col = table.column(j);
                         col.visible(false);
                     }
@@ -200,7 +244,7 @@ $(document).ready(function () {
                 .data('success-message', 'Update successful!')
                 .data('error-message', 'Update failed. Please try again.')
                 .html('Update');
-                reopenModeWarn.hide();
+                // reopenModeWarn.hide();
                 $('#reopen-form')
                     .attr('id', 'update-form')
                     .attr('action', 'update-vacancy');
@@ -208,7 +252,7 @@ $(document).ready(function () {
             // If the button is in the "off" state, switch it on
             reopenBtn.removeClass('btn-un-bright');
             reopenBtn.addClass('btn-bright');
-            reopenModeWarn.show();
+            // reopenModeWarn.show();
             $('#submit-btn')
                 .data('form-id', 'reopen-form')
                 .data('warning-message', 'Reopen will make this vacancy open for 30 days again.')
@@ -220,9 +264,9 @@ $(document).ready(function () {
                 .attr('id', 'reopen-form')
                 .attr('action', 'reopen-vacancy');
         }
-        inputsToDisable.each(function() {
-            $(this).prop('disabled', !$(this).prop('disabled')); // Toggle the disabled property
-        });
+        // inputsToDisable.each(function() {
+        //     $(this).prop('disabled', !$(this).prop('disabled')); // Toggle the disabled property
+        // });
     });
     // Click event handler for the reset button
     resetButton.on('click', function() {
@@ -244,11 +288,11 @@ $(document).ready(function () {
             .attr('id', 'update-form')
             .attr('action', 'update-vacancy');
         // Disable the inputs
-        reopenModeWarn.hide();
-        inputsToDisable.prop('disabled', false);
+        // reopenModeWarn.hide();
+        // inputsToDisable.prop('disabled', false);
     });
 
-    reopenModeWarn.hide();
+    // reopenModeWarn.hide();
 
     // Create reset filter button
     let resetFilterButton = `
@@ -457,6 +501,9 @@ $(document).ready(function () {
         event.stopPropagation();
     });
 
+    // Get the current date
+    const currentDate = moment();
+
     // Date range picker
     $(function() {
         // Initialize the daterangepicker
@@ -464,8 +511,11 @@ $(document).ready(function () {
             autoUpdateInput: false,
             locale: {
                 cancelLabel: 'Clear'
-            }
+            },
+            maxDate: currentDate // Set the maximum date initially to the current date
         });
+
+        console.log($('#date-posted-dropdown-submenu'));
 
         // Handle apply event to update the input value and set start and end times
         $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
@@ -477,7 +527,6 @@ $(document).ready(function () {
             // Set the start and end times in your input fields
             createDatePostedFilterButton('Custom',startDate,endDate);
             checkAndToggleFilterButton();
-            $('.datePostedDropdown').hide();
         });
 
         // Handle cancel event to clear the input value and reset start and end times
@@ -488,13 +537,19 @@ $(document).ready(function () {
         });
 
         $('.daterangepicker').hover(function () {
-            $('.datePostedDropdown').css('display', 'block');
-        },function() {
-            $('.datePostedDropdown').css('display', '');
+            $('#date-posted-dropdown-submenu').css('display', 'block');
         });
+
+        $('.daterangepicker th').each(function() {
+            console.log("TH:",$(this))
+            $(this).on('click', function(event) {
+                console.log("Click!!!!")
+                event.stopPropagation();
+                $('#date-posted-dropdown-submenu').css('display', 'block');
+            });
+        });
+
     });
-
-
 
     // Initialize Bootstrap tooltips
     let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -516,7 +571,8 @@ $(document).on("click", ".show-detail-btn", function (event) {
 
     // Get the vacancy ID from the link's href attribute
     href = $(this).attr("href");
-    vacancyId = href.split("=")[1]; // Assuming the URL is like "view-vacancy-detail?id=123"
+    vacancyId = href.split("=")[1];
+    $('#reset-form').attr('data-vacancy-id', vacancyId);
 
     // Fetch the vacancy details using AJAX
     var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
@@ -527,6 +583,53 @@ $(document).on("click", ".show-detail-btn", function (event) {
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");
+            let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+                return $.trim($(this).val()) === '' && $.trim($(this).val()) === '0' && $(this).prop('required'); // Only consider required fields
+            });
+
+            console.log("Empty Inputs : ",emptyInputs)
+            emptyInputs.each(function () {
+                console.log("Element : ", $(this))
+                if($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid');
+                }else if($(this).hasClass('is-valid')) {
+                    $(this).removeClass('is-valid');
+                }
+                $(this).addClass('is-valid');
+            });
+        });
+});
+
+$(document).on("click", "#reset-form", function (event) {
+    event.preventDefault(); // Prevent the default behavior of the link
+
+    vacancyId = $(this).data('vacancy-id');
+
+    // Fetch the vacancy details using AJAX
+    var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Handle the successful response and display the details in the modal
+            let inputsToReset = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+                return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
+            });
+
+            // if(inputsToReset.hasClass('is-invalid')) {
+            //     inputsToReset.removeClass('is-invalid');
+            //     inputsToReset.addClass('is-valid');
+            // }
+
+            inputsToReset.each(function () {
+                if($(this).hasClass('is-invalid')) {
+                    $(this).removeClass('is-invalid');
+                }
+                $(this).addClass('is-valid');
+            });
+
+            $('.feedback-message').css('display','none');
+            populateModalWithData(data); // Call the function to populate the modal with data
         });
 });
 
@@ -698,6 +801,7 @@ function populateModalWithData(data) {
     $("#requirements").val(data.requirements);
     $("#preferences").val(data.preferences);
     $("#address").val(data.address);
+    $('#note').val(data.note);
 
     const $calendar = $('#calendar').hide();
     const $workingDaysInput = $('#workingDays');
@@ -837,6 +941,10 @@ function populateModalWithData(data) {
     $endTimePicker.on('change', function() {
         endTime = $(this).val();
         updateInputValue();
+    });
+
+    let inputsToReset = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
+        return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
     });
 
     updateCalendar();

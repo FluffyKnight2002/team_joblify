@@ -19,6 +19,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -37,6 +39,18 @@ public class FetchVacancyController {
     private final VacancyViewRepository vacancyViewRepository;
     private final JobFilterServiceImpl jobFilterService;
     private final VacancyInfoService vacancyInfoService;
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getVacancyCount() {
+        try {
+            // Call a service method to fetch and calculate the vacancy count
+            int vacancyCount = vacancyViewRepository.countBy();
+            return ResponseEntity.ok(vacancyCount);
+        } catch (Exception e) {
+            // Handle any exceptions or errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/show-last")
     public List<VacancyView> showLastVacancies() {
@@ -68,7 +82,6 @@ public class FetchVacancyController {
 
         return paginatedVacancies;
     }
-
 
     @GetMapping("/show-all-data")
     public DataTablesOutput<VacancyView> getDataTable(

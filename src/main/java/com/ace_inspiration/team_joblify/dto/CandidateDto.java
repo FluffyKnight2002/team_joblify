@@ -31,52 +31,53 @@ public class CandidateDto {
 
 	private long id;
 
-	private String name;
+	  private String name;
 
-	private LocalDate dob;
+	  private LocalDate dob;
 
-	private String gender;
+	  private String gender;
 
-	private String phone;
+	  private String phone;
 
-	private String email;
+	  private String email;
 
-	private String education;
+	  private String education;
 
-	private String applyPosition;
+	  private String applyPosition;
 
-	private String lvl;
+	  private String lvl;
 
-	private String specialistTech;
+	  private String specialistTech;
 
-	private String experience;
+	  private String experience;
 
-	private double expectedSalary;
+	  private double expectedSalary;
 
-	private Candidate candidate;
+	  private Candidate candidate;
 
-	private String [] languageSkills;
+	  private String [] languageSkills;
 
-	private String [] techSkills;
+	  private String [] techSkills;
 
-	private String selectionStatus;
+	  private String selectionStatus;
 
-	private String interviewStatus;
+	  private String interviewStatus;
 
 	private LocalDateTime applyDate;
-	
+
 	private String type;
 
-	private MultipartFile resume;
+	  private MultipartFile resume;
 
-	private String note;
+	  private String note;
 
-	private Summary summary;
+	  private Summary summary;
 
-	private List<Interview>interviews=new ArrayList<>();
+	  private List<Interview>interviews=new ArrayList<>();
 
-	private List<Notification>notification=new ArrayList<>();
+	  private List<Notification>notification=new ArrayList<>();
 
-	private VacancyDto vacancyDto;
+	  private VacancyDto vacancyDto;
+	
 
 }
