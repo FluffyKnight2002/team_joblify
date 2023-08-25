@@ -55,4 +55,15 @@ class DepartmentRepositoryTest {
             assertThat(d).isEmpty();
         }
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Off-show", "human resource"})
+    void findByNameIgnoreCase(String name) {
+        Optional<Department> d = departmentRepository.findByNameIgnoreCase(name);
+        if (d.isPresent()) {
+            assertThat(d).contains(department);
+        } else {
+            assertThat(d).isEmpty();
+        }
+    }
 }

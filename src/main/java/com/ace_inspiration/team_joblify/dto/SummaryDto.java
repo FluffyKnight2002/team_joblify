@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ace_inspiration.team_joblify.entity.Candidate;
 import com.ace_inspiration.team_joblify.entity.Gender;
+import com.ace_inspiration.team_joblify.entity.Interview;
+import com.ace_inspiration.team_joblify.entity.InterviewStage;
+import com.ace_inspiration.team_joblify.entity.InterviewType;
 import com.ace_inspiration.team_joblify.entity.LanguageSkills;
 import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.Status;
@@ -38,7 +41,7 @@ import jakarta.persistence.OneToOne;
 @NoArgsConstructor
 public class SummaryDto {
 
-	  private long id;
+	private long id;
 	   
 	   private String name;
 	   
@@ -67,5 +70,8 @@ public class SummaryDto {
 	   private String specialist_tech;
 	   
 	   private String pId;
-	
+	   
+	   private List<String> interviewStage;
+	   
+	   private String interviewType;
 }

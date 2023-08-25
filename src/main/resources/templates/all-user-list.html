@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!--  Date range picker-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
     <style>
@@ -53,8 +53,9 @@
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                     <h6>
                                         <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
-                                           style="background: #1e497b !important;" href="javascript:history.back()">
-                                            <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                            style="background: #1e497b !important;" href="javascript:history.back()">
+                                            <i class="bi bi-arrow-left-circle position-absolute"
+                                                style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
                                     </h6>
                                 </nav>
                             </div>
@@ -146,7 +147,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
     <script>
 
-        
+
 
         // Define the closeModal function in a global scope
         function closeModal() {
@@ -157,11 +158,19 @@
         $(document).ready(function () {
 
             function format(d) {
+                const createdDate = new Date(d.createdDate).toLocaleString(); // Format createdDate
+                const lastUpdatedDate = new Date(d.lastUpdatedDate).toLocaleString(); // Format lastUpdatedDate
+
                 return (
+                    'Created Date: ' +
+                    createdDate +
+                    '<br>' +
+                    'Updated Date: ' +
+                    lastUpdatedDate +
+                    '<br>' +
                     'Note: ' +
                     d.note +
-                    '<br>' +
-                    'The child row can contain any data you wish, including links, images, inner tables etc.'
+                    '<br>'
                 );
             }
 
@@ -280,8 +289,8 @@
             $(recentFilterDropdownCon).appendTo(searchRow);
 
             $('.dropdown-menu > li').hover(function () {
-                    $(this).children('.dropdown-submenu').css('display', 'block');
-                }
+                $(this).children('.dropdown-submenu').css('display', 'block');
+            }
                 , function () {
                     $(this).children('.dropdown-submenu').css('display', '');
                 });
@@ -290,7 +299,7 @@
             const currentDate = moment();
 
             // Date range picker
-            $(function() {
+            $(function () {
                 // Initialize the daterangepicker
                 $('input[name="datefilter"]').daterangepicker({
                     autoUpdateInput: false,
@@ -303,19 +312,19 @@
                 console.log($('#date-posted-dropdown-submenu'));
 
                 // Handle apply event to update the input value and set start and end times
-                $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+                $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
                     const startDate = picker.startDate.format('MM/DD/YYYY');
                     const endDate = picker.endDate.format('MM/DD/YYYY');
 
                     $(this).val(startDate + ' - ' + endDate);
 
                     // Set the start and end times in your input fields
-                    createDatePostedFilterButton('Custom',startDate,endDate);
+                    createDatePostedFilterButton('Custom', startDate, endDate);
                     checkAndToggleFilterButton();
                 });
 
                 // Handle cancel event to clear the input value and reset start and end times
-                $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+                $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
                     $(this).val('');
                     $('#filter-start-time').val('');
                     $('#filter-end-time').val('');
@@ -325,9 +334,9 @@
                     $('#date-posted-dropdown-submenu').css('display', 'block');
                 });
 
-                $('.daterangepicker th').each(function() {
-                    console.log("TH:",$(this))
-                    $(this).on('click', function(event) {
+                $('.daterangepicker th').each(function () {
+                    console.log("TH:", $(this))
+                    $(this).on('click', function (event) {
                         console.log("Click!!!!")
                         event.stopPropagation();
                         $('#date-posted-dropdown-submenu').css('display', 'block');
@@ -341,6 +350,8 @@
             let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+
+
 
             async function fetchDepartmentAndGenerateHTML() {
                 try {
@@ -377,6 +388,9 @@
                     return ''; // Return an empty string in case of an error
                 }
             }
+
+
+
 
             //////////////////////////////////////////////
 
@@ -442,7 +456,7 @@
                     $('.modal-content .modal-body').replaceWith(reset);
                 }
                 $(document).on("click", "#close", function () {
-                    
+
                     resetModal();
                 });
 

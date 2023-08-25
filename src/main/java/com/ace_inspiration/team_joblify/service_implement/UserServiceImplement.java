@@ -44,7 +44,7 @@ public class UserServiceImplement implements UserService {
             imageBytes = userDto.getPhoto().getBytes();
         }
 
-        Optional<Department> departmentOptional = departmentRepository.findByName(userDto.getDepartment());
+        Optional<Department> departmentOptional = departmentRepository.findByNameIgnoreCase(userDto.getDepartment());
 
         Department department;
 
@@ -106,7 +106,7 @@ public class UserServiceImplement implements UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            Optional<Department> departmentOptional = departmentRepository.findByName(userDto.getDepartment());
+            Optional<Department> departmentOptional = departmentRepository.findByNameIgnoreCase(userDto.getDepartment());
             Department department;
 
             if (departmentOptional.isPresent()) {

@@ -6,18 +6,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.ace_inspiration.team_joblify.entity.Role;
 
@@ -41,11 +40,12 @@ public class SecurityConfig {
                 )
                 .rememberMe(
                         rememberMe -> rememberMe
+                                .rememberMeServices(customRememberMeServices())
                                 .key(rememberMeKey)
-                                .tokenValiditySeconds(84600)
-                                .rememberMeCookieName("remember-me-cookie")
-                                .rememberMeParameter("remember-me")
-                                .userDetailsService(myUserDetailsService)
+                                // .tokenValiditySeconds(84600)
+                                // .rememberMeCookieName("remember-me-cookie")
+                                // .rememberMeParameter("remember-me")
+                                // .userDetailsService(myUserDetailsService)
                 )
                 .authorizeHttpRequests(authorize->authorize
                 .requestMatchers("/all-user-list").hasAuthority(Role.DEFAULT_HR.name())
@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .formLogin(login->login
                         .loginPage("/login")
                         .usernameParameter("username")
-                        .failureUrl("/login?error=true")
+                        .failureHandler(customAuthenticationFailureHandler()) // Set the custom failure handler
                         .defaultSuccessUrl("/dashboard?loginSuccess=true")
                         .permitAll()
                 )
@@ -80,6 +80,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public CustomRememberMeServices customRememberMeServices() {
+        return new CustomRememberMeServices(rememberMeKey, myUserDetailsService);
+    }
+
+    @Bean
+    public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

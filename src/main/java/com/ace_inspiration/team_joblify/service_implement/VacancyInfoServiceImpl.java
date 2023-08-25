@@ -227,6 +227,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyInfo.setStatus(Status.CLOSED);
         return vacancyInfoRepository.save(vacancyInfo);
     }
+    
 
     private VacancyInfo dtoToEntity(VacancyDto vacancyDto) {
         Address address = addressService.checkAndSetAddress(vacancyDto.getAddress());

@@ -12,4 +12,5 @@ public interface DepartmentRepository extends DataTablesRepository<Department, L
 
     List<Department> findByNameContainingIgnoreCase(String term);
     Optional<Department> findByName(String name);
+    Optional<Department> findByNameIgnoreCase(String name);
 }

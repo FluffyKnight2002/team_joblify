@@ -107,6 +107,7 @@ $(document).ready(function() {table = $('#table2').DataTable(
 														},
 												
 												],
+												order:[[0,'desc']]
 
 											});
 							/*function getCsrfToken() {

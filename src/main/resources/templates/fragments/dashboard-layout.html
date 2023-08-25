@@ -49,7 +49,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR')">
+                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
                         <span>Users</span>
@@ -186,7 +186,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="loader" style="min-width: 168.95px; min-height: 40.19px;" class="d-flex justify-content-center align-items-center">
+                    <div id="loader" style="min-width: 168.95px; min-height: 40.19px; " class="d-flex justify-content-center align-items-center">
                         <div class="spinner-grow text-danger me-2" role="status"></div>
                           <div class="spinner-grow text-warning me-2" role="status"></div>
                           <div class="spinner-grow text-info" role="status"></div>
