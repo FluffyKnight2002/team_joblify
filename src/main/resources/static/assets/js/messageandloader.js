@@ -24,12 +24,6 @@ function actionToVacancy(button) {
     $('#loadMe').modal({
         backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
     }).modal('show');
-    // console.warn(inputsToDisable);
-    // console.log("Result : " ,inputsToDisable != undefined);
-    // if (inputsToDisable.length != 0) {
-    //     inputsToDisable.prop('disabled', false);
-    //     reopenModeWarn.hide();
-    // }
 
     // Serialize the form data to JSON manually
     let formData = {};
@@ -288,10 +282,10 @@ $(document).ready(function () {
                 '<h3 class="text-white">Are you sure?</h3>' +
                 `<p class="text-center text-white">${warningMessage}</p>` +
                 '<div>' +
-                `<button type="button" class="btn btn-sm btn-light-danger mx-1" data-form-id="${formId}" 
+                `<button type="button" class="btn btn-sm btn-light mx-1" data-form-id="${formId}" 
             data-warning-message="${warningMessage}" data-success-message="${successMessage}" data-error-message="${errorMessage}"
             onclick="actionToVacancy(this)">Sure</button>` +
-                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()"">Cancel</button></div>` +
+                `<button class="btn btn-sm btn-light-danger mx-1" onclick="closeModal()"">Cancel</button></div>` +
                 '</div>' +
                 '</div>');
             $('#loadMe').modal({

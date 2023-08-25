@@ -24,7 +24,7 @@ public interface VacancyViewRepository extends DataTablesRepository<VacancyView,
                                       @Param("including_closed") boolean includingClosed,
                                       Pageable pageable);
 
-    @Query("SELECT vv FROM VacancyView vv ORDER BY vv.updatedTime DESC LIMIT 3")
+    @Query("SELECT vv FROM VacancyView vv WHERE vv.status = 'OPEN' ORDER BY vv.updatedTime DESC LIMIT 3")
     List<VacancyView> getLastVacancyView();
     int countBy();
 

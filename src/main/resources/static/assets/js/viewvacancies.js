@@ -85,10 +85,10 @@ $(document).ready(function () {
                     data: "createdUsername",
                     data: "createdTime",
                     render: function (data, type, row, meta) {
-                        return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
+                        return '<span class="d-inline-block text-white rounded bg-gradient-ltr p-1" style="font-size: 0.7rem">' + row.createdUsername + '</span>' +
                             '</br>' +
-                            '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) +
-                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="d-inline-block text-white rounded bg-primary bg-gradient p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.createdTime) +
+                            '<span class="position-absolute translate-middle badge rounded-pill text-dark glass-transparent" style="transform: translate(-90%,-76%) !important;">' +
                             changeTime(row.createdTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
@@ -99,10 +99,10 @@ $(document).ready(function () {
                     data: "updatedUsername",
                     data: "updatedTime",
                     render: function (data, type, row, meta) {
-                        return '<span class="d-inline-block text-white rounded bg-primary p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
+                        return '<span class="d-inline-block text-white rounded bg-gradient-ltr p-1" style="font-size: 0.7rem">' + row.updatedUsername + '</span>' +
                             '</br>' +
-                            '<span class="d-inline-block text-white rounded bg-warning p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) +
-                            '<span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-primary">' +
+                            '<span class="d-inline-block text-white rounded bg-primary bg-gradient p-1 position-relative" style="font-size: 0.7rem">' + changeTimeFormat(row.updatedTime) +
+                            '<span class="position-absolute translate-middle badge rounded-pill text-dark glass-transparent" style="transform: translate(-90%,-76%) !important;">' +
                             changeTime(row.updatedTime) +
                             '    <span class="visually-hidden">unread messages</span>' +
                             '</span>';
@@ -117,9 +117,9 @@ $(document).ready(function () {
                         var openDateFormatted = changeTimeFormat(row.openDate);
                         var closeDateFormatted = changeTimeFormat(row.closeDate);
 
-                        return '<span class="d-inline-block text-white rounded bg-success p-1" style="font-size: 0.7rem">' + openDateFormatted + '</span>' +
+                        return '<span class="d-inline-block text-white rounded bg-gradient-ltr p-1" style="font-size: 0.7rem">' + openDateFormatted + '</span>' +
                             '</br>' +
-                            '<span class="d-inline-block text-white rounded bg-danger p-1" style="font-size: 0.7rem">' + closeDateFormatted + '</span>';
+                            '<span class="d-inline-block text-white rounded bg-danger bg-gradient p-1" style="font-size: 0.7rem">' + closeDateFormatted + '</span>';
                     },
                     target: 9
                 },
@@ -460,7 +460,7 @@ $(document).ready(function () {
             // Change the color of the range bar
             "background: linear-gradient(to right, #007BFF, #007BFF) !important;",
             // Change the color of the range buttons and dots
-            ".noUi-connect { background: #007BFF !important; }",
+            ".noUi-connect { background: #1e497b !important; }",
             ".noUi-handle { background: #007BFF !important; }",
             ".noUi-tooltip { background: #007BFF !important; }",
         ],
@@ -469,26 +469,6 @@ $(document).ready(function () {
     rangeBar1.noUiSlider.on('update', function (values, handle) {
         sliderValue1.innerText = values[0];
         sliderValue2.innerText = values[1];
-    });
-
-    // Enable tooltips when handle is pressed
-    rangeBar1.noUiSlider.on('start', function () {
-        if (!tooltipsEnabled1) {
-            rangeBar1.noUiSlider.updateOptions({
-                tooltips: [true, true]
-            });
-            tooltipsEnabled1 = true;
-        }
-    });
-
-    // Disable tooltips when handle is released
-    rangeBar1.noUiSlider.on('end', function () {
-        if (tooltipsEnabled1) {
-            rangeBar1.noUiSlider.updateOptions({
-                tooltips: [false, false]
-            });
-            tooltipsEnabled1 = false;
-        }
     });
 
     // Prevent dropdown-submenu from closing when interacting with the range slider
