@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <!-- Izitoast for noti -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
     <style>
@@ -47,7 +48,7 @@
                         <div class="row">
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
-                                    <div class="card-body px-3 py-4-5">
+                                    <div class="card-body px-3 py-4-5" style="min-height: 129.59px !important">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="stats-icon purple">
@@ -64,16 +65,16 @@
                             </div>
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
-                                    <div class="card-body px-3 py-4-5">
+                                    <div class="card-body px-3 py-4-5" style="min-height: 129.59px !important">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="stats-icon blue">
-                                                    <i class="iconly-boldProfile"></i>
+                                                    <i class="bi bi-card-heading" style="translate: -5px -6px;"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
                                                 <h6 class="text-muted font-semibold">Vacancy Posts</h6>
-                                                <h6 class="font-extrabold mb-0">0</h6>
+                                                <h6 class="font-extrabold mb-0" id="vacancy-post-count"></h6>
                                             </div>
                                         </div>
                                     </div>
@@ -81,7 +82,7 @@
                             </div>
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
-                                    <div class="card-body px-3 py-4-5">
+                                    <div class="card-body px-3 py-4-5" style="min-height: 129.59px !important">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="stats-icon green">
@@ -98,7 +99,7 @@
                             </div>
                             <div class="col-6 col-lg-3 col-md-6">
                                 <div class="card">
-                                    <div class="card-body px-3 py-4-5">
+                                    <div class="card-body px-3 py-4-5" style="min-height: 129.59px !important;">
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="stats-icon red">
@@ -260,18 +261,21 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
-    
+    <!-- Izitoast for noti -->
     <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+    <!-- Stomp -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- SockJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <!-- About notification -->
+    <script src="/assets/js/websocket.js"></script>
+    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/vendors/apexcharts/apexcharts.js"></script>
     <script src="/assets/js/pages/dashboard.js"></script>
+    <script src="/assets/js/dashboarddata.js"></script>
     <script src="/assets/js/main.js"></script>
-    <script>
-document.cookie;
-        console.log(document.cookie);
-    </script>
-
 
 </body>
 
