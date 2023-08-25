@@ -127,12 +127,29 @@ public class Api {
         }else {
         	return false;
         }
-
     }
-
+    @PostMapping("/send-offer-mail")
+    public boolean sendOfferMail(@RequestBody EmailTemplateDto emailTemplateDto){
+        boolean email=emailService.sendJobOfferEmail(emailTemplateDto);
+        return email;
+    }
     @PostMapping("/otp-submit")
     public boolean otpSubmit(@RequestParam("otp") String otp, @RequestParam("email") String email) {
         return otpService.otpCheck(otp, email);
+    }
+    @PostMapping("/reject")
+    public String handleReject(@RequestParam("id") String id) {
+        System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"+id);
+
+
+        return "redirect:/thank-you"; // Redirect to a thank-you page or appropriate location
+    }
+
+    @PostMapping("/accept")
+    public String handleAccept(@RequestParam("id") String id) {
+      System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+id);
+
+        return "redirect:/thank-you"; // Redirect to a thank-you page or appropriate location
     }
 
     @PostMapping("/search-email")

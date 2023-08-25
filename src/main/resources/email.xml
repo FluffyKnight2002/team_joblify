@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+   
+    <template>
+        <subject>Job Interview Invitation</subject>
+        <content><![CDATA[
+             <a>Job  Invitation</a>
+              
+                <br />
+                
+                <br />
+                Best regards,
+                <br />
+                <strong>ACE Data Systems Ltd.</strong>
+                <hr style="border: none; border-top: 0.5px solid #131111" />
+               
+                  <p>This email can't receive replies.</p>
+               
+                  <span>
+                    This email was sent to
+                    <span></span>
+                  </span>
+          
+                  <a href="/">ACE Data Systems Ltd.</a> | Building 18, 7th floor, MICT Park,
+                    Hlaing Township,Yangon, Myanmar
+           
+                  &copy; 2023 ACE Data Systems Ltd. All rights
+                  reserved.
+            
+        ]]></content>
+    </template>
+</templates>

@@ -110,29 +110,7 @@ $(document).ready(function() {table = $('#table2').DataTable(
 												order:[[0,'desc']]
 
 											});
-							/*function getCsrfToken() {
- 							 const metaTag = document.querySelector('meta[name="_csrf"]');
-  								return metaTag ? metaTag.getAttribute('content') : null;		
-  									}
-								const csrfToken = getCsrfToken();
-											
-									$('#table2 tbody').on('click','#position',function(){
-										var value=$(this).val();
-										var tr=$(this).closest('tr');
-										var row=table.row(tr).data();
-										fetch('/seeposition',{
-											method:'POST',
-											 headers: {
-												  'Content-Type': 'application/json;charset=utf-8',
-											      'X-XSRF-Token':csrfToken },
-											      body: JSON.stringify(row.viId) 
-											    })
-											    .then (response =>{
-													if(rsponse.ok){
-														console.log("SUCCCC")
-													}else{console.log("NOt OK")}
-												})
-										})*/
+
 									
 											
 						});
