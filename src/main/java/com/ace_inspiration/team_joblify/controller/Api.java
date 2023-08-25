@@ -15,6 +15,10 @@ import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.OtpService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -215,14 +219,26 @@ public class Api {
     }
 
     @GetMapping("/getCookies")
-    public boolean getCookie(@CookieValue(value = "remember-me", required = false) String yourCookieValue) {
+    public boolean getCookieValue(HttpServletRequest request, HttpServletResponse response) {
+        String cookieName = "remember-me"; // Change this to the name of the cookie you're looking for
         
-        System.out.println(yourCookieValue + "aa");
-        if (yourCookieValue != null) {
-            return true;
-        } else {
-            return false;
+        Cookie[] cookies = request.getCookies(); // Get all cookies from the request
+        
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                   // Set the maxAge of the cookie to 2 weeks (in seconds)
+                   int maxAgeInSeconds = 14 * 24 * 60 * 60;
+                   cookie.setMaxAge(maxAgeInSeconds);
+                   
+                   response.addCookie(cookie); // Update the cookie in the response
+                   return true; // Return the name of the page to show cookie expiration message
+                }
+            }
         }
+        
+        // Cookie not found, handle accordingly
+        return false; // Return the name of the page to display cookie not found message
     }
 
     // @GetMapping("/filtered-vacancies")

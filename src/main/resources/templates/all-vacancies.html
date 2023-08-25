@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!-- Izitoast for noti -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
     <!--  Range picker -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.css">
     <!--  Date range picker-->
@@ -71,7 +73,7 @@
                                         <th>Applicants</th>
                                         <th>Created User/Time</th>
                                         <th>Updated User/Time</th>
-                                        <th>Open/Close</th>
+                                        <th>Open/Close Date</th>
                                         <th>
                                             <!-- Add a button with an ID "toggleColumnsBtn" -->
                                             <button class="btn btn-sm btn-primary my-3" id="toggleColumnsBtn">Switch</button>
@@ -173,7 +175,7 @@
                             <label for="title" class="form-label">
                                 Title(Position)
                                 <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Modify position was not allow!">
+                                      title="Modifying position was not allowed!">
                                     <i class="bi bi-exclamation-circle-fill"></i>
                                 </span>
                             </label>
@@ -192,7 +194,7 @@
                                 <label for="department" class="form-label">
                                     Department
                                     <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                          title="Modify department was not allow!">
+                                          title="Modifying department was not allowed!">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </span>
                                 </label>
@@ -335,6 +337,16 @@
                             <div class="feedback-message text-danger">Address can't be empty</div>
                             <div id="address-suggestions"></div>
                         </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">
+                                Note
+                                <span class="text-info" data-bs-toggle="tooltip" data-bs-placement="right"
+                                      title="Note something important about this vacancy">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </span>
+                            </label>
+                            <textarea class="form-control custom-autocomplete" id="note" name="note" rows="3"></textarea>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -366,6 +378,8 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!-- Izitoast for noti -->
+<script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
 <!--Range picker cdn-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.1/nouislider.min.js"></script>
 <!-- Your custom scripts -->
