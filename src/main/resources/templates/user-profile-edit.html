@@ -298,6 +298,12 @@
     let passwordChangeLink = document.getElementById('password-change-link');
 
     document.addEventListener('DOMContentLoaded', function () {
+      profileFill();
+
+    });
+
+
+      function profileFill(){
       fetch('/get-user-profile?email=' + encodeURIComponent(email), {
         method: 'POST',
         headers: {
@@ -351,7 +357,7 @@
             });
           }
         });
-    });
+      }
 
 
 
@@ -500,7 +506,7 @@
 
 
               passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(newEmail.value);
-
+              profileFill();
             } else {
               // Registration failed, handle the error
               console.error("Profile Edit failed");

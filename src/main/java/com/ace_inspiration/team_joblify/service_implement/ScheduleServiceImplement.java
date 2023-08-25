@@ -17,7 +17,7 @@ public class ScheduleServiceImplement implements ScheduleService {
 
     @Override
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 59 11 * * *")
     public void otpClear() {
         LocalDateTime now = LocalDateTime.now();
         otpRepository.deleteByExpiredDateLessThan(now);

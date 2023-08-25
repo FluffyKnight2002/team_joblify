@@ -42,7 +42,7 @@ async function authenticatedUserData() {
             if (passwordMatches) {
                 iziToast.warning({
                     title: 'Caution',
-                    message: 'Please Change Your Password',
+                    message: 'You\'re Still Using Default Password. Please Change Immediately',
                     position: 'topCenter'
                 });
             }
