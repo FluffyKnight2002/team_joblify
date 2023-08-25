@@ -214,6 +214,17 @@ public class Api {
         return new Object[]{myUserDetails, passwordMatches};
     }
 
+    @GetMapping("/getCookies")
+    public boolean getCookie(@CookieValue(value = "remember-me", required = false) String yourCookieValue) {
+        
+        System.out.println(yourCookieValue + "aa");
+        if (yourCookieValue != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // @GetMapping("/filtered-vacancies")
     // public List <Object[]> getFilteredVacancies() {
     // List<Object[]> result = vacancyInfoRepository.vacancyFilter("recent", true,
