@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <!-- Izitoast for noti -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!--  Date range picker-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -124,18 +126,19 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <!-- Stomp -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- SockJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
     <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+    <!-- Izitoast for noti -->
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/websocket.js"></script>
-
+    <script src="/assets/js/datatablefilteruser.js"></script>
     <script src="/assets/js/main.js"></script>
-
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 
@@ -240,12 +243,12 @@
              data-bs-placement="right" title="Add filter"></i>
             </span>
             <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
-                <li class="dropdown-item filter-items date-posted-dropdown-item">
-                    <span class="date-posted">Date posted</span>
-                    <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-dropdown-submenu">
-                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
-                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
-                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
+                <li class="dropdown-item filter-items date-created-dropdown-item">
+                    <span class="date-posted">Created Date</span>
+                    <ul class="dropdown-menu dropdown-submenu dateCreatedDropdown" id="date-created-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createDateCreatedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
+                        <li class="dropdown-item filter-items" onclick="createDateCreatedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
+                        <li class="dropdown-item filter-items" onclick="createDateCreatedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
                         <li class="dropdown-item filter-items">
                             <input type="text" class="px-2 rounded datefilter" name="datefilter" value="" placeholder="Custom" />
                         </li>
@@ -265,10 +268,10 @@
                 </li>
                 <li class="dropdown-item filter-items role-dropdown-item">
                     <span>Role</span>
-                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu" style="top: -90px">
-                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Senior-HR</li>
-                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Junior-HR</li>
-                        <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Other</li>
+                    <ul class="dropdown-menu dropdown-submenu" id="role-dropdown-submenu" style="top: -90px">
+                        <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Senior-HR</li>
+                        <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Junior-HR</li>
+                        <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Other</li>
                     </ul>
                 </li>
             </ul>
@@ -350,48 +353,6 @@
             let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-
-
-
-            async function fetchDepartmentAndGenerateHTML() {
-                try {
-                    const response = await fetch('departments'); // Replace 'titles' with the actual URL
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch data');
-                    }
-
-                    const fetchedData = await response.json();
-
-                    // Sort the data alphabetically
-                    const sortedData = fetchedData.sort();
-
-                    // Create an HTML string to store the submenu content
-                    let submenuHTML = '';
-
-                    let currentLetter = null;
-                    sortedData.forEach(item => {
-                        const startingLetter = item.name[0].toUpperCase();
-                        if (startingLetter !== currentLetter) {
-                            submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
-                            currentLetter = startingLetter;
-                        }
-                        submenuHTML += `<li class="dropdown-item filter-items"
-                onclick="createDepartmentFilterButton('${item.name}');checkAndToggleFilterButton();" data-filter-id="filter-department">
-                    ${item.name}
-                </li>`;
-                    });
-
-                    // Return the generated HTML content
-                    return submenuHTML;
-                } catch (error) {
-                    console.error('An error occurred:', error);
-                    return ''; // Return an empty string in case of an error
-                }
-            }
-
-
-
-
             //////////////////////////////////////////////
 
             function showConfirmationModal(action, id) {
