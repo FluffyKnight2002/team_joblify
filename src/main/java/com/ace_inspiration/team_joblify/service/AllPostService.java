@@ -10,6 +10,6 @@ import com.ace_inspiration.team_joblify.entity.AllPost;
 public interface AllPostService {
 	
 	DataTablesOutput<AllPost> getAll(DataTablesInput input);
-
-
+	
+	
 }

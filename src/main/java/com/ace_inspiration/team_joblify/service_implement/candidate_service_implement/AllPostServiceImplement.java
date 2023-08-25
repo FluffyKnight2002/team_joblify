@@ -23,5 +23,5 @@ public class AllPostServiceImplement implements AllPostService{
 	    public DataTablesOutput<AllPost> getAll(DataTablesInput input){
 	    	return allpostRepository.findAll(input);
 	    }
-
+	 
 }
