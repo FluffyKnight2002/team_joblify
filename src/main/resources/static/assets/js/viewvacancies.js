@@ -53,6 +53,9 @@ $(document).ready(function () {
                     className: 'dt-control',
                     orderable: false,
                     data: "note",
+                    render: function (data, type, row, meta) {
+                        return "";
+                    },
                     defaultContent: '',
                     target: 0
                 },
@@ -205,7 +208,7 @@ $(document).ready(function () {
                     // Hide columns 8 to 9 and show columns 3 to 7
                     columnVisibility[i] = isVisible;
                     column.visible(false);
-                    for (var j = 2; j <= 6; j++) {
+                    for (var j = 3; j <= 6; j++) {
                         var col = table.column(j);
                         col.visible(true);
                     }
@@ -213,7 +216,7 @@ $(document).ready(function () {
                     // Show columns 7 to 9 and hide columns 3 to 6
                     columnVisibility[i] = isVisible;
                     column.visible(true);
-                    for (var j = 2; j <= 6; j++) {
+                    for (var j = 3; j <= 6; j++) {
                         var col = table.column(j);
                         col.visible(false);
                     }
@@ -798,6 +801,7 @@ function populateModalWithData(data) {
     $("#requirements").val(data.requirements);
     $("#preferences").val(data.preferences);
     $("#address").val(data.address);
+    $('#note').val(data.note);
 
     const $calendar = $('#calendar').hide();
     const $workingDaysInput = $('#workingDays');

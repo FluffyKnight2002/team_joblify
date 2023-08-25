@@ -71,7 +71,7 @@
                                         <th>Applicants</th>
                                         <th>Created User/Time</th>
                                         <th>Updated User/Time</th>
-                                        <th>Open/Close</th>
+                                        <th>Open/Close Date</th>
                                         <th>
                                             <!-- Add a button with an ID "toggleColumnsBtn" -->
                                             <button class="btn btn-sm btn-primary my-3" id="toggleColumnsBtn">Switch</button>
@@ -173,7 +173,7 @@
                             <label for="title" class="form-label">
                                 Title(Position)
                                 <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Modify position was not allow!">
+                                      title="Modifying position was not allowed!">
                                     <i class="bi bi-exclamation-circle-fill"></i>
                                 </span>
                             </label>
@@ -192,7 +192,7 @@
                                 <label for="department" class="form-label">
                                     Department
                                     <span class="text-danger disabled-warn" data-bs-toggle="tooltip" data-bs-placement="top"
-                                          title="Modify department was not allow!">
+                                          title="Modifying department was not allowed!">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </span>
                                 </label>
@@ -334,6 +334,16 @@
                             <span class='spinner-border spinner-border-sm spinner address-spinner' role='status'></span>
                             <div class="feedback-message text-danger">Address can't be empty</div>
                             <div id="address-suggestions"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="note" class="form-label">
+                                Note
+                                <span class="text-info" data-bs-toggle="tooltip" data-bs-placement="right"
+                                      title="Note something important about this vacancy">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </span>
+                            </label>
+                            <textarea class="form-control custom-autocomplete" id="note" name="note" rows="3"></textarea>
                         </div>
                     </form>
                 </div>

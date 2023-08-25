@@ -88,6 +88,26 @@
 
                     </section>
                 </div>
+                <div>
+                    <!-- Hidden input for 'datePosted' parameter -->
+                    <input type="hidden" name="dateCreated" id="filter-date-created" value="">
+
+                    <!-- Hidden input for 'startDate' parameter -->
+                    <input type="hidden" name="startDate" id="filter-start-date" value="">
+
+                    <!-- Hidden input for 'endDate' parameter -->
+                    <input type="hidden" name="endDate" id="filter-end-date" value="">
+
+                    <!-- Hidden input for 'department' parameter -->
+                    <input type="hidden" name="department" id="filter-department" value="">
+
+                    <!-- Hidden input for 'status' parameter -->
+                    <input type="hidden" name="status" id="filter-status" value="">
+
+                    <!-- Hidden input for 'applicants' parameter -->
+                    <input type="hidden" name="role" id="filter-role" value="">
+
+                </div>
 
                 <footer>
                     <div class="footer clearfix mb-0 text-muted">
@@ -150,7 +170,6 @@
             const table = $('table#table').DataTable({
 
                 ajax: '/get-all-user',
-
                 columns: [
                     {
                         target: 0,
