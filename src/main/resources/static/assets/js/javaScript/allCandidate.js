@@ -10,15 +10,9 @@ $(document).ready(function() {
 			['height', ['height']]
 		], height: 300
 	});
-
+	$('#data-1').summernote();
 
 });
-
-function getCsrfToken() {
-	const metaTag = document.querySelector('meta[name="_csrf"]');
-	return metaTag ? metaTag.getAttribute('content') : null;
-}
-const csrfToken = getCsrfToken();
 
 var table;
 var currentId = new URLSearchParams(window.location.search);
@@ -133,7 +127,7 @@ $(document).ready(function() {
 					targets: 10,
 					data: "email",
 					render: function(data, type, row) {
-						return '<a  data-bs-toggle="modal" data-bs-target="#offer-mail" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
+						return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
 					},
 					sortable: false,
 					visible: false
@@ -189,7 +183,7 @@ $(document).ready(function() {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json;charset=utf-8',
-					'X-XSRF-Token': csrfToken
+					[csrfHeader]: csrfToken
 				},
 				body: JSON.stringify(rowData.id)
 			})
@@ -224,7 +218,7 @@ $(document).ready(function() {
 					method: "POST",
 					headers: {
 						'Content-Type': 'application/json;charset=utf-8',
-						'X-XSRF-Token': csrfToken
+						[csrfHeader]: csrfToken
 					},
 					body: JSON.stringify(id)
 				})
@@ -353,7 +347,7 @@ $(document).ready(function() {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
-				'X-XSRF-Token': csrfToken
+				[csrfHeader]: csrfToken
 			}
 		})
 			.then(response => {
@@ -541,7 +535,7 @@ $(document).ready(function() {
 	});
 	//download end
 
-	$('#cc').keyup(function(data) {
+	$('.cc').keyup(function(data) {
 		if (data.keyCode === 13) {
 			var value = $(this).val();
 			ccMails.push($(this).val());
@@ -564,21 +558,21 @@ $(document).ready(function() {
 		}
 	})
 	$(document).on("click", ".remove-skill", function() {
-    var count = $(this).data("count");
-    var valueToRemove = $("#skill" + count + " .default-font").text().trim();
-    // Remove the element with the matching value from the array
-    var indexToRemove = ccMails.indexOf(valueToRemove);
-    if (indexToRemove !== -1) {
-        ccMails.splice(indexToRemove, 1);
-    }
+		var count = $(this).data("count");
+		var valueToRemove = $("#skill" + count + " .default-font").text().trim();
+		// Remove the element with the matching value from the array
+		var indexToRemove = ccMails.indexOf(valueToRemove);
+		if (indexToRemove !== -1) {
+			ccMails.splice(indexToRemove, 1);
+		}
 
-    $("#skill" + count).remove();
-    updateCcMails();
-    console.log("ConcateValue:",concatenatedValue)
-    console.log("Removed count:", count);
-    console.log("Value to remove:", valueToRemove);
-    console.log("Updated ccMails array:", ccMails);
-});
+		$("#skill" + count).remove();
+		updateCcMails();
+		console.log("ConcateValue:",concatenatedValue)
+		console.log("Removed count:", count);
+		console.log("Value to remove:", valueToRemove);
+		console.log("Updated ccMails array:", ccMails);
+	});
 
 
 
@@ -640,8 +634,253 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 	var modalTitle = $(this).data('modal-title');
 	var row = table.row($(this).closest('tr')).data();
 
+	$('#emailModal .modal-title').text(modalTitle);
+	$('#emailModal .candidatEmail').val(row.email);
+	$("#emailModal .userEmail").val(row.email);
+	$("#emailModal #candidate-id").val(row.id);
+
+	$('#type').on('change',function(){
+		const type=$(this).val();
+		const content=getofferMail(type,row.name);
+		$('#data-1').summernote('code',content);
+	});
+
+	$('#where').on('change', function() {
+		const type = $(this).val();
+		const updatedContent = getEmailContent(type, row.name,row.id,csrfToken);
+		$('#data').summernote('code', updatedContent);
+	});
+	$('#add-date').on('click', function() {
+		const edit = '<span style="color:red" class="date-setting">Date</span>'
+		$('#data').summernote('pasteHTML', edit);
+		edit = '';
+
+	})
+	$('#add-time').on('click', function() {
+		const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
+		$('#data').summernote('pasteHTML', edit);
+		edit = '';
+
+	})
+
+
+
+	const fetchValueButton = document.getElementById('fetchValueButton');
+	fetchValueButton.addEventListener('click', function() {
+		const hiddenInput = document.getElementById('content');
+		const to = document.getElementById('to');
+		const subject = document.getElementById('subject');
+		const ccmail = document.getElementById('mails');
+		const date1 = document.getElementById('date');
+		const time = document.getElementById('time');
+		const type = document.getElementById('where');
+		const stage = document.getElementById('interview-status');
+		const canid = document.getElementById('candidate-id');
+		updateCcMails();
+		if ($('#data').summernote('isEmpty')) {
+
+
+			$('#message-con').html('' +
+				'<div class="loader"></div>' +
+				'<div class="loader-txt">' +
+				'<h3 class="text-white">Email is Enpty</h3>' +
+				'<div>' +
+				`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
+				'</div>');
+		}
+		else {
+			$('#data').summernote('insertText', '');
+			hiddenInput.value = document.querySelector('#data').value;
+
+			const data = {
+				to: to.value,
+				ccmail: ccMails,
+				subject: subject.value,
+				content: hiddenInput.value,
+				date: date1.value,
+				time: time.value,
+				status: stage.value,
+				type: type.value,
+				canId: canid.value,
+
+
+			};
+			try {
+				fetch('/send-invite-email', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json;charset=utf-8',
+						[csrfHeader]: csrfToken // Include CSRF token as a request header
+					},
+					body: JSON.stringify(data)
+				})
+					.then(response => response.json())
+					.then(data => {
+						if (data === true) {
+							console.log('Success send to mail');
+							$('table#table1').DataTable().ajax.reload(null, false);
+							$('#message-con').html('' +
+								'<div class="loader"></div>' +
+								'<div class="loader-txt">' +
+								'<h3 class="text-white">Email was sent</h3>' +
+								'<div>' +
+								`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+								'</div>');
+
+						} else {
+							$('#message-con').html('' +
+								'<div class="loader"></div>' +
+								'<div class="loader-txt">' +
+								'<h3 class="text-white">Email was not sent</h3>' +
+								'<h3 class="text-white">Something have error</h3>'+
+								'<div>' +
+								`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+								'</div>');
+							console.error('Failed to send email:', response.statusText);
+						}
+					});
+
+
+			} catch (error) {
+				console.error('An error occurred:', error);
+			}
+		}
+	});
+	const fetchofferMail=document.getElementById('Send_Offer_Mail');
+	fetchofferMail.addEventListener('click',function (){
+		const hiddenInput = document.getElementById('content_1');
+		const to=document.getElementById('to_1');
+		const subject=document.getElementById('subject_1');
+		const ccmail=document.getElementById('mails_1');
+		if ($('#data_1').summernote('isEmpty')) {
+
+
+			$('#message-con').html('' +
+				'<div class="loader"></div>' +
+				'<div class="loader-txt">' +
+				'<h3 class="text-white">Email is Enpty</h3>' +
+				'<div>' +
+				`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
+				'</div>');
+		}
+		else{
+			$('#data_1').summernote('insertText', '');
+			hiddenInput.value = document.querySelector('#data_1').value;
+
+			const data={
+				to:to.value,
+				subject:subject.value,
+				ccmail:ccMails,
+				content:hiddenInput.value
+			}
+			fetch('/send-offer-mail',{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json;charset=utf-8',
+					[csrfHeader]: csrfToken // Include CSRF token as a request header
+				},
+				body: JSON.stringify(data)
+			}).then(respone =>respone.json(data))
+				.then(data => {
+					if (data === true) {
+						console.log('Success send to mail');
+						$('table#table1').DataTable().ajax.reload(null, false);
+						$('#message-con').html('' +
+							'<div class="loader"></div>' +
+							'<div class="loader-txt">' +
+							'<h3 class="text-white">Email was sent</h3>' +
+							'<div>' +
+							`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+							'</div>');
+
+					} else {
+						console.error('Failed to send email:', response.statusText);
+					}
+				});
+
+		}
+
+	})
+
+
+});
+$('#date').on('input', function() {
+	const inputDate = $(this).val();
+	const date = new Date(inputDate);
+	const day = date.getDate();
+	const month = date.toLocaleString('default', { month: 'long' });
+	const year = date.getFullYear();
+	const formattedDate = `${day}-${month}-${year}`;
+
+	$('.date-setting').html(formattedDate);
+});
+$('#time').on('input', function() {
+	var inputTime = $(this).val();
+	var date = new Date();
+	var timeParts = inputTime.split(':');
+	date.setHours(parseInt(timeParts[0], 10));
+	date.setMinutes(parseInt(timeParts[1], 10));
+
+	// Format time with AM/PM
+	var formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+	const endTime = new Date(date.getTime() + 30 * 60000); // 30 minutes in milliseconds
+	const formattedEndTime = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+	// Update the content of the time-setting element
+	$('.time-setting').html(formattedTime);
+	$('.end-setting').html(formattedEndTime);
+
+});
+
+/*function updateDateSetting() {
+	var selectedDate = $('#date').val();
+	var emailContent = $('#emailModal #data').summernote('code');
+		
+	// Update the Date Setting section in the email content
+	emailContent = emailContent.replace(/Date Setting\s+-.*\n/,
+		'Date Setting    - ' + selectedDate + '\n');
+console.log(emailContent)
+	// Replace newline characters with HTML <br> tags
+	//emailContent = emailContent.replace(/\n/g, '<br>');
+
+	// Set the updated content back to the textarea
+	$('#emailModal #data').summernote('code', emailContent);
+}*/
+// Function to get the CSRF token from the cookie
+
+
+
+
+
+
+
+
+
+// Define the custom search function
+
+function getFilenameFromResponseHeaders(response) {
+	var contentDisposition = response.headers.get('content-disposition');
+	return contentDisposition.split('filename=')[1].replace(/"/g, '');
+}
+
+
+
+
+
+
+const triggerTabList = document.querySelectorAll('#myTab button')
+triggerTabList.forEach(triggerEl => {
+	const tabTrigger = new bootstrap.Tab(triggerEl)
+
+	triggerEl.addEventListener('click', event => {
+		event.preventDefault()
+		tabTrigger.show()
+	})
+})
+function getofferMail(type,name){
+	const custom='';
 	var offermail = `
-<b>Dear ${row.name}.</b>
+<b>Dear ${name}.</b>
  
 We are pleased to inform you that you are appointed as Software Engineer in Banking and Finance Department of ACE Data Systems Ltd. Please see your entitlement information detail and brief HR rule of company in below.
 
@@ -693,237 +932,14 @@ b.     In case the employee for any reason, leave the services of the Company be
 
 (4)   Confidentiality                                        :          
 
-a.     The employee agrees not to disclose any of Company’s confidential information, Company’s trademarks or knowledge pertaining to the business of the Company during or after the employment.
+a.     The employee agrees not to disclose any of Company’s confidential information, Company’s trademarks or knowledge pertaining to the business of the Company during or after the employment.<br>
+<input type="submit" style="background-color:red" value="Reject" fdprocessedid="fspy8e"><br>
+<input type="submit" style="background-color:green" value="Accept" fdprocessedid="7oi7bb">
 `
+	return (type === 'offer_mail') ? offermail : custom;
 
-
-	$('#emailModal .modal-title').text(modalTitle);
-	$('#emailModal .candidatEmail').val(row.email);
-	$("#emailModal .userEmail").val(row.email);
-	$("#emailModal #candidate-id").val(row.id);
-
-
-
-	offermail = offermail.replace(/\n/g, '<br>');
-
-	$('#where').on('change', function() {
-		const type = $(this).val();
-		const updatedContent = getEmailContent(type, row.name);
-		$('#data').summernote('code', updatedContent);
-	});
-	$('#add-date').on('click', function() {
-		const edit = '<span style="color:red" class="date-setting">Date</span>'
-		$('#data').summernote('pasteHTML', edit);
-		edit = '';
-
-	})
-	$('#add-time').on('click', function() {
-		const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
-		$('#data').summernote('pasteHTML', edit);
-		edit = '';
-
-	})
-
-	const hiddenInput = document.getElementById('content');
-	const to = document.getElementById('to');
-	const subject = document.getElementById('subject');
-	const ccmail = document.getElementById('mails');
-	const date1 = document.getElementById('date');
-	const time = document.getElementById('time');
-	const type = document.getElementById('where');
-	const stage = document.getElementById('interview-status');
-	const canid = document.getElementById('candidate-id');
-
-
-	const fetchValueButton = document.getElementById('fetchValueButton');
-	fetchValueButton.addEventListener('click', function() {
-		updateCcMails();
-		$('#data').summernote('insertText', '');
-		hiddenInput.value = document.querySelector('#data').value;
-
-		const data = {
-			to: to.value,
-			ccmail: ccmail.value,
-			subject: subject.value,
-			content: hiddenInput.value,
-			date: date1.value,
-			time: time.value,
-			status: stage.value,
-			type: type.value,
-			canId: canid.value,
-
-
-		};
-		if ($('#data').summernote('isEmpty')) {
-
-
-			$('#message-con').html('' +
-				'<div class="loader"></div>' +
-				'<div class="loader-txt">' +
-				'<h3 class="text-white">Email is Enpty</h3>' +
-				'<div>' +
-				`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
-				'</div>');
-		}
-		else {
-
-			try {
-				fetch('/send-invite-email', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json;charset=utf-8',
-						'X-XSRF-Token': csrfToken // Include CSRF token as a request header
-					},
-					body: JSON.stringify(data)
-				})
-					.then(response => response.json())
-					.then(data => {
-						if (data === true) {
-							console.log('Success send to mail');
-							$('table#table1').DataTable().ajax.reload(null, false);
-							$('#message-con').html('' +
-								'<div class="loader"></div>' +
-								'<div class="loader-txt">' +
-								'<h3 class="text-white">Email was sent</h3>' +
-								'<div>' +
-								`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
-								'</div>');
-
-						} else {
-							console.error('Failed to send email:', response.statusText);
-						}
-					});
-					
-
-			} catch (error) {
-				console.error('An error occurred:', error);
-			}
-		}
-	});
-
-
-});
-$('#date').on('input', function() {
-	const inputDate = $(this).val();
-	const date = new Date(inputDate);
-	const day = date.getDate();
-	const month = date.toLocaleString('default', { month: 'long' });
-	const year = date.getFullYear();
-	const formattedDate = `${day}-${month}-${year}`;
-
-	$('.date-setting').html(formattedDate);
-});
-$('#time').on('input', function() {
-	var inputTime = $(this).val();
-	var date = new Date();
-	var timeParts = inputTime.split(':');
-	date.setHours(parseInt(timeParts[0], 10));
-	date.setMinutes(parseInt(timeParts[1], 10));
-
-	// Format time with AM/PM
-	var formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-	const endTime = new Date(date.getTime() + 30 * 60000); // 30 minutes in milliseconds
-	const formattedEndTime = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-	// Update the content of the time-setting element
-	$('.time-setting').html(formattedTime);
-	$('.end-setting').html(formattedEndTime);
-
-});
-
-/*function updateDateSetting() {
-	var selectedDate = $('#date').val();
-	var emailContent = $('#emailModal #data').summernote('code');
-		
-	// Update the Date Setting section in the email content
-	emailContent = emailContent.replace(/Date Setting\s+-.*\n/,
-		'Date Setting    - ' + selectedDate + '\n');
-console.log(emailContent)
-	// Replace newline characters with HTML <br> tags
-	//emailContent = emailContent.replace(/\n/g, '<br>');
-
-	// Set the updated content back to the textarea
-	$('#emailModal #data').summernote('code', emailContent);
-}*/
-// Function to get the CSRF token from the cookie
-
-
-$('#table1 tbody').on('click', '.seeMoreBtn',
-	function() {
-		var tr = $(this).closest('tr');
-		var row = table.row(tr).data();
-		$('#seeMoreModal').modal('show');
-
-		var id = row.id;
-
-
-
-		{
-			fetch('/seeeMore', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json;charset=utf-8',
-					'X-XSRF-Token': csrfToken
-
-				},
-				body: JSON.stringify(id)
-			})
-				.then(response => {
-					if (response.ok) {
-						return response.json();
-
-					} else {
-						console.error("Fail");
-					}
-				})
-				.then(candidateData => {
-					console.log(candidateData);
-					$('#name').html(candidateData.name);
-					$('#email').html(candidateData.email);
-					$('#phone').html(candidateData.phone);
-					$('#dob').html(candidateData.dob);
-					$('#gender').html(candidateData.gender);
-					$('#education').html(candidateData.education);
-					$('#applyPosition').html(candidateData.apply_position);
-					$('#expectedSalary').html(candidateData.expectedSalary);
-					$('#experience').html(candidateData.experience);
-					$('#level').html(candidateData.lvl);
-					$('#specialist').html(candidateData.specialist_tech);
-				})
-				.catch(error => {
-					console.error("Error:", error);
-				});
-		}
-
-	});
-
-
-
-
-
-
-// Define the custom search function
-
-function getFilenameFromResponseHeaders(response) {
-	var contentDisposition = response.headers.get('content-disposition');
-	return contentDisposition.split('filename=')[1].replace(/"/g, '');
 }
-
-
-
-
-
-
-const triggerTabList = document.querySelectorAll('#myTab button')
-triggerTabList.forEach(triggerEl => {
-	const tabTrigger = new bootstrap.Tab(triggerEl)
-
-	triggerEl.addEventListener('click', event => {
-		event.preventDefault()
-		tabTrigger.show()
-	})
-})
-function getEmailContent(type, name) {
+function getEmailContent(type, name,id,csrfToken) {
 	const custom = ''; // Add your custom message here
 
 	const onlineText = `
@@ -938,7 +954,17 @@ function getEmailContent(type, name) {
         Join Zoom Meeting<br>
         <a href="https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09">Zoom Meeting Link</a><br>
         Meeting ID: 921 9152 8025<br>
-        Passcode: 178426
+        Passcode: 178426<br>
+      <form action="http://localhost:8080/reject" method="POST" >
+        <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
+      <input type="hidden" value="${id}" name="id">
+       <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
+</form> <br>
+ <form action="http://localhost:8080/accept" method="POST" >
+   <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
+      <input type="hidden" value="${id}" name="id">
+       <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
+</form>
     `;
 
 	const offlineText = `
@@ -987,4 +1013,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 */
-

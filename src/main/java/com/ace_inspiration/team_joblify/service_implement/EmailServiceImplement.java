@@ -103,16 +103,51 @@ public class EmailServiceImplement implements EmailService {
         // Now send the email using JavaMail
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-        	String[] ccmail = emailTemplateDto.getCcmail().split(",");
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
-            helper.setCc(ccmail);
-            helper.setTo(emailTemplateDto.getTo());
-            helper.setSubject(emailTemplateDto.getSubject());
-            helper.setText(templateContent, true);
+            if(emailTemplateDto.getCcmail().length<=0) {
 
-            javaMailSender.send(message);
-            return true;
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
+                helper.setTo(emailTemplateDto.getTo());
+                helper.setSubject(emailTemplateDto.getSubject());
+                helper.setText(templateContent, true);
+
+                javaMailSender.send(message);
+                return true;
+            }
+            else if(emailTemplateDto.getDate().isBlank() && emailTemplateDto.getTime().isBlank() && emailTemplateDto.getType().isBlank() && emailTemplateDto.getStatus().isBlank()){
+//                String[] ccmail = emailTemplateDto.getCcmail().split(",");
+                for (String email: emailTemplateDto.getCcmail()){
+                    System.err.println(email);
+                }
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
+                helper.setCc(emailTemplateDto.getCcmail());
+                helper.setTo(emailTemplateDto.getTo());
+                helper.setSubject(emailTemplateDto.getSubject());
+                helper.setText(templateContent, true);
+
+                javaMailSender.send(message);
+                return true;
+            }
+            else{
+//                String[] ccmail = emailTemplateDto.getCcmail().split(",");
+                for (String email: emailTemplateDto.getCcmail()){
+                    System.err.println(email);
+                }
+
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
+                helper.setCc(emailTemplateDto.getCcmail());
+                helper.setTo(emailTemplateDto.getTo());
+                helper.setSubject(emailTemplateDto.getSubject());
+                helper.setText(templateContent, true);
+
+                javaMailSender.send(message);
+                return true;
+            }
+
+
+
         
         } catch (MessagingException e) {
             log.error("Error sending email: {}", e.getMessage());

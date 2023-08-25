@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="assets/vendors/summernote/summernote-lite.min.css">
+  <meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+<style>
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: 5px;
+  }
+</style>
+<body>
+
+<h1>The XMLHttpRequest Object</h1>
+
+<button type="button" onclick="loadDoc()">Get my CD collection</button>
+<br><br>
+<form id="xmlForm">
+  <div id="result"></div>
+  <textarea class="xmlContent" id="formatted-content" rows="10" cols="500"></textarea>
+  <button type="button" onclick="saveXml()">Save</button>
+</form>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="assets/vendors/summernote/summernote-lite.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('.xmlContent').summernote();
+  });
+
+  function loadDoc() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        myFunction(this.responseText); // Pass the responseText to your myFunction
+      }
+    };
+    xhttp.open("GET", "/get-email-xml", true); // Replace with your actual endpoint
+    xhttp.send();
+  }
+
+  function myFunction(xml) {
+    var txt = '';
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(xml, "text/xml");
+    var contentElement = xmlDoc.getElementsByTagName("content")[0]; // Assuming there's only one "content" element
+
+    if (contentElement) {
+      txt = contentElement.innerHTML;
+    }
+
+    // Update the formatted content in the Summernote editor
+    $('#formatted-content').summernote('code', txt);
+  }
+
+  function getCsrfToken() {
+  	const metaTag = document.querySelector('meta[name="_csrf"]');
+  	return metaTag ? metaTag.getAttribute('content') : null;
+  }
+  const csrfToken = getCsrfToken();
+
+  function saveXml() {
+	  var updatedContent = document.getElementById("formatted-content").value;
+	
+	        
+      fetch("/update-xml-content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/plain",
+        	  "X-XSRF-Token": csrfToken
+        },
+        body: updatedContent
+      })
+      .then(response => response.text())
+      .then(result => {
+        document.getElementById("result").textContent = result;
+      })
+      .catch(error => {
+        document.getElementById("result").textContent = "Failed to update XML content.";
+        console.error(error);
+      });
+  }
+</script>
+
+</body>
+</html>
