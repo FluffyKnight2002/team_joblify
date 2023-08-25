@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="apply-job" method="POST" class="row g-3 needs-validation" novalidate>
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="name" placeholder="Name">
+                            <label for="name" class="ms-2">Name</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" placeholder="E-mail">
+                            <label for="email" class="ms-2">Email address</label>
+                        </div>
+                        <div>
+                            <div class="form-check form-check-inline w-50">
+                                <label class="form-label">Sex</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" id="male" name="gender" value="Male">
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" class="form-check-input" id="female" name="gender" value="Female">
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                            <input type="tel" class="form-control" id="phoneNo" placeholder="Phone Number">
+                            <label for="phoneNo" class="ms-2">Phone Number</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="position" placeholder="Position">
+                            <label for="position" class="ms-2">Position</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="education" placeholder="Education">
+                            <label for="education" class="ms-2">Education</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="mainSkill" placeholder="Main Skill">
+                            <label for="mainSkill" class="ms-2">Main Skill</label>
+                        </div>
+
+                        <!-- Skill input start -->
+                        <div class="form-floating mb-1">
+                            <input type="text" class="form-control" id="skill" placeholder="Skill">
+                            <label for="skill" class="ms-2">Skill</label>
+                        </div>
+                        <div class="d-flex flex-wrap px-1 skill-block">
+                        </div>
+                        <!-- Skill input end -->
+
+                        <div class="form-floating">
+                            <select class="form-select" id="experiences" aria-label="Floating label select example">
+                                <option value="Internship">Internship</option>
+                                <option value="Entry level">Entry level</option>
+                                <option value="Mid-Senior level">Mid-Senior level</option>
+                                <option value="Director">Director</option>
+                                <option value="Executive">Executive</option>
+                            </select>
+                            <label for="experiences" class="ms-2">Experiences level</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="salary" placeholder="Salary">
+                            <label for="salary" class="ms-2">Excepted salary</label>
+                        </div>
+                        <div>
+                            <label class="form-label" for="resume">Upload CV</label>
+                            <input type="file" class="form-control" id="resume" name="resume">
+                        </div>
+							<input type="submit" value="gogo">
+                    </form>
+</body>
+</html>
