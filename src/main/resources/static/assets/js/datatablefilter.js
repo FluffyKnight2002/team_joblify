@@ -65,6 +65,7 @@ function resetFilters() {
 function changeSelectedFilterName(item) {
     if (item) {
         let selectedValue = $(item).text(); // Get the selected value from the clicked item
+        console.log("Selected Value : " , selectedValue);
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
         let filterId = $(item).data('filter-id');
@@ -79,14 +80,14 @@ function changeSelectedFilterName(item) {
             }
         }
 
-        if ($('input[name="datefilter2"]').length > 0) {
+        // if ($('input[name="datefilter2"]').length > 0) {
             if(selectedValue != 'Custom') {
                 $('input[name="datefilter2"]').val('');
-                button.text(selectedValue); // Update the text of the button
+                button.text($.trim(selectedValue)); // Update the text of the button
             }else {
                 $('.date-posted-filter-btn').text('Custom');
             }
-        }
+        // }
 
         updateDataTable();
     }

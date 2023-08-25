@@ -261,14 +261,14 @@
                 </li>
                 <li class="dropdown-item filter-items status-dropdown-item">
                     <span>Status</span>
-                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu" style="top: -90px">
+                    <ul class="dropdown-menu dropdown-submenu" id="status-dropdown-submenu">
                         <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Active</li>
                         <li class="dropdown-item filter-items" onclick="createStatusFilterButton($(this));checkAndToggleFilterButton();">Suspend</li>
                     </ul>
                 </li>
                 <li class="dropdown-item filter-items role-dropdown-item">
                     <span>Role</span>
-                    <ul class="dropdown-menu dropdown-submenu" id="role-dropdown-submenu" style="top: -90px">
+                    <ul class="dropdown-menu dropdown-submenu" id="role-dropdown-submenu">
                         <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Senior-HR</li>
                         <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Junior-HR</li>
                         <li class="dropdown-item filter-items" onclick="createRoleFilterButton($(this));checkAndToggleFilterButton();">Other</li>
@@ -292,8 +292,8 @@
             $(recentFilterDropdownCon).appendTo(searchRow);
 
             $('.dropdown-menu > li').hover(function () {
-                $(this).children('.dropdown-submenu').css('display', 'block');
-            }
+                    $(this).children('.dropdown-submenu').css('display', 'block');
+                }
                 , function () {
                     $(this).children('.dropdown-submenu').css('display', '');
                 });
@@ -302,7 +302,7 @@
             const currentDate = moment();
 
             // Date range picker
-            $(function () {
+            $(function() {
                 // Initialize the daterangepicker
                 $('input[name="datefilter"]').daterangepicker({
                     autoUpdateInput: false,
@@ -315,31 +315,31 @@
                 console.log($('#date-posted-dropdown-submenu'));
 
                 // Handle apply event to update the input value and set start and end times
-                $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
+                $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
                     const startDate = picker.startDate.format('MM/DD/YYYY');
                     const endDate = picker.endDate.format('MM/DD/YYYY');
 
                     $(this).val(startDate + ' - ' + endDate);
 
                     // Set the start and end times in your input fields
-                    createDatePostedFilterButton('Custom', startDate, endDate);
+                    createDateCreatedFilterButton('Custom',startDate,endDate);
                     checkAndToggleFilterButton();
                 });
 
                 // Handle cancel event to clear the input value and reset start and end times
-                $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
+                $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
                     $(this).val('');
                     $('#filter-start-time').val('');
                     $('#filter-end-time').val('');
                 });
 
                 $('.daterangepicker').hover(function () {
-                    $('#date-posted-dropdown-submenu').css('display', 'block');
+                    $('#date-created-dropdown-submenu').css('display', 'block');
                 });
 
-                $('.daterangepicker th').each(function () {
-                    console.log("TH:", $(this))
-                    $(this).on('click', function (event) {
+                $('.daterangepicker th').each(function() {
+                    console.log("TH:",$(this))
+                    $(this).on('click', function(event) {
                         console.log("Click!!!!")
                         event.stopPropagation();
                         $('#date-posted-dropdown-submenu').css('display', 'block');
@@ -353,6 +353,13 @@
             let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+
+            // Prevent the dropdown from closing when date inputs are clicked
+            $('.startTimePicker, .endTimePicker').on('click', function (e) {
+                e.stopPropagation(); // Stop the event from propagating
+                $(this).closest('.dropdown-submenu').dropdown('toggle'); // Show the dropdown
+            });
+
             //////////////////////////////////////////////
 
             function showConfirmationModal(action, id) {
