@@ -44,12 +44,12 @@ public class Api {
     private final OtpService otpService;
     private final DepartmentService departmentService;
     private final InterviewService interService;
-    private final InterviewRepository inter;
     private final NotificationCreator notificationCreator;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
+        System.out.print(input);
         return userRepository.findAll(input);
     }
 

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
+import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
@@ -38,11 +38,12 @@ import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.InterviewProcessService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
+import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
+
 import lombok.RequiredArgsConstructor;
 
 
@@ -89,26 +90,26 @@ public class CandidateController {
 
     private final VacancyInfoRepository vanInfoReopository;
 
-//    private FirstDaySpecification firstDaySpecification;
+   private FirstDaySpecification firstDaySpecification;
 
 
-//    @GetMapping("/allCandidate")
-//    @ResponseBody
-//    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
-//
-//        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
-//        firstDaySpecification = new FirstDaySpecification(input);
-//
-//        System.out.println(input);
-//
-//        if (firstDaySpecification == null) {
-//            return interviewData;
-//        } else {
-//            interviewData = repo.findAll(input, firstDaySpecification);
-//            return interviewData;
-//        }
-//
-//    }
+   @GetMapping("/allCandidate")
+   @ResponseBody
+   public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+
+       DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+       firstDaySpecification = new FirstDaySpecification(input);
+
+       System.out.println(input);
+
+       if (firstDaySpecification == null) {
+           return interviewData;
+       } else {
+           interviewData = repo.findAll(input, firstDaySpecification);
+           return interviewData;
+       }
+
+   }
 
 
     @GetMapping("/allPositions")
