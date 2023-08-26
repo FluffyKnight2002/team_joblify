@@ -1,6 +1,12 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
+import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.service.AllPostService;
+import com.ace_inspiration.team_joblify.service.PositionService;
+import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -30,17 +36,8 @@ import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
-import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.InterviewProcessService;
-import com.ace_inspiration.team_joblify.service.PositionService;
-import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +78,7 @@ public class CandidateController {
 
 //    private final DasboardService dasboardservice;
 
-    private final InterviewProcessService interviewService;
+    private  final InterviewProcessService interviewService;
 
     private final InterviewProcessRepository repo;
 
@@ -97,6 +94,7 @@ public class CandidateController {
     public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
 
         DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+        firstDaySpecification = new FirstDaySpecification(input);
         firstDaySpecification = new FirstDaySpecification(input);
 
         System.out.println(input);

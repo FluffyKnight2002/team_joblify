@@ -1,7 +1,11 @@
 package com.ace_inspiration.team_joblify.controller.jasper_report;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +36,8 @@ public class JasperReportController {
 		return candidatesReportService.exportReport(format);
 
 }
-	@PostMapping("/interview_process/{format}")
-	public String generateReportInterview(@PathVariable String format,@RequestBody List<InterViewProcessReport> tableData) throws FileNotFoundException, JRException {
+	@GetMapping("/interview_process/{format}")
+	public ResponseEntity<byte[]> generateReportInterview(@PathVariable String format) throws JRException, IOException {
 		
 		return interViewService.exportReport(format);
 	

@@ -34,7 +34,7 @@ public class AllCandidatesReportService {
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(pdfjasper);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Joblify Team");
+        parameters.put("createdBy", "All Candidates");
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
         if (reportFormat.equalsIgnoreCase("html")) {
             JasperExportManager.exportReportToHtmlFile(jasperPrint+ "\\All CandidatesReport.html");
