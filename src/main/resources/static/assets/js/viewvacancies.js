@@ -75,10 +75,18 @@ $(document).ready(function () {
                     target: 4 }, // Access object property directly
                 { name: "Status", data: "status", target: 5 }, // Access object property directly
                 { name: "Applicants",
+                    data: "hiredPost",
                     data: "applicants",
+                    data: "post",
                     render: function (data, type, row, meta) {
-                        let applicants =  (row.applicants === 0) ? "-" : row.applicants;
-                        return '<p class="text-center">'+applicants+'</p>';
+                        let hiredPost = row.hiredPost;
+                        let applicants =  row.applicants;
+                        const returnRow = `
+                            <span class="bg-gradient-ltr py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem">${hiredPost}</span>
+                            <span class="bg-success bg-gradient py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem" >${applicants}</span>
+                            <span class="bg-primary bg-gradient py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem">${row.post}</span>
+                        `;
+                        return returnRow;
                     },
                     target: 6 }, // Access object property directly
                 { name: "Created User/Time",

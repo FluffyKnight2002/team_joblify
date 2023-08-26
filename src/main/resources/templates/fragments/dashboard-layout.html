@@ -44,12 +44,14 @@
                             <a th:href="show-upload-vacancy-form">Upload</a>
                         </li>
                         <li class="submenu-item ">
-                            <a th:href="show-all-vacancies-page">View list</a>
+                            <a th:href="show-all-vacancies-page">Vacancy list</a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
+                <li class="sidebar-item  has-sub"
+                    th:classappend="${currentPage == '/user-register' ? 'active' : (currentPage == '/all-user-list') ? 'active' : (currentPage == '/user-profile-edit') ? 'active' : ''}"
+                    sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
                         <span>Users</span>
