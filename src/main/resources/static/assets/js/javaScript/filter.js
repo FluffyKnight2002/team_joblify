@@ -13,7 +13,6 @@ async function applyFilter() {
       $('input[name="level"]:checked').serializeArray().map(item => item.value);
   // let levelString = levelArray.join(',');
   let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
-  let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
   let page = 0;
   let itemPerPage = 5;
 
@@ -22,11 +21,10 @@ async function applyFilter() {
   console.log("Sort By Job Type:", jobType);
   console.log("Sort By Level:",levelArray);
   console.log("Under 10 Applicants:",isUnder10);
-  console.log("Show both :",isIncludingClosed);
   console.log("Page from applyJobs :",page);
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, isIncludingClosed,page,itemPerPage);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, page, itemPerPage);
         totalPages = data.totalPages;
         resultCount = data.totalElements;
         console.log("Result Count from apply: " + resultCount);
@@ -58,7 +56,6 @@ async function resetFilter(event) {
     $("input[name='level']").prop("checked", false);
     $("#type-both").prop("checked",true);
     $("input[name='under10']").prop("checked", false);
-    $("input[name='includingClosed']").prop("checked", false);
 
     let dataOfVacancies =await applyFilter();
     showResult();
@@ -90,7 +87,7 @@ function closeFilter() {
   }, 300); // 300 milliseconds = transition duration
 }
 
-async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder10, isIncludingClosed,page,itemPerPage) {
+async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder10, page, itemPerPage) {
     let filterData = {
         sortBy: sortBy,
         datePosted: datePosted,
@@ -98,7 +95,6 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder1
         jobType: jobType,
         level: level,
         isUnder10: isUnder10,
-        isIncludingClosed: isIncludingClosed
     };
 
     console.log("Form : ", JSON.stringify(filterData)); // Log the filter data
@@ -290,8 +286,8 @@ function showResult() {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
-                        <span class="default-font me-4 d-inline-block end-date-text"><i class='bx bx-calendar-exclamation' data-toggle="tooltip" data-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
+                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1 more-detail-btn" style="min-width: 88.59px">More Details</a>
+                        <span class="default-font me-4 d-inline-block end-date-text closed-date" ><i class='bx bx-calendar-exclamation' data-toggle="tooltip" data-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
                     </div>
                 </div>
             `;
@@ -364,11 +360,10 @@ async function loadVacancies(page) {
 
     // let levelString = levelArray.length > 0 ? levelArray.join(',') : null;
     let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
-    let isIncludingClosed = $('input[name="includingClosed"]:checked').val() === undefined ? "false" : "true";
     let itemPerPage = 5;
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10,isIncludingClosed, page, itemPerPage);
+        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
         resultCount = data.totalElements;
@@ -392,7 +387,6 @@ function updateRecentFilter() {
         return $(this).siblings('label').text();
     }).get();
     const under10 = $('input[name="under10"]').is(':checked') ? 'Under 10 applicants' : '';
-    const includingClosed = $('input[name="includingClosed"]').is(':checked') ? 'Including closed' : '';
 
     // Create an array of filter elements
     const filterElements = [
@@ -415,9 +409,6 @@ function updateRecentFilter() {
     if (under10) {
         filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${under10}</span>`);
     }
-    if (includingClosed) {
-        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${includingClosed}</span>`);
-    }
 
     // Update the recent-filter section with the generated filter elements
     const recentFilter = $('#filter-data-con');
@@ -435,7 +426,6 @@ $(document).ready(async function () {
     $('input[name="jobType"]').on('change', applyFilter);
     $('input[name="level"]').on('change', applyFilter);
     $('input[name="under10"]').on('change', applyFilter);
-    $('input[name="includingClosed"]').on('change', applyFilter);
 
     // vacancies =await applyFilter();
     console.log("Doc ready : " +  vacancies);

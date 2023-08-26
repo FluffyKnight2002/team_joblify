@@ -5,7 +5,7 @@ import com.ace_inspiration.team_joblify.dto.NotificationDto;
 import java.util.List;
 
 public interface NotificationService {
-    void createNotifications(NotificationDto notificationDto);
+    NotificationDto createNotifications(NotificationDto notificationDto);
     List<NotificationDto> showNotifications();
     long getNotificationCount();
     void removeNotification(long id);

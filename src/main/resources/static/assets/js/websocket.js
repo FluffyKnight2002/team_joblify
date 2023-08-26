@@ -3,6 +3,8 @@ let status = false;
 let notificationLight = $('#noti-light');
 let selectedNotifications = new Set(); // Keep track of selected notification IDs
 let isDropdownVisible = false;
+let notificationCount = 0;
+let unSeenCount;
 let notiDropdown = $('#noti-dropdown');
 let deleteBtn = $('#delete-noti-btn');
 notificationLight.hide();
@@ -17,11 +19,9 @@ $(document).ready(function() {
         stompClient.subscribe('/all/notifications', function(result) {
             // fetchCount();
             fetchNotifications();
-            // console.log("Received notification:"); // Debugging statement
-            // console.log(result.body);
-            // var newNotification = JSON.parse(result.body);
-            // console.log(newNotification); // Debugging statement
-            // handleNewNotification(newNotification);
+            // Handle the WebSocket message and notification data
+            var newNotification = JSON.parse(result.body);
+            handleNewNotification(newNotification);
         });
     });
     console.log(notiDropdown)
@@ -30,8 +30,12 @@ $(document).ready(function() {
     // Attach show.bs.dropdown event handler (this kind of ez give troubles !!!!)
     $('#notification-bell-btn').on('show.bs.dropdown', function() {
         console.log('Dropdown is showing');
+        // Example usage when the user clicks the notification icon
+        markNotificationsAsRead();
         updateDeleteButtonAndSelectedNotifications();
     });
+
+    unSeenCount = 0;
 
 });
 
@@ -78,11 +82,16 @@ function displayNotification(notifications) {
     notifications.forEach(function (notification) {
         addNotifications(notification);
     });
+
+    notificationCount = unSeenCount;
+    $('#notifications-count').text(notificationCount);
+    unSeenCount = 0;
 }
 
 /* Function to add notifications to the notificationContainer */
 function addNotifications(notification) {
     const isSeen = notification.seen;
+    unSeenCount = (isSeen) ? unSeenCount : unSeenCount + 1;
     const isDeleted = notification.deleted;
     console.log(isSeen)
     console.log(typeof(isSeen))
@@ -138,24 +147,23 @@ function addNotifications(notification) {
 }
 
 function handleNewNotification(notification) {
-    // Update the notification count
-    var currentCount = parseInt($('#notifications-count').text(), 10);
-    $('#notifications-count').text(currentCount + 1);
-
-    // Set the 'seen' property to 'false' for the new notification
-    notification.seen = 'false';
-
-    // Check if the notifications container is currently being viewed
-    const isViewingNotifications = $('#view-noti-btn').hasClass('show');
-    if (isViewingNotifications) {
-        // If the container is open, directly add the new notification
-        addNotifications(notification);
-    }
 
     // Store the new notification message in shared state (localStorage)
     var notifications = JSON.parse(localStorage.getItem('notifications')) || [];
     notifications.push(notification);
     localStorage.setItem('notifications', JSON.stringify(notifications));
+
+    // Display a notification using iziToast.js
+    iziToast.show({
+        title: 'Notification :',
+        message: notification.message,
+        position: 'bottomRight',
+        timeout: 5000,
+        backgroundColor: '#f8f8f8',
+        onClosed: function () {
+            // You can add a callback function here if needed
+        }
+    });
 }
 
 // Function to convert time to a relative format
@@ -169,7 +177,6 @@ function timeAgo(time) {
     const hour = 60 * minute;
     const day = 24 * hour;
     const week = 7 * day;
-    const month = 30 * day;
 
     if (timeDifferenceInSeconds < minute) {
         return 'Just now';
@@ -182,7 +189,7 @@ function timeAgo(time) {
     } else if (timeDifferenceInSeconds < week) {
         const daysAgo = Math.floor(timeDifferenceInSeconds / day);
         return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
+    } else if (timeDifferenceInSeconds == week) {
         const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
         return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
     } else {
@@ -238,9 +245,3 @@ function deleteSelectedNotifications(selectedNotifications) {
         .then(notificationLight.hide())
         .then(fetchNotifications);
 }
-
-
-// Example usage:
-// const inputTime = '2023-07-23T23:03:52.123781';
-// const result = timeAgo(inputTime);
-// $('#timeDisplay').text(result);

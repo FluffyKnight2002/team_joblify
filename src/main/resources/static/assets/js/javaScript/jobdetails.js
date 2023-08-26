@@ -271,7 +271,7 @@ function timeAgo(time) {
     } else if (timeDifferenceInSeconds < week) {
         const daysAgo = Math.floor(timeDifferenceInSeconds / day);
         return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
+    } else if (timeDifferenceInSeconds == week) {
         const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
         return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
     } else {
