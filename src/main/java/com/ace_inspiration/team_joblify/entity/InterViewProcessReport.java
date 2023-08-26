@@ -51,4 +51,6 @@ public class InterViewProcessReport {
 	@Column(name="accepted_candidates")
 	private long acceptedCandidates;
 
+	@Column(name="interviewed_count")
+	private long interviewCount;
 }

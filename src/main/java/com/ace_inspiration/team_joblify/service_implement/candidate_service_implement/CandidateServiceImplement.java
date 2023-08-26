@@ -8,47 +8,22 @@ import java.util.Base64;
 import java.util.List;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.*;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Gender;
-import com.ace_inspiration.team_joblify.entity.Interview;
-import com.ace_inspiration.team_joblify.entity.InterviewType;
-import com.ace_inspiration.team_joblify.entity.LanguageSkills;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.TechSkills;
-import com.ace_inspiration.team_joblify.repository.CandidateRepository;
-import com.ace_inspiration.team_joblify.repository.InterviewRepository;
-import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
-import com.ace_inspiration.team_joblify.repository.SummaryRepository;
-import com.ace_inspiration.team_joblify.repository.TechSkillsRepository;
 import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import lombok.RequiredArgsConstructor;
 
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.repository.CandidateRepository;
-import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -63,6 +38,7 @@ public class CandidateServiceImplement implements CandidateService{
     private final InterviewService interviewService;
     private final LanguageSkillsRepository languageSkillsRepository;
     private final TechSkillsRepository techSkillsRepository;
+    private final VacancyInfoRepository vacancyInfoRepository;
 
 
 
@@ -175,6 +151,7 @@ public class CandidateServiceImplement implements CandidateService{
             
         }
 
+        Optional<VacancyInfo> vacancyInfo = vacancyInfoRepository.findById(candidateDto.getId());
 
 
         Summary summary = new Summary();
@@ -192,6 +169,7 @@ public class CandidateServiceImplement implements CandidateService{
         summary.setSpecialistTech(candidateDto.getSpecialistTech());
         summary.setLanguageSkills(languageSkillsList);
         summary.setTechSkills(techSkillsList);
+
         summaryRepository.save(summary);
 
         Candidate candidate=new Candidate();
@@ -202,6 +180,7 @@ public class CandidateServiceImplement implements CandidateService{
              candidate.setSelectionStatus(Status.RECEIVED);
              candidate.setInterviewStatus(Status.NONE);
              candidate.setApplyDate(LocalDateTime.now());
+             candidate.setVacancyInfo(vacancyInfo.get());
             candidate.setType(candidateDto.getResume().getContentType());
             try {
                 candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));
@@ -282,10 +261,7 @@ public class CandidateServiceImplement implements CandidateService{
     	return file.getContentType().equals("image/jpg");
     }
 
-    public String encodeImageToString(MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        return Base64Utils.encodeToString(bytes);
-    }
+
     
     @Override
     public List<Candidate> getFile(List<Long> id) {

@@ -647,7 +647,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 
 	$('#where').on('change', function() {
 		const type = $(this).val();
-		const updatedContent = getEmailContent(type, row.name,row.id,csrfToken);
+		const updatedContent = getEmailContent(type, row.name,row.id);
 		$('#data').summernote('code', updatedContent);
 	});
 	$('#add-date').on('click', function() {
@@ -939,7 +939,7 @@ a.     The employee agrees not to disclose any of Company’s confidential infor
 	return (type === 'offer_mail') ? offermail : custom;
 
 }
-function getEmailContent(type, name,id,csrfToken) {
+function getEmailContent(type, name,id) {
 	const custom = ''; // Add your custom message here
 
 	const onlineText = `
@@ -955,16 +955,7 @@ function getEmailContent(type, name,id,csrfToken) {
         <a href="https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09">Zoom Meeting Link</a><br>
         Meeting ID: 921 9152 8025<br>
         Passcode: 178426<br>
-      <form action="http://localhost:8080/reject" method="POST" >
-        <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
-</form> <br>
- <form action="http://localhost:8080/accept" method="POST" >
-   <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
-</form>
+      
     `;
 
 	const offlineText = `
