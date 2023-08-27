@@ -2,17 +2,13 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.entity.Role;
-
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -47,21 +43,22 @@ public class UserController {
     }
 
     @GetMapping("/user-register")
-    public String showUserRegisterForm() {
-
+    public String showUserRegisterForm(Model model) {
+        model.addAttribute("currentPage", "/user-register");
         return "user-register";
     }
 
     @GetMapping("/all-user-list")
-    public String showAllUsersList() {
+    public String showAllUsersList(Model model) {
+        model.addAttribute("currentPage", "/all-user-list");
         return "all-user-list";
     }
 
     @GetMapping("/user-profile-edit")
     public Object showUserProfileEdit(HttpServletResponse response, @RequestParam("email") String email,
-            Authentication authentication) {
+            Authentication authentication,Model model) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-
+        model.addAttribute("currentPage", "/user-profile-edit");
         if (myUserDetails.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals(Role.DEFAULT_HR.name()))
                 || myUserDetails.getAuthorities().stream()

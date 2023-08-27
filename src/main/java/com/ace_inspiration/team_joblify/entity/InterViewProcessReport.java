@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import com.querydsl.core.annotations.Immutable;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -21,34 +21,25 @@ public class InterViewProcessReport {
 	@Id
 	private long id;
 	
-	@Column(name = "close_date")
-	private LocalDate closeDate;
+	private LocalDate close_date;
 	
-	@Column(name = "open_date")
-	private LocalDate openDate;
+	private LocalDate open_date;
 	
-	@Column(name="position")
 	private String position;
 	
-	@Column(name="total_candidates")
-	private long totalCandidates;
+	private long total_candidates;
 	
-	@Column(name="interviews_candidate")
-	private long interviewCandidates;
+	private long interview_candidate;
 	
-	@Column(name="passed_candidates")
-	private long passCandidates;
+	private long passed_candidates;
 	
-	@Column(name="pending_candidates")
-	private long pendingCandidates;
+	private long pending_candidates;
 	
-	@Column(name="cancel_candidates")
-	private long cancelCandidates;
+	private long cancel_candidates;
 	
-	@Column(name="not_interview_candidates")
-	private long notInterviewCandidates;
+	private long not_interview_candidates;
 	
-	@Column(name="accepted_candidates")
-	private long acceptedCandidates;
+	private long accepted_candidates;
 
+	private long interviewed_counts;
 }

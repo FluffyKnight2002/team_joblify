@@ -13,5 +13,4 @@ public class JobFilterRequest {
     private String jobType;
     private String[] level;
     private String isUnder10;
-    private String isIncludingClosed;
 }

@@ -54,7 +54,8 @@ async function authenticatedUserData() {
                 iziToast.warning({
                     title: 'Caution',
                     message: 'You\'re Still Using Default Password. Please Change Immediately',
-                    position: 'topCenter'
+                    position: 'topCenter',
+                    backgroundColor: '#f58787'
                 });
             }
         } else {

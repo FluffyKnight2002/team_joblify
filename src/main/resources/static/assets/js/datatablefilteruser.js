@@ -35,7 +35,7 @@ function roleFiltered(selectedValue) {
 
 
 function statusFiltered(selectedValue) {
-    
+
     let data;
     if (selectedValue === 'Active') {
         data = true;
@@ -43,41 +43,51 @@ function statusFiltered(selectedValue) {
         data = false;
     }
     table.column(7).search(data).draw();
-    
+
 }
 
 
 function createdDateFiltered(selectedValue) {
+    console.log(selectedValue);
     let data;
-    const currentDatetime = new Date();
-    if (selectedValue === 'Last 24 hours') {
-        // Calculate datetime from 24 hours ago
-        const twentyFourHoursAgo = new Date();
-        twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
-        data = twentyFourHoursAgo + ';' + currentDatetime
+    const currentDate = new Date();
+    const endDate = currentDate.toISOString().split('T')[0]; // End date is today
+    const startDate = new Date(currentDate);
+    const isoStartDate = startDate.toISOString().split('T')[0];
+    
+    if (selectedValue === '') {
+        data = '';
+    } else if (selectedValue === 'Last 24 hours') {
+        startDate.setHours(currentDate.getHours() - 24);
+        data = isoStartDate + ';' + endDate;
 
     } else if (selectedValue === 'Last week') {
-        // Calculate datetime from 1 week ago
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        data = oneWeekAgo + ';' + currentDatetime
+        startDate.setDate(currentDate.getDate() - 7);
+        const isoLastWeekStartDate = startDate.toISOString().split('T')[0]; // ISO formatted last week start date
+        data = isoLastWeekStartDate + ';' + endDate;
 
     } else if (selectedValue === 'Last month') {
-        // Calculate datetime from 1 month ago
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-        data = oneMonthAgo + ';' + currentDatetime
+        startDate.setMonth(currentDate.getMonth() - 1);
+        const isoLastMonthStartDate = startDate.toISOString().split('T')[0]; // ISO formatted last month start date
+        data = isoLastMonthStartDate + ';' + endDate;
 
     } else {
-
+        const dateRange = selectedValue;
+        const formattedDateRange = dateRange.replace(/ - /g, ';').replace(/\//g, '-');
+        const parts = formattedDateRange.split(';');
+        const startDateParts = parts[0].split('-');
+        const endDateParts = parts[1].split('-');
+        const isoStartDate = `${startDateParts[2]}-${startDateParts[0]}-${startDateParts[1]}`;
+        const isoEndDate = `${endDateParts[2]}-${endDateParts[0]}-${endDateParts[1]}`;
+        data = `${isoStartDate};${isoEndDate}`;
     }
 
     table.column(8).search(data).draw();
 }
 
-function lastUpdatedDateFiltered(selectedValue) {
-    table.column(9).search(selectedValue).draw();
-}
+
+
+
 
 let table;
 
@@ -111,16 +121,17 @@ $(document).ready(function () {
                 class: 'dt-control',
                 orderable: false,
                 searchable: false,
-                data: "id",
-                defaultContent: ''
+                data: null,
+                defaultContent: '',
+                
             },
-            { name: "Name", data: "name", targets: 1 },
-            { name: "Email", data: "email", targets: 2 },
-            { name: "Phone", data: "phone", targets: 3 },
-            { name: "Address", data: "address", targets: 4 },
-            { name: "Department", data: "department.name", targets: 5 },
+            { data: "name", targets: 1 },
+            { data: "email", targets: 2 },
+            { data: "phone", targets: 3 },
+            { data: "address", targets: 4 },
+            { data: "department.name", targets: 5 },
             {
-                name: "Role",
+                
                 data: "role",
                 targets: 6, // Adjust the target index to match the column
                 render: function (data, type, row) {
@@ -157,17 +168,11 @@ $(document).ready(function () {
             },
             {
                 target: 8,
-                name: "Created Date",
                 data: "createdDate",
                 visible: false
             },
-            {
-                target: 9,
-                name: "Last Updated Date",
-                data: "lastUpdatedDate",
-                visible: false
-            },
             
+
         ],
         serverSide: true,
         processing: true
@@ -557,7 +562,7 @@ function resetFilters() {
     statusFiltered('');
     roleFiltered('');
     createdDateFiltered('');
-    lastUpdatedDateFiltered('');
+
 
 }
 
@@ -577,10 +582,19 @@ function changeSelectedFilterName(item) {
 
         if (filterId === 'filter-department') {
             departmentFiltered(selectedValue);
+
         } else if (filterId === 'filter-date-posted') {
-            createdDateFiltered(selectedValue);
+            if (selectedValue !== 'Custom') {
+                createdDateFiltered(selectedValue);
+            } else {
+                const inputData = $('input[name="datefilter2"]').val();
+                createdDateFiltered(inputData);
+            }
+
+
         } else if (filterId === 'filter-status') {
             statusFiltered(selectedValue);
+
         } else if (filterId === 'filter-role') {
             roleFiltered(selectedValue);
         }
@@ -653,17 +667,19 @@ function createDateCreatedFilterButton(selectedValue, startDate, endDate) {
     $('.date-created-dropdown-item').hide();
 
     let selectedText = null;
-
+    let data;
     if (selectedValue === 'Custom') {
         $('#filter-start-date').val(startDate);
         $('#filter-end-date').val(endDate);
         selectedText = selectedValue;
+        data = startDate + ';' + endDate
         $('#filter-date-posted').val(selectedText);
     } else {
         selectedText = selectedValue.text();
+        data = selectedValue.text();
         $('#filter-date-posted').val(selectedText);
     }
-
+    createdDateFiltered(data);
     // Create a filter button with the selected filter item
     var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
@@ -815,8 +831,11 @@ function createRoleFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="role-filter-dropdown-submenu">
+            <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Default-HR</li>
                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Senior-HR</li>
                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Junior-HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Management-HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Interviewer</li>
                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Other</li>
             </ul>
         </div>`;

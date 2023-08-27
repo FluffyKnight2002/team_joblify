@@ -14,3 +14,4 @@ async function fetchVacancyPostCount() {
         console.error('Error fetching vacancy count:', error);
     }
 }
+

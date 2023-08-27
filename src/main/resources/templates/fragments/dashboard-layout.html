@@ -44,12 +44,14 @@
                             <a th:href="show-upload-vacancy-form">Upload</a>
                         </li>
                         <li class="submenu-item ">
-                            <a th:href="show-all-vacancies-page">View list</a>
+                            <a th:href="show-all-vacancies-page">Vacancy list</a>
                         </li>
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub" sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
+                <li class="sidebar-item  has-sub"
+                    th:classappend="${currentPage == '/user-register' ? 'active' : (currentPage == '/all-user-list') ? 'active' : (currentPage == '/user-profile-edit') ? 'active' : ''}"
+                    sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR')">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-person-fill"></i>
                         <span>Users</span>
@@ -60,18 +62,6 @@
                         </li>
                         <li class="submenu-item ">
                             <a th:href="@{/all-user-list}">User list</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-file-person-fill"></i>
-                        <span>Candidates</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a th:href="view-summaryinfo">View list</a>
                         </li>
                     </ul>
                 </li>
@@ -114,9 +104,10 @@
                                 aria-expanded="false">
                                 <i class='bi bi-bell bi-sub fs-4 text-gray-600 position-relative'
                                     style="cursor: pointer">
-                                    <span
-                                        class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"
+                                    <span style="font-size: 0.8rem;width: 27px;height: 27px"
+                                        class="text-center position-absolute top-0 start-100 translate-middle bg-danger border border-light rounded-circle"
                                         id="noti-light">
+                                        <b class="text-white pt-1 m-0 d-inline-block" id="notifications-count"></b>
                                         <span class="visually-hidden">New alerts</span>
                                     </span>
                                 </i>

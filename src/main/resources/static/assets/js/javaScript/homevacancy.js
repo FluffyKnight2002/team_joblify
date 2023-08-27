@@ -28,15 +28,16 @@ function displayVacancies(data) {
                         <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.updatedTime)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.openDate)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1">More Details</a>
+                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1" id="more-detail-btn" style="min-width: 88.59px">More Detail</a>
                         <span class="default-font me-4 d-inline-block end-date-text"><i class='bx bx-calendar-exclamation' data-toggle="tooltip" data-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
                     </div>
                 </div>
             `;
+
         // Initialize Bootstrap tooltips
         $(function () {
             $('[data-toggle="tooltip"]').tooltip({
@@ -49,10 +50,9 @@ function displayVacancies(data) {
 
 // Change time format
 function changeTimeFormat(time) {
-    var dateString = "2023-07-27";
 
     // Parse the date string to a JavaScript Date object
-    var date = new Date(dateString);
+    var date = new Date(time);
 
     // Array to map month numbers to month names
     var monthNames = [

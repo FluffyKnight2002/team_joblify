@@ -1,4 +1,4 @@
-var currentId = new URLSearchParams(window.location.search).get("id");
+let currentId = new URLSearchParams(window.location.search).get("id");
 const formId = document.getElementById('form-id');
 formId.value = currentId;
 // Function to fetch job data and create job card UI
@@ -271,7 +271,7 @@ function timeAgo(time) {
     } else if (timeDifferenceInSeconds < week) {
         const daysAgo = Math.floor(timeDifferenceInSeconds / day);
         return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
-    } else if (timeDifferenceInSeconds < month) {
+    } else if (timeDifferenceInSeconds == week) {
         const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
         return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
     } else {

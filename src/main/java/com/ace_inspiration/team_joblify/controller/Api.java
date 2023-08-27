@@ -1,10 +1,13 @@
 package com.ace_inspiration.team_joblify.controller;
 
+import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.config.FirstDaySpecificationUser;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.Department;
+import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.InterviewRepository;
@@ -46,12 +49,26 @@ public class Api {
     private final InterviewService interService;
     private final NotificationCreator notificationCreator;
     private final PasswordEncoder passwordEncoder;
+    private FirstDaySpecificationUser firstDaySpecificationUser;
+
 
     @GetMapping("/get-all-user")
-    public DataTablesOutput<User> getALlUsers(DataTablesInput input) {
-        System.out.print(input);
-        return userRepository.findAll(input);
-    }
+    public DataTablesOutput<User> getAllUsers(DataTablesInput input) {
+        System.out.println(input);
+         DataTablesOutput<User> user = userRepository.findAll(input);
+        firstDaySpecificationUser = new FirstDaySpecificationUser(input);
+        
+
+        System.out.println(input);
+
+        if (firstDaySpecificationUser == null) {
+            return user;
+        } else {
+            user = userRepository.findAll(input, firstDaySpecificationUser);
+            return user;
+        }
+        
+       }
 
     @PostMapping(value = "/user-register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> userRegister(UserDto userDto, Authentication authentication) throws IOException {

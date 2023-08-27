@@ -2,10 +2,7 @@ package com.ace_inspiration.team_joblify.controller.candidate;
 
 import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.JobType;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.VacancyView;
+import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.VacancyViewRepository;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service_implement.JobFilterServiceImpl;
@@ -219,8 +216,8 @@ public class FetchVacancyController {
     }
 
     @GetMapping("/show-others")
-    public List<VacancyDto> getOtherVacancies() {
-        return vacancyInfoService.selectAllVacancyInfo();
+    public List<VacancyView> getOtherVacancies() {
+        return vacancyViewRepository.findAll();
     }
 
     @GetMapping("/job-detail")
@@ -228,6 +225,7 @@ public class FetchVacancyController {
         return vacancyInfoService.selectVacancyById(id);
     }
 
+    // For candidate view
     @PostMapping("/filter")
     @ResponseBody
     public Page<VacancyView> filterJobs(@RequestBody JobFilterRequest filterRequest,
@@ -237,7 +235,6 @@ public class FetchVacancyController {
         System.out.println("It's work!!!!");
         System.out.println("Page number : " + page);
         System.out.println("Is Under 10 : " + filterRequest.getIsUnder10());
-        System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
 
         // Create a pageable object for pagination
         Pageable pageable = PageRequest.of(page, pageSize); // Use actualPageNumber

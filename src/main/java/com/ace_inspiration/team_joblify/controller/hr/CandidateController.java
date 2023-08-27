@@ -1,6 +1,12 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 
+import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.service.AllPostService;
+import com.ace_inspiration.team_joblify.service.PositionService;
+import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -30,16 +36,8 @@ import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
-import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.PositionService;
-import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
@@ -82,7 +80,7 @@ public class CandidateController {
 
 //    private final DasboardService dasboardservice;
 
-    private final InterviewProcessService interviewService;
+    private  final InterviewProcessService interviewService;
 
     private final InterviewProcessRepository repo;
 
@@ -90,26 +88,27 @@ public class CandidateController {
 
     private final VacancyInfoRepository vanInfoReopository;
 
-   private FirstDaySpecification firstDaySpecification;
+    private FirstDaySpecification firstDaySpecification;
 
 
-   @GetMapping("/allCandidate")
-   @ResponseBody
-   public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+    @GetMapping("/allCandidate")
+    @ResponseBody
+    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+System.err.println(input);
+        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+        firstDaySpecification = new FirstDaySpecification(input);
+        
 
-       DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
-       firstDaySpecification = new FirstDaySpecification(input);
+        
 
-       System.out.println(input);
+        if (firstDaySpecification == null) {
+            return interviewData;
+        } else {
+            interviewData = repo.findAll(input, firstDaySpecification);
+            return interviewData;
+        }
 
-       if (firstDaySpecification == null) {
-           return interviewData;
-       } else {
-           interviewData = repo.findAll(input, firstDaySpecification);
-           return interviewData;
-       }
-
-   }
+    }
 
 
     @GetMapping("/allPositions")

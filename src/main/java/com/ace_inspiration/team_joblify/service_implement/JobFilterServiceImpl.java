@@ -57,7 +57,6 @@ public class JobFilterServiceImpl {
         Specification<VacancyView> spec = Specification.where(null);
 
         System.out.println("Position : " + (filterRequest.getPosition().trim() == ""));
-        System.out.println("Is Including Closed : " + filterRequest.getIsIncludingClosed());
         System.out.println("Is Under10 : " + filterRequest.getIsUnder10());
 
         if (filterRequest.getSortBy() != null) {
@@ -142,21 +141,10 @@ public class JobFilterServiceImpl {
                     builder.lessThanOrEqualTo(root.get("applicants"), 1));
         }
 
-        if (filterRequest.getIsIncludingClosed() != null && !filterRequest.getIsIncludingClosed().isEmpty()) {
-            System.out.println("Closed works!!!");
-            spec = spec.and((root, query, builder) -> {
-                Predicate openPredicate = builder.equal(root.get("status"), Status.OPEN);
-                Predicate closedPredicate = builder.equal(root.get("status"), Status.CLOSED);
-
-                return filterRequest.getIsIncludingClosed().equals("true") ?
-                        builder.or(openPredicate, closedPredicate) :
-                        openPredicate;
-            });
-//            spec = spec.and((root, query, builder) ->
-//                    root.get("level").in(Status.OPEN, Status.CLOSED));
-        }
-
-        // ... (other filter conditions)
+        spec = spec.and((root, query, builder) -> {
+            System.out.println("Comparing: " + root.get("level"));
+            return builder.equal(root.get("status"), Status.OPEN);
+        });
 
         // Perform the filtering with pagination
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
