@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/assets/css/app.css">
   <link rel="stylesheet" href="/assets/css/pages/auth.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
   <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
   <style>
     /* Custom CSS to hide background image of validation */
@@ -92,72 +93,77 @@
 
   </div>
   <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
   <script>
-
-    const usernameError = document.getElementById('username-error');
-    const passwordError = document.getElementById('password-error');
-
     document.addEventListener('DOMContentLoaded', function () {
-      const form = document.getElementById('login-form');
-      const usernameError = document.getElementById('username-error');
-      const passwordError = document.getElementById('password-error');
-      const error = document.getElementById('login-error');
-      const username = document.getElementById('username');
-      const password = document.getElementById('password');
+  const form = document.getElementById('login-form');
+  const usernameError = document.getElementById('username-error');
+  const passwordError = document.getElementById('password-error');
+  const error = document.getElementById('login-error');
+  const username = document.getElementById('username');
+  const password = document.getElementById('password');
 
-      // Create a URLSearchParams object with the current URL's query parameters
-      const queryParams = new URLSearchParams(window.location.search);
+  const queryParams = new URLSearchParams(window.location.search);
+  const isError = queryParams.get('error');
+  const isDisabled = queryParams.get('disabled');
+  const isSuccess = queryParams.get('success');
 
-      // Get the value of the 'error' parameter
-      const isError = queryParams.get('error');
+  if (isError) {
+    usernameError.innerHTML = '';
+    passwordError.innerHTML = '';
 
-      // Get the value of the 'disabled' parameter
-      const isDisabled = queryParams.get('disabled');
+    error.classList.add('invalid-feedback');
+    error.innerHTML = 'Username or Password is Wrong';
 
-      if (isError) {
-        usernameError.innerHTML = ''
-        passwordError.innerHTML = ''
+    username.classList.add('is-invalid');
+    password.classList.add('is-invalid');
+  } else if (isDisabled) {
+    usernameError.innerHTML = '';
+    passwordError.innerHTML = '';
 
-        error.classList.add('invalid-feedback');
-        error.innerHTML = 'Username or Password is Wrong';
+    error.classList.add('invalid-feedback');
+    error.innerHTML = 'Your Account is Suspended.';
 
-        username.classList.add('is-invalid');
-        password.classList.add('is-invalid');
-
-      } else if (isDisabled) {
-        usernameError.innerHTML = ''
-        passwordError.innerHTML = ''
-
-        error.classList.add('invalid-feedback');
-        error.innerHTML = 'Your Account is Suspended.';
-
-        username.classList.add('is-invalid');
-        password.classList.add('is-invalid');
-      }
+    username.classList.add('is-invalid');
+    password.classList.add('is-invalid');
+  } else if (isSuccess) {
+    iziToast.success({
+      title: 'Success',
+      message: 'Password Change Success.',
+      position: 'topCenter',
     });
+  }
+});
 
-    (() => {
-      'use strict'
-      const forms = document.querySelectorAll('.needs-validation');
+(() => {
+  'use strict';
+  const forms = document.querySelectorAll('.needs-validation');
 
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
 
-          form.classList.add('was-validated');
-          // Add validation classes to the corresponding elements
+      form.classList.add('was-validated');
 
-          usernameError.classList.add('invalid-feedback');
-          passwordError.classList.add('invalid-feedback');
+      if (usernameInput.value === '') {
+        usernameError.classList.add('invalid-feedback');
+        usernameError.innerHTML = 'Please Add Username.';
+      } else {
+        usernameError.innerHTML = '';
+      }
 
-          usernameError.innerHTML = 'Please Add Username.'
-          passwordError.innerHTML = 'Please Add Password.'
-        }, false);
-      });
-    })();
+      if (passwordInput.value === '') {
+        passwordError.classList.add('invalid-feedback');
+        passwordError.innerHTML = 'Please Add Password.';
+      } else {
+        passwordError.innerHTML = '';
+      }
+    }, false);
+  });
+})();
 
   </script>
 </body>
