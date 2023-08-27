@@ -287,16 +287,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         return vacancyDto;
     }
 
-    public VacancyDto tupleToVacancyDto(Object[] tuple) {
-        VacancyInfo vacancyInfo = (VacancyInfo) tuple[0];
-        Long applicantsCount = (Long) tuple[1];
-
-        VacancyDto vacancyDto = entityToDto(vacancyInfo);
-        vacancyDto.setApplicants(Integer.valueOf(Math.toIntExact(applicantsCount)));
-
-        return vacancyDto;
-    }
-
     private Level convertLevel(String levelName) {
         return Level.valueOf(levelName);
     }
