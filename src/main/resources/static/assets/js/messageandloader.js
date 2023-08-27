@@ -5,9 +5,8 @@ function actionToVacancy(button) {
     const warningMessage = $(button).data('warning-message');
     const successMessage = $(button).data('success-message');
     const errorMessage = $(button).data('error-message');
-
-    const csrfToken = document.querySelector('#token').value;
-    console.log(csrfToken);
+    // console.log(csrfToken);
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
     const metaCsrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 
     console.log(metaCsrfToken);
@@ -25,135 +24,200 @@ function actionToVacancy(button) {
         backdrop: 'static' // Set backdrop to 'static' when the "Processing..." message is shown
     }).modal('show');
 
-    // Serialize the form data to JSON manually
-    let formData = {};
-    $('#' + formId).serializeArray().forEach(item => {
-        formData[item.name] = item.value;
-    });
+    let formData;
 
-    console.log("FormData : " ,JSON.stringify(formData))
+    if ($('form#job-apply').length > 0) {
+        const formElement = document.querySelector('form#job-apply'); // Select the form using plain JavaScript
+        console.log("Form job-apply exit",formElement);
+        formData = new FormData(formElement); // Use the form itself
+        console.log("Form Data :", formData);
+    } else {
+        // Serialize the form data to JSON manually
+        formData = {};
+        $('#' + formId).serializeArray().forEach(item => {
+            formData[item.name] = item.value;
+        });
+    }
 
-    console.log("FormData : " ,JSON.stringify(formData))
+    // console.log("FormData : " ,JSON.stringify(formData))
+    //
+    // console.log("FormData : " ,JSON.stringify(formData))
     console.log("Url : ", $('#' + formId).attr('action'));
 
+    let bodyData = JSON.stringify(formData);
+
+    if ($('form#job-apply').length > 0) {
+        $('#tech-skills-input').val(Array.from(techSkillsInput));
+        $('#language-skills-input').val(Array.from(languageSkillsInput));
+        formData.append('techSkillsString', $('#tech-skills-input').val());
+        formData.append('languageSkillsString', $('#language-skills-input').val());
+        bodyData = formData;
+        console.warn("TECHSKILL AND LANSKILL", formData.techSkillsString,formData.languageSkillsString);
+    }
+
+    console.log("Body Data :",bodyData);
+
     // Submit the form using AJAX
-    fetch($('#' + formId).attr('action'), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-XSRF-Token': metaCsrfToken
-        },
-        body: JSON.stringify(formData),// Pass the form data as JSON in the 'body' property
-    })
-        .then(
-            // Clear the form data after the fetch call is completed
-            $('#' + formId)[0].reset()
-        )
-        .then(response => response.json())
-        .then(data => {
-            if (data === true) {
-                // Handle the success response and update the message-con modal for success
-                $('#message-con').html('<p class="text-white">' + successMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Okay</button></div>');
-            } else {
-                // Handle the response and update the message-con modal for error
-                $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>');
-            }
-            if(formId === 'upload-form') {
-
-                console.log("Upload form !!!!")
-
-                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
-                let startTime = '9:00';
-                let endTime = '18:00';
-
-                function updateInputValue() {
-                    console.log("Mon ~ Fri : ", selectedDays);
-
-                    if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
-                        $('#workingDays').val('Mon ~ Fri');
-                    } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
-                        $('#workingDays').val('Weekend');
-                    } else {
-                        let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
-                        $('#workingDays').val(textSelectedDays.join(' ~ '));
-                    }
-
-                    console.log("Start Time : ", startTime);
-                    console.log("End Time : ",endTime);
-                    // Format start and end times
-                    const formattedStartTime = formatTime(startTime);
-                    const formattedEndTime = formatTime(endTime);
-
-                    // Update workingHours input value
-                    $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
-                }
-            }
-            hideMessageModalAfterDelay();
-            // To change back form
-            if(formId == 'reopen-form'){
-                $('#submit-btn')
-                    .attr('data-form-id', 'update-form')
-                    .attr('data-warning-message', 'Your vacancy will be updated.')
-                    .attr('data-success-message', 'Update successful!')
-                    .attr('data-error-message', 'Update failed. Please try again.')
-                    .html('Update');
-                reopenBtn.removeClass('btn-bright');
-                reopenBtn.addClass('btn-un-bright');
-                // reopenModeWarn.hide();
-                $('#reopen-form')
-                    .attr('id', 'update-form')
-                    .attr('action', 'update-vacancy');
-            }
-
-            console.log("After that....")
-            console.log("FormId : ",formId);
-            console.log("SuccessMessage : ",successMessage);
-            console.log("ErrorMessage : ",errorMessage);
+    if($('form#job-apply').length > 0) {
+        fetch($('#' + formId).attr('action'), {
+            method: 'POST',
+            headers: {
+                'X-XSRF-Token': metaCsrfToken
+            },
+            body: bodyData,// Pass the form data as JSON in the 'body' property
         })
-        .catch(error => {
-            if(formId === 'upload-form') {
+            .then(
+                // Clear the form data after the fetch call is completed
+                $('#' + formId)[0].reset()
+            )
+            .then(response => response.json())
+            .then(data => {
 
-                console.log("Upload form !!!!")
+                makeAfterRequestSend(data,successMessage,errorMessage);
+            })
+            .catch(error => {
+                renderCatch();
+            });
+    }else {
+        fetch($('#' + formId).attr('action'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-XSRF-Token': metaCsrfToken
+            },
+            body: bodyData,// Pass the form data as JSON in the 'body' property
+        })
+            .then(
+                // Clear the form data after the fetch call is completed
+                $('#' + formId)[0].reset()
+            )
+            .then(response => response.json())
+            .then(data => {
 
-                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
-                let startTime = '9:00';
-                let endTime = '17:00';
+                makeAfterRequestSend(data,successMessage,errorMessage);
+            })
+            .catch(error => {
+                renderCatch();
+            });
+    }
+}
 
-                function updateInputValue() {
-                    console.log("Mon ~ Fri : ", selectedDays);
+function makeAfterRequestSend(data,successMessage,errorMessage) {
+    if (data === true) {
+        // Handle the success response and update the message-con modal for success
+        $('#message-con').html('<p class="text-white">' + successMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Okay</button></div>');
+    } else {
+        // Handle the response and update the message-con modal for error
+        $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>');
+    }
+    if(formId === 'upload-form') {
 
-                    if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
-                        $('#workingDays').val('Mon ~ Fri');
-                    } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
-                        $('#workingDays').val('Weekend');
-                    } else {
-                        let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
-                        $('#workingDays').val(textSelectedDays.join(' ~ '));
-                    }
+        console.log("Upload form !!!!")
 
-                    console.log("Start Time : ", startTime);
-                    console.log("End Time : ",endTime);
-                    // Format start and end times
-                    const formattedStartTime = formatTime(startTime);
-                    const formattedEndTime = formatTime(endTime);
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
+        let startTime = '9:00';
+        let endTime = '18:00';
 
-                    // Update workingHours input value
-                    $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
-                }
+        function updateInputValue() {
+            console.log("Mon ~ Fri : ", selectedDays);
+
+            if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
+                $('#workingDays').val('Mon ~ Fri');
+            } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+                $('#workingDays').val('Weekend');
+            } else {
+                let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+                $('#workingDays').val(textSelectedDays.join(' ~ '));
             }
-            // Handle the error response and update the message-con modal
-            hideMessageModalAfterDelay();
-            $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>'); // Replace with the content you want to show for error
-        });
+
+            console.log("Start Time : ", startTime);
+            console.log("End Time : ",endTime);
+            // Format start and end times
+            const formattedStartTime = formatTime(startTime);
+            const formattedEndTime = formatTime(endTime);
+
+            // Update workingHours input value
+            $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
+        }
+    }
+    hideMessageModalAfterDelay();
+    // To change back form
+    if(formId == 'reopen-form'){
+        $('#submit-btn')
+            .attr('data-form-id', 'update-form')
+            .attr('data-warning-message', 'Your vacancy will be updated.')
+            .attr('data-success-message', 'Update successful!')
+            .attr('data-error-message', 'Update failed. Please try again.')
+            .html('Update');
+        reopenBtn.removeClass('btn-bright');
+        reopenBtn.addClass('btn-un-bright');
+        // reopenModeWarn.hide();
+        $('#reopen-form')
+            .attr('id', 'update-form')
+            .attr('action', 'update-vacancy');
+    }
+
+    console.log("After that....")
+    console.log("FormId : ",formId);
+    console.log("SuccessMessage : ",successMessage);
+    console.log("ErrorMessage : ",errorMessage);
+}
+
+function renderCatch(errorMessage) {
+    if(formId === 'upload-form') {
+
+        console.log("Upload form !!!!")
+
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        let selectedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']; // Set default selected days
+        let startTime = '9:00';
+        let endTime = '17:00';
+
+        function updateInputValue() {
+            console.log("Mon ~ Fri : ", selectedDays);
+
+            if (selectedDays.length === 5 && selectedDays.every(day => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(day))) {
+                $('#workingDays').val('Mon ~ Fri');
+            } else if (selectedDays.length === 2 && selectedDays.includes('Sun') && selectedDays.includes('Sat')) {
+                $('#workingDays').val('Weekend');
+            } else {
+                let textSelectedDays = daysOfWeek.filter(day => selectedDays.includes(day));
+                $('#workingDays').val(textSelectedDays.join(' ~ '));
+            }
+
+            console.log("Start Time : ", startTime);
+            console.log("End Time : ",endTime);
+            // Format start and end times
+            const formattedStartTime = formatTime(startTime);
+            const formattedEndTime = formatTime(endTime);
+
+            // Update workingHours input value
+            $('#workingHours').val(`${formattedStartTime} ~ ${formattedEndTime}`);
+        }
+    }
+    // Handle the error response and update the message-con modal
+    hideMessageModalAfterDelay();
+    $('#message-con').html('<p class="text-white">' + errorMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Close</button></div>'); // Replace with the content you want to show for error
 }
 
 // Function to hide the message-con modal after a delay
 function hideMessageModalAfterDelay() {
 
+    if(typeof techSkillsInput  != undefined) {
+        techSkillsInput = new Set;
+    }
+
+    if(typeof languageSkillsInput != undefined) {
+        languageSkillsInput = new Set;
+    }
+
     if($('#detailModal').length > 0) {
         $('#detailModal').modal('hide');
+    }
+
+    if($('#apply-form').length > 0) {
+        $('#apply-form').modal('hide');
     }
 
     $('input[type="text"],input[type="number"],input#post, textarea').each(function() {
@@ -176,11 +240,14 @@ function hideMessageModalAfterDelay() {
         table.DataTable().ajax.reload(null, false);
     }
 
-    // Scroll to the specific section after the fetch call is completed
-    const elementToScrollTo = $('#app');
-    $('html, body').animate({
-        scrollTop: elementToScrollTo.offset().top
-    }, 500); // Adjust the animation speed as needed (800 milliseconds in this case)
+    if($('form#job-apply').length === 0) {
+        // Scroll to the specific section after the fetch call is completed
+        const elementToScrollTo = $('#app');
+        $('html, body').animate({
+            scrollTop: elementToScrollTo.offset().top
+        }, 500); // Adjust the animation speed as needed (800 milliseconds in this case)
+    }
+
 }
 
 function closeModal(formId) {
@@ -209,6 +276,12 @@ $(document).ready(function () {
         });
 
         formStatus = emptyInputs.length === 0;
+
+        if($('form#job-apply').length > 0) {
+            console.log("JOB APPLY")
+            validateFormStatus();
+        }
+
     }
 
     function showFeedback(inputElement) {
@@ -252,13 +325,17 @@ $(document).ready(function () {
         event.preventDefault();
 
         // validate();
-        updateFormStatus();
-        console.log("Form Status : ", formStatus);
+        // if(formId === 'job-apply') {
+        //     validateForm();
+        // }else {
+            updateFormStatus();
+        // }
+            console.log("Form Status : ", formStatus);
 
         if (!formStatus) {
             // Find empty inputs and add 'is-invalid' class
             $('input[type="text"], input[type="number"], input#post, textarea').each(function() {
-                if ($.trim($(this).val()) === '') {
+                if ($.trim($(this).val()) === '' && $(this).prop('required')) {
                     $(this).addClass('is-invalid');
                     $(this).css('background-image', 'none');
                 }
@@ -285,7 +362,7 @@ $(document).ready(function () {
                 `<button type="button" class="btn btn-sm btn-light mx-1" data-form-id="${formId}" 
             data-warning-message="${warningMessage}" data-success-message="${successMessage}" data-error-message="${errorMessage}"
             onclick="actionToVacancy(this)">Sure</button>` +
-                `<button class="btn btn-sm btn-light-danger mx-1" onclick="closeModal()"">Cancel</button></div>` +
+                `<button class="btn btn-sm btn-secondary mx-1" onclick="closeModal()"">Cancel</button></div>` +
                 '</div>' +
                 '</div>');
             $('#loadMe').modal({

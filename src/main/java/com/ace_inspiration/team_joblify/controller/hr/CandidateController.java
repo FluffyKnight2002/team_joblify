@@ -2,17 +2,24 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
+import com.ace_inspiration.team_joblify.dto.CountDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
+import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpHeaders;
@@ -20,29 +27,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.dto.CountDto;
-import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.dto.VacancyDto;
-import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
-import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
-import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
-import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
-import lombok.RequiredArgsConstructor;
-
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,13 +47,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -221,17 +208,37 @@ public class CandidateController {
 
 
     @PostMapping("/apply")
-    public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
-        candidateService.saveCandidate(dto);
-        return "redirect:/show-job-details";
+    public boolean submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
+        Candidate candidate = candidateService.saveCandidate(dto);
+        if(candidate == null) {
+            return false;
+        }
+        return true;
     }
 
     @PostMapping(value = "/apply-job", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Candidate> applyJob(CandidateDto candidateDto) throws IOException {
+    public boolean applyJob(CandidateDto candidateDto) throws IOException {
         System.err.println("MMMMMMMMMMMMMMMMMMMMMMMMMM");
+        System.out.println(candidateDto.getLanguageSkillsString());
+        System.out.println(candidateDto.getTechSkillsString());
+        // Split the comma-separated techSkillsString into a string array
+        String[] techSkillsArray = candidateDto.getTechSkillsString().split(",");
+
+        // Set the techSkills array in your CandidateDto
+        candidateDto.setTechSkills(techSkillsArray);
+
+        // Similarly, do the same for languageSkillsString
+        String[] languageSkillsArray = candidateDto.getLanguageSkillsString().split(",");
+
+        candidateDto.setLanguageSkills(languageSkillsArray);
+
+        System.out.println(candidateDto);
 
         Candidate candidate = candidateService.saveCandidate(candidateDto);
-        return new ResponseEntity<>(candidate, HttpStatus.OK);
+        if (candidate == null) {
+            return false;
+        }
+        return true;
     }
 
     @GetMapping("/view-summaryinfo")

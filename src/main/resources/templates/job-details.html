@@ -30,6 +30,19 @@
 	<div th:replace="/fragments/layout ::nav"></div>
 	<!-- Navbar end -->
 
+	<!--Message Modal -->
+	<div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel" style="z-index: 1800">
+		<div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body text-center" id="message-con" style="background: #0c233d">
+					<div class="loader"></div>
+					<div class="loader-txt">
+						<p>Check out this slick bootstrap spinner modal. <br><br><small>We are addicted to Bootstrap... #love</small></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Jobs list and details start -->
 	<div class="container-fluid row mt-4 mx-auto">
 
@@ -213,17 +226,23 @@
 				</div>
 				<div class="modal-body">
 
-					<form id="job-apply" class="row g-3 needs-validation" enctype="multipart/form-data" novalidate>
+					<form action="/apply-job" id="job-apply" class="row g-3 needs-validation" enctype="multipart/form-data">
 						<input type="hidden" id="form-id" name="id">
 						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="name" name="name" placeholder="Name">
+							<input type="text" class="form-control" id="name" name="name" placeholder="Name"
+									oninput="event.stopImmediatePropagation();validateName()" required>
 							<label for="name" class="ms-2">Name</label>
+							<div class="feedback-message text-danger">Name can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
 						
 						<div class="form-floating">
-							<input type="date" class="form-control" id="dob" name="dob" placeholder="Date of Birth">
+							<input type="date" class="form-control" id="dob" name="dob" placeholder="Date of Birth"
+								   oninput="event.stopImmediatePropagation();validateDob()" required>
 							<label for="dob" class="ms-2">Date of Birth</label>
+							<div class="feedback-message text-danger">Birthday can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
 						
 						<div>
@@ -231,7 +250,7 @@
 								<label class="form-label">Gender</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input type="radio" class="form-check-input" id="male" name="gender" value="MALE">
+								<input type="radio" class="form-check-input" id="male" name="gender" value="MALE" checked>
 								<label class="form-check-label" for="male">Male</label>
 							</div>
 							<div class="form-check form-check-inline">
@@ -239,37 +258,50 @@
 								<label class="form-check-label" for="female">Female</label>
 							</div>
 						</div>
-						
-						
+
 						<div class="form-floating">
-							<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+							<input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone Number"
+								   oninput="event.stopImmediatePropagation();validatePhone()" required>
 							<label for="phone" class="ms-2">Phone Number</label>
+							<div class="feedback-message text-danger">Phone number can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
 						<div class="form-floating">
-							<input type="email" class="form-control" id="email" name="email" placeholder="E-mail">
+							<input type="email" class="form-control" id="email" name="email" placeholder="E-mail"
+								   oninput="event.stopImmediatePropagation();validateEmail()" required>
 							<label for="email" class="ms-2">Email address</label>
+							<div class="feedback-message text-danger">Email can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
 						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="education" name="education" placeholder="Education">
+							<input type="text" class="form-control" id="education" name="education" placeholder="Education" required>
 							<label for="education" class="ms-2">Bachelor Degree/Disploma</label>
+							<div class="feedback-message text-danger">Education can't be empty</div>
 						</div>
 						
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" id="techSkills" name="techSkills" placeholder="TechSkills">
-							<label for="skill" class="ms-2">Techanical Skills</label>
+							<input type="text" class="form-control" id="techSkills" placeholder="TechSkills"
+								   oninput="event.stopImmediatePropagation();validateTechSkills()">
+							<label for="techSkills" class="ms-2">Technical Skills</label>
+							<div class="feedback-message text-danger">Technical skills can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
-						
+						<div class="tech-skills-block mb-1">
+							<input type="hidden" id="tech-skills-input" name="techSkillsString"/>
+						</div>
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" id="languageSkills" name="languageSkills" placeholder="TanguageSkills">
-							<label for="skill" class="ms-2">Language Skills</label>
+							<input type="text" class="form-control" id="languageSkills" placeholder="LanguageSkills"
+								   oninput="event.stopImmediatePropagation();validateLanguageSkills()">
+							<label for="languageSkills" class="ms-2">Language Skills</label>
+							<div class="feedback-message text-danger">Language skills can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
-						
-						
-						<div class="form-floating">
-							<input type="text" class="form-control" id="applyPosition" name="applyPosition" placeholder="Position">
-							<label for="applyPosition" class="ms-2">Position</label>
+						<div class="language-skills-block mb-1">
+							<input type="hidden" id="language-skills-input" name="languageSkillsString"/>
 						</div>
+
+						<input type="hidden" id="applyPosition" name="applyPosition"/>
 						
 						<div class="form-floating">
 							<select class="form-select" id="lvl" name="lvl" aria-label="Floating label select example">
@@ -280,42 +312,45 @@
 								<option value="SUPERVISOR_LEVEL">Supervisor Level</option>
 								<option value="EXECUTIVE_LEVEL">Executive Level</option>
 							</select>
-							<label for="experiences" class="ms-2">Level</label>
+							<label for="lvl" class="ms-2">Level</label>
 						</div>
 					
 						
 						<div class="form-floating">
-							<input type="text" class="form-control" id="specialistTech" name="specialistTech" placeholder="Main Skill">
+							<input type="text" class="form-control" id="specialistTech" name="specialistTech" placeholder="Main Skill" required>
 							<label for="specialistTech" class="ms-2">Main Skill</label>
+							<div class="feedback-message text-danger">Main can't be empty</div>
 						</div>
-
-						<!-- Skill input start -->
 						
 						<div class="form-floating mb-1">
-							<input type="text" class="form-control" id="experience" name="experience" placeholder="Experience">
+							<input type="text" class="form-control" id="experience" name="experience" placeholder="Experience" required>
 							<label for="experience" class="ms-2">Experience</label>
+							<div class="feedback-message text-danger">Experience can't be empty</div>
 						</div>
-						
-						
-						
-						
+
 						<div class="form-floating">
-							<input type="number" class="form-control" id="expectedSalary" name="expectedSalary" placeholder="Salary">
+							<input type="number" class="form-control" id="expectedSalary" name="expectedSalary" placeholder="Salary" required>
 							<label for="expectedSalary" class="ms-2">Excepted salary</label>
+							<div class="feedback-message text-danger">Excepted salary can't be empty</div>
 						</div>
-						
-						
+
 						<div>
 							<label class="form-label" for="resume">Upload CV</label>
-							<input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx">
+							<input type="file" class="form-control" id="resume" name="resume" accept=".pdf, .doc, .docx" required
+								oninput="validateResume()">
+							<div class="feedback-message text-danger">Resume can't be empty</div>
+							<div class="custom-feedback-message text-danger"></div>
 						</div>
 
 					</form>
 				</div>
-				
-				
+
 				<div class="modal-footer">
-					<input class="btn btn-primary" id="submit-job" type="submit"><i class='bx bxs-navigation'></i></input>
+					<button class="btn btn-primary" type="button" id="submit-btn"
+						   data-form-id="job-apply" data-warning-message="We only accept one applicants per email."
+						   data-success-message="You applied the job.We'll be contact soon."
+						   data-error-message="Sorry!, something went wrong.Please, try again.">
+						Apply <i class='bx bxs-navigation'></i></button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 				</div>
 			</div>
@@ -332,42 +367,44 @@
 	<script src="/assets/js/javaScript/app.js"></script>
 	<script src="/assets/js/javaScript/skillblock.js"></script>
 	<script src="/assets/js/javascript/jobdetails.js"></script>
-	<script>
-		const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
-		const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-		const form = document.getElementById('job-apply');
-		document.getElementById("submit-job").addEventListener("click", function (event) {
-			event.preventDefault(); // Prevent the form from submitting normall
-			const formData = new FormData(form);
-			console.log(form);
-			fetch('/apply-job', {
-				method: 'POST',
-				headers: {
-					[csrfHeader]: csrfToken // Include CSRF token as a request header
-				},
-				body: formData
-			})
+	<script src="/assets/js/messageandloader.js"></script>
+	<script src="/assets/js/javaScript/applyformvalitation.js"></script>
+<!--	<script>-->
+<!--		const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");-->
+<!--		const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");-->
+<!--		const form = document.getElementById('job-apply');-->
+<!--		document.getElementById("submit-job").addEventListener("click", function (event) {-->
+<!--			event.preventDefault(); // Prevent the form from submitting normall-->
+<!--			const formData = new FormData(form);-->
+<!--			console.log(form);-->
+<!--			fetch('/apply-job', {-->
+<!--				method: 'POST',-->
+<!--				headers: {-->
+<!--					[csrfHeader]: csrfToken // Include CSRF token as a request header-->
+<!--				},-->
+<!--				body: formData-->
+<!--			})-->
 
 
-				.then(response => {
-					if (response.ok) {
-						// Registration successful, handle the response
-						console.log("Your Apply successful");
+<!--				.then(response => {-->
+<!--					if (response.ok) {-->
+<!--						// Registration successful, handle the response-->
+<!--						console.log("Your Apply successful");-->
 
-					} else {
-						// Registration failed, handle the error
-						console.error("Your Apply failed");
+<!--					} else {-->
+<!--						// Registration failed, handle the error-->
+<!--						console.error("Your Apply failed");-->
 
-					}
-				})
-				.catch(error => {
-					// An error occurred, handle the error
-					console.error("An error occurred during registration:", error);
-					// You can show an error message to the user here
-				});
-		});
+<!--					}-->
+<!--				})-->
+<!--				.catch(error => {-->
+<!--					// An error occurred, handle the error-->
+<!--					console.error("An error occurred during registration:", error);-->
+<!--					// You can show an error message to the user here-->
+<!--				});-->
+<!--		});-->
 
-	</script>
+<!--	</script>-->
 </body>
 
 </html>

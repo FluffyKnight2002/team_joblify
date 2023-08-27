@@ -40,7 +40,7 @@ function fetchJobsAndRenderUI() {
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <button type="button" class="btn btn-sm btn-primary mb-1" data-job-id="${job.id}">More Details</button>
+                    <button type="button" class="btn btn-sm btn-primary mb-1 more-detail-btn" data-job-id="${job.id}">More Details</button>
                     <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
                           data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i>
                         ${changeTimeFormat(job.closeDate)}      
@@ -61,7 +61,7 @@ function fetchJobsAndRenderUI() {
                 });
             });
             // Now that the job cards are added, set up the click event handler
-            $(".btn-primary").on("click", function() {
+            $(".more-detail-btn").on("click", function() {
                 // Get the job ID from the data attribute
                 const jobId = $(this).data("job-id");
 
@@ -89,7 +89,7 @@ function fetchJobDetails(id) {
             const jobContainer = `
                     <div class="detail-header">
                         <div class="title-sesion d-flex justify-content-between">
-                            <h4 class="default-font text-start">${data.position}</h4>
+                            <h4 class="default-font text-start" id="position-name">${data.position}</h4>
                             <h6 class="text-muted"><i class='bx bx-time'></i>${timeAgo(data.updatedTime)}</h6>
                         </div>
                         <div>
@@ -116,7 +116,7 @@ function fetchJobDetails(id) {
                         data-placement="bottom" title="Experience Level"></i>
                         ${data.lvl}</span>
                     <span class="my-2 d-block">
-                        <i class='bi bi-gear-wide-connected' data-toggle="tooltip"
+                        <i class='bx bx-building-house' data-toggle="tooltip"
                         data-placement="bottom" title="On-site or Remote"></i>
                         ${data.onSiteOrRemote}</span>
                 </div>
@@ -195,6 +195,7 @@ function fetchJobDetails(id) {
 
             // Append the new job details content to the container
             jobDetailsContainer.append(jobContainer);
+            $("#applyPosition").val($("#position-name").text());
 
             // Initialize Bootstrap tooltips
             $(function () {
