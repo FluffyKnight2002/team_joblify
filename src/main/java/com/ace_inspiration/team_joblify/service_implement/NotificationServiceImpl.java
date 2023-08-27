@@ -30,7 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationUserRepository notificationUserRepository;
 
     @Override
-    public void createNotifications(NotificationDto notificationDto) {
+    public NotificationDto createNotifications(NotificationDto notificationDto) {
 
         List<User> users = userRepository.findAll();
         Notification notification = new Notification();
@@ -57,6 +57,9 @@ public class NotificationServiceImpl implements NotificationService {
 
             notificationUserRepository.save(notificationUser);
         }
+
+        return entityToDto(savedNotification);
+
     }
 
     @Override
@@ -197,6 +200,19 @@ public class NotificationServiceImpl implements NotificationService {
 
         return notificationDto;
     }
+
+    public NotificationDto entityToDto(Notification notification) {
+        NotificationDto notificationDto = new NotificationDto();
+
+        notificationDto.setId(notification.getId());
+        notificationDto.setMessage(notification.getMessage());
+        notificationDto.setLink(notification.getLink());
+        notificationDto.setTime(notification.getTime());
+
+        return notificationDto;
+    }
+
+
 
     private boolean checkUserNotificationAssociation(long notificationId, long userId) {
         boolean isExit = false;

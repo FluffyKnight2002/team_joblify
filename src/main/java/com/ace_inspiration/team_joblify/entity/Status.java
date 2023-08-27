@@ -13,5 +13,8 @@ public enum Status implements Serializable {
     OPEN,
     CLOSED,
     EXPIRED,
-    NONE
+
+    NONE, 
+    OFFERED
+
 }

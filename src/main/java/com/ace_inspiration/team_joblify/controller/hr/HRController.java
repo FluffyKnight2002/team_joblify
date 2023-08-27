@@ -47,6 +47,7 @@ public class HRController {
     public String inviteMail() {
         return "invite-mail";
     }
+  
 
    
 }

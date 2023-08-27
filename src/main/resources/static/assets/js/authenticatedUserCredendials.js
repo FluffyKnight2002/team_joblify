@@ -4,6 +4,17 @@ const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttrib
 // This event listener will trigger your function when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function () {
     authenticatedUserData();
+
+    fetch('/getCookies')
+            .then(response => response.json())
+            .then(data => {
+                // Process the data received from the servlet
+                console.log(data + 'cookie');
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
 });
 
 async function authenticatedUserData() {
@@ -43,7 +54,8 @@ async function authenticatedUserData() {
                 iziToast.warning({
                     title: 'Caution',
                     message: 'You\'re Still Using Default Password. Please Change Immediately',
-                    position: 'topCenter'
+                    position: 'topCenter',
+                    backgroundColor: '#f58787'
                 });
             }
         } else {
@@ -53,3 +65,5 @@ async function authenticatedUserData() {
         console.error('An error occurred while fetching authenticated user data:', error);
     }
 }
+
+

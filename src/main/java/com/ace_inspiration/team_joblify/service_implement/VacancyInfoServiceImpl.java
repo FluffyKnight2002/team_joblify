@@ -256,9 +256,10 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
     }
 
     public VacancyDto entityToDto(VacancyInfo vacancyInfo) {
+        Vacancy vacancy = vacancyRepository.findById(vacancyInfo.getVacancy().getId()).orElseThrow(() -> new NoSuchElementException("No vacancy Found."));
         VacancyDto vacancyDto = new VacancyDto();
         vacancyDto.setId(vacancyInfo.getId());
-        vacancyDto.setVacancyId(vacancyRepository.findById(vacancyInfo.getVacancy().getId()).get().getId());
+        vacancyDto.setVacancyId(vacancy.getId());
         vacancyDto.setPosition(vacancyInfo.getVacancy().getPosition().getName());
         vacancyDto.setDepartment(vacancyInfo.getVacancy().getDepartment().getName());
         vacancyDto.setAddress(vacancyInfo.getAddress().getName());
@@ -283,16 +284,6 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         vacancyDto.setOpenDate(vacancyInfo.getOpenDate());
         vacancyDto.setCloseDate(vacancyInfo.getCloseDate());
         vacancyDto.setStatus(String.valueOf(vacancyInfo.getStatus()));
-        return vacancyDto;
-    }
-
-    public VacancyDto tupleToVacancyDto(Object[] tuple) {
-        VacancyInfo vacancyInfo = (VacancyInfo) tuple[0];
-        Long applicantsCount = (Long) tuple[1];
-
-        VacancyDto vacancyDto = entityToDto(vacancyInfo);
-        vacancyDto.setApplicants(Integer.valueOf(Math.toIntExact(applicantsCount)));
-
         return vacancyDto;
     }
 
