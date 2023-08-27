@@ -13,7 +13,8 @@ let rangeBar1;
 let sliderValue1;
 let sliderValue2;
 let tooltipsEnabled1 = false;
-let currentLi = null;
+// let tooltipTriggerPost;
+// let tooltipPost;
 $(document).ready(function () {
 
     // Check if the currentId is the same as the previousId
@@ -82,10 +83,28 @@ $(document).ready(function () {
                         let hiredPost = row.hiredPost;
                         let applicants =  row.applicants;
                         const returnRow = `
-                            <span class="bg-gradient-ltr py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem">${hiredPost}</span>
-                            <span class="bg-success bg-gradient py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem" >${applicants}</span>
-                            <span class="bg-primary bg-gradient py-1 px-2 mx-1 text-white rounded-pill" style="font-size: 0.8rem">${row.post}</span>
-                        `;
+                            <div class="text-nowrap">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Hired Post">
+                                    <span class="bg-gradient-ltr py-1 px-2 text-white rounded-pill"
+                                    style="font-size: 0.8rem;">${hiredPost}</span>
+                                </span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Applicants">
+                                    <span class="bg-success bg-gradient py-1 px-2 mx-1 text-white rounded-pill"
+                                        style="font-size: 0.8rem">${applicants}</span>
+                                </span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Required Post">
+                                    <span class="bg-primary bg-gradient py-1 px-2 text-white rounded-pill"
+                                    style="font-size: 0.8rem">${row.post}</span>
+                                </span>
+                            </div>
+                         `;
+
+                        // Initialize Bootstrap tooltips
+                        let tooltipTriggerPost = [].slice.call($('[data-bs-toggle="tooltip"]'));
+                        let tooltipPost = tooltipTriggerPost.map(function (tooltipTriggerEl) {
+                            return new bootstrap.Tooltip(tooltipTriggerEl);
+                        });
+
                         return returnRow;
                     },
                     target: 6 }, // Access object property directly
@@ -166,7 +185,6 @@ $(document).ready(function () {
             lengthMenu: [5,10,20],
             pageLength: 5,
         });
-
     function format(d) {
         // `d` is the original data object for the row
         let note = '';

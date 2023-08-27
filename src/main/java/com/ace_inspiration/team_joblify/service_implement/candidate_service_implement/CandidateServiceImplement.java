@@ -1,32 +1,60 @@
 package com.ace_inspiration.team_joblify.service_implement.candidate_service_implement;
 
-import java.util.List;
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.*;
+import com.ace_inspiration.team_joblify.service.InterviewService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import java.util.Optional;
-
-import com.ace_inspiration.team_joblify.entity.*;
-import com.ace_inspiration.team_joblify.repository.*;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.multipart.MultipartFile;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
+import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.Gender;
+import com.ace_inspiration.team_joblify.entity.Interview;
+import com.ace_inspiration.team_joblify.entity.InterviewType;
+import com.ace_inspiration.team_joblify.entity.LanguageSkills;
+import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Status;
+import com.ace_inspiration.team_joblify.entity.Summary;
+import com.ace_inspiration.team_joblify.entity.TechSkills;
+import com.ace_inspiration.team_joblify.entity.VacancyInfo;
+import com.ace_inspiration.team_joblify.repository.CandidateRepository;
+import com.ace_inspiration.team_joblify.repository.InterviewRepository;
+import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
+import com.ace_inspiration.team_joblify.repository.SummaryRepository;
+import com.ace_inspiration.team_joblify.repository.TechSkillsRepository;
 import com.ace_inspiration.team_joblify.service.InterviewService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import lombok.RequiredArgsConstructor;
 
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.entity.Status;
+import com.ace_inspiration.team_joblify.repository.CandidateRepository;
+import com.ace_inspiration.team_joblify.repository.PositionRepository;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 
 
 @Service
@@ -136,19 +164,34 @@ public class CandidateServiceImplement implements CandidateService{
 
     @Override
     public Candidate saveCandidate(CandidateDto candidateDto) {
+
         List<LanguageSkills> languageSkillsList= new ArrayList<>();
+
         for(String languageSkill: candidateDto.getLanguageSkills()) {
-            LanguageSkills  languageSkills= new LanguageSkills();
-            languageSkills.setName(languageSkill);
-            languageSkillsList.add(languageSkillsRepository.save(languageSkills));
+            System.out.println("Language Skills : " + languageSkill);
+            if (languageSkill.trim() != "") {
+                Optional<LanguageSkills>  optionalLanguageSkills= languageSkillsRepository.findByNameIgnoreCase(languageSkill);
+                if(!optionalLanguageSkills.isPresent()) {
+                    LanguageSkills languageSkillsToSave = LanguageSkills.builder().name(languageSkill).build();
+                    languageSkillsList.add(languageSkillsRepository.save(languageSkillsToSave));
+                }else {
+                    languageSkillsList.add(optionalLanguageSkills.get());
+                }
+            }
         }
 
         List<TechSkills> techSkillsList= new ArrayList<>();
         for(String techSkill: candidateDto.getTechSkills()) {
-            TechSkills  techSkills= new TechSkills();
-            techSkills.setName(techSkill);
-            techSkillsList.add(techSkillsRepository.save(techSkills));
-            
+            System.out.println("Tech Skills : " + techSkill);
+            if (techSkill.trim() != "") {
+                Optional<TechSkills>  optionalTechSkills = techSkillsRepository.findByNameIgnoreCase(techSkill);
+                if(!optionalTechSkills.isPresent()) {
+                    TechSkills techSkillsToSave = TechSkills.builder().name(techSkill).build();
+                    techSkillsList.add(techSkillsRepository.save(techSkillsToSave));
+                }else {
+                    techSkillsList.add(optionalTechSkills.get());
+                }
+            }
         }
 
         Optional<VacancyInfo> vacancyInfo = vacancyInfoRepository.findById(candidateDto.getId());
@@ -180,6 +223,7 @@ public class CandidateServiceImplement implements CandidateService{
              candidate.setSelectionStatus(Status.RECEIVED);
              candidate.setInterviewStatus(Status.NONE);
              candidate.setApplyDate(LocalDateTime.now());
+//             candidate.setVacancyInfo(van.getId());
              candidate.setVacancyInfo(vacancyInfo.get());
             candidate.setType(candidateDto.getResume().getContentType());
             try {

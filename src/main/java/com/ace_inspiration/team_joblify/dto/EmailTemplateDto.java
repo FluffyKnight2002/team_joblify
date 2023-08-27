@@ -22,6 +22,9 @@ public class EmailTemplateDto {
    private String date;
    private String status;
    private String type;
+   private String note;
+   private long userId;
+   private long vacancyId;
    private long canId;
 
 }

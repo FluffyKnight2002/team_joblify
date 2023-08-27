@@ -68,7 +68,8 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "updatedUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<VacancyInfo> updatedJobPosts = new ArrayList<>();
-
+    
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     @JsonIgnoreProperties("user")
@@ -81,5 +82,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Otp> otps= new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<OfferMailSended> sendOfferMail = new ArrayList<>();
+
 
 }

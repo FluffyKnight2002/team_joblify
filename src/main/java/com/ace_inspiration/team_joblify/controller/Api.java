@@ -15,6 +15,7 @@ import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
 import com.ace_inspiration.team_joblify.service.EmailService;
 import com.ace_inspiration.team_joblify.service.InterviewService;
+import com.ace_inspiration.team_joblify.service.OfferMailSendedService;
 import com.ace_inspiration.team_joblify.service.OtpService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
@@ -49,8 +50,12 @@ public class Api {
     private final InterviewService interService;
     private final NotificationCreator notificationCreator;
     private final PasswordEncoder passwordEncoder;
+
     private FirstDaySpecificationUser firstDaySpecificationUser;
 
+
+
+    private final OfferMailSendedService  offerMailSendedService;    
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getAllUsers(DataTablesInput input) {
@@ -139,8 +144,9 @@ public class Api {
     }
 
     @PostMapping("/send-invite-email")
-    public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
+    public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto,Authentication authentication) {
        boolean email=emailService.sendJobOfferEmail(emailTemplateDto);
+       
         if(email==true) {
         	interService.saveInterview(emailTemplateDto);
         	candidateService.stage(emailTemplateDto.getCanId());
@@ -150,28 +156,18 @@ public class Api {
         }
     }
     @PostMapping("/send-offer-mail")
-    public boolean sendOfferMail(@RequestBody EmailTemplateDto emailTemplateDto){
+    public boolean sendOfferMail(@RequestBody EmailTemplateDto emailTemplateDto,Authentication authentication){
+    	MyUserDetails myuser=(MyUserDetails) authentication.getPrincipal();
+    	emailTemplateDto.setUserId(myuser.getUserId());
         boolean email=emailService.sendJobOfferEmail(emailTemplateDto);
+        offerMailSendedService.setDataInOfferMail(emailTemplateDto);
         return email;
     }
     @PostMapping("/otp-submit")
     public boolean otpSubmit(@RequestParam("otp") String otp, @RequestParam("email") String email) {
         return otpService.otpCheck(otp, email);
     }
-    @PostMapping("/reject")
-    public String handleReject(@RequestParam("id") String id) {
-        System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"+id);
 
-
-        return "redirect:/thank-you"; // Redirect to a thank-you page or appropriate location
-    }
-
-    @PostMapping("/accept")
-    public String handleAccept(@RequestParam("id") String id) {
-      System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+id);
-
-        return "redirect:/thank-you"; // Redirect to a thank-you page or appropriate location
-    }
 
     @PostMapping("/search-email")
     public boolean otpSubmit(@RequestParam("email") String email) {

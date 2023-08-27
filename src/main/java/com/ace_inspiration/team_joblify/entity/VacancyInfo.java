@@ -94,5 +94,6 @@ public class VacancyInfo implements Serializable {
     @JoinColumn(name = "address_id")
     private Address address;
 
-
+    @OneToMany(mappedBy="vacanyInfo",cascade= CascadeType.ALL, orphanRemoval = true)
+    private List<OfferMailSended> offerMailSended =new ArrayList<>();
 }
