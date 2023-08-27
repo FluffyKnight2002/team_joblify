@@ -40,7 +40,7 @@ $(document).ready(function() {table = $('#table2').DataTable(
 														},
 														{
 															targets:4,
-															data:'interviewCandidate',
+															data:'interviewedCounts',
 															 render:function(data)
 														    {
 																let inter=data == null ? '<span>-</span>' :

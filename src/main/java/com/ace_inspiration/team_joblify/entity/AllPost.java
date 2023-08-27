@@ -28,9 +28,6 @@ public class AllPost {
 	@Column(name="total_candidates")
 	private Long totalCandidate;
 	
-	@Column(name="interviews_candidate")
-	private Long interviewCandidate;
-	
 	@Column(name="passed_candidates")
 	private Long passedCandidate;
 	
@@ -46,5 +43,7 @@ public class AllPost {
 	@Column(name="accepted_candidates")
 	private Long acceptedCandidate;
 	
+	@Column(name="interviewed_counts")
+	private Long interviewedCounts;
 
 }

@@ -32,6 +32,7 @@ import com.ace_inspiration.team_joblify.entity.Level;
 import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.entity.TechSkills;
+import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewRepository;
 import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
@@ -195,13 +196,15 @@ public class CandidateServiceImplement implements CandidateService{
         summaryRepository.save(summary);
 
         Candidate candidate=new Candidate();
-
+//        VacancyInfo van=new VacancyInfo();
+//        van.setId(1);
 
         if (isWordFile(candidateDto.getResume()) || isPdfFile(candidateDto.getResume()) || isPngFile(candidateDto.getResume()) || isJpgFile(candidateDto.getResume())) {
         	 candidate.setSummary(summary);
              candidate.setSelectionStatus(Status.RECEIVED);
              candidate.setInterviewStatus(Status.NONE);
              candidate.setApplyDate(LocalDateTime.now());
+//             candidate.setVacancyInfo(van.getId());
             candidate.setType(candidateDto.getResume().getContentType());
             try {
                 candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));

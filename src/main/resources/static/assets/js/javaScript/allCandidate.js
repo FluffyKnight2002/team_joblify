@@ -10,7 +10,7 @@ $(document).ready(function() {
 			['height', ['height']]
 		], height: 300
 	});
-	$('#data-1').summernote();
+	$('#data_1').summernote();
 
 });
 
@@ -43,7 +43,8 @@ $(document).ready(function() {
 			"serverSide": true,
 			"processing": true,
 			"ajax": '/allCandidate',
-
+			"sScrollY": "auto",
+			// "bScrollCollapse": true,
 
 			"columns": [
 
@@ -88,7 +89,7 @@ $(document).ready(function() {
 				{
 					targets: 6,
 					data: 'phone',
-					visible: true
+
 
 
 				},
@@ -131,6 +132,7 @@ $(document).ready(function() {
 					},
 					sortable: false,
 					visible: false
+
 				},
 				{
 					targets: 11,
@@ -151,28 +153,19 @@ $(document).ready(function() {
 			],
 			order: [[2, 'desc']]
 		});
-	$('.first-page').on('click', function() {
+	// Assuming you have initialized DataTable properly
 
-		var firstColumn = table.column(6);
-		var secondColumn = table.column(9);
-
-		firstColumn.visible(!firstColumn.visible());
-		secondColumn.visible(!secondColumn.visible());
-
-		var one = table.column(7);
-		var two = table.column(10);
-
-		one.visible(!one.visible());
-		two.visible(!two.visible());
-
-
+	$('#home-tab').on('click', function() {
+		table.columns([6, 9]).visible(true);
+		table.columns([7, 10]).visible(false);
 	});
-	$('.second-page').on('click', function() {
-		var firstColumn = table.columns('.first');
-		var secondColumn = table.columns('.second');
-		firstColumn.visible(!firstColumn.visible());
-		secondColumn.visible(!secondColumn.visible());
+
+	$('#profile-tab').on('click', function() {
+		table.columns([6, 9]).visible(false);
+		table.columns([7, 10]).visible(true);
 	});
+
+
 
 	table.on('click', 'td.dt-control', async function(e) {
 		let tr = e.target.closest('tr');
@@ -352,16 +345,18 @@ $(document).ready(function() {
 		})
 			.then(response => {
 				if (response.ok) {
-					Swal.fire({
-						icon: "success",
-						title: "Success Update"
+					iziToast.success({
+						title:'Success',
+						position:'topCenter', 
+						message:'Success Change Stataus',
 					})
 				} else {
-					console.error("Fail");
-					Swal.fire({
-						icon: "error",
-						title: "Error"
+					iziToast.error({
+						title:'Error',
+						position:'topCenter', 
+						message:'Not Change Stataus',
 					})
+					
 				}
 			});
 	});
@@ -638,11 +633,14 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 	$('#emailModal .candidatEmail').val(row.email);
 	$("#emailModal .userEmail").val(row.email);
 	$("#emailModal #candidate-id").val(row.id);
+	$('#offer-Email-Modal #to_1').val(row.email);
+	$('#offer-Email-Modal .vacancy_id').val(row.viId);
+	
 
 	$('#type').on('change',function(){
 		const type=$(this).val();
 		const content=getofferMail(type,row.name);
-		$('#data-1').summernote('code',content);
+		$('#data_1').summernote('code',content);
 	});
 
 	$('#where').on('change', function() {
@@ -675,7 +673,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 		const time = document.getElementById('time');
 		const type = document.getElementById('where');
 		const stage = document.getElementById('interview-status');
-		const canid = document.getElementById('candidate-id');
+		const canid=document.getElementById('candidate-id');
 		updateCcMails();
 		if ($('#data').summernote('isEmpty')) {
 
@@ -752,6 +750,9 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 		const to=document.getElementById('to_1');
 		const subject=document.getElementById('subject_1');
 		const ccmail=document.getElementById('mails_1');
+		const canid = document.getElementById('candidate-id');
+		const viId=document.getElementById('viId');
+		console.log('<<<<<',viId.value)
 		if ($('#data_1').summernote('isEmpty')) {
 
 
@@ -766,11 +767,14 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 		else{
 			$('#data_1').summernote('insertText', '');
 			hiddenInput.value = document.querySelector('#data_1').value;
-
+			
+		/*	console.log('>>>>>>',date,'>>>>>>>',time,'<<<<<',row.viId)*/
 			const data={
 				to:to.value,
 				subject:subject.value,
 				ccmail:ccMails,
+				vacancyId:viId.value,
+				canId: canid.value,
 				content:hiddenInput.value
 			}
 			fetch('/send-offer-mail',{
@@ -933,8 +937,15 @@ b.     In case the employee for any reason, leave the services of the Company be
 (4)   Confidentiality                                        :          
 
 a.     The employee agrees not to disclose any of Company’s confidential information, Company’s trademarks or knowledge pertaining to the business of the Company during or after the employment.<br>
-<input type="submit" style="background-color:red" value="Reject" fdprocessedid="fspy8e"><br>
-<input type="submit" style="background-color:green" value="Accept" fdprocessedid="7oi7bb">
+    <form action="http://localhost:8080/reject?id=${id}" method="GET" >
+      <input type="hidden" value="${id}" name="id">
+       <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
+</form> <br>
+ <form action="http://localhost:8080/accept?id=${id}" method="GET" >
+
+      <input type="hidden" value="${id}" name="id">
+       <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
+</form>
 `
 	return (type === 'offer_mail') ? offermail : custom;
 
@@ -955,13 +966,12 @@ function getEmailContent(type, name,id,csrfToken) {
         <a href="https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09">Zoom Meeting Link</a><br>
         Meeting ID: 921 9152 8025<br>
         Passcode: 178426<br>
-      <form action="http://localhost:8080/reject" method="POST" >
-        <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
+      <form action="http://localhost:8080/reject?id=${id}" method="GET" >
       <input type="hidden" value="${id}" name="id">
        <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
 </form> <br>
- <form action="http://localhost:8080/accept" method="POST" >
-   <input type="hidden" name="${_csrf.parameterName}" value="${csrfToken}">
+ <form action="http://localhost:8080/accept?id=${id}" method="GET" >
+
       <input type="hidden" value="${id}" name="id">
        <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
 </form>
