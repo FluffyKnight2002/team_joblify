@@ -2,12 +2,20 @@ package com.ace_inspiration.team_joblify.controller.hr;
 
 
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
+import com.ace_inspiration.team_joblify.dto.CountDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
+import com.ace_inspiration.team_joblify.dto.VacancyDto;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
+import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.DasboardService;
-import com.ace_inspiration.team_joblify.service.OfferMailSendedService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -21,14 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -84,16 +85,16 @@ public class CandidateController {
 
     private final PositionService positionService;
 
-    private final DasboardService dasboardservice;
+//    private final DasboardService dasboardservice;
 
-    private final InterviewProcessService interviewService;
+    private  final InterviewProcessService interviewService;
 
     private final InterviewProcessRepository repo;
 
     private final VacancyInfoService vacancyInfoService;
 
     private final VacancyInfoRepository vanInfoReopository;
-    
+
     private final OfferMailSendedService offerMailSendedService;
 
     private FirstDaySpecification firstDaySpecification;
@@ -157,12 +158,12 @@ public class CandidateController {
     	   List<Object[]> year=vanInfoReopository.getYear();
     	   return year;
     }
-    
+
     @PostMapping ("/dashboard")
     public List<CountDto> getCounts(@RequestParam("timeSession")String year) {
         String starDate=year+"-01-01";
         String endDate=year+"-12-31";
-     
+
         List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate,endDate);
         List<CountDto> dtoList = new ArrayList<>();
 
@@ -234,17 +235,37 @@ public class CandidateController {
 
 
     @PostMapping("/apply")
-    public String submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
-        candidateService.saveCandidate(dto);
-        return "redirect:/show-job-details";
+    public boolean submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
+        Candidate candidate = candidateService.saveCandidate(dto);
+        if(candidate == null) {
+            return false;
+        }
+        return true;
     }
 
     @PostMapping(value = "/apply-job", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Candidate> applyJob(CandidateDto candidateDto) throws IOException {
+    public boolean applyJob(CandidateDto candidateDto) throws IOException {
         System.err.println("MMMMMMMMMMMMMMMMMMMMMMMMMM");
+        System.out.println(candidateDto.getLanguageSkillsString());
+        System.out.println(candidateDto.getTechSkillsString());
+        // Split the comma-separated techSkillsString into a string array
+        String[] techSkillsArray = candidateDto.getTechSkillsString().split(",");
+
+        // Set the techSkills array in your CandidateDto
+        candidateDto.setTechSkills(techSkillsArray);
+
+        // Similarly, do the same for languageSkillsString
+        String[] languageSkillsArray = candidateDto.getLanguageSkillsString().split(",");
+
+        candidateDto.setLanguageSkills(languageSkillsArray);
+
+        System.out.println(candidateDto);
 
         Candidate candidate = candidateService.saveCandidate(candidateDto);
-        return new ResponseEntity<>(candidate, HttpStatus.OK);
+        if (candidate == null) {
+            return false;
+        }
+        return true;
     }
 
     @GetMapping("/view-summaryinfo")
@@ -282,7 +303,7 @@ public class CandidateController {
     @GetMapping("/reject")
     public String handleReject(@RequestParam("id") String id) {
         System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"+id);
-      
+
 
         return "/thank-you"; // Redirect to a thank-you page or appropriate location
     }

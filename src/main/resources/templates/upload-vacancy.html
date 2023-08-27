@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/assets/vendors/iconly/bold.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"/>
+    <!-- Izitoast for noti -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -236,7 +238,8 @@
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-light-secondary mx-1" id="preview-btn" data-bs-toggle="modal" data-bs-target="#previewModal">Preview</button>
-                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-warning-message="Your vacancy will be uploaded." data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
+                    <button class="btn btn-primary mx-1" id="submit-btn" data-form-id="upload-form" data-warning-message="Your vacancy will be uploaded."
+                            data-success-message="Upload successful!" data-error-message="Upload failed. Please try again.">Submit</button>
 
                     <!-- Modal -->
                     <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="vacancyPostPreview" aria-hidden="true">
@@ -362,12 +365,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- SockJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <!-- Izitoast for noti -->
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
     <!-- User info for navbar -->
-    <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
+    <script src="/assets/js/authenticatedUserCredendials.js"></script>
     <!-- For vacancy form -->
     <script src="/assets/js/vacancyform.js"></script>
     <!-- For auto compelete -->

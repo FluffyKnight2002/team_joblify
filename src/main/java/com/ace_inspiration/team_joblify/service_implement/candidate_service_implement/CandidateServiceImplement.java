@@ -1,18 +1,19 @@
 package com.ace_inspiration.team_joblify.service_implement.candidate_service_implement;
 
-import java.util.List;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ace_inspiration.team_joblify.dto.CandidateDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
+import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.*;
+import com.ace_inspiration.team_joblify.service.InterviewService;
+import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 
 
 @Service
@@ -64,6 +66,7 @@ public class CandidateServiceImplement implements CandidateService{
     private final InterviewService interviewService;
     private final LanguageSkillsRepository languageSkillsRepository;
     private final TechSkillsRepository techSkillsRepository;
+    private final VacancyInfoRepository vacancyInfoRepository;
 
 
 
@@ -161,21 +164,37 @@ public class CandidateServiceImplement implements CandidateService{
 
     @Override
     public Candidate saveCandidate(CandidateDto candidateDto) {
+
         List<LanguageSkills> languageSkillsList= new ArrayList<>();
+
         for(String languageSkill: candidateDto.getLanguageSkills()) {
-            LanguageSkills  languageSkills= new LanguageSkills();
-            languageSkills.setName(languageSkill);
-            languageSkillsList.add(languageSkillsRepository.save(languageSkills));
+            System.out.println("Language Skills : " + languageSkill);
+            if (languageSkill.trim() != "") {
+                Optional<LanguageSkills>  optionalLanguageSkills= languageSkillsRepository.findByNameIgnoreCase(languageSkill);
+                if(!optionalLanguageSkills.isPresent()) {
+                    LanguageSkills languageSkillsToSave = LanguageSkills.builder().name(languageSkill).build();
+                    languageSkillsList.add(languageSkillsRepository.save(languageSkillsToSave));
+                }else {
+                    languageSkillsList.add(optionalLanguageSkills.get());
+                }
+            }
         }
 
         List<TechSkills> techSkillsList= new ArrayList<>();
         for(String techSkill: candidateDto.getTechSkills()) {
-            TechSkills  techSkills= new TechSkills();
-            techSkills.setName(techSkill);
-            techSkillsList.add(techSkillsRepository.save(techSkills));
-            
+            System.out.println("Tech Skills : " + techSkill);
+            if (techSkill.trim() != "") {
+                Optional<TechSkills>  optionalTechSkills = techSkillsRepository.findByNameIgnoreCase(techSkill);
+                if(!optionalTechSkills.isPresent()) {
+                    TechSkills techSkillsToSave = TechSkills.builder().name(techSkill).build();
+                    techSkillsList.add(techSkillsRepository.save(techSkillsToSave));
+                }else {
+                    techSkillsList.add(optionalTechSkills.get());
+                }
+            }
         }
 
+        Optional<VacancyInfo> vacancyInfo = vacancyInfoRepository.findById(candidateDto.getId());
 
 
         Summary summary = new Summary();
@@ -193,11 +212,11 @@ public class CandidateServiceImplement implements CandidateService{
         summary.setSpecialistTech(candidateDto.getSpecialistTech());
         summary.setLanguageSkills(languageSkillsList);
         summary.setTechSkills(techSkillsList);
+
         summaryRepository.save(summary);
 
         Candidate candidate=new Candidate();
-//        VacancyInfo van=new VacancyInfo();
-//        van.setId(1);
+
 
         if (isWordFile(candidateDto.getResume()) || isPdfFile(candidateDto.getResume()) || isPngFile(candidateDto.getResume()) || isJpgFile(candidateDto.getResume())) {
         	 candidate.setSummary(summary);
@@ -205,6 +224,7 @@ public class CandidateServiceImplement implements CandidateService{
              candidate.setInterviewStatus(Status.NONE);
              candidate.setApplyDate(LocalDateTime.now());
 //             candidate.setVacancyInfo(van.getId());
+             candidate.setVacancyInfo(vacancyInfo.get());
             candidate.setType(candidateDto.getResume().getContentType());
             try {
                 candidate.setResume(Base64.getEncoder().encodeToString(candidateDto.getResume().getBytes()));
@@ -285,10 +305,7 @@ public class CandidateServiceImplement implements CandidateService{
     	return file.getContentType().equals("image/jpg");
     }
 
-    public String encodeImageToString(MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        return Base64Utils.encodeToString(bytes);
-    }
+
     
     @Override
     public List<Candidate> getFile(List<Long> id) {

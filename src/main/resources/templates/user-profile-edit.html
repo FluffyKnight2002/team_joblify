@@ -13,7 +13,9 @@
   <link rel="stylesheet" href="/assets/css/bootstrap.css">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" href="/assets/vendors/toastify/toastify.css">
-
+  <!-- Izitoast for noti -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
   <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -87,22 +89,23 @@
     <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
     <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
     <div id="main">
-      <div id="main-content">
+      <div id="main-content" class="rounded-3 p-3" style="background: #fff">
 
         <div class="page-heading">
           <div class="page-title">
             <div class="row">
-              <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                <h3>User Profile Edit</h3>
-
+              <div class="col-12 col-md-6 order-md-1">
+                <h3>User Profile</h3>
+                <h6 class="card-title sub-title text-muted">Edit profile</h6>
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">User Profile Edit
-                    </li>
-                  </ol>
+                  <h6>
+                    <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                       style="background: #1e497b !important;" href="javascript:history.back()">
+                      <i class="bi bi-arrow-left-circle position-absolute"
+                         style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                  </h6>
                 </nav>
               </div>
             </div>
@@ -110,10 +113,6 @@
           <section class="section">
             <div class="card">
               <div class="card-header">
-                <h4 class="card-title">Edit User Account Here</h4>
-                <div class="mt-md-3 text-center">
-                  <h3 class="success-line"></h3>
-                </div>
               </div>
               <div class="card-body">
                 <form id="profile-edit-form" enctype="multipart/form-data" method="post" class="needs-validation"
@@ -226,24 +225,24 @@
                         Please Choose Role.
                       </div>
                     </div>
+                    <div class="col-md-6">
 
-                    <div class="row">
-                      <div class="form-floating mb-3 col-md-6">
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
 
                         <textarea class="form-control" id="address" name="address" placeholder="Address"
-                          style="height: 100px" required></textarea>
-                        <label for="address"><span class="px-3">Address</span></label>
-                        <div class="invalid-feedback" id="address-error">
-                          Please Add Address.
-                        </div>
+                                  style="height: 100px" required></textarea>
+                      <label for="address"><span class="px-3">Address</span></label>
+                      <div class="invalid-feedback" id="address-error">
+                        Please Add Address.
                       </div>
-                      <div class="form-floating mb-3 col-md-6">
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
 
                         <textarea class="form-control" id="note" name="note" placeholder="Note"
-                          style="height: 100px"></textarea>
-                        <label for="note"><span class="px-3">Note(Optional)</span></label>
+                                  style="height: 100px"></textarea>
+                      <label for="note"><span class="px-3">Note(Optional)</span></label>
 
-                      </div>
                     </div>
                   </div>
                   <div class="text-end mt-4">
@@ -271,11 +270,18 @@
       </div>
     </div>
   </div>
-  <script src="/assets/js/javaScript/authenticatedUserCredendials.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- Stomp -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <!-- SockJS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+  <script src="/assets/js/authenticatedUserCredendials.js"></script>
+  <script src="/assets/js/websocket.js"></script>
   <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="/assets/js/bootstrap.bundle.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+  <!-- Izitoast for noti -->
+  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
   <!-- toastify -->
   <script src="/assets/vendors/toastify/toastify.js"></script>
 

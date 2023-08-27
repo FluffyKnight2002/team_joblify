@@ -24,7 +24,8 @@ public class NotificationCreator {
         notificationDto.setUserId(myUserDetails.getUserId());
         notificationDto.setUsername(myUserDetails.getUsername());
         notificationDto.setTime(LocalDateTime.now());
-        notificationService.createNotifications(notificationDto);
-        messagingTemplate.convertAndSend("/all/notifications", notificationDto);
+        NotificationDto notification = notificationService.createNotifications(notificationDto);
+        messagingTemplate.convertAndSend("/all/notifications", notification);
     }
+
 }

@@ -65,6 +65,7 @@ function resetFilters() {
 function changeSelectedFilterName(item) {
     if (item) {
         let selectedValue = $(item).text(); // Get the selected value from the clicked item
+        console.log("Selected Value : " , selectedValue);
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
         let filterId = $(item).data('filter-id');
@@ -79,14 +80,14 @@ function changeSelectedFilterName(item) {
             }
         }
 
-        if ($('input[name="datefilter2"]').length > 0) {
+        // if ($('input[name="datefilter2"]').length > 0) {
             if(selectedValue != 'Custom') {
                 $('input[name="datefilter2"]').val('');
-                button.text(selectedValue); // Update the text of the button
+                button.text($.trim(selectedValue)); // Update the text of the button
             }else {
                 $('.date-posted-filter-btn').text('Custom');
             }
-        }
+        // }
 
         updateDataTable();
     }
@@ -531,14 +532,14 @@ function createSalaryFilterButton(selectedValue) {
     });
 
     // Enable tooltips when handle is pressed
-    rangeBar2.noUiSlider.on('start', function () {
-        if (!tooltipsEnabled2) {
-            rangeBar2.noUiSlider.updateOptions({
-                tooltips: [true, true]
-            });
-            tooltipsEnabled2 = true;
-        }
-    });
+    // rangeBar2.noUiSlider.on('start', function () {
+    //     if (!tooltipsEnabled2) {
+    //         rangeBar2.noUiSlider.updateOptions({
+    //             tooltips: [true, true]
+    //         });
+    //         tooltipsEnabled2 = true;
+    //     }
+    // });
 
     // Disable tooltips when handle is released
     rangeBar2.noUiSlider.on('end', function () {
@@ -670,7 +671,7 @@ async function fetchTitleAndGenerateHTML() {
         sortedData.forEach(item => {
             const startingLetter = item.name[0].toUpperCase();
             if (startingLetter !== currentLetter) {
-                submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
+                submenuHTML += `<li style="background: #1e497b"><b class="ps-2 text-white">${startingLetter}</b></li>`;
                 currentLetter = startingLetter;
             }
             submenuHTML += `
@@ -707,7 +708,7 @@ async function fetchDepartmentAndGenerateHTML() {
         sortedData.forEach(item => {
             const startingLetter = item.name[0].toUpperCase();
             if (startingLetter !== currentLetter) {
-                submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
+                submenuHTML += `<li style="background: #1e497b"><b class="ps-2 text-white">${startingLetter}</b></li>`;
                 currentLetter = startingLetter;
             }
             submenuHTML += `<li class="dropdown-item filter-items" 
