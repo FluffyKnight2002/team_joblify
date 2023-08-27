@@ -9,7 +9,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-
+import org.springframework.data.jpa.datatables.mapping.Search;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Expression;
@@ -21,7 +21,7 @@ public class FirstDaySpecification implements Specification<InterviewProcess> {
        private final LocalDate maxFirstDay;
 
        public FirstDaySpecification(DataTablesInput input) {
-           org.springframework.data.jpa.datatables.mapping.Search columnSearch = input.getColumn("date").getSearch();
+           Search columnSearch = input.getColumn("date").getSearch();
            String dateFilter = columnSearch.getValue();
            columnSearch.setValue("");
            if (!hasText(dateFilter)) {

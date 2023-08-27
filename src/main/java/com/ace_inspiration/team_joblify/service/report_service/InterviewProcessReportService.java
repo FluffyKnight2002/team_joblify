@@ -2,18 +2,17 @@ package com.ace_inspiration.team_joblify.service.report_service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,11 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.ace_inspiration.team_joblify.entity.AllCandidatesReport;
 import com.ace_inspiration.team_joblify.entity.InterViewProcessReport;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessReportRepository;
-import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -34,60 +30,52 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+
 @Service
 public class InterviewProcessReportService {
 	@Autowired
-	private InterviewProcessReportRepository jasperRepository;
-	
-	public ResponseEntity<byte[]> exportReport(String reportFormat) throws JRException, IOException {
-	    List<InterViewProcessReport> pdfjasper = jasperRepository.findAll();
-	    System.out.println(pdfjasper);
-	    // Load file and compile it
-	    InputStream jrxmlStream = getClass().getResourceAsStream("/interview_process.jrxml");
-	    JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
+	private InterviewProcessReportRepository interviewProcessReportRepository;
 
-	    JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(pdfjasper);
-	    Map<String, Object> parameters = new HashMap<>();
-	    parameters.put("createdBy", "Interview Process");
-	    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+	public ResponseEntity<byte[]> exportReport(String format) throws JRException, IOException {
 
-	    byte[] reportBytes;
-	    String fileName;
-	    String contentType;
+		List<InterViewProcessReport> interViewProcessReports = interviewProcessReportRepository.findAll();
+		System.err.println(interViewProcessReports);
 
-	    if (reportFormat.equalsIgnoreCase("pdf")) {
-	        reportBytes = JasperExportManager.exportReportToPdf(jasperPrint);
-	        fileName = "Cost_Report.pdf";
-	        contentType = MediaType.APPLICATION_PDF_VALUE;
-	    } else if (reportFormat.equalsIgnoreCase("excel")) {
-	        JRXlsxExporter exporter = new JRXlsxExporter();
-	        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-	        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-	        exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(byteArrayOutputStream));
-	        exporter.exportReport();
-	        reportBytes = byteArrayOutputStream.toByteArray();
-	        fileName = "Cost_Report.xlsx";
-	        contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-	    } else {
-	        return ResponseEntity.badRequest().build(); // Invalid report format
-	    }
+		File file = ResourceUtils.getFile("classpath:interview_process.jrxml");
+          JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+          JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(interViewProcessReports);
+          Map<String, Object> parameters = new HashMap<>();
 
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentDispositionFormData(fileName, fileName);
-	    headers.setContentType(MediaType.parseMediaType(contentType));
+        //   parameters.put("createdBy", "Interview Process");
+          JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
-	    return new ResponseEntity<>(reportBytes, headers, HttpStatus.OK);
-	}
+          ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+          if (format.equalsIgnoreCase("pdf")) {
+              JRPdfExporter exporterPdf = new JRPdfExporter();
+              exporterPdf.setExporterInput(new SimpleExporterInput(jasperPrint));
+              exporterPdf.setExporterOutput(new SimpleOutputStreamExporterOutput(outStream));
+              exporterPdf.exportReport();
 
+              HttpHeaders headers = new HttpHeaders();
+              headers.add("Content-Disposition", "attachment; filename=Interview_Process.pdf");
 
-    private byte[] getFileBytes(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        return Files.readAllBytes(path);
-    }
+              return new ResponseEntity<>(outStream.toByteArray(), headers, HttpStatus.OK);
+          } else if (format.equalsIgnoreCase("excel")) {
+              JRXlsxExporter exporterXLS = new JRXlsxExporter();
+              exporterXLS.setExporterInput(new SimpleExporterInput(jasperPrint));
+              exporterXLS.setExporterOutput(new SimpleOutputStreamExporterOutput(outStream));
+              exporterXLS.exportReport();
+
+              HttpHeaders headers = new HttpHeaders();
+              headers.add("Content-Disposition", "attachment; filename=Interview_Process.xlsx");
+
+              return new ResponseEntity<>(outStream.toByteArray(), headers, HttpStatus.OK);
+          }
+		return null; 
+      }
+
 }
-
-	
-
