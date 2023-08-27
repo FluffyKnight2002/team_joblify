@@ -56,63 +56,38 @@
 	</style>
 	<subDataset name="tableDataset" uuid="a207c0c1-359f-4cae-bfda-f618aeb76a3d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="project_ace"/>
-		<queryString language="SQL">
-			<![CDATA[select * from all_post]]>
-		</queryString>
-		<field name="close_date" class="java.sql.Date">
-			<property name="com.jaspersoft.studio.field.name" value="close_date"/>
-			<property name="com.jaspersoft.studio.field.label" value="close_date"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="vacancy_info"/>
+		
+		<field name="closeDate" class="java.sql.Date">
 		</field>
-		<field name="open_date" class="java.sql.Date">
-			<property name="com.jaspersoft.studio.field.name" value="open_date"/>
-			<property name="com.jaspersoft.studio.field.label" value="open_date"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="vacancy_info"/>
+		<field name="openDate" class="java.sql.Date">
+			
 		</field>
 		<field name="position" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="position"/>
-			<property name="com.jaspersoft.studio.field.label" value="position"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="position"/>
+			
 		</field>
-		<field name="total_candidates" class="java.lang.Long">
-			<property name="com.jaspersoft.studio.field.name" value="total_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="total_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="totalCandidates" class="java.lang.Long">
+			
 		</field>
-		<field name="interviews_candidate" class="java.lang.Long">
-			<property name="com.jaspersoft.studio.field.name" value="interviews_candidate"/>
-			<property name="com.jaspersoft.studio.field.label" value="interviews_candidate"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="interviewCandidates" class="java.lang.Long">
+			
 		</field>
-		<field name="passed_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="passed_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="passed_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="passeCandidates" class="java.math.BigDecimal">
+			
 		</field>
-		<field name="pending_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="pending_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="pending_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="pendingCandidates" class="java.math.BigDecimal">
+			
 		</field>
-		<field name="cancel_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="cancel_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="cancel_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="cancelCandidates" class="java.math.BigDecimal">
+			
 		</field>
-		<field name="not_interview_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="not_interview_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="not_interview_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="notinterViewCandidates" class="java.math.BigDecimal">
+			
 		</field>
-		<field name="accepted_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="accepted_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="accepted_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="acceptedCandidates" class="java.math.BigDecimal">
+			
 		</field>
-		<field name="interviewed_count" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="interviewed_count"/>
-			<property name="com.jaspersoft.studio.field.label" value="interviewed_count"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
+		<field name="intervieweCount" class="java.math.BigDecimal">
+			
 		</field>
 	</subDataset>
 	<parameter name="createdBy" class="java.lang.String"/>
@@ -171,7 +146,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{close_date}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{closeDate}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -196,7 +171,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="12"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{open_date}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{openDate}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -246,7 +221,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{total_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{totalCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -271,7 +246,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{interviews_candidate}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{interviewCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -296,7 +271,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{passed_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{passeCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -321,7 +296,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{pending_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{pendingCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -346,7 +321,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{cancel_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{cancelCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -371,7 +346,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{not_interview_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{notInterviewCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -396,7 +371,7 @@
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial" size="10"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{accepted_candidates}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{acceptedCandidates}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

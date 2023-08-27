@@ -28,27 +28,26 @@ public class AllCandidatesReportService {
 	@Autowired
 	private AllCandidatesReportRepository jasperRepository;
 	public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
-        List<AllCandidatesReport> pdfjasper = jasperRepository.findAll();
+		String path="C:\\Users\\HP PC\\Desktop\\Project";
+        List<AllCandidatesReport> all_candidates = jasperRepository.findAll();
         //load file and compile it
         File file = ResourceUtils.getFile("classpath:all_candidates.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(pdfjasper);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(all_candidates);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("createdBy", "All Candidates");
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-        if (reportFormat.equalsIgnoreCase("html")) {
-            JasperExportManager.exportReportToHtmlFile(jasperPrint+ "\\All CandidatesReport.html");
-        }
+        
         if (reportFormat.equalsIgnoreCase("pdf")) {
-            JasperExportManager.exportReportToPdfFile(jasperPrint+ "\\All CandidatesReport.pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint+ "\\all_candidates.pdf");
         }
         if (reportFormat.equalsIgnoreCase("excel")) {
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("\\All CandidatesReport.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("\\all_candidates.xlsx"));
             exporter.exportReport();
         }
-        return "report generated in path : ";
+        return "report generated in path :"+path;
     }
 }
 

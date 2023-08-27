@@ -1,5 +1,7 @@
 package com.ace_inspiration.team_joblify.entity;
 
+import java.time.LocalDate;
+
 import com.querydsl.core.annotations.Immutable;
 
 import jakarta.persistence.Column;
@@ -11,40 +13,42 @@ import lombok.Data;
 @Entity
 @Data
 @Immutable
-@Table(name="all_post")
+@Table(name="interview_process")
 public class AllPost {
 	
 	@Id
 	private long id;
 	
-	@Column(name="close_date")
-	private String closeDate;
-
-	@Column(name="open_date")
-	private String openDate;
+	@Column(name = "close_date")
+	private LocalDate closeDate;
 	
+	@Column(name = "open_date")
+	private LocalDate openDate;
+	
+	@Column(name="position")
 	private String position;
 	
 	@Column(name="total_candidates")
-	private Long totalCandidate;
+	private long totalCandidates;
 	
 	@Column(name="interviews_candidate")
-	private Long interviewCandidate;
+	private long interviewCandidates;
 	
 	@Column(name="passed_candidates")
-	private Long passedCandidate;
+	private long passCandidates;
 	
 	@Column(name="pending_candidates")
-	private Long pendingCandidate;
+	private long pendingCandidates;
 	
 	@Column(name="cancel_candidates")
-	private Long cancelCandidate;
+	private long cancelCandidates;
 	
 	@Column(name="not_interview_candidates")
-	private Long notInterviewCandidate;
+	private long notInterviewCandidates;
 	
 	@Column(name="accepted_candidates")
-	private Long acceptedCandidate;
-	
+	private long acceptedCandidates;
 
+	@Column(name="interviewed_count")
+	private long interviewCount;
 }
