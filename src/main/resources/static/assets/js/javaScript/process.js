@@ -24,7 +24,7 @@ $(document).ready(function() {table = $('#table2').DataTable(
 															data:"position",
 															className:"position",
 															render:function(data,type,row)
-															{   return `<a href="/CandidateViewSummary?viId=${row.id}&name=${data}">${data}</a>`;},
+															{   return `<a href="/candidate-view-summary?viId=${row.id}&name=${data}">${data}</a>`;},
 															sortable:false
 															
 														},

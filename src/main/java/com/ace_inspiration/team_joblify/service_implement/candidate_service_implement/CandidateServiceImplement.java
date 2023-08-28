@@ -4,8 +4,9 @@ import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.*;
-import com.ace_inspiration.team_joblify.service.InterviewService;
+import com.ace_inspiration.team_joblify.service.*;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
+
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,41 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
-import org.springframework.web.multipart.MultipartFile;
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Gender;
-import com.ace_inspiration.team_joblify.entity.Interview;
-import com.ace_inspiration.team_joblify.entity.InterviewType;
-import com.ace_inspiration.team_joblify.entity.LanguageSkills;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.TechSkills;
-import com.ace_inspiration.team_joblify.entity.VacancyInfo;
-import com.ace_inspiration.team_joblify.repository.CandidateRepository;
-import com.ace_inspiration.team_joblify.repository.InterviewRepository;
-import com.ace_inspiration.team_joblify.repository.LanguageSkillsRepository;
-import com.ace_inspiration.team_joblify.repository.SummaryRepository;
-import com.ace_inspiration.team_joblify.repository.TechSkillsRepository;
-import com.ace_inspiration.team_joblify.service.InterviewService;
-import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 
-import lombok.RequiredArgsConstructor;
-
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.repository.CandidateRepository;
-import com.ace_inspiration.team_joblify.repository.PositionRepository;
-import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
-
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import java.util.Optional;
 
 
@@ -86,10 +53,31 @@ public class CandidateServiceImplement implements CandidateService{
 		   if (candiDate.isPresent()) {
 		         Candidate candidate = candiDate.get();
 		         String interviewType;
-		         
 		         List<String>interviewStages=new ArrayList<>();
+//		         List<String> lan=new ArrayList<>(); 
+//		         List<String> tec=new ArrayList<>();
 		         List<Interview> interviews = interviewService.findInterviewsByCandidateId(id);
-		         if(!interviews.isEmpty()) {
+//                 List<LanguageSkills> languageSkill=languageSkillsRepository.findLanguageSkillIdBySummaryId(candidate.getSummary().getId());
+//		        List<TechSkills> techSkill=techSkillsRepository.findTechSkillsIdBySummaryId(candidate.getSummary().getId());
+//		        if(!languageSkill.isEmpty()) {
+//		        	languageSkill=languageSkill.get(0).getSummary().get(0).getLanguageSkills();
+//		        	for(LanguageSkills language: languageSkill) {
+//		        		lan.add(language.getName());
+//		        		System.err.println(">>>>>>>>>>>>>>>>"+language.getName());
+//		        	}
+//		        }else {
+//		        	lan.add("not have data");
+//		        }
+//		        if(!techSkill.isEmpty()) {
+//		        	techSkill=techSkill.get(0).getSummary().get(0).getTechSkills();
+//		        	for(TechSkills tech: techSkill) {
+//		        		tec.add(tech.getName());
+//		        		System.err.println(">>>>>>>>>>>>>>>>"+tech.getName());
+//		        	}
+//		        }else {
+//		        	lan.add("not have data");
+//		        }
+                 if(!interviews.isEmpty()) {
 		        	 interviewType=interviews.get(0).getType().toString();
 		        	 for (Interview interview : interviews) {
 		        		 interviewStages.add(interview.getInterviewStage().toString());
@@ -118,6 +106,8 @@ public class CandidateServiceImplement implements CandidateService{
 		         	candidate.getVacancyInfo().getVacancy().getPosition().getName(),
 		         	interviewStages,
 		         	interviewType
+//                         lan,
+//                         tec
 		         );
 		       
 

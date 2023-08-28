@@ -10,6 +10,7 @@ import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
+import com.ace_inspiration.team_joblify.service.OfferMailSendedService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;

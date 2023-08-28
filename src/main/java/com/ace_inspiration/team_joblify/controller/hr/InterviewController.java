@@ -11,13 +11,13 @@ public class InterviewController {
 	
 	
 	
-	@GetMapping("/interviewProcess")
+	@GetMapping("/interview-process")
 	public String interviewProcessSummary() {
 		
 		return "interview-proces-summary";
 	}
 	
-	@GetMapping("/CandidateViewSummary")
+	@GetMapping("/candidate-view-summary")
 	public String all_candidtate_view_summary() {
 		
 		return "all-candidate-view-summary";

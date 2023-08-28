@@ -518,7 +518,6 @@ $(document).ready(function() {
 				a.download = filename;
 				document.body.appendChild(a);
 				a.click();
-				window.URL.revokeObjectURL(url);
 				table.ajax.reload();
 			} catch (error) {
 				console.error('Fetch error:', error);
@@ -616,7 +615,7 @@ function format(d) {
 		'</div>' +
 		'<div class="row">' +
 		'<div class="col-md-2">' +
-		'Extra info: And any further details here (images etc)...' +
+		'language Skill' +d.name+
 		'</div>' +
 		'</div>' +
 		'</div>';
@@ -645,7 +644,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 
 	$('#where').on('change', function() {
 		const type = $(this).val();
-		const updatedContent = getEmailContent(type, row.name,row.id,csrfToken);
+		const updatedContent = getEmailContent(type, row.name,row.id);
 		$('#data').summernote('code', updatedContent);
 	});
 	$('#add-date').on('click', function() {
@@ -950,7 +949,7 @@ a.     The employee agrees not to disclose any of Company’s confidential infor
 	return (type === 'offer_mail') ? offermail : custom;
 
 }
-function getEmailContent(type, name,id,csrfToken) {
+function getEmailContent(type, name,id) {
 	const custom = ''; // Add your custom message here
 
 	const onlineText = `

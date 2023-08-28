@@ -15,7 +15,7 @@ public interface CandidateService {
 
 	DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input);
 	 void changeStatus(long id);
-	 SummaryDto findByid(long id);
+	SummaryDto findByid(long id);
 	void changeInterviewstatus(long id,String status);
     public Candidate saveCandidate(CandidateDto candidateDto);
     List<Candidate> getAllCandidates();
