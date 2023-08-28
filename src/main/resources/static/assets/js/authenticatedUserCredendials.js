@@ -61,6 +61,7 @@ async function authenticatedUserData() {
             }
 
 
+
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }
