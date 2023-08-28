@@ -162,7 +162,7 @@ public class Api {
     public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto, Authentication authentication) {
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
 
-        if (email == true) {
+        if (email) {
             interService.saveInterview(emailTemplateDto);
             candidateService.stage(emailTemplateDto.getCanId());
             return true;
