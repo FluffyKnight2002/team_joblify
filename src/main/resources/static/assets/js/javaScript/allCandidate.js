@@ -15,6 +15,7 @@ var position1 = currentId.get("position");
 var select = currentId.get("selection");
 var interview1 = currentId.get("interview");
 var postId = currentId.get("postId");
+var candidateId=currentId.get('candidateId');
 var ccMails = [];
 var updatedString = null;
 var concatenatedValue = null;
@@ -469,7 +470,7 @@ $(document).ready( async function() {
 		});
 	}
 
-	if (position1 || select || interview1 || postId) {
+	if (position1 || select || interview1 || postId || candidateId) {
 
 		let filters = [];
 
@@ -487,6 +488,9 @@ $(document).ready( async function() {
 		if (postId) {
 			interview.val(postId);
 			filters.push({ column: 1, value: postId });
+		}
+		if(candidateId){
+			filters.push({ column: 0, value: candidateId });
 		}
 		filters.forEach(filter => {
 			table.column(filter.column).search(filter.value);
