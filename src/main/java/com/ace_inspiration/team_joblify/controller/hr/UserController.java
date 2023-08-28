@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.controller.hr;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.entity.Role;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,7 +57,7 @@ public class UserController {
 
     @GetMapping("/user-profile-edit")
     public Object showUserProfileEdit(HttpServletResponse response, @RequestParam("email") String email,
-            Authentication authentication,Model model) {
+            Authentication authentication, Model model) {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         model.addAttribute("currentPage", "/user-profile-edit");
         if (myUserDetails.getAuthorities().stream()
@@ -82,13 +83,25 @@ public class UserController {
     }
 
     @GetMapping("/forgot-password-form")
-    public String showForgetPasswordForm() {
-        return "forgot-password";
+    public String showForgetPasswordForm(HttpSession session) {
+        if (session.getAttribute("otpChecked") != null && (boolean) session.getAttribute("otpChecked")) {
+
+            session.removeAttribute("otpChecked");
+            session.invalidate();
+            return "forgot-password";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/otp-authentication-form")
-    public String showOTPForm() {
-        return "otp-authentication";
+    public String showOTPForm(HttpSession session) {
+        if (session.getAttribute("emailSearched") != null && (boolean) session.getAttribute("emailSearched")) {
+
+            session.removeAttribute("emailSearched");
+            session.invalidate();
+            return "otp-authentication";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/email-check-form")

@@ -13,42 +13,41 @@ import lombok.Data;
 @Entity
 @Data
 @Immutable
-@Table(name="interview_process")
+@Table(name = "all_post")
 public class AllPost {
-	
+
 	@Id
 	private long id;
-	
+
 	@Column(name = "close_date")
 	private LocalDate closeDate;
-	
+
 	@Column(name = "open_date")
 	private LocalDate openDate;
-	
-	@Column(name="position")
-	private String position;
-	
-	@Column(name="total_candidates")
-	private long totalCandidates;
-	
-	@Column(name="interviews_candidate")
-	private long interviewCandidates;
-	
-	@Column(name="passed_candidates")
-	private long passCandidates;
-	
-	@Column(name="pending_candidates")
-	private long pendingCandidates;
-	
-	@Column(name="cancel_candidates")
-	private long cancelCandidates;
-	
-	@Column(name="not_interview_candidates")
-	private long notInterviewCandidates;
-	
-	@Column(name="accepted_candidates")
-	private long acceptedCandidates;
 
-	@Column(name="interviewed_count")
-	private long interviewCount;
+	private String position;
+
+	@Column(name = "total_candidates")
+	private long totalCandidate;
+
+	@Column(name = "passed_candidates")
+	private long passedCandidate;
+
+	@Column(name = "pending_candidates")
+	private long pendingCandidate;
+
+	@Column(name = "cancel_candidates")
+	private long cancelCandidate;
+
+	@Column(name = "not_interview_candidates")
+	private long notInterviewCandidate;
+
+	@Column(name = "accepted_candidates")
+	private long acceptedCandidate;
+
+	@Column(name = "interviewed_counts")
+	private long interviewedCounts;
+
+	@Column(name = "offered_letter_email")
+	private long offeredLetterEmail;
 }

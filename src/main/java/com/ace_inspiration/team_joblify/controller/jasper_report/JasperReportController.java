@@ -1,4 +1,5 @@
 package com.ace_inspiration.team_joblify.controller.jasper_report;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -12,32 +13,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ace_inspiration.team_joblify.entity.AllCandidatesReport;
 import com.ace_inspiration.team_joblify.repository.AllCandidatesReportRepository;
-import com.ace_inspiration.team_joblify.service.report_service.AllCandidatesReportService;
-import com.ace_inspiration.team_joblify.service.report_service.InterviewProcessReportService;
+import com.ace_inspiration.team_joblify.service.ReportService;
+import com.ace_inspiration.team_joblify.service_implement.ReportServiceImplement;
 
 import net.sf.jasperreports.engine.JRException;
+
 @RestController
 public class JasperReportController {
-	@Autowired
-	private AllCandidatesReportService candidatesReportService;
-	@Autowired
-	private AllCandidatesReportRepository candidatesReportRepo;
-	@Autowired
-	private InterviewProcessReportService interViewService;
 
-	
-	@PostMapping("/view_allCandidates/{format}")
-	public String generateReportCandidates(@PathVariable String format,@RequestBody List<AllCandidatesReport> tableData) throws FileNotFoundException, JRException {
-		candidatesReportRepo.saveAll(tableData);
-		return candidatesReportService.exportReport(format);
+	@Autowired
+	private ReportService reportService;
 
-}
+	@GetMapping("/all_candidates/{format}")
+	public ResponseEntity<byte[]> generateReportCandidates(@PathVariable String format) throws JRException, IOException {
+		
+		return reportService.allCandidate(format);
+
+	}
+
 	@GetMapping("/interview_process/{format}")
 	public ResponseEntity<byte[]> generateReportInterview(@PathVariable String format) throws JRException, IOException {
-		
-		return interViewService.exportReport(format);
-	
-	
-	
-}
+
+		return reportService.interviewProcess(format);
+
+	}
 }
