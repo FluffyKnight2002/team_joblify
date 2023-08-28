@@ -44,7 +44,7 @@ async function authenticatedUserData() {
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
-            const sendMail=document.getElementById('mail-1').hidden;
+        
             if (loader) {
                 loader.remove();
             }
@@ -58,9 +58,7 @@ async function authenticatedUserData() {
                     backgroundColor: '#f58787'
                 });
             }
-            if(userDetails.user.role!=='DEFAULT_HR' || userDetails.user.role!=='SENIOR_HR'){
-                sendMail.show
-            }
+            
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }
