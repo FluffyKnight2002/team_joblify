@@ -699,7 +699,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 	$('#add-time').on('click', function() {
 		const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
 		$('#data').summernote('pasteHTML', edit);
-		// edit = '';
+		edit = '';
 
 	})
 
