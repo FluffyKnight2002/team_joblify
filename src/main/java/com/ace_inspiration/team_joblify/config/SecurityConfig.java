@@ -53,7 +53,7 @@ public class SecurityConfig {
                                 "/assets/vendors/**").permitAll()
 
                         .requestMatchers("/ws/**", "/change-password", "/sendOTP", "/otp-submit", "/search-email",
-                        "/find-phonenumber-by-email", "/error", "/vacancy/show-last", "/vacancy/show-all", "/vacancy/show-other",
+                        "/find-phonenumber-by-email", "/error", "/vacancy/show-last", "/vacancy/show-all", "/vacancy/show-others",
                         "/vacancy/job-detail", "/vacancy/filter", "/", "/contact-us", "/job-detail", "/all-jobs", "/400", "/401", "/403",
                         "/404", "/405", "/500", "502", "/503", "/504", "/apply-job", "/titles", "/departments", "/fetch-titles", "/fetch-departments",
                         "/fetch-address", "/login", "/password-change", "/forgot-password-form", "/otp-authentication-form", "/email-check-form"
