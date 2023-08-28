@@ -15,7 +15,7 @@ public class InterviewController {
 	@GetMapping("/interview-process")
 	public String interviewProcessSummary(Model model) {
 		model.addAttribute("currentPage", "/interview-process");
-		return "interviewproces-summary";
+		return "interview-proces-summary";
 	}
 	
 	@GetMapping("/candidate-view-summary")
