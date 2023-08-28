@@ -101,17 +101,17 @@ public class VacancyController {
         return "all-vacancies";
     }
 
-    @GetMapping("/view-vacancy-detail")
-    public String showAllVacancyPage(@RequestParam("id")long id, Model model) {
-        VacancyDto vacancyDto = vacancyInfoService.selectVacancyById(id);
-        System.out.println("Vacancy ID : " + vacancyDto.getVacancyId());
-        System.out.println(vacancyDto.getPosition());
-        System.out.println(vacancyDto.getDescriptions());
-        System.out.println(vacancyDto.getLvl());
-        model.addAttribute("currentPage" , "/show-all-vacancies-page");
-        model.addAttribute("vacancy", vacancyInfoService.selectVacancyById(id));
-        return "vacancy-details";
-    }
+    // @GetMapping("/view-vacancy-detail")
+    // public String showAllVacancyPage(@RequestParam("id")long id, Model model) {
+    //     VacancyDto vacancyDto = vacancyInfoService.selectVacancyById(id);
+    //     System.out.println("Vacancy ID : " + vacancyDto.getVacancyId());
+    //     System.out.println(vacancyDto.getPosition());
+    //     System.out.println(vacancyDto.getDescriptions());
+    //     System.out.println(vacancyDto.getLvl());
+    //     model.addAttribute("currentPage" , "/show-all-vacancies-page");
+    //     model.addAttribute("vacancy", vacancyInfoService.selectVacancyById(id));
+    //     return "vacancy-details";
+    // }
 
     @PostMapping("/update-vacancy")
     @ResponseBody
