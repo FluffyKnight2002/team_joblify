@@ -1,407 +1,372 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interview_process" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="66519d71-4f27-4833-9a1d-c9b72e811f0c">
-	<property name="template.engine" value="tabular_template"/>
-	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="project_ace"/>
-	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
-	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
-	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
-	<style name="Detail" fontName="Arial" fontSize="12"/>
-	<style name="Row" mode="Transparent">
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-			<style backcolor="#E6DAC3"/>
-		</conditionalStyle>
-	</style>
-	<style name="Table">
-		<box>
-			<pen lineWidth="1.0" lineColor="#000000"/>
-			<topPen lineWidth="1.0" lineColor="#000000"/>
-			<leftPen lineWidth="1.0" lineColor="#000000"/>
-			<bottomPen lineWidth="1.0" lineColor="#000000"/>
-			<rightPen lineWidth="1.0" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="Table_CH" mode="Opaque" forecolor="#B89F7D" backcolor="#F2EBDF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-	</style>
-	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
-		<box>
-			<pen lineWidth="0.5" lineColor="#000000"/>
-			<topPen lineWidth="0.5" lineColor="#000000"/>
-			<leftPen lineWidth="0.5" lineColor="#000000"/>
-			<bottomPen lineWidth="0.5" lineColor="#000000"/>
-			<rightPen lineWidth="0.5" lineColor="#000000"/>
-		</box>
-		<conditionalStyle>
-			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
-			<style mode="Transparent" backcolor="#E6DAC3"/>
-		</conditionalStyle>
-	</style>
-	<subDataset name="tableDataset" uuid="a207c0c1-359f-4cae-bfda-f618aeb76a3d">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="project_ace"/>
-		<queryString language="SQL">
-			<![CDATA[select * from all_post]]>
-		</queryString>
-		<field name="close_date" class="java.sql.Date">
-			<property name="com.jaspersoft.studio.field.name" value="close_date"/>
-			<property name="com.jaspersoft.studio.field.label" value="close_date"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="vacancy_info"/>
-		</field>
-		<field name="open_date" class="java.sql.Date">
-			<property name="com.jaspersoft.studio.field.name" value="open_date"/>
-			<property name="com.jaspersoft.studio.field.label" value="open_date"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="vacancy_info"/>
-		</field>
-		<field name="position" class="java.lang.String">
-			<property name="com.jaspersoft.studio.field.name" value="position"/>
-			<property name="com.jaspersoft.studio.field.label" value="position"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="position"/>
-		</field>
-		<field name="total_candidates" class="java.lang.Long">
-			<property name="com.jaspersoft.studio.field.name" value="total_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="total_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="interviews_candidate" class="java.lang.Long">
-			<property name="com.jaspersoft.studio.field.name" value="interviews_candidate"/>
-			<property name="com.jaspersoft.studio.field.label" value="interviews_candidate"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="passed_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="passed_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="passed_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="pending_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="pending_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="pending_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="cancel_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="cancel_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="cancel_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="not_interview_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="not_interview_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="not_interview_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="accepted_candidates" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="accepted_candidates"/>
-			<property name="com.jaspersoft.studio.field.label" value="accepted_candidates"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-		<field name="interviewed_count" class="java.math.BigDecimal">
-			<property name="com.jaspersoft.studio.field.name" value="interviewed_count"/>
-			<property name="com.jaspersoft.studio.field.label" value="interviewed_count"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="all_post"/>
-		</field>
-	</subDataset>
-	<parameter name="createdBy" class="java.lang.String"/>
-	<queryString>
-		<![CDATA[]]>
-	</queryString>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interview_process" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6c266f25-7998-4f14-89db-a887e1b5c74e">
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.3" value="lastPageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="false"/>
+	
+	
+	<field name="id" class="java.lang.Long">
+	</field>
+	<field name="closeDate" class="java.time.LocalDate">
+	</field>
+	<field name="openDate" class="java.time.LocalDate">
+	</field>
+	<field name="position" class="java.lang.String">
+	</field>
+	<field name="totalCandidate" class="java.lang.Long">
+	</field>
+	<field name="passedCandidate" class="java.lang.Long">
+	</field>
+	<field name="pendingCandidate" class="java.lang.Long">
+	</field>
+	<field name="cancelCandidate" class="java.lang.Long">
+	</field>
+	<field name="notInterviewCandidate" class="java.lang.Long">
+	</field>
+	<field name="acceptedCandidate" class="java.lang.Long">
+	</field>
+	<field name="interviewedCounts" class="java.lang.Long">
+	</field>
+	<field name="offeredLetterEmail" class="java.lang.Long">
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
 	<title>
-		<band height="136" splitType="Stretch">
-			<textField>
-				<reportElement x="391" y="54" width="100" height="30" uuid="66bcb413-0313-4c3c-bbb3-86633a00820b"/>
-				<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
+		<band height="94" splitType="Stretch">
+			<staticText>
+				<reportElement x="296" y="20" width="211" height="51" uuid="a72063f0-2733-4928-bfaf-59a1b2f3279b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Interview Process]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="40" y="4" width="100" height="26" uuid="eba39cc9-1e48-4b3d-963c-d89bf143178b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<frame>
-				<reportElement x="0" y="0" width="120" height="96" uuid="79136824-0089-4835-a1a2-b2841a5808e2"/>
-			</frame>
+			<textField>
+				<reportElement x="650" y="0" width="81" height="21" uuid="fb46ee5a-1b2c-4e7e-affa-eca0d88d62be"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
-	<pageFooter>
-		<band height="25" splitType="Stretch">
-			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="843" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="f2324113-3563-4f48-b688-ed82b3098434"/>
-			</frame>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="73" height="37" uuid="1da77c83-09ff-4ee7-810c-ef4658186bcc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="73" height="37" uuid="95c98bea-d9f7-4ea5-997b-45fcfcbae90b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Open Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="146" y="0" width="73" height="37" uuid="3df91e10-8353-424b-9597-eb2a6f919ac6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Close Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="219" y="0" width="73" height="37" uuid="4f70a79c-6b44-45e2-8d98-a9b789950fc8"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Total Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="0" width="73" height="37" uuid="2f350aa0-5b99-45d7-8491-9a0effa95934"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Interviewed Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="365" y="0" width="73" height="37" uuid="74e19f91-0aba-4812-9e24-efbd24d2b702"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Passed Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="0" width="73" height="37" uuid="41b2ce8e-eb3f-4e25-b271-e0e4e4ea987b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Pending Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="511" y="0" width="73" height="37" uuid="223b2e44-f6a5-49c1-8876-5d9ac953ea9e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Cancel Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="584" y="0" width="73" height="37" uuid="86e037f5-058e-4c00-87b2-9f82723d335a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Not Interview Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="657" y="0" width="73" height="37" uuid="5cb7da40-c22e-4a8a-bad3-29f3180aeb7b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Accepted Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="730" y="0" width="72" height="37" uuid="2b16facd-849f-4aa6-81c6-d4c56de27a23"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Offered Letter Email]]></text>
+			</staticText>
 		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+			<textField>
+				<reportElement x="0" y="0" width="73" height="31" uuid="f2235ef1-ec77-494c-911a-f83a8dc7bbdc"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="0" width="73" height="31" uuid="3f66f521-1a66-41de-956d-54e91cca6518"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{openDate}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="0" width="73" height="31" uuid="2c731b5a-43d4-4257-9c45-5b861d0eb21c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{closeDate}.toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="219" y="0" width="73" height="31" uuid="68ef8c6a-37f8-45bd-80e7-2e3e074a095c"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="292" y="0" width="73" height="31" uuid="5b05862e-5cc2-4326-aabe-f5da62d70da0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interviewedCounts}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="365" y="0" width="73" height="31" uuid="601a9bc7-590b-43b0-a834-3844a06396f3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{passedCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="0" width="73" height="31" uuid="9f4ed822-2cc7-495f-a707-82aa8099c510"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pendingCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="511" y="0" width="73" height="31" uuid="77373dad-f2c2-44dd-a3d9-73badae03e2e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cancelCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="584" y="0" width="73" height="31" uuid="a903ef3d-87ac-491c-ab40-b67aaa323578"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{notInterviewCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="657" y="0" width="73" height="31" uuid="6e85528e-8b9f-41f6-9857-a51543af2a65"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{acceptedCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="730" y="0" width="72" height="31" uuid="030ecad9-3c57-40b8-a341-75e497ec65a3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{offeredLetterEmail}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="210" splitType="Stretch">
-			<property name="local_mesure_unitheight" value="pixel"/>
-			<componentElement>
-				<reportElement x="20" y="0" width="802" height="200" uuid="26a31477-4c15-4613-81b1-692a33f88c80">
-					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
-					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
-					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
-				</reportElement>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="tableDataset" uuid="7079eda9-4fda-48f2-a202-61fa2924df3c">
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="72" uuid="ef4c0a47-4336-4708-a61b-aac8e51ea7c7">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="892bf91c-4179-4acf-95a2-967963e3b1f0"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Close Date]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="aa9b8b4b-e713-400c-8da2-cddfcad661ae"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{close_date}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="9c514546-0415-4bdf-9e1a-e1f6f4c43358">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="fafe11a1-24ec-4f96-90fa-a9ec92c78f38"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Open Date]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="77ab2fdf-c2f6-4b1c-92f5-684ebfac4798"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{open_date}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="26fc0519-9bb5-448c-a1aa-8349b2a411ea">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="8817e7fe-a7da-475b-9f62-cdf25a961506"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Possition]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="23fa7511-9c11-4685-9d4d-b90d133081a4"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{position}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="aa35b78f-eb3a-4cbb-a89c-fc7c42b23948">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="6f65d206-1d1f-4c8a-8ffd-fc97e100174a"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Total Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="40803441-c401-48b8-b2f0-6b0c5f326228"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{total_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="1d1d0bfa-dd27-401f-9ed9-c5f158dade8e">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="30c64ccb-c274-4dc9-8931-04eff9255125"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Interviews Candidate]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="e3581dfd-a352-4b58-b234-43eb4bc84c67"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{interviews_candidate}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="e070d577-cd50-42a5-8e21-f85735edaf90">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="9a1b6901-3ed9-4e0e-b3af-8e21b78f19fe"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Passed Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="246e02e9-2ea5-4402-83cd-2dff0dde6b09"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{passed_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="02b45b07-8f84-464a-b4d7-7d85215fc09f">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="06df4e11-fbfd-4e13-8207-842c11c0c963"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Pending Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="5a1badf9-d78f-4332-8cc6-4543f602577d"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{pending_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="fabe3998-686b-4c8d-9848-b270f15fe6ca">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="15ae2641-c0c0-4f18-9cc9-90f147743a9d"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Cancel Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="69b7590b-1fc8-4cc0-81f2-85de96bf1d0e"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{cancel_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="bdf4b547-67b8-4f70-9098-ebac7f93470a">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="7504d530-c6f5-426c-b9ef-7137d926b192"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="11" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Notinterview Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="f949fea2-2a79-44b3-9aa6-07e45b7dee6c"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{not_interview_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="72" uuid="0c340363-1256-4607-a62f-4455f5c552fe">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
-						<jr:tableFooter style="Table_TH" height="30" rowSpan="1"/>
-						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement key="" style="SubTitle" x="0" y="0" width="72" height="30" forecolor="#736343" uuid="e1595487-3a39-41a4-bae0-8ea1212d0a00"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="12" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Accept Candidates]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="Table_CH" height="30" rowSpan="1"/>
-						<jr:detailCell style="Table_TD" height="30">
-							<textField>
-								<reportElement style="Detail" x="0" y="0" width="72" height="30" uuid="3fa39fa8-8530-4fb8-a225-7b3e6c5e88b7"/>
-								<box leftPadding="2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font fontName="Arial" size="10"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{accepted_candidates}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
-		</band>
+		<band height="42" splitType="Stretch"/>
 	</summary>
 </jasperReport>
