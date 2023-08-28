@@ -26,5 +26,6 @@ public class EmailTemplateDto {
    private long userId;
    private long vacancyId;
    private long canId;
+   private String position;
 
 }
