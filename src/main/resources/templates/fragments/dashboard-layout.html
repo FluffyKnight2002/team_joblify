@@ -40,7 +40,7 @@
                         <span>Vacancies </span>
                     </a>
                     <ul class="submenu ">
-                        <li class="submenu-item ">
+                        <li class="submenu-item " sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR') or hasAuthority('JUNIOR_HR')">
                             <a th:href="show-upload-vacancy-form">Upload</a>
                         </li>
                         <li class="submenu-item ">
@@ -73,8 +73,8 @@
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">
-                            <a th:href="@{/interviewProcess}">View position & candidate</a>
-                            <a th:href="@{/CandidateViewSummary}">View status details</a>
+                            <a th:href="@{/interview-process}">View position & candidate</a>
+                            <a th:href="@{/candidate-view-summary}">View status details</a>
                         </li>
                     </ul>
                 </li>
