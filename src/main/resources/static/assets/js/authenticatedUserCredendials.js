@@ -1,6 +1,6 @@
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-let userRole;
+// let userRole;
 
 // This event listener will trigger your function when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -33,8 +33,6 @@ async function authenticatedUserData() {
             console.log(passwordMatches);
             console.log(userDetails.user.role)
 
-            userRole = userDetails.user.role;
-
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
@@ -48,7 +46,8 @@ async function authenticatedUserData() {
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
-            const sendMail=document.getElementById('mail-1').hidden;
+
+            // const sendMail=document.getElementById('mail-1').hidden;
             if (loader) {
                 loader.remove();
             }
@@ -64,9 +63,7 @@ async function authenticatedUserData() {
                     theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
                 });
             }
-            if(userDetails.user.role!=='DEFAULT_HR' || userDetails.user.role!=='SENIOR_HR'){
-                sendMail.show
-            }
+
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }

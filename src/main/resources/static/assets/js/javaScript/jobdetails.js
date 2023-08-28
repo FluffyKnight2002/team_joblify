@@ -6,7 +6,8 @@ function fetchJobsAndRenderUI() {
 
     fetch("/vacancy/show-others")
         .then((response) => response.json())
-        .then(data =>{
+        .then(data => {
+            console.log(data)
         // Assuming 'data' is an array of job objects with properties like title, applicants, jobType, salary, postedTime, location, and closeDate
         // Loop through the job data to create job cards
             $("#job-list-container").empty();
@@ -57,7 +58,7 @@ function fetchJobsAndRenderUI() {
                         ${changeTimeFormat(job.closeDate)}      
                     </span>
                 </div>
-            </div>
+                </div>
                 `;
                 if (job.id != currentId) {
                     // Append the job card to the container
@@ -79,7 +80,10 @@ function fetchJobsAndRenderUI() {
                 // Call the changeDetail function with the jobId
                 changeDetail(jobId);
             });
-    });
+    })
+        .catch(error => {
+            console.log("Error",error)
+        });
 }
 
 // Function to fetch job details and update the container

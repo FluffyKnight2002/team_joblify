@@ -201,12 +201,19 @@ function hideMessageModalAfterDelay() {
 
     if(typeof techSkillsInput  != undefined) {
         techSkillsInput = new Set;
-        $('#tech-skills-input').empty();
+        $('.tech-skills-block').empty();
     }
 
     if(typeof languageSkillsInput != undefined) {
         languageSkillsInput = new Set;
-        $('#language-skills-input').empty();
+        $('.language-skills-block').empty();
+    }
+
+    if($('form#job-apply').length > 0) {
+        $('#dob').removeClass('is-valid');
+        $('#phone').removeClass('is-valid');
+        $('#email').removeClass('is-valid');
+        $('#resume').removeClass('is-valid');
     }
 
     if($('#detailModal').length > 0) {

@@ -16,14 +16,34 @@ let tooltipsEnabled1 = false;
 let currentData = {};
 // let tooltipTriggerPost;
 // let tooltipPost;
+let userRole;
+
+// async function validateUIButton() {
+//     const response = await fetch('/authenticated-user-data', {
+//         method: 'POST',
+//         headers: {
+//             [csrfHeader]: csrfToken
+//         }
+//     });
+//
+//     if (response.ok) {
+//         const [userDetails, passwordMatches] = await response.json();
+//         userRole = userDetails.role;
+//     }
+//
+//     console.log("User Role", userRole);
+//     if(userRole != 'DEFAULT_HR' && userRole != 'SENIOR_HR' && userRole != 'JUNIOR_HR') {
+//         $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+//             $(this).remove();
+//         })
+//         $('input[type="text"], input[type="number"], select, textarea').each(function () {
+//             $(this).prop('disabled', true);
+//         })
+//     }
+// }
 $(document).ready(function () {
 
-    if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
-        $('#reset-form, #reopen-btn, #close-btn, #submit-btn').each(function () {
-            $(this).remove();
-        })
-    }
-
+    // validateUIButton();
     // Check if the currentId is the same as the previousId
     if (currentId != null) {
         showDetailModalForVacancyId(currentId);
@@ -174,13 +194,13 @@ $(document).ready(function () {
                         <ul class="dropdown-menu" id="dropdown-setting${rowID}" aria-labelledby="dropdown-setting${rowID}">
                         <li><a class="dropdown-item show-detail-btn" href="view-vacancy-detail?id=${rowID}">Detail</a></li>`;
                         if (status === 'OPEN') {
-                            if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
                                 dropdown += `<li><a class="dropdown-item close-vacancy" href="close-vacancy?id=${rowID}">Close Vacancy</a></li>`;
-                            }
+                            // }
                         } else {
-                            if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
                                 dropdown += `<li><a class="dropdown-item reopen-vacancy" href="reopen-vacancy-by-id?id=${rowID}">Reopen Vacancy</a></li>`;
-                            }
+                            // }
                         }
                         dropdown += `</ul>
                         </div>`;
