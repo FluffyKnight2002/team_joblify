@@ -24,6 +24,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -35,8 +36,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import static org.mockito.ArgumentMatchers.booleanThat;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +58,7 @@ public class Api {
     private final OfferMailSendedService offerMailSendedService;
 
     @GetMapping("/get-all-user")
-    public DataTablesOutput<User> getAllUsers(DataTablesInput input) {
+    public DataTablesOutput<User> getAllUsers(@Valid DataTablesInput input) {
         System.out.println(input);
         DataTablesOutput<User> user = userRepository.findAll(input);
         firstDaySpecificationUser = new FirstDaySpecificationUser(input);
