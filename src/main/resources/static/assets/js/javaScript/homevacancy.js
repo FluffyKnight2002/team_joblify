@@ -10,7 +10,19 @@ function showLastVacancies() {
         .then(data => {
             console.log("Data received from server:", data);
             // Handle the data received from the server
-            displayVacancies(data); // Assuming you have the displayVacancies function to handle the data
+            if(data.length > 0) {
+                displayVacancies(data); // Assuming you have the displayVacancies function to handle the data
+            }else {
+                const card = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+                </div>
+                <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+                `;
+
+                // Append the card to the container
+                $("#card-container").append(card);
+            }
         })
         .catch(error => console.error('Error fetching vacancies:', error));
 }

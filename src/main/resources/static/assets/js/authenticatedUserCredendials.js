@@ -1,5 +1,6 @@
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+let userRole;
 
 // This event listener will trigger your function when the DOM content is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -30,6 +31,8 @@ async function authenticatedUserData() {
             const [userDetails, passwordMatches] = await response.json();
             console.log(userDetails);
             console.log(passwordMatches);
+
+            userRole = userDetails.user.role;
             
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
@@ -55,7 +58,9 @@ async function authenticatedUserData() {
                     title: 'Caution',
                     message: 'You\'re Still Using Default Password. Please Change Immediately',
                     position: 'topCenter',
-                    backgroundColor: '#f58787'
+                    backgroundColor: '#f58787',
+                    progressBarColor: 'red', // Set the progress bar color to red
+                    theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
                 });
             }
         } else {

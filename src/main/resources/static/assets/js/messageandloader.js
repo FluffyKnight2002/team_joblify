@@ -39,9 +39,6 @@ function actionToVacancy(button) {
         });
     }
 
-    // console.log("FormData : " ,JSON.stringify(formData))
-    //
-    // console.log("FormData : " ,JSON.stringify(formData))
     console.log("Url : ", $('#' + formId).attr('action'));
 
     let bodyData = JSON.stringify(formData);
@@ -52,7 +49,6 @@ function actionToVacancy(button) {
         formData.append('techSkillsString', $('#tech-skills-input').val());
         formData.append('languageSkillsString', $('#language-skills-input').val());
         bodyData = formData;
-        console.warn("TECHSKILL AND LANSKILL", formData.techSkillsString,formData.languageSkillsString);
     }
 
     console.log("Body Data :",bodyData);
@@ -73,10 +69,10 @@ function actionToVacancy(button) {
             .then(response => response.json())
             .then(data => {
 
-                makeAfterRequestSend(data,successMessage,errorMessage);
+                makeAfterRequestSend(formId, data, successMessage, errorMessage);
             })
             .catch(error => {
-                renderCatch();
+                renderCatch(formId, errorMessage);
             });
     }else {
         fetch($('#' + formId).attr('action'), {
@@ -93,16 +89,15 @@ function actionToVacancy(button) {
             )
             .then(response => response.json())
             .then(data => {
-
-                makeAfterRequestSend(data,successMessage,errorMessage);
+                makeAfterRequestSend(formId,data,successMessage,errorMessage);
             })
             .catch(error => {
-                renderCatch();
+                renderCatch(formId,errorMessage);
             });
     }
 }
 
-function makeAfterRequestSend(data,successMessage,errorMessage) {
+function makeAfterRequestSend(formId, data,successMessage,errorMessage) {
     if (data === true) {
         // Handle the success response and update the message-con modal for success
         $('#message-con').html('<p class="text-white">' + successMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Okay</button></div>');
@@ -143,7 +138,7 @@ function makeAfterRequestSend(data,successMessage,errorMessage) {
     }
     hideMessageModalAfterDelay();
     // To change back form
-    if(formId == 'reopen-form'){
+    if(formId === 'reopen-form'){
         $('#submit-btn')
             .attr('data-form-id', 'update-form')
             .attr('data-warning-message', 'Your vacancy will be updated.')
@@ -164,7 +159,7 @@ function makeAfterRequestSend(data,successMessage,errorMessage) {
     console.log("ErrorMessage : ",errorMessage);
 }
 
-function renderCatch(errorMessage) {
+function renderCatch(formId,errorMessage) {
     if(formId === 'upload-form') {
 
         console.log("Upload form !!!!")
@@ -206,10 +201,12 @@ function hideMessageModalAfterDelay() {
 
     if(typeof techSkillsInput  != undefined) {
         techSkillsInput = new Set;
+        $('#tech-skills-input').empty();
     }
 
     if(typeof languageSkillsInput != undefined) {
         languageSkillsInput = new Set;
+        $('#language-skills-input').empty();
     }
 
     if($('#detailModal').length > 0) {
@@ -281,7 +278,67 @@ $(document).ready(function () {
             console.log("JOB APPLY")
             validateFormStatus();
         }
+        if ($('form#update-form').length > 0) {
+            formStatus = vacancyInfoSameOrNot();
+        }
+    }
 
+    function vacancyInfoSameOrNot() {
+        console.log("Update Form");
+        const formElement = document.querySelector('form#update-form');
+        console.log("Form Element :",formElement)
+        const formElementData = new FormData(formElement);
+
+        console.log("FormDataString ", JSON.stringify(formElementData));
+        console.log("CurrentDataString", JSON.stringify(currentData)); // Make sure to stringify currentData
+
+        // Compare the JSON strings
+        if (isDataSame(formElementData, currentData)) {
+            // Display a notification using iziToast.js
+            iziToast.show({
+                title: '<i class="bi bi-exclamation-triangle-fill"></i>',
+                message: 'No changes were made. Vacancy information are still the same.',
+                position: 'topCenter',
+                timeout: 3000,
+                backgroundColor: 'rgb(255,191,140)',
+                progressBarColor: 'red', // Set the progress bar color to red
+                theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
+                onClosed: function () {
+                }
+            });
+            return false;
+        }
+
+        return true;
+
+        function isDataSame(formElement, currentData) {
+            // Assuming currentData is already parsed from JSON
+            console.log(parseInt(formElement.get('post')));
+            console.log(currentData.post)
+            console.log(reconvertToString(formElement.get('type')));
+            console.log(currentData.type)
+            console.log(reconvertToString(formElement.get('lvl')))
+            console.log(currentData.lvl)
+            console.log(formElement.get('salary'));
+            console.log(reconvertToString(formElement.get('onSiteOrRemote')))
+            console.log(formElement.get('descriptions'))
+            if (
+                parseInt(formElement.get('post')) === currentData.post &&
+                reconvertToString(formElement.get('type')).toLowerCase() === currentData.type.toLowerCase() &&
+                reconvertToString(formElement.get('lvl')).toLowerCase() === currentData.lvl.toLowerCase() &&
+                parseInt(formElement.get('salary')) === currentData.salary &&
+                reconvertToString(formElement.get('onSiteOrRemote')).toLowerCase() === currentData.onSiteOrRemote.toLowerCase() &&
+                formElement.get('descriptions') === currentData.descriptions &&
+                formElement.get('responsibilities') === currentData.responsibilities &&
+                formElement.get('requirements') === currentData.requirements &&
+                formElement.get('preferences') === currentData.preferences &&
+                formElement.get('address') === currentData.address &&
+                formElement.get('note') === currentData.note
+            ) {
+                return true;
+            }
+            return false;
+        }
     }
 
     function showFeedback(inputElement) {
@@ -299,8 +356,6 @@ $(document).ready(function () {
         inputElement.removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
         inputElement.css('background-image', 'none');
         inputElement.closest('.mb-3').find('.feedback-message').css('display','none');
-        // Clear feedback message here
-        // Example: inputElement.siblings('.feedback-message').text('');
     }
 
     // Validate inputs on input change

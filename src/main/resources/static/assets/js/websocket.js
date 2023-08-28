@@ -155,13 +155,13 @@ function handleNewNotification(notification) {
 
     // Display a notification using iziToast.js
     iziToast.show({
-        title: 'Notification :',
-        message: notification.message,
+        title: '<div class="text-dark"><i class="bi bi-app-indicator"></i></div>',
+        message: '<p className="text-dark fw-bolder">'+notification.message+'</p>',
         position: 'bottomRight',
         timeout: 5000,
+        progressBar: false,
         backgroundColor: '#f8f8f8',
         onClosed: function () {
-            // You can add a callback function here if needed
         }
     });
 }

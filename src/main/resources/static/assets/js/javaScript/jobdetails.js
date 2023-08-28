@@ -10,7 +10,18 @@ function fetchJobsAndRenderUI() {
         // Assuming 'data' is an array of job objects with properties like title, applicants, jobType, salary, postedTime, location, and closeDate
         // Loop through the job data to create job cards
             $("#job-list-container").empty();
-            console.log($('#job-list-container'))
+            if(data.length == 1) {
+                const card = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+                </div>
+                <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+                `;
+
+                // Append the card to the container
+                $("#job-list-container").append(card);
+            }
+            console.log(data.length)
             data.forEach(job => {
                 const jobCard = `
                 <div class="card">
@@ -26,13 +37,13 @@ function fetchJobsAndRenderUI() {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Post(Job type)"><i
                                 class='bx bxs-briefcase'></i> ${job.post}
-                            (${job.type})</span>
+                            (${reconvertToString(job.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
                             ${convertToLakhs(job.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                              ${timeAgo(job.updatedTime)}
+                              ${timeAgo(job.openDate)}
                             </span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Location">
@@ -90,7 +101,7 @@ function fetchJobDetails(id) {
                     <div class="detail-header">
                         <div class="title-sesion d-flex justify-content-between">
                             <h4 class="default-font text-start" id="position-name">${data.position}</h4>
-                            <h6 class="text-muted"><i class='bx bx-time'></i>${timeAgo(data.updatedTime)}</h6>
+                            <h6 class="text-muted"><i class='bx bx-time'></i>${timeAgo(data.openDate)}</h6>
                         </div>
                         <div>
                             <h6 class="text-danger" style="font-size: 0.7rem">Close in : ${changeTimeFormat(data.closeDate)}</h6>
@@ -343,3 +354,14 @@ $(document).ready(function (){
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+
+function simulateEnterKeyPress(button) {
+
+    const closestFormFloating = button.closest('.form-floating');
+    const inputField = closestFormFloating.find('input[type="text"]');
+
+    if (inputField.length > 0) {
+        // Simulate an Enter key press event on the input field
+        inputField.trigger($.Event('keyup', { keyCode: 13 }));
+    }
+}

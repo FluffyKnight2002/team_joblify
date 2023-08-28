@@ -284,6 +284,8 @@
 							<input type="text" class="form-control" id="techSkills" placeholder="TechSkills"
 								   oninput="event.stopImmediatePropagation();validateTechSkills()">
 							<label for="techSkills" class="ms-2">Technical Skills</label>
+							<button class="btn btn-sm btn-primary text-white position-absolute btn-adjusted"
+									type="button" onclick="simulateEnterKeyPress($(this))">Add</button>
 							<div class="feedback-message text-danger">Technical skills can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
@@ -294,6 +296,8 @@
 							<input type="text" class="form-control" id="languageSkills" placeholder="LanguageSkills"
 								   oninput="event.stopImmediatePropagation();validateLanguageSkills()">
 							<label for="languageSkills" class="ms-2">Language Skills</label>
+							<button class="btn btn-sm btn-primary text-white position-absolute btn-adjusted"
+									type="button" onclick="simulateEnterKeyPress($(this))">Add</button>
 							<div class="feedback-message text-danger">Language skills can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>

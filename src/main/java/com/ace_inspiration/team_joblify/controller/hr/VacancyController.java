@@ -14,7 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class VacancyController {
         vacancyDto.setCreatedUserId(myUserDetails.getUserId());
         vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
         // For close date plus 30
-        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setOpenDate(LocalDateTime.now());
         vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
         vacancyDto.setStatus("OPEN");
         VacancyInfo vacancyInfo = vacancyInfoService.createdVacancyInfo(vacancyDto);
@@ -58,7 +58,7 @@ public class VacancyController {
         vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
         vacancyDto.setStatus("OPEN");
         // For close date plus 30
-        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setOpenDate(LocalDateTime.now());
         vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
         VacancyInfo vacancyInfo = vacancyInfoService.reopenVacancyInfo(vacancyDto);
         if(vacancyInfo != null) {
@@ -80,7 +80,7 @@ public class VacancyController {
         vacancyDto.setUpdatedUserId(myUserDetails.getUserId());
         vacancyDto.setStatus("OPEN");
         // For close date plus 30
-        vacancyDto.setOpenDate(LocalDate.now());
+        vacancyDto.setOpenDate(LocalDateTime.now());
         vacancyDto.setCloseDate(vacancyDto.getOpenDate().plusDays(30));
         vacancyDto.setId(Long.valueOf(id));
         System.out.println("ID : " + vacancyDto.getId());
@@ -101,17 +101,17 @@ public class VacancyController {
         return "all-vacancies";
     }
 
-    @GetMapping("/view-vacancy-detail")
-    public String showAllVacancyPage(@RequestParam("id")long id, Model model) {
-        VacancyDto vacancyDto = vacancyInfoService.selectVacancyById(id);
-        System.out.println("Vacancy ID : " + vacancyDto.getVacancyId());
-        System.out.println(vacancyDto.getPosition());
-        System.out.println(vacancyDto.getDescriptions());
-        System.out.println(vacancyDto.getLvl());
-        model.addAttribute("currentPage" , "/show-all-vacancies-page");
-        model.addAttribute("vacancy", vacancyInfoService.selectVacancyById(id));
-        return "vacancy-details";
-    }
+//    @GetMapping("/view-vacancy-detail")
+//    public String showAllVacancyPage(@RequestParam("id")long id, Model model) {
+//        VacancyDto vacancyDto = vacancyInfoService.selectVacancyById(id);
+//        System.out.println("Vacancy ID : " + vacancyDto.getVacancyId());
+//        System.out.println(vacancyDto.getPosition());
+//        System.out.println(vacancyDto.getDescriptions());
+//        System.out.println(vacancyDto.getLvl());
+//        model.addAttribute("currentPage" , "/show-all-vacancies-page");
+//        model.addAttribute("vacancy", vacancyInfoService.selectVacancyById(id));
+//        return "vacancy-details";
+//    }
 
     @PostMapping("/update-vacancy")
     @ResponseBody

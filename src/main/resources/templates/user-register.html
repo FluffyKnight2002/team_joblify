@@ -327,16 +327,16 @@
 
             const confirmationModal = `
             <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-body text center" style="background: #0c233d">
+                        <div class="modal-body text center" style="max-width: 300px;background: #0c233d">
                             <div class="loader"></div>
                             <div class="loader-txt text-center">
-                                <h3 class="text-white">Are you sure to Create New Account?</h3>
-
+                                <h3 class="text-white">Are you sure?</h3>
+                                    <p class="text-white text-center">You want to register a user.</p>
                                 <div>
-                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
-                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-secondary mx-1" data-bs-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
@@ -391,8 +391,8 @@
                 const reset = `<div class="modal-body text center" style="background: #0c233d">
                             <div class="loader"></div>
                             <div class="loader-txt text-center">
-                                <h3 class="text-white">Are you sure to Create New Account?</h3>
-
+                                <h3 class="text-white">Are you sure?</h3>
+                                    <p class="text-white text-center">You want to register a new user.</p>
                                 <div>
                                     <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
                                     <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
@@ -404,7 +404,7 @@
 
             $(document).on("click", "#close", function () {
                 
-                resetModal();
+                // resetModal();
             });
 
             $(document).on("click", "#confirmYes", function () {

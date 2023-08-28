@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.btn-adjusted {
+    /*transform: translate(var(--translateX), var(--translateY));*/
+    top: 26%;
+    right: 0%;
+}
+
 /* Custom styling for the autocomplete dropdown */
 .ui-autocomplete {
     max-height: 200px; /* Set a maximum height for the dropdown */
