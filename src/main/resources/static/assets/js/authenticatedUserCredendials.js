@@ -30,7 +30,7 @@ async function authenticatedUserData() {
             const [userDetails, passwordMatches] = await response.json();
             console.log(userDetails);
             console.log(passwordMatches);
-            
+            console.log(userDetails.user.role)
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
@@ -44,7 +44,7 @@ async function authenticatedUserData() {
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
-
+            const sendMail=document.getElementById('mail-1').hidden;
             if (loader) {
                 loader.remove();
             }
@@ -58,9 +58,13 @@ async function authenticatedUserData() {
                     backgroundColor: '#f58787'
                 });
             }
+            if(userDetails.user.role!=='DEFAULT_HR' || userDetails.user.role!=='SENIOR_HR'){
+                sendMail.show
+            }
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }
+
     } catch (error) {
         console.error('An error occurred while fetching authenticated user data:', error);
     }

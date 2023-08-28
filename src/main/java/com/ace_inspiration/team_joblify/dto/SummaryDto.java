@@ -74,4 +74,9 @@ public class SummaryDto {
 	   private List<String> interviewStage;
 	   
 	   private String interviewType;
+
+//	   private List<String> languageSkill;
+//
+//	   private List<String> techSkill;
+
 }

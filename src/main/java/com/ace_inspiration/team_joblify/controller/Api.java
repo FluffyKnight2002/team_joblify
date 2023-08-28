@@ -161,7 +161,7 @@ public class Api {
     public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto, Authentication authentication) {
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
 
-        if (email == true) {
+        if (email) {
             interService.saveInterview(emailTemplateDto);
             candidateService.stage(emailTemplateDto.getCanId());
             return true;
@@ -175,8 +175,14 @@ public class Api {
         MyUserDetails myuser = (MyUserDetails) authentication.getPrincipal();
         emailTemplateDto.setUserId(myuser.getUserId());
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
-        offerMailSendedService.setDataInOfferMail(emailTemplateDto);
-        return email;
+        if(email==true){
+            offerMailSendedService.setDataInOfferMail(emailTemplateDto);
+            candidateService.offer(emailTemplateDto.getCanId());
+            return true;
+        }else{
+           return false;
+        }
+
     }
 
     @PostMapping("/otp-submit")
