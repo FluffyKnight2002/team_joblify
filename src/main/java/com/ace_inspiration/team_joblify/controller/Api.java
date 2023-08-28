@@ -209,7 +209,7 @@ public class Api {
 
     }
 
-    @PostMapping("/all-department")
+    @GetMapping("/all-department")
     public List<Department> allDepartment() {
         return departmentService.selectAllDepartment();
     }
