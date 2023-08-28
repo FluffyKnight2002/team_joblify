@@ -24,14 +24,14 @@ public class JasperReportController {
 	@Autowired
 	private ReportService reportService;
 
-	@GetMapping("/all_candidates/{format}")
+	@PostMapping("/all_candidates/{format}")
 	public ResponseEntity<byte[]> generateReportCandidates(@PathVariable String format) throws JRException, IOException {
 		
 		return reportService.allCandidate(format);
 
 	}
 
-	@GetMapping("/interview_process/{format}")
+	@PostMapping("/interview_process/{format}")
 	public ResponseEntity<byte[]> generateReportInterview(@PathVariable String format) throws JRException, IOException {
 
 		return reportService.interviewProcess(format);
