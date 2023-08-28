@@ -42,20 +42,35 @@ public class SecurityConfig {
                         rememberMe -> rememberMe
                                 .rememberMeServices(customRememberMeServices())
                                 .key(rememberMeKey)
-                                // .tokenValiditySeconds(84600)
-                                // .rememberMeCookieName("remember-me-cookie")
-                                // .rememberMeParameter("remember-me")
-                                // .userDetailsService(myUserDetailsService)
+                                
                 )
                 .authorizeHttpRequests(authorize->authorize
-                .requestMatchers("/all-user-list").hasAuthority(Role.DEFAULT_HR.name())
+                
                         .requestMatchers("/assets/**",
                                 "/assets/css/**",
                                 "/assets/images/**",
                                 "/assets/js/**",
                                 "/assets/vendors/**").permitAll()
-                        .requestMatchers("/**", "/ws/**").permitAll()
+
+                        .requestMatchers("/ws/**", "/change-password", "/sendOTP", "/otp-submit", "/search-email",
+                        "/find-phonenumber-by-email", "/error", "/vacancy/show-last", "/vacancy/show-all", "/vacancy/show-other",
+                        "/vacancy/job-detail", "/vacancy/filter", "/", "/contact-us", "/job-detail", "/all-jobs", "/400", "/401", "/403",
+                        "/404", "/405", "/500", "502", "/503", "/504", "/apply-job", "/titles", "/departments", "/fetch-titles", "/fetch-departments",
+                        "/fetch-address", "/login", "/password-change", "/forgot-password-form", "/otp-authentication-form", "/email-check-form"
+                        ).permitAll()
+
+                        .requestMatchers("/user-register", "/all-user-list", "/get-all-user", "/send-invite-email", "/send-offer-mail",
+                        "/suspend", "/activate", "/changeInterview").hasAnyAuthority(Role.DEFAULT_HR.name(), Role.SENIOR_HR.name())
+
+                        .requestMatchers("/show-upload-vacancy-form", "/upload-vacancy", "/reopen-vacancy", "/reopen-vacancy-by-id", "/update-vacancy", "/close-vacancy"
                         
+                        ).hasAnyAuthority(Role.DEFAULT_HR.name(), Role.SENIOR_HR.name(), Role.JUNIOR_HR.name())
+                        
+                        .requestMatchers("/vacancy/count", "/vacancy/show-all-data", "/allCandidate", "/allPositions", "/changStatus",
+                        "/seeMore", "/dashboard", "/view-summaryinfo", "/process", "/getYear", "/interview-process", "/candidate-view-summary",
+                        "/user-profile-edit", "/show-all-vacancies-page", "/all_candidates/**", "/interview_process/**", "/notifications/**"
+                        ).authenticated()
+
                         .anyRequest().authenticated()
                 )
                 

@@ -5,11 +5,9 @@ import com.ace_inspiration.team_joblify.config.FirstDaySpecificationUser;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
-import com.ace_inspiration.team_joblify.entity.Department;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-import com.ace_inspiration.team_joblify.entity.Role;
-import com.ace_inspiration.team_joblify.entity.User;
+import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.InterviewRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
@@ -24,6 +22,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -35,8 +34,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import static org.mockito.ArgumentMatchers.booleanThat;
 
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +56,7 @@ public class Api {
     private final OfferMailSendedService offerMailSendedService;
 
     @GetMapping("/get-all-user")
-    public DataTablesOutput<User> getAllUsers(DataTablesInput input) {
+    public DataTablesOutput<User> getAllUsers(@Valid DataTablesInput input) {
         System.out.println(input);
         DataTablesOutput<User> user = userRepository.findAll(input);
         firstDaySpecificationUser = new FirstDaySpecificationUser(input);
@@ -160,11 +157,19 @@ public class Api {
 
     @PostMapping("/send-invite-email")
     public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
 
-        if (email == true) {
+        if (email) {
             interService.saveInterview(emailTemplateDto);
             candidateService.stage(emailTemplateDto.getCanId());
+
+            SummaryDto summaryDto = candidateService.findByid(emailTemplateDto.getCanId());
+
+            String message = myUserDetails.getName() + " send Interview Invite Mail to " + emailTemplateDto.getName();
+            String link = "/candidate-view-summary?position=" + summaryDto.getApply_position();
+            notificationCreator.createNotification(myUserDetails, message, link);
+
             return true;
         } else {
             return false;
@@ -176,8 +181,14 @@ public class Api {
         MyUserDetails myuser = (MyUserDetails) authentication.getPrincipal();
         emailTemplateDto.setUserId(myuser.getUserId());
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
-        offerMailSendedService.setDataInOfferMail(emailTemplateDto);
-        return email;
+        if(email){
+            offerMailSendedService.setDataInOfferMail(emailTemplateDto);
+            candidateService.offer(emailTemplateDto.getCanId());
+            return true;
+        }else{
+           return false;
+        }
+
     }
 
     @PostMapping("/otp-submit")

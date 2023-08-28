@@ -2,7 +2,7 @@ const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("con
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
 
 // This event listener will trigger your function when the DOM content is loaded
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",  async function () {
     authenticatedUserData();
 
     fetch('/getCookies')
@@ -30,7 +30,9 @@ async function authenticatedUserData() {
             const [userDetails, passwordMatches] = await response.json();
             console.log(userDetails);
             console.log(passwordMatches);
-            
+            console.log(userDetails.user.role)
+            userRole = await userDetails.user.role
+            console.log(userRole)
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
@@ -44,7 +46,6 @@ async function authenticatedUserData() {
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
-
             if (loader) {
                 loader.remove();
             }
@@ -58,9 +59,13 @@ async function authenticatedUserData() {
                     backgroundColor: '#f58787'
                 });
             }
+
+
+
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }
+
     } catch (error) {
         console.error('An error occurred while fetching authenticated user data:', error);
     }

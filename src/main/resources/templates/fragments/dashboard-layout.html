@@ -40,7 +40,7 @@
                         <span>Vacancies </span>
                     </a>
                     <ul class="submenu ">
-                        <li class="submenu-item ">
+                        <li class="submenu-item " sec:authorize="hasAuthority('DEFAULT_HR') or hasAuthority('SENIOR_HR') or hasAuthority('JUNIOR_HR')">
                             <a th:href="show-upload-vacancy-form">Upload</a>
                         </li>
                         <li class="submenu-item ">
@@ -66,15 +66,15 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item  has-sub">
+                <li class="sidebar-item  has-sub" th:classappend="${currentPage == '/interview-process' ? 'active' : (currentPage == '/candidate-view-summary') ? 'active' : ''}">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-clipboard-data"></i>
                         <span>Interviews</span>
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">
-                            <a th:href="@{/interviewProcess}">View position & candidate</a>
-                            <a th:href="@{/CandidateViewSummary}">View status details</a>
+                            <a th:href="@{/interview-process}">View position & candidate</a>
+                            <a th:href="@{/candidate-view-summary}">View status details</a>
                         </li>
                     </ul>
                 </li>
