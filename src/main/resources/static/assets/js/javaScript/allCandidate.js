@@ -1,16 +1,8 @@
 $(document).ready(function() {
 	$('#data').summernote({
-		toolbar: [
-			// [groupName, [list of button]]
-			['style', ['bold', 'italic', 'underline', 'clear']],
-			['font', ['strikethrough', 'superscript', 'subscript']],
-			['fontsize', ['fontsize']],
-			['color', ['forecolor']],
-			['para', ['ul', 'ol', 'paragraph']],
-			['height', ['height']]
-		], height: 300
+		height: 'auto'
 	});
-	$('#data_1').summernote();
+	$('#data_1').summernote({height: 'auto'});
 
 });
 
@@ -347,7 +339,7 @@ $(document).ready(function() {
 				if (response.ok) {
 					iziToast.success({
 						title:'Success',
-						position:'topCenter', 
+						position:'topCenter',
 						message:'Success Change Stataus',
 					})
 				} else {
@@ -487,7 +479,7 @@ $(document).ready(function() {
 
 	//Filter end	
 
-	//dowload starst
+	//CV dowload starst
 	var downloadButton = document.querySelector('#download');
 
 	downloadButton.addEventListener('click', async function() {
@@ -527,7 +519,63 @@ $(document).ready(function() {
 			console.log("Select at least one checkbox.");
 		}
 	});
-	//download end
+	//CV download end
+
+	//Pdf download Start
+	$('#pdfDownload').on('click',function (){
+		fetch('/all_candidates/pdf',{
+			method:'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				[csrfHeader]: csrfToken
+
+		}
+	})	.then(response => {
+			if (response.ok) {
+				iziToast.success({
+					title:'Success',
+					position:'topCenter',
+					message:'Success Download PDF',
+				})
+			} else {
+				iziToast.error({
+					title:'Error',
+					position:'topCenter',
+					message:'Not Download PDF',
+				})
+
+			}
+		});
+	})
+	//Pdf Download End
+
+	//excel download start
+	$('#excelDownload').on('click',function (){
+		fetch('/all_candidates/excel',{
+			method:'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				[csrfHeader]: csrfToken
+
+			}
+		})	.then(response => {
+			if (response.ok) {
+				iziToast.success({
+					title:'Success',
+					position:'topCenter',
+					message:'Success Download excel',
+				})
+			} else {
+				iziToast.error({
+					title:'Error',
+					position:'topCenter',
+					message:'Not Download excel',
+				})
+
+			}
+		});
+	})
+	//excel download end
 
 	$('.cc').keyup(function(data) {
 		if (data.keyCode === 13) {
@@ -590,7 +638,7 @@ function format(d) {
 	return '<div class="slider">' +
 		'<div class="row">' +
 		'<div class="col-md-2">' +
-		'Full name: ' + d.name +
+		'Full Name: ' + d.name +
 		'</div>' +
 		'</div>' +
 		'<div class="row">' +
@@ -611,11 +659,6 @@ function format(d) {
 		'<div class="row">' +
 		'<div class="col-md-2">' +
 		'Level: ' + d.lvl +
-		'</div>' +
-		'</div>' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'language Skill' +d.name+
 		'</div>' +
 		'</div>' +
 		'</div>';
@@ -680,7 +723,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 			$('#message-con').html('' +
 				'<div class="loader"></div>' +
 				'<div class="loader-txt">' +
-				'<h3 class="text-white">Email is Enpty</h3>' +
+				'<h3 class="text-white">Email is Empty</h3>' +
 				'<div>' +
 				`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
 				'</div>');
@@ -758,7 +801,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 			$('#message-con').html('' +
 				'<div class="loader"></div>' +
 				'<div class="loader-txt">' +
-				'<h3 class="text-white">Email is Enpty</h3>' +
+				'<h3 class="text-white">Email is Empty</h3>' +
 				'<div>' +
 				`<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
 				'</div>');
@@ -783,7 +826,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 					[csrfHeader]: csrfToken // Include CSRF token as a request header
 				},
 				body: JSON.stringify(data)
-			}).then(respone =>respone.json(data))
+			}).then(response =>response.json(data))
 				.then(data => {
 					if (data === true) {
 						console.log('Success send to mail');
@@ -883,68 +926,60 @@ triggerTabList.forEach(triggerEl => {
 function getofferMail(type,name){
 	const custom='';
 	var offermail = `
-<b>Dear ${name}.</b>
+<b>Dear ${name}.</b></br>
  
-We are pleased to inform you that you are appointed as Software Engineer in Banking and Finance Department of ACE Data Systems Ltd. Please see your entitlement information detail and brief HR rule of company in below.
+We are pleased to inform you that you are appointed as Software Engineer in Banking and Finance Department of ACE Data Systems Ltd. Please see your entitlement information detail and brief HR rule of company in below.</br>
 
-Entitlement Pay Information
+Entitlement Pay Information</br>
 
-Joined Start Date           	– 
+Joined Start Date           	– </br>
 
-Position                         	– Software Engineer
+Position                         	– Software Engineer</br>
 
-Basic Pay                      	– 
+Basic Pay                      	– </br>
 
-Project Allowance		– 	
+Project Allowance		– 	</br>
 
-Meal + Transportation Allowance   – 3000 * (Working Days per Month) = Normally 60, 000 MMK
+Meal + Transportation Allowance   – 3000 * (Working Days per Month) = Normally 60, 000 MMK</br>
 
-Note for probation period:
+Note for probation period:</br>
+</br>
+*After probation and if you are selected, you must work minimum 2 years contract at ACE</br>
+*If you wish to resign in violation of within 2 years Agreement, you must give three months’ notice and your two months’ current net salary must be refunded.   </br>
+*No leaves are entitled in the probation period.</br>
+*Any leave must be informed in advance by phone.</br>
+*You must inform us 1 month in advance to resign.</br>
+*ACE will inform you 1 month in advance if we want to terminate.</br>
+*You must learn all technical knowledge required by project(.NET, Java or any other technologies)</br>
+</br>
 
-*After probation and if you are selected, you must work minimum 2 years contract at ACE
-*If you wish to resign in violation of within 2 years Agreement, you must give three months’ notice and your two months’ current net salary must be refunded.   
-*No leaves are entitled in the probation period.
-*Any leave must be informed in advance by phone.
-*You must inform us 1 month in advance to resign.
-*ACE will inform you 1 month in advance if we want to terminate.
-*You must learn all technical knowledge required by project(.NET, Java or any other technologies)
+ </br>
+HR Rule of Company (Brief)</br>
 
-
- 
-HR Rule of Company (Brief)
-
-(1)   Working Hour            	: From 9:00 AM To 06:00 PM
-                                                                          : From Monday to Friday (Except gazette holidays)
+(1)   Working Hour            	: From 9:00 AM To 06:00 PM</br>
+                                                                          : From Monday to Friday (Except gazette holidays)</br>
 (2)  Leave Entitlement (After probation period)
 
-a.     Earn Leave                  	: 10 days per year after one year service history
-                                                                         (Need to apply one month in advance)
+a.     Earn Leave                  	: 10 days per year after one year service history</br>
+                                                                         (Need to apply one month in advance)</br>
 
 
-b.     Casual Leave              	: 10 days per year after probation period 
-                                                                        (Maximum 3 days per Month)
+b.     Casual Leave              	: 10 days per year after probation period </br>
+                                                                        (Maximum 3 days per Month)</br>
 
-c.     Medical Leave                : 30 days per year (With approved medical certification)
+c.     Medical Leave                : 30 days per year (With approved medical certification)</br>
 
 
-(3)   Resignation after Employment Period     :          
+(3)   Resignation after Employment Period     :      </br>    
 
-a.     The employee shall give not less than three months written notice to the Employer for his/her resignation.
+a.     The employee shall give not less than three months written notice to the Employer for his/her resignation.</br>
 
-b.     In case the employee for any reason, leave the services of the Company before the agreement period then employee shall pay 3 times of the current net salary.
+b.     In case the employee for any reason, leave the services of the Company before the agreement period then employee shall pay 3 times of the current net salary.</br>
 
-(4)   Confidentiality                                        :          
+(4)   Confidentiality       </br>                                 :          
 
 a.     The employee agrees not to disclose any of Company’s confidential information, Company’s trademarks or knowledge pertaining to the business of the Company during or after the employment.<br>
-    <form action="http://localhost:8080/reject?id=${id}" method="GET" >
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
-</form> <br>
- <form action="http://localhost:8080/accept?id=${id}" method="GET" >
 
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
-</form>
 `
 	return (type === 'offer_mail') ? offermail : custom;
 
@@ -965,15 +1000,7 @@ function getEmailContent(type, name,id) {
         <a href="https://zoom.us/j/92191528025?pwd=K1BMUzR4M0hQZDJqQm1DUWxsRTN3dz09">Zoom Meeting Link</a><br>
         Meeting ID: 921 9152 8025<br>
         Passcode: 178426<br>
-      <form action="http://localhost:8080/reject?id=${id}" method="GET" >
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Reject" fdprocessedid="fspy8e">
-</form> <br>
- <form action="http://localhost:8080/accept?id=${id}" method="GET" >
-
-      <input type="hidden" value="${id}" name="id">
-       <input type="submit" style="background-color:red"  value="Accept" fdprocessedid="fspy8e">
-</form>
+ 
     `;
 
 	const offlineText = `

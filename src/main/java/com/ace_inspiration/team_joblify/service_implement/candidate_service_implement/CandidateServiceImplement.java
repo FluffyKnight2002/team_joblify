@@ -137,6 +137,15 @@ public class CandidateServiceImplement implements CandidateService{
 	            entityManager.persist(candidate); // Save the updated candidate entity
 	        }
 	}
+    @Override
+    public void offer(long id){
+        Candidate candidate = entityManager.find(Candidate.class, id);
+        if (candidate != null) {
+            System.err.println("herrrrrrrrrrrrrrr");
+            candidate.setInterviewStatus(Status.OfferMail); // Set the new status value
+            entityManager.persist(candidate); // Save the updated candidate entity
+        }
+    }
 
 	@Override
 	@Transactional

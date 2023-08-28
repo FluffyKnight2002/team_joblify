@@ -176,8 +176,14 @@ public class Api {
         MyUserDetails myuser = (MyUserDetails) authentication.getPrincipal();
         emailTemplateDto.setUserId(myuser.getUserId());
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
-        offerMailSendedService.setDataInOfferMail(emailTemplateDto);
-        return email;
+        if(email==true){
+            offerMailSendedService.setDataInOfferMail(emailTemplateDto);
+            candidateService.offer(emailTemplateDto.getCanId());
+            return true;
+        }else{
+           return false;
+        }
+
     }
 
     @PostMapping("/otp-submit")

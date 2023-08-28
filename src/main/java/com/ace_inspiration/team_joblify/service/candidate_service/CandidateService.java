@@ -22,4 +22,5 @@ public interface CandidateService {
     void stage(long id);
     List<Candidate> getFile(List<Long> id);
 
+    void offer(long id);
 }
