@@ -7,6 +7,7 @@ $(document).ready(function() {
 });
 
 var table;
+
 var currentId = new URLSearchParams(window.location.search);
 var id = currentId.get("viId");
 var dname = currentId.get(decodeURIComponent("name"));
@@ -17,7 +18,31 @@ var postId = currentId.get("postId");
 var ccMails = [];
 var updatedString = null;
 var concatenatedValue = null;
-$(document).ready(function() {
+let role;
+
+$(document).ready( async function() {
+	const isHidden = document.getElementById('second');
+	const response = await fetch('/authenticated-user-data', {
+		method: 'POST',
+		headers: {
+			[csrfHeader]: csrfToken
+		}
+	});
+
+	if (response.ok) {
+		const [userDetails, passwordMatches] = await response.json();
+		role = await userDetails.user.role;
+
+		if(role==='DEFAULT_HR' || role==='SENIOR_HR'){
+			document.getElementById('second').hidden = false;
+		}else{
+			console.log(isHidden)
+			document.getElementById('second').hidden = true;
+
+		}
+	}
+
+
 
 	$('#emailModal').on('show.bs.modal', function() {
 		// Reset specific input fields, selects, and textarea inside the form
@@ -510,6 +535,8 @@ $(document).ready(function() {
 				a.download = filename;
 				document.body.appendChild(a);
 				a.click();
+				$('#selectAll').prop('checked', false);
+				$('.ck').prop('checked', false);
 				table.ajax.reload();
 			} catch (error) {
 				console.error('Fetch error:', error);
@@ -521,60 +548,54 @@ $(document).ready(function() {
 	});
 	//CV download end
 
-	//Pdf download Start
-	$('#pdfDownload').on('click',function (){
-		fetch('/all_candidates/pdf',{
-			method:'POST',
-			headers: {
-				'Content-Type': 'application/json;charset=utf-8',
-				[csrfHeader]: csrfToken
-
-		}
-	})	.then(response => {
-			if (response.ok) {
-				iziToast.success({
-					title:'Success',
-					position:'topCenter',
-					message:'Success Download PDF',
-				})
-			} else {
-				iziToast.error({
-					title:'Error',
-					position:'topCenter',
-					message:'Not Download PDF',
-				})
-
-			}
-		});
-	})
-	//Pdf Download End
-
-	//excel download start
-	$('#excelDownload').on('click',function (){
-		fetch('/all_candidates/excel',{
-			method:'POST',
-			headers: {
-				'Content-Type': 'application/json;charset=utf-8',
-				[csrfHeader]: csrfToken
-
-			}
-		})	.then(response => {
-			if (response.ok) {
-				iziToast.success({
-					title:'Success',
-					position:'topCenter',
-					message:'Success Download excel',
-				})
-			} else {
-				iziToast.error({
-					title:'Error',
-					position:'topCenter',
-					message:'Not Download excel',
-				})
-
-			}
-		});
-	})
+	// //Pdf download Start
+	// $('#pdfDownload').on('click',function (){
+	// 	fetch('/all_candidates/pdf')
+	// 		.then(response => {
+	// 		if (response.ok) {
+	// 			iziToast.success({
+	// 				title:'Success',
+	// 				position:'topCenter',
+	// 				message:'Success Download PDF',
+	// 			})
+	// 		} else {
+	// 			iziToast.error({
+	// 				title:'Error',
+	// 				position:'topCenter',
+	// 				message:'Not Download PDF',
+	// 			})
+	//
+	// 		}
+	// 	});
+	// })
+	// //Pdf Download End
+	//
+	// //excel download start
+	// $('#excelDownload').on('click',function (){
+	// 	fetch('/all_candidates/excel',{
+	// 		method:'POST',
+	// 		headers: {
+	// 			'Content-Type': 'application/json;charset=utf-8',
+	// 			[csrfHeader]: csrfToken
+	//
+	// 		}
+	// 	})	.then(response => {
+	// 		if (response.ok) {
+	// 			iziToast.success({
+	// 				title:'Success',
+	// 				position:'topCenter',
+	// 				message:'Success Download excel',
+	// 			})
+	// 		} else {
+	// 			iziToast.error({
+	// 				title:'Error',
+	// 				position:'topCenter',
+	// 				message:'Not Download excel',
+	// 			})
+	//
+	// 		}
+	// 	});
+	// })
 	//excel download end
 
 	$('.cc').keyup(function(data) {
@@ -675,9 +696,10 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 	$('#emailModal .candidatEmail').val(row.email);
 	$("#emailModal .userEmail").val(row.email);
 	$("#emailModal #candidate-id").val(row.id);
+	$("#emailModal #userName").val(row.name);
 	$('#offer-Email-Modal #to_1').val(row.email);
 	$('#offer-Email-Modal .vacancy_id').val(row.viId);
-	
+
 
 	$('#type').on('change',function(){
 		const type=$(this).val();
@@ -716,6 +738,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 		const type = document.getElementById('where');
 		const stage = document.getElementById('interview-status');
 		const canid=document.getElementById('candidate-id');
+		const name=document.getElementById('userName');
 		updateCcMails();
 		if ($('#data').summernote('isEmpty')) {
 
@@ -733,6 +756,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 			hiddenInput.value = document.querySelector('#data').value;
 
 			const data = {
+				name:name.value,
 				to: to.value,
 				ccmail: ccMails,
 				subject: subject.value,
@@ -742,7 +766,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 				status: stage.value,
 				type: type.value,
 				canId: canid.value,
-
+				position: position1
 
 			};
 			try {

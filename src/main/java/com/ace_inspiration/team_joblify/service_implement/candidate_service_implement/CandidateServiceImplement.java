@@ -141,8 +141,8 @@ public class CandidateServiceImplement implements CandidateService{
     public void offer(long id){
         Candidate candidate = entityManager.find(Candidate.class, id);
         if (candidate != null) {
-            System.err.println("herrrrrrrrrrrrrrr");
-            candidate.setInterviewStatus(Status.OfferMail); // Set the new status value
+            System.err.println("herrrrrrrrrrrrrrr"+id);
+            candidate.setSelectionStatus(Status.OfferMail); // Set the new status value
             entityManager.persist(candidate); // Save the updated candidate entity
         }
     }
