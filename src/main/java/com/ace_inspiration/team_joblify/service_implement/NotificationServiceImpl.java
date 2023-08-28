@@ -39,7 +39,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setTime(notificationDto.getTime());
 
         Notification savedNotification = notificationRepository.save(notification);
-        if(notificationDto.getLink().contains("user-profile-edit")) {
+        if(notificationDto.getLink().contains("user-profile-edit") || notificationDto.getLink().contains("candidate-view-summary")) {
             users = new ArrayList<>();
             User currentUser = userRepository.findById(notificationDto.getUserId()).orElseThrow(() -> new NoSuchElementException("No such user."));
             users.add(userRepository.findByRole(Role.DEFAULT_HR).get());

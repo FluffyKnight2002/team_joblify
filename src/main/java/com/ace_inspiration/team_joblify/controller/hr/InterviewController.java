@@ -14,7 +14,7 @@ public class InterviewController {
 	@GetMapping("/interview-process")
 	public String interviewProcessSummary() {
 		
-		return "interviewproces-summary";
+		return "interview-proces-summary";
 	}
 	
 	@GetMapping("/candidate-view-summary")

@@ -7,7 +7,7 @@
 	<meta name="_csrf" th:content="${_csrf.token}" />
 	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Upload Vacancy</title>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
 <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
@@ -62,16 +62,28 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Interview Process Report</h4>
+
+                                <div class="d-flex justify-content-between">
+                                    <h3 class="text-primary mb-5">Interview Process Report</h3>
+                                    <div>
+                                        <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                            <h6>
+                                                <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+                                                   style="background: #1e497b !important;" href="javascript:history.back()">
+                                                    <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                            </h6>
+                                        </nav>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-content">
                                 <div class="table-responsive">
                                 <div class="row">
                                     <div class="col-md-1">
-                                        <button id="pdfDownload" class="image-button" aria-label="Download pdf"></button>
+                                        <a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/interview_process/pdf"></a>
                                     </div>
                                     <div class="col-md-1">
-                                        <button id="excelDownload" class="image-button" aria-label="Download Excel"></button>
+                                        <a id="excelDownload" class="image-button" aria-label="Download Excel" href="/interview_process/excel"></a>
                                     </div>
                                 </div>
                                     <table class="table table-striped mb-0" id="table2">
@@ -102,6 +114,12 @@
             </section>
         </div>
     </div>
+    <!-- Stomp -->
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- SockJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="/assets/js/websocket.js"></script>
     <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
@@ -114,7 +132,8 @@
 	<script src="/assets/ajax/jquery.spring-friendly.js"></script>
 	<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+
     <script src="/assets/js/javaScript/process.js"></script>
 </body>
 

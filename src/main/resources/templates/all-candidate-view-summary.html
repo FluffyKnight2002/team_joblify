@@ -89,7 +89,7 @@
 			<li class="nav-item" role="presentation" id="mail">
 				<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Home</button>
 			</li>
-			<li class="nav-item" role="presentation" id="mail-1">
+			<li class="nav-item" role="presentation" id="second" hidden="true">
 				<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profile</button>
 			</li>
 
@@ -104,8 +104,18 @@
 
 								<div class="card-header">
 
-									<h4 class="card-title">All Candidate's Interview Process</h4>
-
+									<div class="d-flex justify-content-between">
+										<h3 class="text-primary mb-5">All Candidate Interview Process</h3>
+										<div>
+											<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+												<h6>
+													<a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
+													   style="background: #1e497b !important;" href="javascript:history.back()">
+														<i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+												</h6>
+											</nav>
+										</div>
+									</div>
 								</div>
 
 
@@ -175,11 +185,11 @@
 												<p>CV</p>
 											</div>
 											<div class="col-md-1">
-												<button id="pdfDownload" class="image-button" aria-label="Download pdf"></button>
+												<a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/all_candidates/pdf"></a>
 												<p>PDF</p>
 											</div>
 											<div class="col-md-1">
-												<button id="excelDownload" class="image-button" aria-label="Download Excel"></button>
+												<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/all_candidates/excel"></a>
 												<p>Excel</p>
 											</div>
 											</div>
@@ -222,7 +232,8 @@
 			</div>
 
 		</div>
-
+	</div>
+</div>
 		<!-- Modal -->
 		<div class="modal fade" id="seeMoreModal" tabindex="-1"
 			 aria-labelledby="seeMoreLabel" aria-hidden="true">
@@ -293,6 +304,7 @@
 						<form id="send-mail">
 							<input type="hidden" id="candidate-id">
 							<input type="hidden" class="vacancy_id">
+							<input type="hidden" id="userName">
 							<div class="card-body p-md-5">
 								
 								<div class="col-md-4">
@@ -484,18 +496,22 @@
 					<div class="modal-body text-center" id="message-con"
 						 style="background: #0c233d">
 						<div class="loader"></div>
-						<div clas="loader-txt">
+						<div class="loader-txt">
 							<p>Processing....</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
-
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<!-- Stomp -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- SockJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="/assets/js/websocket.js"></script>
 		<script
 				src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+
 		<script src="/assets/js/bootstrap.bundle.min.js"></script>
 		<!-- <script src="/assets/vendors/apexcharts/apexcharts.js"></script> -->
 		<!-- <script src="/assets/js/pages/dashboard.js"></script> -->

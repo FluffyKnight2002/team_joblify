@@ -5,11 +5,9 @@ import com.ace_inspiration.team_joblify.config.FirstDaySpecificationUser;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
+import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
-import com.ace_inspiration.team_joblify.entity.Department;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-import com.ace_inspiration.team_joblify.entity.Role;
-import com.ace_inspiration.team_joblify.entity.User;
+import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.InterviewRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.DepartmentService;
@@ -159,11 +157,19 @@ public class Api {
 
     @PostMapping("/send-invite-email")
     public boolean sendInviteEmail(@RequestBody EmailTemplateDto emailTemplateDto, Authentication authentication) {
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
 
         if (email) {
             interService.saveInterview(emailTemplateDto);
             candidateService.stage(emailTemplateDto.getCanId());
+
+            SummaryDto summaryDto = candidateService.findByid(emailTemplateDto.getCanId());
+
+            String message = myUserDetails.getName() + " send Interview Invite Mail to " + emailTemplateDto.getName();
+            String link = "/candidate-view-summary?position=" + summaryDto.getApply_position();
+            notificationCreator.createNotification(myUserDetails, message, link);
+
             return true;
         } else {
             return false;
@@ -175,7 +181,7 @@ public class Api {
         MyUserDetails myuser = (MyUserDetails) authentication.getPrincipal();
         emailTemplateDto.setUserId(myuser.getUserId());
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
-        if(email==true){
+        if(email){
             offerMailSendedService.setDataInOfferMail(emailTemplateDto);
             candidateService.offer(emailTemplateDto.getCanId());
             return true;
