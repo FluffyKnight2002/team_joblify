@@ -1,11 +1,7 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
-
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.dto.CountDto;
-import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.dto.VacancyDto;
+import com.ace_inspiration.team_joblify.dto.*;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
@@ -16,6 +12,7 @@ import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +31,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.ace_inspiration.team_joblify.entity.Position;
+import com.ace_inspiration.team_joblify.entity.Summary;
+import com.ace_inspiration.team_joblify.entity.AllPost;
+import com.ace_inspiration.team_joblify.entity.Candidate;
+import com.ace_inspiration.team_joblify.entity.InterviewProcess;
+
+import lombok.RequiredArgsConstructor;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -249,33 +254,74 @@ public class CandidateController {
     }
 
     @GetMapping("/getYear")
-    public List<Object[]> getyear(){
-    	   List<Object[]> year=vanInfoReopository.getYear();
-    	   return year;
+    public List<Object[]> getyear() {
+        List<Object[]> year = vanInfoReopository.getYear();
+        return year;
     }
+
 
     @PostMapping ("/dashboard")
     public List<CountDto> getCounts(@RequestParam("timeSession")String year) {
         String starDate=year+"-01-01";
         String endDate=year+"-12-31";
 
-        List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate,endDate);
+        List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate, endDate);
         List<CountDto> dtoList = new ArrayList<>();
 
         for (Object[] resultRow : results) {
             CountDto dto = new CountDto(
-                (String) resultRow[0],
-                (String) resultRow[1],
-                (String) resultRow[2],
-                (String) resultRow[3]
-            );
+                    (String) resultRow[0],
+                    (String) resultRow[1],
+                    (String) resultRow[2],
+                    (String) resultRow[3]);
             dtoList.add(dto);
         }
 
+        return dtoList;
+    }
+    @GetMapping("/chart")
+    public PindChartDto pineChart(){
+    	  LocalDate postDate = LocalDate.parse("2023-08-27");
+    	PindChartDto pind =allPostService.findByOpenDate(postDate);
+    	System.out.println(pind.getInterviewed());
+        return pind;
+    }
+
+    @GetMapping("/yearly-vacancy-count")
+    public List<YearlyVacancyCountDto> getYearlyVacancyCount(@RequestParam("timeSession") String year,
+                                                             @RequestParam("department") String department) {
+
+
+
+        String starDate = null;
+        String endDate = null;
+
+        if(year.equals("All")){
+            starDate = LocalDate.now().getYear() + "-01-01";
+            endDate = LocalDate.now().getYear() + "-12-31";
+
+        } else {
+             starDate = year + "-01-01";
+            endDate = year + "-12-31";
+
+        }
+        System.out.println(">>>>>>>>>>>>>" + year);
+        System.out.println(">>>>>>>>>>>>>" + department);
+
+        List<Object[]> results = vanInfoReopository.getMonthlyVacancyCountsByMonth(starDate, endDate, department);
+        List<YearlyVacancyCountDto> dtoList = new ArrayList<>();
+
+        for (Object[] resultRow : results) {
+            YearlyVacancyCountDto yearlyVacancyCountDto = new YearlyVacancyCountDto(
+                    (long) resultRow[0],
+                    (long) resultRow[1]
+
+            );
+            dtoList.add(yearlyVacancyCountDto);
+        }
 
         return dtoList;
     }
-
 
     @ModelAttribute("candidate")
     public CandidateDto getCandidateDto() {
@@ -303,7 +349,8 @@ public class CandidateController {
                 System.err.println("sdfzdfgd");
                 return ResponseEntity.ok("XML content updated successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to locate <content> element in XML");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Failed to locate <content> element in XML");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -332,7 +379,7 @@ public class CandidateController {
     @PostMapping("/apply")
     public boolean submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
         Candidate candidate = candidateService.saveCandidate(dto);
-        if(candidate == null) {
+        if (candidate == null) {
             return false;
         }
         return true;

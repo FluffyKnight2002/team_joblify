@@ -39,8 +39,7 @@ public class CandidateServiceImplement implements CandidateService{
 
 
     private final EntityManager entityManager;
-
-	@Override
+    @Override
 	public DataTablesOutput<Candidate> getAllcandidate(DataTablesInput input){
 		return candidateRepository.findAll(input);
 	}
@@ -139,11 +138,10 @@ public class CandidateServiceImplement implements CandidateService{
 	}
     @Override
     public void offer(long id){
-        Candidate candidate = entityManager.find(Candidate.class, id);
-        if (candidate != null) {
-            System.err.println("herrrrrrrrrrrrrrr"+id);
-            candidate.setSelectionStatus(Status.OfferMail); // Set the new status value
-            entityManager.persist(candidate); // Save the updated candidate entity
+       Candidate  candidate = candidateRepository.findById(id).orElseThrow(null);
+        if(candidate !=null){
+            candidate.setSelectionStatus(Status.OFFERED);
+            candidateRepository.save(candidate);
         }
     }
 
