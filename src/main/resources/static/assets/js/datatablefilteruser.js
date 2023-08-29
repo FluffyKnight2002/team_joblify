@@ -1,4 +1,4 @@
-
+let userRole;
 
 // Define the closeModal function in a global scope
 function closeModal() {
@@ -54,7 +54,7 @@ function createdDateFiltered(selectedValue) {
     const endDate = currentDate.toISOString().split('T')[0]; // End date is today
     const startDate = new Date(currentDate);
     const isoStartDate = startDate.toISOString().split('T')[0];
-    
+
     if (selectedValue === '') {
         data = '';
     } else if (selectedValue === 'Last 24 hours') {
@@ -86,12 +86,25 @@ function createdDateFiltered(selectedValue) {
 }
 
 
-
-
-
 let table;
 
 $(document).ready(function () {
+
+    fetch('/authenticated-user-data', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+        .then(async response => {
+            if (response.ok) {
+                const [userDetails, passwordMatches] = await response.json();
+                userRole = await userDetails.user.role;
+                console.log("User Role", userRole);
+            }
+
+
+        });
 
     function format(d) {
         const createdDate = new Date(d.createdDate).toLocaleString(); // Format createdDate
@@ -111,7 +124,6 @@ $(document).ready(function () {
     }
 
 
-
     table = $('table#table').DataTable({
 
         ajax: '/get-all-user',
@@ -123,15 +135,15 @@ $(document).ready(function () {
                 searchable: false,
                 data: null,
                 defaultContent: '',
-                
+
             },
-            { data: "name", targets: 1 },
-            { data: "email", targets: 2 },
-            { data: "phone", targets: 3 },
-            { data: "address", targets: 4 },
-            { data: "department.name", targets: 5 },
+            {data: "name", targets: 1},
+            {data: "email", targets: 2},
+            {data: "phone", targets: 3},
+            {data: "address", targets: 4},
+            {data: "department.name", targets: 5},
             {
-                
+
                 data: "role",
                 targets: 6, // Adjust the target index to match the column
                 render: function (data, type, row) {
@@ -152,33 +164,50 @@ $(document).ready(function () {
 
                     const buttonText = row.accountStatus ? "Suspend" : "Activate";
                     const buttonLink = row.accountStatus ? "suspend" : "activate";
+                    if (userRole === 'SENIOR_HR' && row.role === 'DEFAULT_HR') {
+                        return `<p class="text-center">-</p>`;
+                    } else if (userRole === 'DEFAULT_HR' && row.role === 'DEFAULT_HR') {
 
-                    return `<div class="dropdown">
+                        return `<div class="dropdown" id="user-detail-btn">
                     <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="dropdown-menu"> 
                         <a class="dropdown-item" href="/user-profile-edit?email=${encodeURIComponent(row.email)}">Profile</a>
-
-                        <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>
+                        
+<!--                            <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>-->
+                        
                     </div>
-                </div>`;
+                    </div>`;
+
+                    } else {
+                        return `<div class="dropdown" id="user-detail-btn">
+                    <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu"> 
+                        <a class="dropdown-item" href="/user-profile-edit?email=${encodeURIComponent(row.email)}">Profile</a>
+                        
+                            <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>
+                        
+                    </div>
+                    </div>`;
+                    }
                 },
-                sortable: false
-            },
+                    sortable: false
+                },
             {
                 target: 8,
                 data: "createdDate",
                 visible: false
             },
-            
+
 
         ],
         serverSide: true,
         processing: true
         // stateSave: true
     });
-
 
 
     // $('.dropdown-item.filter-items.department-dropdown-item ul li.filter-items').on('click', function() {
@@ -203,7 +232,6 @@ $(document).ready(function () {
 
 
     // });
-
 
 
     // Create reset filter button
@@ -276,8 +304,8 @@ $(document).ready(function () {
     $(recentFilterDropdownCon).appendTo(searchRow);
 
     $('.dropdown-menu > li').hover(function () {
-        $(this).children('.dropdown-submenu').css('display', 'block');
-    }
+            $(this).children('.dropdown-submenu').css('display', 'block');
+        }
         , function () {
             $(this).children('.dropdown-submenu').css('display', '');
         });
@@ -348,7 +376,7 @@ $(document).ready(function () {
 
     function showConfirmationModal(action, id) {
         const confirmationModal = `
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmationModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text center" style="background: #0c233d">
@@ -407,6 +435,7 @@ $(document).ready(function () {
                 </div>`
             $('.modal-content .modal-body').replaceWith(reset);
         }
+
         $(document).on("click", "#close", function () {
 
             resetModal();
@@ -463,9 +492,6 @@ $(document).ready(function () {
     });
 
 
-
-
-
     // Array to track the ids of the details displayed rows
     const detailRows = [];
 
@@ -480,8 +506,7 @@ $(document).ready(function () {
 
             // Remove from the 'open' array
             detailRows.splice(idx, 1);
-        }
-        else {
+        } else {
             tr.addClass('details');
             row.child(format(row.data())).show();
 
@@ -499,189 +524,183 @@ $(document).ready(function () {
         });
     });
 
-});
-
-
+})
+    ;
 
 
 /////////////////////////////////////
 
 
+    let filterElements = [
+        {name: 'date-created-dropdown-item', isRemove: false, filterId: 'filter-created-posted'},
+        {name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department'},
+        {name: 'status-dropdown-item', isRemove: false, filterId: 'filter-status'},
+        {name: 'role-dropdown-item', isRemove: false, filterId: 'filter-role'}
+    ];
 
-
-
-
-let filterElements = [
-    { name: 'date-created-dropdown-item', isRemove: false, filterId: 'filter-created-posted' },
-    { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
-    { name: 'status-dropdown-item', isRemove: false, filterId: 'filter-status' },
-    { name: 'role-dropdown-item', isRemove: false, filterId: 'filter-role' }
-];
-
-function checkAndToggleFilterButton() {
-    let anyIsRemove = false;
-
-    for (let i = 0; i < filterElements.length; i++) {
-        if (!filterElements[i].isRemove) {
-            anyIsRemove = true;
-            break; // Exit the loop once an element with isRemove = true is found
-        }
-    }
-
-    console.log("Filter Elements", filterElements)
-    console.log("AnyIsRemove", anyIsRemove)
-
-    // Toggle the visibility of the buttons based on the anyIsRemove variable
-    if (anyIsRemove) {
-        $('#custom-filter').show();
-        $('#reset-filter').hide();
-    } else {
-        $('#reset-filter').show();
-        $('#custom-filter').hide();
-    }
-}
-
-function resetFilters() {
-
-    console.log("Reset filters work");
-
-    // Find and update the isRemove property in filterElements
-    for (let i = 0; i < filterElements.length; i++) {
-        filterElements[i].isRemove = false;
-        $('.' + filterElements[i].name).show();
-        $('#' + filterElements[i].filterId).val('');
-    }
-    $('.selected-dropdown-remove-button').each(function () {
-        $(this).closest('.btn-group').remove();
-    });
-
-    $('#reset-filter').hide();
-    $('#custom-filter').show();
-
-    departmentFiltered('');
-    statusFiltered('');
-    roleFiltered('');
-    createdDateFiltered('');
-
-
-}
-
-// Update the text of the recent filter dropdown button when an option is selected
-function changeSelectedFilterName(item) {
-
-    if (item) {
-        let selectedValue = $(item).text(); // Get the selected value from the clicked item
-
-
-
-        let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
-
-        let filterId = $(item).data('filter-id');
-
-        console.log(filterId + ' AKZ');
-
-        if (filterId === 'filter-department') {
-            departmentFiltered(selectedValue);
-
-        } else if (filterId === 'filter-date-posted') {
-            if (selectedValue !== 'Custom') {
-                createdDateFiltered(selectedValue);
-            } else {
-                const inputData = $('input[name="datefilter2"]').val();
-                createdDateFiltered(inputData);
-            }
-
-
-        } else if (filterId === 'filter-status') {
-            statusFiltered(selectedValue);
-
-        } else if (filterId === 'filter-role') {
-            roleFiltered(selectedValue);
-        }
-        // Find and update the isRemove property in filterElements
+    function checkAndToggleFilterButton() {
+        let anyIsRemove = false;
 
         for (let i = 0; i < filterElements.length; i++) {
-            console.log("Filter Element Name : ", filterElements[i].name)
-            if (filterElements[i].filterId === filterId) {
-                $('#' + filterElements[i].filterId).val($.trim(selectedValue));
+            if (!filterElements[i].isRemove) {
+                anyIsRemove = true;
+                break; // Exit the loop once an element with isRemove = true is found
+            }
+        }
+
+        console.log("Filter Elements", filterElements)
+        console.log("AnyIsRemove", anyIsRemove)
+
+        // Toggle the visibility of the buttons based on the anyIsRemove variable
+        if (anyIsRemove) {
+            $('#custom-filter').show();
+            $('#reset-filter').hide();
+        } else {
+            $('#reset-filter').show();
+            $('#custom-filter').hide();
+        }
+    }
+
+    function resetFilters() {
+
+        console.log("Reset filters work");
+
+        // Find and update the isRemove property in filterElements
+        for (let i = 0; i < filterElements.length; i++) {
+            filterElements[i].isRemove = false;
+            $('.' + filterElements[i].name).show();
+            $('#' + filterElements[i].filterId).val('');
+        }
+        $('.selected-dropdown-remove-button').each(function () {
+            $(this).closest('.btn-group').remove();
+        });
+
+        $('#reset-filter').hide();
+        $('#custom-filter').show();
+
+        departmentFiltered('');
+        statusFiltered('');
+        roleFiltered('');
+        createdDateFiltered('');
+
+
+    }
+
+// Update the text of the recent filter dropdown button when an option is selected
+    function changeSelectedFilterName(item) {
+
+        if (item) {
+            let selectedValue = $(item).text(); // Get the selected value from the clicked item
+
+
+            let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
+
+            let filterId = $(item).data('filter-id');
+
+            console.log(filterId + ' AKZ');
+
+            if (filterId === 'filter-department') {
+                departmentFiltered(selectedValue);
+
+            } else if (filterId === 'filter-date-posted') {
+                if (selectedValue !== 'Custom') {
+                    createdDateFiltered(selectedValue);
+                } else {
+                    const inputData = $('input[name="datefilter2"]').val();
+                    createdDateFiltered(inputData);
+                }
+
+
+            } else if (filterId === 'filter-status') {
+                statusFiltered(selectedValue);
+
+            } else if (filterId === 'filter-role') {
+                roleFiltered(selectedValue);
+            }
+            // Find and update the isRemove property in filterElements
+
+            for (let i = 0; i < filterElements.length; i++) {
+                console.log("Filter Element Name : ", filterElements[i].name)
+                if (filterElements[i].filterId === filterId) {
+                    $('#' + filterElements[i].filterId).val($.trim(selectedValue));
+                    break; // Exit the loop once the element is found
+                }
+            }
+
+            // if ($('input[name="datefilter2"]').length > 0) {
+            if (selectedValue != 'Custom') {
+                $('input[name="datefilter2"]').val('');
+                button.text(selectedValue); // Update the text of the button
+            } else {
+                $('.date-posted-filter-btn').text('Custom');
+            }
+            // }
+
+            // updateDataTable();
+        }
+    }
+
+// Function to remove selected dropdown and new button
+    $(document).on('click', '.selected-dropdown-remove-button', function () {
+        let filterName = $(this).data('filter-name');
+        console.log(filterName + 'CZe');
+
+
+        if (filterName === 'date-created-dropdown-item') {
+            createdDateFiltered('');
+        } else if (filterName === 'department-dropdown-item') {
+            departmentFiltered('');
+        } else if (filterName === 'status-dropdown-item') {
+            statusFiltered('');
+        } else if (filterName === 'role-dropdown-item') {
+            roleFiltered('');
+        }
+
+        // Find and update the isRemove property in filterElements
+        for (let i = 0; i < filterElements.length; i++) {
+            if (filterElements[i].name === filterName) {
+                filterElements[i].isRemove = false;
+                $('.' + filterElements[i].name).show();
+                $('#' + filterElements[i].filterId).val('');
                 break; // Exit the loop once the element is found
             }
         }
 
-        // if ($('input[name="datefilter2"]').length > 0) {
-        if (selectedValue != 'Custom') {
-            $('input[name="datefilter2"]').val('');
-            button.text(selectedValue); // Update the text of the button
-        } else {
-            $('.date-posted-filter-btn').text('Custom');
-        }
-        // }
+        console.log("Filter name : ", filterName);
 
+        $(this).closest('.btn-group').remove();
+        checkAndToggleFilterButton();
+
+        // Update data table
         // updateDataTable();
-    }
-}
+    });
 
-// Function to remove selected dropdown and new button
-$(document).on('click', '.selected-dropdown-remove-button', function () {
-    let filterName = $(this).data('filter-name');
-    console.log(filterName + 'CZe');
-
-
-    if (filterName === 'date-created-dropdown-item') {
-        createdDateFiltered('');
-    } else if (filterName === 'department-dropdown-item') {
-        departmentFiltered('');
-    } else if (filterName === 'status-dropdown-item') {
-        statusFiltered('');
-    } else if (filterName === 'role-dropdown-item') {
-        roleFiltered('');
+    function showSelectedDropdownRemoveButton(button) {
+        const removeButton = $(button).next('.selected-dropdown-remove-button');
+        removeButton.show();
     }
 
-    // Find and update the isRemove property in filterElements
-    for (let i = 0; i < filterElements.length; i++) {
-        if (filterElements[i].name === filterName) {
-            filterElements[i].isRemove = false;
-            $('.' + filterElements[i].name).show();
-            $('#' + filterElements[i].filterId).val('');
-            break; // Exit the loop once the element is found
+    function createDateCreatedFilterButton(selectedValue, startDate, endDate) {
+
+        filterElements[0].isRemove = true;
+        $('.date-created-dropdown-item').hide();
+
+        let selectedText = null;
+        let data;
+        if (selectedValue === 'Custom') {
+            $('#filter-start-date').val(startDate);
+            $('#filter-end-date').val(endDate);
+            selectedText = selectedValue;
+            data = startDate + ';' + endDate
+            $('#filter-date-posted').val(selectedText);
+        } else {
+            selectedText = selectedValue.text();
+            data = selectedValue.text();
+            $('#filter-date-posted').val(selectedText);
         }
-    }
-
-    console.log("Filter name : ", filterName);
-
-    $(this).closest('.btn-group').remove();
-    checkAndToggleFilterButton();
-
-    // Update data table
-    // updateDataTable();
-});
-
-function showSelectedDropdownRemoveButton(button) {
-    const removeButton = $(button).next('.selected-dropdown-remove-button');
-    removeButton.show();
-}
-
-function createDateCreatedFilterButton(selectedValue, startDate, endDate) {
-
-    filterElements[0].isRemove = true;
-    $('.date-created-dropdown-item').hide();
-
-    let selectedText = null;
-    let data;
-    if (selectedValue === 'Custom') {
-        $('#filter-start-date').val(startDate);
-        $('#filter-end-date').val(endDate);
-        selectedText = selectedValue;
-        data = startDate + ';' + endDate
-        $('#filter-date-posted').val(selectedText);
-    } else {
-        selectedText = selectedValue.text();
-        data = selectedValue.text();
-        $('#filter-date-posted').val(selectedText);
-    }
-    createdDateFiltered(data);
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
+        createdDateFiltered(data);
+        // Create a filter button with the selected filter item
+        var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
                 recent-filter-dropdown-btn date-posted-filter-btn"
@@ -702,72 +721,72 @@ function createDateCreatedFilterButton(selectedValue, startDate, endDate) {
             </ul>
         </div>`;
 
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
+        // Append the selectedDropdown to the appropriate container
+        $('#recent-filter-dropdown-con').append(selectedDropdown);
 
-    $(function () {
-        // Replace value of date range
-        replaceDateFilter2Value();
-        // Initialize the daterangepicker
-        $('input[name="datefilter2"]').daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                cancelLabel: 'Clear'
-            }
+        $(function () {
+            // Replace value of date range
+            replaceDateFilter2Value();
+            // Initialize the daterangepicker
+            $('input[name="datefilter2"]').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    cancelLabel: 'Clear'
+                }
+            });
+
+            // Handle apply event to update the input value and set start and end times
+            $('input[name="datefilter2"]').on('apply.daterangepicker', function (ev, picker) {
+                const startDate = picker.startDate.format('MM/DD/YYYY');
+                const endDate = picker.endDate.format('MM/DD/YYYY');
+
+                $(this).val(startDate + ' - ' + endDate);
+
+                $('#filter-start-date').val(startDate);
+                $('#filter-end-date').val(endDate);
+                $('.datePostedDropdown').hide();
+
+                // Get the selected item with a data-filter-id attribute
+                const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-date-posted">Custom</li>');
+
+                // Call the function and pass the selected item
+                changeSelectedFilterName(selectedFilterItem);
+
+            });
+
+            // Handle cancel event to clear the input value and reset start and end times
+            $('input[name="datefilter2"]').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                $('#filter-start-time').val('');
+                $('#filter-end-time').val('');
+            });
+
+            $('.daterangepicker').hover(function () {
+                $('.datePostedDropdown').css('display', 'block');
+            }, function () {
+                $('.datePostedDropdown').css('display', '');
+            });
         });
 
-        // Handle apply event to update the input value and set start and end times
-        $('input[name="datefilter2"]').on('apply.daterangepicker', function (ev, picker) {
-            const startDate = picker.startDate.format('MM/DD/YYYY');
-            const endDate = picker.endDate.format('MM/DD/YYYY');
+        // Hide other remove buttons and show the recent-filter-dropdown-btn
+        $('.selected-dropdown-remove-button').hide();
+        $('.recent-filter-dropdown-btn').show();
 
-            $(this).val(startDate + ' - ' + endDate);
+        // Update data table
+        // updateDataTable();
+    }
 
-            $('#filter-start-date').val(startDate);
-            $('#filter-end-date').val(endDate);
-            $('.datePostedDropdown').hide();
+    function createDepartmentFilterButton(selectedValue) {
 
-            // Get the selected item with a data-filter-id attribute
-            const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-date-posted">Custom</li>');
+        filterElements[1].isRemove = true;
+        $('.department-dropdown-item').hide();
+        departmentFiltered(selectedValue);
+        // $('#filter-department').val(selectedValue);
 
-            // Call the function and pass the selected item
-            changeSelectedFilterName(selectedFilterItem);
+        checkAndToggleFilterButton();
 
-        });
-
-        // Handle cancel event to clear the input value and reset start and end times
-        $('input[name="datefilter2"]').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-            $('#filter-start-time').val('');
-            $('#filter-end-time').val('');
-        });
-
-        $('.daterangepicker').hover(function () {
-            $('.datePostedDropdown').css('display', 'block');
-        }, function () {
-            $('.datePostedDropdown').css('display', '');
-        });
-    });
-
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
-
-    // Update data table
-    // updateDataTable();
-}
-
-function createDepartmentFilterButton(selectedValue) {
-
-    filterElements[1].isRemove = true;
-    $('.department-dropdown-item').hide();
-    departmentFiltered(selectedValue);
-    // $('#filter-department').val(selectedValue);
-
-    checkAndToggleFilterButton();
-
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
+        // Create a filter button with the selected filter item
+        var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
                 recent-filter-dropdown-btn position-filter-btn"
@@ -783,43 +802,43 @@ function createDepartmentFilterButton(selectedValue) {
             </ul>
         </div>`;
 
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
+        // Append the selectedDropdown to the appropriate container
+        $('#recent-filter-dropdown-con').append(selectedDropdown);
 
-    // Fetch and populate submenu items
-    fetchDepartmentAndGenerateHTML().then(submenuHTML => {
+        // Fetch and populate submenu items
+        fetchDepartmentAndGenerateHTML().then(submenuHTML => {
 
-        $('#department-filter-dropdown-submenu').html(submenuHTML);
+            $('#department-filter-dropdown-submenu').html(submenuHTML);
 
-        $('#department-filter-dropdown-submenu .filter-items').removeAttr('onclick');
+            $('#department-filter-dropdown-submenu .filter-items').removeAttr('onclick');
 
-        // Add the onclick attribute to every recent-filter-items within the department-filter-dropdown-submenu
-        $('#department-filter-dropdown-submenu .filter-items').attr('onclick', 'changeSelectedFilterName(this);');
+            // Add the onclick attribute to every recent-filter-items within the department-filter-dropdown-submenu
+            $('#department-filter-dropdown-submenu .filter-items').attr('onclick', 'changeSelectedFilterName(this);');
 
-        // Hide other remove buttons and show the recent-filter-dropdown-btn
-        $('.selected-dropdown-remove-button').hide();
-        $('.recent-filter-dropdown-btn').show();
-    });
+            // Hide other remove buttons and show the recent-filter-dropdown-btn
+            $('.selected-dropdown-remove-button').hide();
+            $('.recent-filter-dropdown-btn').show();
+        });
 
-    // Update data table
-    // updateDataTable();
+        // Update data table
+        // updateDataTable();
 
 
-}
+    }
 
-function createRoleFilterButton(selectedValue) {
+    function createRoleFilterButton(selectedValue) {
 
-    filterElements[2].isRemove = true;
-    $('.role-dropdown-item').hide();
+        filterElements[2].isRemove = true;
+        $('.role-dropdown-item').hide();
 
-    checkAndToggleFilterButton();
+        checkAndToggleFilterButton();
 
-    var selectedText = selectedValue.text();
-    roleFiltered(selectedText);
-    // $('#filter-role').val(selectedText);
+        var selectedText = selectedValue.text();
+        roleFiltered(selectedText);
+        // $('#filter-role').val(selectedText);
 
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
+        // Create a filter button with the selected filter item
+        var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
                 recent-filter-dropdown-btn status-filter-btn"
@@ -840,30 +859,30 @@ function createRoleFilterButton(selectedValue) {
             </ul>
         </div>`;
 
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
+        // Append the selectedDropdown to the appropriate container
+        $('#recent-filter-dropdown-con').append(selectedDropdown);
 
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
+        // Hide other remove buttons and show the recent-filter-dropdown-btn
+        $('.selected-dropdown-remove-button').hide();
+        $('.recent-filter-dropdown-btn').show();
 
-    // Update data table
-    // updateDataTable();
-}
+        // Update data table
+        // updateDataTable();
+    }
 
-function createStatusFilterButton(selectedValue) {
+    function createStatusFilterButton(selectedValue) {
 
-    filterElements[3].isRemove = true;
-    $('.status-dropdown-item').hide();
+        filterElements[3].isRemove = true;
+        $('.status-dropdown-item').hide();
 
-    checkAndToggleFilterButton();
+        checkAndToggleFilterButton();
 
-    var selectedText = selectedValue.text();
-    statusFiltered(selectedText);
-    // $('#filter-status').val(selectedText);
+        var selectedText = selectedValue.text();
+        statusFiltered(selectedText);
+        // $('#filter-status').val(selectedText);
 
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
+        // Create a filter button with the selected filter item
+        var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
                 recent-filter-dropdown-btn status-filter-btn"
@@ -880,56 +899,56 @@ function createStatusFilterButton(selectedValue) {
             </ul>
         </div>`;
 
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
+        // Append the selectedDropdown to the appropriate container
+        $('#recent-filter-dropdown-con').append(selectedDropdown);
 
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
+        // Hide other remove buttons and show the recent-filter-dropdown-btn
+        $('.selected-dropdown-remove-button').hide();
+        $('.recent-filter-dropdown-btn').show();
 
-    // Update data table
-    // updateDataTable();
-}
+        // Update data table
+        // updateDataTable();
+    }
 
-async function fetchDepartmentAndGenerateHTML() {
-    try {
-        const response = await fetch('departments'); // Replace 'titles' with the actual URL
-        if (!response.ok) {
-            throw new Error('Failed to fetch data');
-        }
-
-        const fetchedData = await response.json();
-
-        // Sort the data alphabetically
-        const sortedData = fetchedData.sort();
-
-        // Create an HTML string to store the submenu content
-        let submenuHTML = '';
-
-        let currentLetter = null;
-        sortedData.forEach(item => {
-            const startingLetter = item.name[0].toUpperCase();
-            if (startingLetter !== currentLetter) {
-                submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
-                currentLetter = startingLetter;
+    async function fetchDepartmentAndGenerateHTML() {
+        try {
+            const response = await fetch('departments'); // Replace 'titles' with the actual URL
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-            submenuHTML += `<li class="dropdown-item filter-items" 
+
+            const fetchedData = await response.json();
+
+            // Sort the data alphabetically
+            const sortedData = fetchedData.sort();
+
+            // Create an HTML string to store the submenu content
+            let submenuHTML = '';
+
+            let currentLetter = null;
+            sortedData.forEach(item => {
+                const startingLetter = item.name[0].toUpperCase();
+                if (startingLetter !== currentLetter) {
+                    submenuHTML += `<li class="bg-dark"><b class="ps-2">${startingLetter}</b></li>`;
+                    currentLetter = startingLetter;
+                }
+                submenuHTML += `<li class="dropdown-item filter-items" 
                 onclick="createDepartmentFilterButton('${item.name}');checkAndToggleFilterButton();" data-filter-id="filter-department">
                     ${item.name}
                 </li>`;
-        });
+            });
 
-        // Return the generated HTML content
-        return submenuHTML;
-    } catch (error) {
-        console.error('An error occurred:', error);
-        return ''; // Return an empty string in case of an error
+            // Return the generated HTML content
+            return submenuHTML;
+        } catch (error) {
+            console.error('An error occurred:', error);
+            return ''; // Return an empty string in case of an error
+        }
     }
-}
 
 // Function to replace datefilter2 with the value from datefilter
-function replaceDateFilter2Value() {
-    const dateFilterValue = $('input[name="datefilter"]').val();
-    $('input[name="datefilter2"]').val(dateFilterValue);
-    $('input[name="datefilter"]').val('')
-}
+    function replaceDateFilter2Value() {
+        const dateFilterValue = $('input[name="datefilter"]').val();
+        $('input[name="datefilter2"]').val(dateFilterValue);
+        $('input[name="datefilter"]').val('')
+    }

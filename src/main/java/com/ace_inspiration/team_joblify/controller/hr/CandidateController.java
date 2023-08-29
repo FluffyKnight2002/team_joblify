@@ -13,7 +13,6 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,14 +30,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-
-import lombok.RequiredArgsConstructor;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -110,6 +101,7 @@ public class CandidateController {
 
     @GetMapping("/allCandidate")
     public DataTablesOutput<InterviewProcess> getDataTable(
+            @RequestParam(required = false) String vacancyInfoId,
             @RequestParam(required = false) String applyDate,
             @RequestParam(required = false) String startDateInput,
             @RequestParam(required = false) String endDateInput,
@@ -123,6 +115,13 @@ public class CandidateController {
         // Create a Specification using the DataTablesInput object
         Specification<InterviewProcess> specification = (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
+
+            System.out.println("Vacancy ID " + vacancyInfoId);
+            if(!vacancyInfoId.trim().equals("All")) {
+                long id = Long.valueOf(vacancyInfoId.trim());
+                System.out.println("COndition HTITITITITITI");
+                predicate = criteriaBuilder.equal(root.get("viId"), id);
+            }
 
             // Inside your getDataTable method
             if (applyDate != null && !applyDate.isEmpty()) {

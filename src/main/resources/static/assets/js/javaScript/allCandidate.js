@@ -20,7 +20,16 @@ var updatedString = null;
 var concatenatedValue = null;
 let role;
 
+
 $(document).ready( async function() {
+	if(id!=null){
+		$('#filter-vacancy-info-id').val(id);
+		console.log('mmmmmmmmmmm',id)
+	}else {
+		$('#filter-vacancy-info-id').val("All");
+	}
+
+	console.log("FIlter Vadjaf", $('#filter-vacancy-info-id'))
 	const isHidden = document.getElementById('second');
 	const response = await fetch('/authenticated-user-data', {
 		method: 'POST',
@@ -64,6 +73,7 @@ $(document).ready( async function() {
 			url:'/allCandidate',
 				type:'GET',
 				data: function (d) {
+					d.vacancyInfoId = $('#filter-vacancy-info-id').val();
 					d.applyDate = $('#filter-apply-date').val(),
 						d.title = $('#filter-title').val(),
 						d.department = $('#filter-department').val(),

@@ -281,6 +281,8 @@
                 <!-- Hidden input for 'datePosted' parameter -->
                 <input type="hidden" name="applyDate" id="filter-apply-date" value="">
 
+                <input type="hidden" name="vacancyInfoId" id="filter-vacancy-info-id" value="">
+
                 <!-- Hidden input for 'startDate' parameter -->
                 <input type="hidden" name="startDate" id="filter-start-date" value="">
 
@@ -564,7 +566,7 @@
         </div>
     </div>
     <!--Message Modal -->
-    <div class="modal fade" id="loadMe" tabindex="-1" role="dialog"
+    <div class="modal fade" id="loadMe" data-bs-backdrop="static" tabindex="-1" role="dialog"
          aria-labelledby="loadMeLabel">
         <div class="modal-dialog modal-sm modal-dialog-centered"
              id="message-modal-dialog" role="document">

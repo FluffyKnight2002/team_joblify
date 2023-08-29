@@ -9,6 +9,7 @@ let filterElements = [
 let selectedLevels = [];
 
 function updateDataTable() {
+    $('#filter-vacancy-info-id').val("All");
     table.ajax.reload();
 }
 
@@ -173,9 +174,9 @@ function createDatePostedFilterButton(selectedValue,startDate,endDate) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last 24 hours</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last week</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last month</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last 24 hours</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last week</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last month</li>
                 <li class="dropdown-item filter-items">
                     <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
                 </li>
