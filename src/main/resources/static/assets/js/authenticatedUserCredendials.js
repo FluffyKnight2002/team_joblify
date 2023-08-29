@@ -31,8 +31,6 @@ async function authenticatedUserData() {
             console.log(userDetails);
             console.log(passwordMatches);
             console.log(userDetails.user.role)
-            userRole = await userDetails.user.role
-            console.log(userRole)
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');

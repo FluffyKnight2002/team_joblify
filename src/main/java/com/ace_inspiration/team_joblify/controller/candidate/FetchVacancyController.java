@@ -216,8 +216,14 @@ public class FetchVacancyController {
     }
 
     @GetMapping("/show-others")
-    public List<VacancyView> getOtherVacancies() {
-        return vacancyViewRepository.findAll();
+    public List<VacancyView> getOtherVacancies(@RequestParam String id) {
+        System.out.println("ID " +id);
+        VacancyView currentVacancyView = vacancyViewRepository.findById(Long.valueOf(id)).orElseThrow(null);
+        List<VacancyView> vacancyViews = new ArrayList<>();
+        if(currentVacancyView != null) {
+            vacancyViews = vacancyViewRepository.findVacancyViewByPositionAndDepartmentAndStatus(currentVacancyView.getPosition(),currentVacancyView.getDepartment());
+        }
+        return vacancyViews;
     }
 
     @GetMapping("/job-detail")

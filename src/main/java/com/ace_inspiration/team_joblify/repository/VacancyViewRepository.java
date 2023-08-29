@@ -28,4 +28,10 @@ public interface VacancyViewRepository extends DataTablesRepository<VacancyView,
     List<VacancyView> getLastVacancyView();
     int countBy();
 
+    @Query("SELECT v FROM VacancyView v WHERE (v.position = :position OR v.department = :department) AND v.status = 'OPEN'")
+    List<VacancyView> findVacancyViewByPositionAndDepartmentAndStatus(
+            @Param("position") String position,
+            @Param("department") String department
+    );
+
 }

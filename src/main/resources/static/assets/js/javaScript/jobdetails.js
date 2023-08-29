@@ -4,7 +4,7 @@ formId.value = currentId;
 // Function to fetch job data and create job card UI
 function fetchJobsAndRenderUI() {
 
-    fetch("/vacancy/show-others")
+    fetch("/vacancy/show-others?id="+currentId)
         .then((response) => response.json())
         .then(data => {
             console.log(data)
@@ -324,7 +324,7 @@ function changeDetail(id) {
     console.log("ID : ",id)
     currentId = id;
     fetchJobDetails(id);
-    fetchJobsAndRenderUI();
+    fetchJobsAndRenderUI(id);
     updateURLParams();
 }
 

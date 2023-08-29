@@ -29,21 +29,48 @@ let userRole;
 //     if (response.ok) {
 //         const [userDetails, passwordMatches] = await response.json();
 //         userRole = userDetails.role;
+//         console.log("User Role", userRole);
+//         if(userRole != 'DEFAULT_HR' && userRole != 'SENIOR_HR' && userRole != 'JUNIOR_HR') {
+//             $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+//                 $(this).remove();
+//             })
+//             $('input[type="text"], input[type="number"], select, textarea').each(function () {
+//                 $(this).prop('disabled', true);
+//             })
+//         }
+//
 //     }
 //
-//     console.log("User Role", userRole);
-//     if(userRole != 'DEFAULT_HR' && userRole != 'SENIOR_HR' && userRole != 'JUNIOR_HR') {
-//         $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
-//             $(this).remove();
-//         })
-//         $('input[type="text"], input[type="number"], select, textarea').each(function () {
-//             $(this).prop('disabled', true);
-//         })
-//     }
 // }
 $(document).ready(function () {
 
-    // validateUIButton();
+    fetch('/authenticated-user-data', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+        .then(async response => {
+            if (response.ok) {
+                const [userDetails, passwordMatches] = await response.json();
+                userRole = await userDetails.user.role;
+                console.log("User Role", userRole);
+            }
+
+            if (userRole === 'OTHER' || userRole === 'MANAGEMENT' || userRole === 'INTERVIEWER') {
+                $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+                    $(this).remove();
+                })
+                $('input[type="text"], input[type="number"], select, textarea').each(function () {
+                    $(this).prop('disabled', true);
+                })
+                $('.close-vacancy').remove();
+                $('.reopen-vacancy').remove();
+            }else {
+                console.log("Hello")
+            }
+        });
+
     // Check if the currentId is the same as the previousId
     if (currentId != null) {
         showDetailModalForVacancyId(currentId);
@@ -73,7 +100,8 @@ $(document).ready(function () {
                     d.level = $('#filter-level').val(),
                     d.minAndMax = $('#filter-minAndMax').val(),
                     d.applicants = $('#filter-applicants').val(),
-                    d.status = $('#filter-status').val()
+                    d.status = $('#filter-selection-status').val(),
+                    d.status = $('#filter-interview-status').val()
                 }
             },
             "columns": [
@@ -690,7 +718,7 @@ $(document).on("click", ".reopen-vacancy", function (event) {
         '<p class="text-center text-white">Reopen will make this vacancy open for 30 days again.</p>' +
         '<div>' +
         '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
-        '<button class="btn btn-sm btn-light-danger mx-1" onclick="closeModal()">Cancel</button></div>' +
+        '<button class="btn btn-sm btn-secondary mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
     $('#loadMe').modal({
@@ -717,8 +745,8 @@ $(document).on("click", ".close-vacancy", function (event) {
         '<h3 class="text-white">Are you sure?</h3>' +
         '<p class="text-center text-white">After closing, no candidate will be allowed to apply this vacancy.</p>' +
         '<div>' +
-        '<button type="button" class="btn btn-sm btn-light-danger mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
-        '<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">Cancel</button></div>' +
+        '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
+        '<button class="btn btn-sm btn-secondary mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
     $('#loadMe').modal({

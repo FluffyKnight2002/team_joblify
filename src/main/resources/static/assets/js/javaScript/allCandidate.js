@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 });
 
-var table;
+let table;
 
 var currentId = new URLSearchParams(window.location.search);
 var id = currentId.get("viId");
@@ -59,8 +59,23 @@ $(document).ready( async function() {
 		{
 			"serverSide": true,
 			"processing": true,
-			"ajax": '/allCandidate',
+			"ajax": {
+
+			url:'/allCandidate',
+				type:'GET',
+				data: function (d) {
+					d.applyDate = $('#filter-apply-date').val(),
+						d.title = $('#filter-title').val(),
+						d.department = $('#filter-department').val(),
+						d.startDateInput = $('#filter-start-date').val(),
+						d.endDateInput = $('#filter-end-date').val(),
+						d.level = $('#filter-level').val(),
+						d.selectionStatus = $('#filter-selection-status').val(),
+						d.interviewStatus = $('#filter-interview-status').val()
+				},
+			},
 			"sScrollY": "auto",
+
 			// "bScrollCollapse": true,
 
 			"columns": [
@@ -114,7 +129,7 @@ $(document).ready( async function() {
 					targets: 7,
 					data: "email",
 					render: function(data, type, row) {
-						return '<a  data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invert Mail</a>';
+						return '<a  data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
 					},
 					sortable: false,
 					visible: false
@@ -125,7 +140,7 @@ $(document).ready( async function() {
 					data: "interviewStatus",
 					targets: 8,
 					render: function(data, type, row) {
-						return '<select id="changeStatus">' +
+						return '<select class="form-control form-control-sm form-control-icon" id="changeStatus">' +
 							'<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
 							'<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
 							'<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
@@ -139,13 +154,17 @@ $(document).ready( async function() {
 				{
 					targets: 9,
 					data: 'lvl',
+					render: function(data, type, row) {
+						return reconvertToString(row.lvl);
+					}
 
 				},
 				{
 					targets: 10,
 					data: "email",
 					render: function(data, type, row) {
-						return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
+						return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail"' +
+							'style="font-size: 0.8rem" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
 					},
 					sortable: false,
 					visible: false
@@ -158,18 +177,233 @@ $(document).ready( async function() {
 					targets: 12,
 					data: 'date',
 					render: function(data, type, row) {
-						if (type === 'display' || type === 'filter') {
-							// Assuming data is in the format '2023-01-01T00:00:00'
-							var dateParts = data.split('T')[0].split('-');
-							return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-						}
-						return data; // For other types, return the original data
+						// if (type === 'display' || type === 'filter') {
+						// 	// Assuming data is in the format '2023-01-01T00:00:00'
+						// 	var dateParts = data.split('T')[0].split('-');
+						// 	return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+						// }
+
+						return changeTimeFormat(data); // For other types, return the original data
 					}
 				},
 
 			],
 			order: [[2, 'desc']]
 		});
+
+	// Filter session start
+	// Create reset filter button
+	let resetFilterButton = `
+        <div id="reset-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 reset-filter"  
+            onclick="resetFilters()">
+                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            </span>
+        </div>
+    `;
+
+	// Create and append the custom filter inputs and button
+	let customFilterHtml = `
+        <div id="custom-filter" class="mt-3 col-1 text-center">
+            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
+                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
+             data-bs-placement="right" title="Add filter"></i>
+            </span>
+            <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
+                <li class="dropdown-item filter-items apply-date-dropdown-item">
+                    <span class="date-posted">Apply Date</span>
+                    <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="apply-date-dropdown-submenu">
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last 24 hours</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last week</li>
+                        <li class="dropdown-item filter-items" onclick="createDatePostedFilterButton($(this));checkAndToggleFilterButton();">Last month</li>
+                        <li class="dropdown-item filter-items">
+                            <input type="text" class="px-2 rounded datefilter" name="datefilter" value="" placeholder="Custom" />
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items position-dropdown-item">
+                    <span>Position</span>
+                    <ul class="dropdown-menu dropdown-submenu positionDropdown scrollable-submenu" id="position-dropdown-submenu">
+                        <li class="dropdown-item filter-items"></li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items department-dropdown-item">
+                    <span>Department</span>
+                    <ul class="dropdown-menu dropdown-submenu scrollable-submenu" id="department-dropdown-submenu">
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items level-dropdown-item">
+                    <span>Level</span>
+                    <ul class="dropdown-menu dropdown-submenu ps-3" id="level-dropdown-submenu" style="top: -20px">
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="ENTRY_LEVEL" id="level-entry">
+                            <label class="form-check-label" for="level-entry">
+                                Entry level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="JUNIOR_LEVEL" id="level-junior">
+                            <label class="form-check-label" for="level-junior">
+                                Junior level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="MID_LEVEL" id="level-mid">
+                            <label class="form-check-label" for="level-mid">
+                                Mid level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SENIOR_LEVEL" id="level-senior">
+                            <label class="form-check-label" for="level-senior">
+                                Senior level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="SUPERVISOR_LEVEL" id="level-supervisor">
+                            <label class="form-check-label" for="level-supervisor">
+                                Supervisor level
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input level-checkbox" type="checkbox" name="level" value="EXECUTIVE_LEVEL" id="level-executive">
+                            <label class="form-check-label" for="level-executive">
+                                Executive level
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center py-2">
+                            <span class="filter-items btn btn-sm btn-outline-primary rounded-pill px-2 py-1 me-3" style="font-size: 0.8rem" onclick="createLevelFilterButton($(this))">Confirm</span>
+                        </div>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items selection-status-dropdown-item">
+                    <span>Selection Status</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="selection-status-dropdown-submenu" style="top: -85px">
+                        <li class="dropdown-item filter-items" onclick="createSelectionStatusFilterButton($(this));checkAndToggleFilterButton();">Received</li>
+                        <li class="dropdown-item filter-items" onclick="createSelectionStatusFilterButton($(this));checkAndToggleFilterButton();">Considering</li>
+                        <li class="dropdown-item filter-items" onclick="createSelectionStatusFilterButton($(this));checkAndToggleFilterButton();">Viewed</li>
+                        <li class="dropdown-item filter-items" onclick="createSelectionStatusFilterButton($(this));checkAndToggleFilterButton();">Offered</li>
+                    </ul>
+                </li>
+                <li class="dropdown-item filter-items interview-status-dropdown-item">
+                    <span>Interview Status</span>
+                    <ul class="dropdown-menu dropdown-submenu" id="interview-status-dropdown-submenu" style="top: -125px">
+                        <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">None</li>
+                        <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Pending</li>
+                        <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Cancel</li>
+                        <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Passed</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    `;
+
+	console.log("Table" , $('#table1'))
+
+	fetchTitleAndGenerateHTML().then(submenuHTML => {
+		// Use the generated submenuHTML as needed
+		$('#position-dropdown-submenu').html(submenuHTML);
+	});
+
+	fetchDepartmentAndGenerateHTML().then(submenuHTML => {
+		// Use the generated submenuHTML as needed
+		$('#department-dropdown-submenu').html(submenuHTML);
+	});
+
+	// Find the search input's parent div.row and append the custom filter inputs
+	let searchRow = $('#table1_filter').closest('.row');
+	$('.dt-row').css('margin-bottom','40px')
+	let recentFilterDropdownCon = `<div class="col-8" id="recent-filter-dropdown-con"></div>`;
+	let reportButtonCon =
+		`<div class="col-auto pt-2" id="report-button-con">
+			<div class="row">
+				<div class="col-4">
+            		<button id="download" class="image-button" aria-label="Download CV"></button>
+                	   <p>CV</p>
+            		</div>
+            		<div class="col-4">
+                		<a id="pdfDownload" class="image-button" aria-label="Download pdf"
+                    	href="/all_candidates/pdf"></a>
+                		<p>PDF</p>
+            		</div>
+            		<div class="col-4">
+                		<a id="excelDownload" class="image-button" aria-label="Download Excel"
+                		href="/all_candidates/excel"></a>
+                			<p>Excel</p>
+                	</div>
+            	</div>
+			</div>
+		</div>`;
+	$(customFilterHtml).appendTo(searchRow);
+	$(resetFilterButton).appendTo(searchRow);
+	$('#reset-filter').hide();
+	$(recentFilterDropdownCon).appendTo(searchRow);
+	$(reportButtonCon).appendTo(searchRow);
+
+	$('.dropdown-menu > li').hover(function () {
+			$(this).children('.dropdown-submenu').css('display', 'block');
+		}
+		, function () {
+			$(this).children('.dropdown-submenu').css('display', '');
+		});
+
+	// Get the current date
+	const currentDate = moment();
+
+	// Date range picker
+	$(function() {
+		// Initialize the daterangepicker
+		$('input[name="datefilter"]').daterangepicker({
+			autoUpdateInput: false,
+			locale: {
+				cancelLabel: 'Clear'
+			},
+			maxDate: currentDate // Set the maximum date initially to the current date
+		});
+
+		console.log($('#apply-date-dropdown-submenu'));
+
+		// Handle apply event to update the input value and set start and end times
+		$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+			const startDate = picker.startDate.format('MM/DD/YYYY');
+			const endDate = picker.endDate.format('MM/DD/YYYY');
+
+			$(this).val(startDate + ' - ' + endDate);
+
+			// Set the start and end times in your input fields
+			createDatePostedFilterButton('Custom',startDate,endDate);
+			checkAndToggleFilterButton();
+		});
+
+		// Handle cancel event to clear the input value and reset start and end times
+		$('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+			$(this).val('');
+			$('#filter-start-time').val('');
+			$('#filter-end-time').val('');
+		});
+
+		$('.daterangepicker').hover(function () {
+			$('#apply-date-dropdown-submenu').css('display', 'block');
+		});
+
+		$('.daterangepicker th').each(function() {
+			console.log("TH:",$(this))
+			$(this).on('click', function(event) {
+				console.log("Click!!!!")
+				event.stopPropagation();
+				$('#apply-date-dropdown-submenu').css('display', 'block');
+			});
+		});
+
+	});
+
+	// Initialize Bootstrap tooltips
+	let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+	let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+		return new bootstrap.Tooltip(tooltipTriggerEl);
+	});
+
+
 	// Assuming you have initialized DataTable properly
 
 	$('#home-tab').on('click', function() {
@@ -247,6 +481,7 @@ $(document).ready( async function() {
 		}
 
 	});
+
 	var onDateBoundChange = function() {
 		var first = $('input#minValue').val();
 		var second = $('input#maxValue').val();
@@ -315,6 +550,7 @@ $(document).ready( async function() {
 		}
 
 	})
+
 	$('#selectAll').on(
 		'change',
 		function() {
@@ -378,141 +614,141 @@ $(document).ready( async function() {
 			});
 	});
 	//Filter  start
-	const selectElement = $('#positionSelect');
-	const selectELement1 = $('#post');
-	const statusSelect = $('#Selection');
-	const interview = $('#Interview');
-	$.ajax({
-		url: '/allPositions',
-		type: 'GET',
-		success: function(response) {
-			$.each(response, function(index, position) {
-				const option = $('<option>').val(position.name).text(position.name);
-				selectElement.append(option);
-
-				if (dname && position.name === dname) {
-					selectElement.val(position.name);
-				}
-
-				if (position1 && position.name === position1) {
-
-					option.prop('selected', true);
-				}
-
-			});
-		},
-		error: function(xhr, status, error) {
-			console.log(status);
-			console.error('Error fetching positions:', error);
-		}
-	});
-	$.ajax({
-		url: '/post',
-		type: 'GET',
-		success: function(response) {
-			$.each(response, function(index, post) {
-				const optionText = post.openDate + ' To ' + post.closeDate;
-				const option = $('<option>', { value: post.id, text: optionText });
-
-				selectELement1.append(option);
-
-				if (id && post.id == id) {
-					selectELement1.val(post.id);
-				}
-
-				if (post.id == postId) {
-
-					option.prop('selected', true);
-				}
-			});
-		},
-		error: function(xhr, status, error) {
-			console.log(status);
-			console.error('Error fetching positions:', error);
-		}
-	});
-
-	selectElement.on('change', function() {
-		handleFilterChange(4, this.value, 'position');
-	});
-
-	statusSelect.on('change', function() {
-		handleFilterChange(5, this.value, 'selection');
-	});
-
-	interview.on('change', function() {
-		handleFilterChange(8, this.value, 'interview');
-	});
-	selectELement1.on('change', function() {
-		handleFilterChange(1, this.value, 'postId');
-	})
-
-	if (id != null || dname != null) {
-		console.log(id)
-		table.column(1).search(id).draw();
-		table.column(4).search(dname).draw();
-		selectElement.on('change', function() {
-			table.column(1).search("").draw();
-			handleFilterChange(4, this.value, 'position');
-		});
-		statusSelect.on('change', function() {
-			table.column(1).search("").draw();
-			handleFilterChange(5, this.value, 'selection');
-		});
-		interview.on('change', function() {
-			table.column(1).search("").draw();
-			handleFilterChange(8, this.value, 'interview');
-		});
-		selectELement1.on('change', function() {
-			table.column(1).search("").draw();
-			handleFilterChange(1, this.value, 'postId');
-		});
-	}
-
-	if (position1 || select || interview1 || postId) {
-
-		let filters = [];
-
-		if (position1) {
-			filters.push({ column: 4, value: position1 });
-		}
-		if (select) {
-			statusSelect.val(select);
-			filters.push({ column: 5, value: select });
-		}
-		if (interview1) {
-			interview.val(interview1);
-			filters.push({ column: 8, value: interview1 });
-		}
-		if (postId) {
-			interview.val(postId);
-			filters.push({ column: 1, value: postId });
-		}
-		filters.forEach(filter => {
-			table.column(filter.column).search(filter.value);
-		});
-
-		table.draw();
-	}
-	function handleFilterChange(columnIndex, filterValue, idKey) {
-		table.column(columnIndex).search(filterValue).draw();
-		currentId.delete('viId');
-		currentId.delete('name');
-		currentId.set(idKey, filterValue);
-		history.pushState(null, null, '?' + currentId.toString());
-	}
+	// const selectElement = $('#positionSelect');
+	// const selectELement1 = $('#post');
+	// const statusSelect = $('#Selection');
+	// const interview = $('#Interview');
+	// $.ajax({
+	// 	url: '/allPositions',
+	// 	type: 'GET',
+	// 	success: function(response) {
+	// 		$.each(response, function(index, position) {
+	// 			const option = $('<option>').val(position.name).text(position.name);
+	// 			selectElement.append(option);
+	//
+	// 			if (dname && position.name === dname) {
+	// 				selectElement.val(position.name);
+	// 			}
+	//
+	// 			if (position1 && position.name === position1) {
+	//
+	// 				option.prop('selected', true);
+	// 			}
+	//
+	// 		});
+	// 	},
+	// 	error: function(xhr, status, error) {
+	// 		console.log(status);
+	// 		console.error('Error fetching positions:', error);
+	// 	}
+	// });
+	// $.ajax({
+	// 	url: '/post',
+	// 	type: 'GET',
+	// 	success: function(response) {
+	// 		$.each(response, function(index, post) {
+	// 			const optionText = post.openDate + ' To ' + post.closeDate;
+	// 			const option = $('<option>', { value: post.id, text: optionText });
+	//
+	// 			selectELement1.append(option);
+	//
+	// 			if (id && post.id == id) {
+	// 				selectELement1.val(post.id);
+	// 			}
+	//
+	// 			if (post.id == postId) {
+	//
+	// 				option.prop('selected', true);
+	// 			}
+	// 		});
+	// 	},
+	// 	error: function(xhr, status, error) {
+	// 		console.log(status);
+	// 		console.error('Error fetching positions:', error);
+	// 	}
+	// });
+	//
+	// selectElement.on('change', function() {
+	// 	handleFilterChange(4, this.value, 'position');
+	// });
+	//
+	// statusSelect.on('change', function() {
+	// 	handleFilterChange(5, this.value, 'selection');
+	// });
+	//
+	// interview.on('change', function() {
+	// 	handleFilterChange(8, this.value, 'interview');
+	// });
+	// selectELement1.on('change', function() {
+	// 	handleFilterChange(1, this.value, 'postId');
+	// })
+	//
+	// if (id != null || dname != null) {
+	// 	console.log(id)
+	// 	table.column(1).search(id).draw();
+	// 	table.column(4).search(dname).draw();
+	// 	selectElement.on('change', function() {
+	// 		table.column(1).search("").draw();
+	// 		handleFilterChange(4, this.value, 'position');
+	// 	});
+	// 	statusSelect.on('change', function() {
+	// 		table.column(1).search("").draw();
+	// 		handleFilterChange(5, this.value, 'selection');
+	// 	});
+	// 	interview.on('change', function() {
+	// 		table.column(1).search("").draw();
+	// 		handleFilterChange(8, this.value, 'interview');
+	// 	});
+	// 	selectELement1.on('change', function() {
+	// 		table.column(1).search("").draw();
+	// 		handleFilterChange(1, this.value, 'postId');
+	// 	});
+	// }
+	//
+	// if (position1 || select || interview1 || postId) {
+	//
+	// 	let filters = [];
+	//
+	// 	if (position1) {
+	// 		filters.push({ column: 4, value: position1 });
+	// 	}
+	// 	if (select) {
+	// 		statusSelect.val(select);
+	// 		filters.push({ column: 5, value: select });
+	// 	}
+	// 	if (interview1) {
+	// 		interview.val(interview1);
+	// 		filters.push({ column: 8, value: interview1 });
+	// 	}
+	// 	if (postId) {
+	// 		interview.val(postId);
+	// 		filters.push({ column: 1, value: postId });
+	// 	}
+	// 	filters.forEach(filter => {
+	// 		table.column(filter.column).search(filter.value);
+	// 	});
+	//
+	// 	table.draw();
+	// }
+	// function handleFilterChange(columnIndex, filterValue, idKey) {
+	// 	table.column(columnIndex).search(filterValue).draw();
+	// 	currentId.delete('viId');
+	// 	currentId.delete('name');
+	// 	currentId.set(idKey, filterValue);
+	// 	history.pushState(null, null, '?' + currentId.toString());
+	// }
 
 	//Filter end	
 
-	//CV dowload starst
+	// CV dowload starst
 	var downloadButton = document.querySelector('#download');
 
 	downloadButton.addEventListener('click', async function() {
 		var selectedIds = [];
-		var checkboxe = document.querySelectorAll('.ck:checked');
+		var checkbox = document.querySelectorAll('.ck:checked');
 
 
-		checkboxe.forEach(function(checkbox) {
+		checkbox.forEach(function(checkbox) {
 			selectedIds.push(checkbox.value);
 		});
 
@@ -546,7 +782,7 @@ $(document).ready( async function() {
 			console.log("Select at least one checkbox.");
 		}
 	});
-	//CV download end
+	// CV download end
 
 	// //Pdf download Start
 	// $('#pdfDownload').on('click',function (){
@@ -656,33 +892,49 @@ function updateCcMails() {
 
 
 function format(d) {
-	return '<div class="slider">' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'Full Name: ' + d.name +
-		'</div>' +
-		'</div>' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'Email: ' + d.email +
-		'</div>' +
-		'</div>' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'Interview type: ' + d.interviewType +
-		'</div>' +
-		'</div>' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'Interview stage: ' + d.interviewStage +
-		'</div>' +
-		'</div>' +
-		'<div class="row">' +
-		'<div class="col-md-2">' +
-		'Level: ' + d.lvl +
-		'</div>' +
-		'</div>' +
-		'</div>';
+	return `
+  <div class="slider">
+    <div class="row">
+      <div class="col-md-2">
+        Full Name:
+      </div>
+      <div class="col-auto">
+        ${d.name}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        Email:
+      </div>
+      <div class="col-auto">
+        ${d.email}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        Interview type:
+      </div>
+      <div class="col-auto">
+      	${d.interviewType}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        Interview stage: 
+      </div>
+      <div class="col-auto">
+      	${d.interviewStage}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        Level:
+      </div>
+      <div class="col-auto">
+      	${reconvertToString(d.lvl)}
+      </div>
+    </div>
+  </div>`;
 
 
 
@@ -1069,7 +1321,50 @@ document.addEventListener('DOMContentLoaded', function() {
 		} else {
 			console.log("No checkboxes are selected.");
 		}
+
 	});
 });
 
 */
+
+function reconvertToString(input) {
+	// Replace underscores with spaces and convert to title case
+	if (input === "ON_SITE") {
+		return "On-site";
+	}
+	return input.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ');
+}
+
+// Change time format
+function changeTimeFormat(time) {
+	var dateString = time;
+
+	// Parse the date string to a JavaScript Date object
+	var date = new Date(dateString);
+
+	// Array to map month numbers to month names
+	var monthNames = [
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun",
+		"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+
+	// Get the day of the month
+	var day = date.getDate();
+
+	// Determine the suffix for the day (st, nd, rd, or th)
+	var suffix;
+	if (day >= 11 && day <= 13) {
+		suffix = "th";
+	} else {
+		switch (day % 10) {
+			case 1: suffix = "st"; break;
+			case 2: suffix = "nd"; break;
+			case 3: suffix = "rd"; break;
+			default: suffix = "th";
+		}
+	}
+
+	// Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
+	var formattedDate = day + suffix + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
+	return formattedDate;
+}
