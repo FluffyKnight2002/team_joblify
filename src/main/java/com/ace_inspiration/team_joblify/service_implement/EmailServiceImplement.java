@@ -112,7 +112,7 @@ public class EmailServiceImplement implements EmailService {
                 javaMailSender.send(message);
                 return true;
             }
-            else if(emailTemplateDto.getDate().isBlank() && emailTemplateDto.getTime().isBlank() && emailTemplateDto.getType().isBlank() && emailTemplateDto.getStatus().isBlank()){
+            else if(emailTemplateDto.getDate() == null && emailTemplateDto.getTime()==null && emailTemplateDto.getType()==null && emailTemplateDto.getStatus()==null){
 //                String[] ccmail = emailTemplateDto.getCcmail().split(",");
                 for (String email: emailTemplateDto.getCcmail()){
                     System.err.println(email);

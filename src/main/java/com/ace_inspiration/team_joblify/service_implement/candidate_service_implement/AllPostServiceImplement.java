@@ -44,7 +44,7 @@ public class AllPostServiceImplement implements AllPostService{
 	        cancelCount += all.getCancelCandidate();
 	        notInterviewCount += all.getNotInterviewCandidate();
 	        pendingCount += all.getPendingCandidate();
-	        passedCount += all.getPassedCandidate();
+	        passedCount += all.getAcceptedCandidate();
 	        Interviewed +=all.getInterviewedCounts();
 	    }
 	    System.err.println(Interviewed);

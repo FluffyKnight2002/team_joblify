@@ -1,10 +1,7 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
-import com.ace_inspiration.team_joblify.dto.CandidateDto;
-import com.ace_inspiration.team_joblify.dto.CountDto;
-import com.ace_inspiration.team_joblify.dto.SummaryDto;
-import com.ace_inspiration.team_joblify.dto.VacancyDto;
+import com.ace_inspiration.team_joblify.dto.*;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.ace_inspiration.team_joblify.dto.PindChartDto;
 import com.ace_inspiration.team_joblify.entity.Position;
 import com.ace_inspiration.team_joblify.entity.Summary;
 import com.ace_inspiration.team_joblify.entity.AllPost;
@@ -288,7 +284,7 @@ public class CandidateController {
         return dtoList;
     }
     @GetMapping("/chart")
-    public PindChartDto pindChart(){
+    public PindChartDto pineChart(){
     	  LocalDate postDate = LocalDate.parse("2023-08-27");
     	PindChartDto pind =allPostService.findByOpenDate(postDate);
     	System.out.println(pind.getInterviewed());
@@ -297,7 +293,7 @@ public class CandidateController {
 
     @GetMapping("/yearly-vacancy-count")
     public List<YearlyVacancyCountDto> getYearlyVacancyCount(@RequestParam("timeSession") String year,
-            @RequestParam("department") String department) {
+                                                             @RequestParam("department") String department) {
 
 
 

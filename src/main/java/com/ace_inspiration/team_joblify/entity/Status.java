@@ -16,7 +16,6 @@ public enum Status implements Serializable {
 
     NONE, 
     OFFERED,
-    ACCEPTED,
-    OfferMail
+    ACCEPTED
 
 }
