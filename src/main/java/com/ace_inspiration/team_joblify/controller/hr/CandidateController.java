@@ -1,6 +1,5 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
-
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
 import com.ace_inspiration.team_joblify.dto.CandidateDto;
 import com.ace_inspiration.team_joblify.dto.CountDto;
@@ -45,7 +44,6 @@ import com.ace_inspiration.team_joblify.entity.InterviewProcess;
 
 import lombok.RequiredArgsConstructor;
 
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -82,9 +80,9 @@ public class CandidateController {
 
     private final PositionService positionService;
 
-//    private final DasboardService dasboardservice;
+    // private final DasboardService dasboardservice;
 
-    private  final InterviewProcessService interviewService;
+    private final InterviewProcessService interviewService;
 
     private final InterviewProcessRepository repo;
 
@@ -229,7 +227,6 @@ public class CandidateController {
         return output;
     }
 
-
     @GetMapping("/allPositions")
     @ResponseBody
     public List<Position> getAllPosition() {
@@ -265,9 +262,9 @@ public class CandidateController {
     }
 
     @GetMapping("/getYear")
-    public List<Object[]> getyear(){
-    	   List<Object[]> year=vanInfoReopository.getYear();
-    	   return year;
+    public List<Object[]> getyear() {
+        List<Object[]> year = vanInfoReopository.getYear();
+        return year;
     }
 
 
@@ -276,19 +273,17 @@ public class CandidateController {
         String starDate=year+"-01-01";
         String endDate=year+"-12-31";
 
-        List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate,endDate);
+        List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate, endDate);
         List<CountDto> dtoList = new ArrayList<>();
 
         for (Object[] resultRow : results) {
             CountDto dto = new CountDto(
-                (String) resultRow[0],
-                (String) resultRow[1],
-                (String) resultRow[2],
-                (String) resultRow[3]
-            );
+                    (String) resultRow[0],
+                    (String) resultRow[1],
+                    (String) resultRow[2],
+                    (String) resultRow[3]);
             dtoList.add(dto);
         }
-
 
         return dtoList;
     }
@@ -300,6 +295,41 @@ public class CandidateController {
         return pind;
     }
 
+    @GetMapping("/yearly-vacancy-count")
+    public List<YearlyVacancyCountDto> getYearlyVacancyCount(@RequestParam("timeSession") String year,
+            @RequestParam("department") String department) {
+
+
+
+        String starDate = null;
+        String endDate = null;
+
+        if(year.equals("All")){
+            starDate = LocalDate.now().minusYears(10).getYear() + "-01-01";
+            endDate = LocalDate.now().getYear() + "-12-31";
+
+        } else {
+             starDate = year + "-01-01";
+            endDate = year + "-12-31";
+
+        }
+        System.out.println(">>>>>>>>>>>>>" + year);
+        System.out.println(">>>>>>>>>>>>>" + department);
+
+        List<Object[]> results = vanInfoReopository.getMonthlyVacancyCountsByMonth(starDate, endDate, department);
+        List<YearlyVacancyCountDto> dtoList = new ArrayList<>();
+
+        for (Object[] resultRow : results) {
+            YearlyVacancyCountDto yearlyVacancyCountDto = new YearlyVacancyCountDto(
+                    (long) resultRow[0],
+                    (long) resultRow[1]
+
+            );
+            dtoList.add(yearlyVacancyCountDto);
+        }
+
+        return dtoList;
+    }
 
     @ModelAttribute("candidate")
     public CandidateDto getCandidateDto() {
@@ -327,7 +357,8 @@ public class CandidateController {
                 System.err.println("sdfzdfgd");
                 return ResponseEntity.ok("XML content updated successfully");
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to locate <content> element in XML");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Failed to locate <content> element in XML");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -356,7 +387,7 @@ public class CandidateController {
     @PostMapping("/apply")
     public boolean submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
         Candidate candidate = candidateService.saveCandidate(dto);
-        if(candidate == null) {
+        if (candidate == null) {
             return false;
         }
         return true;

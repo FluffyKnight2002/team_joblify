@@ -30,6 +30,18 @@
             flex: 1;
             margin: 10px;
         }
+
+        .col {
+            display: flex;
+            /* Use flexbox to align items in a row */
+            align-items: center;
+            /* Center items vertically */
+        }
+
+        .form-control {
+            margin-right: 10px;
+            /* Add some space between the selects */
+        }
     </style>
 </head>
 
@@ -122,19 +134,20 @@
                                         <h4>Profile Visit</h4>
                                     </div>
                                     <div class="card-body">
-                                        <select id="year">
-                                        <option value="">Chose One</option>
-                                        </select></div>
-                                        <div id="chart-profile-visit" class="chart">
+                                        <select id="year" class="form-control">
+                                            <option value="">Choose One</option>
+                                        </select>
+                                        <div id="chart-profile-visit" class="chart"></div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12 col-xl-4">
+                            <div class="col-12 col-xl-5">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Profile Visit</h4>
+                                        <h4>Vacancy Status Percentage</h4>
                                     </div>
                                     <div class="card-body">
                                     <select id="pine">
@@ -161,9 +174,22 @@
                             <div class="col-12 col-xl-8">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Latest Comments</h4>
+                                        <h4>Vacancy Post Count</h4>
                                     </div>
-                                   <div id="graph"></div>
+                                    <div class="card-body">
+                                        <div class="col">
+                                            <select id="department3" class="form-control">
+                                                <option value="" selected disabled>Department</option>
+                                            </select>
+
+                                            <select id="year3" class="form-control">
+                                                <option value="" selected disabled>Year</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="graph"></div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -201,7 +227,7 @@
     <script src="/assets/js/pages/dashboard.js"></script>
     <script src="/assets/js/dashboarddata.js"></script>
     <script src="/assets/js/main.js"></script>
-    
+
 
 
 </body>
