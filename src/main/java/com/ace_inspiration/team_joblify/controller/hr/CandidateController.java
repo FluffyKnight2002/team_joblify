@@ -186,7 +186,7 @@ public class CandidateController {
         String endDate = null;
 
         if(year.equals("All")){
-            starDate = LocalDate.now().minusYears(10).getYear() + "-01-01";
+            starDate = LocalDate.now().getYear() + "-01-01";
             endDate = LocalDate.now().getYear() + "-12-31";
         
         } else {
