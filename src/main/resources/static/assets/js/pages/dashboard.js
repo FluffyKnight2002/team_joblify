@@ -1,20 +1,27 @@
 let post4 ;
 let post5;
 let post6;
+let post7;
+let post8;
+let post9;
+let post10;
+let post11;
+let post12;
 $(document).ready(function() {
 				post4=[];
 				post5=[];
-				post6=[]
-		const currentDate = new Date();
-		const currentYear = currentDate.getFullYear();
+				post6=[];
+		
 	fetch('/getYear')  .then(response => response.json())
   .then(data => {
 data.forEach(yearArray => {
-    const select = $('#year'); // Assuming you have an element with id 'year' for your select element
+    const select = $('#year');
+     const select1=$('#pine');
     const year = yearArray[0]; // Extract the year from the inner array
 
     const option = $('<option>').val(year).text(year);
     select.append(option);
+    select1.append(option);
 });
   })
   .catch(error => {
@@ -128,98 +135,135 @@ $('#year').on('change',function(){
 }
 
 	)
+	fetch('/chart')  .then(response => response.json())
+  .then(data => {
+	  var pine = {
+	series: [data.total, data.not, data.panding,data.interviewed,data.passed,data.cancel],
+	labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
+     chart: {
+		  width: 400,
+          type: 'polarArea',
+        },
+        stroke: {
+          colors: ['#fff']
+        },
+        fill: {
+          opacity: 0.8
+        },
+          yaxis: {
+    show: false,
+   
+  },
+        
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          
+          }
+        }]
+        };
+
+        var pchart = new ApexCharts(document.querySelector("#chart"), pine);
+        pchart.render();
+  }
+  
+  )
+
+
+	
 })
 
 
-let optionsVisitorsProfile  = {
-	series: [70, 30],
-	labels: ['Male', 'Female'],
-	colors: ['#435ebe','#55c6e8'],
-	chart: {
-		type: 'donut',
-		width: '100%',
-		height:'350px'
-	},
-	legend: {
-		position: 'bottom'
-	},
-	plotOptions: {
-		pie: {
-			donut: {
-				size: '30%'
-			}
-		}
-	}
-}
 
-var optionsEurope = {
+
+
+
+
+
+var options = {
 	series: [{
-		name: 'series1',
-		data: [310, 800, 600, 430, 540, 340, 605, 805,430, 540, 340, 605]
-	}],
-	chart: {
-		height: 80,
-		type: 'area',
-		toolbar: {
-			show:false,
+		name: "Session Duration",
+		data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10]
+	},
+		{
+			name: "Page Views",
+			data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35]
 		},
-	},
-	colors: ['#5350e9'],
-	stroke: {
-		width: 2,
-	},
-	grid: {
-		show:false,
+		{
+			name: 'Total Visits',
+			data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47]
+		}
+	],
+	chart: {
+		height: 350,
+		type: 'line',
+		zoom: {
+			enabled: false
+		},
 	},
 	dataLabels: {
 		enabled: false
 	},
-	xaxis: {
-		type: 'datetime',
-		categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z","2018-09-19T07:30:00.000Z","2018-09-19T08:30:00.000Z","2018-09-19T09:30:00.000Z","2018-09-19T10:30:00.000Z","2018-09-19T11:30:00.000Z"],
-		axisBorder: {
-			show:false
-		},
-		axisTicks: {
-			show:false
-		},
-		labels: {
-			show:false,
+	stroke: {
+		width: [5, 7, 5],
+		curve: 'straight',
+		dashArray: [0, 8, 5]
+	},
+	title: {
+		text: 'Page Statistics',
+		align: 'left'
+	},
+	legend: {
+		tooltipHoverFormatter: function(val, opts) {
+			return val + ' - ' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + ''
 		}
 	},
-	show:false,
-	yaxis: {
-		labels: {
-			show:false,
-		},
+	markers: {
+		size: 0,
+		hover: {
+			sizeOffset: 6
+		}
+	},
+	xaxis: {
+		categories: ['01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
+			'10 Jan', '11 Jan', '12 Jan'
+		],
 	},
 	tooltip: {
-		x: {
-			format: 'dd/MM/yy HH:mm'
-		},
+		y: [
+			{
+				title: {
+					formatter: function (val) {
+						return val + " (mins)"
+					}
+				}
+			},
+			{
+				title: {
+					formatter: function (val) {
+						return val + " per session"
+					}
+				}
+			},
+			{
+				title: {
+					formatter: function (val) {
+						return val;
+					}
+				}
+			}
+		]
 	},
+	grid: {
+		borderColor: '#f1f1f1',
+	}
 };
 
-let optionsAmerica = {
-	...optionsEurope,
-	colors: ['#008b75'],
-}
-let optionsIndonesia = {
-	...optionsEurope,
-	colors: ['#dc3545'],
-}
-
-
-
-
-var chartVisitorsProfile = new ApexCharts(document.getElementById('chart-visitors-profile'), optionsVisitorsProfile)
-var chartEurope = new ApexCharts(document.querySelector("#chart-europe"), optionsEurope);
-var chartAmerica = new ApexCharts(document.querySelector("#chart-america"), optionsAmerica);
-var chartIndonesia = new ApexCharts(document.querySelector("#chart-indonesia"), optionsIndonesia);
-
-
-chartIndonesia.render();
-chartAmerica.render();
-chartEurope.render();
-
-chartVisitorsProfile.render()
+var graph = new ApexCharts(document.querySelector("#graph"), options);
+graph.render();
