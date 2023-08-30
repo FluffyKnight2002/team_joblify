@@ -48,7 +48,7 @@ function fetchJobsAndRenderUI() {
                             </span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Location">
-                            <i class="bi bi-geo-alt-fill"></i>${job.address}</span>
+                            <i class="bi bi-geo-alt-fill"></i>${job.address}<span>( ${reconvertToString(job.onSiteOrRemote)} )</span></span>
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">

@@ -15,6 +15,13 @@
     <link rel="stylesheet" href="/assets/css/candidate-css/quicksearchstyle.css">
     <link rel="stylesheet" href="/assets/css/candidate-css/filter.css">
     <link rel="stylesheet" href="/assets/css/candidate-css/paginationstyle.css">
+    <style>
+        #filter-data-con {
+            top: -300px;
+            position: relative;
+            height: 100vh;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,8 +46,8 @@
 
                 <!-- Quick search start -->
                 <div class="input-group">
-                    <input type="text" class="form-control search-btn" placeholder="Quick Search" />
-                    <button type="submit" class="btn btn-outline-dark"><i class='bx bx-search-alt'></i></button>
+                    <input type="text" class="form-control search-btn" name="position" placeholder="Quick Search with Position" />
+                    <button type="button" class="btn btn-outline-dark" id="quick-search-btn"><i class='bx bx-search-alt'></i></button>
                 </div>
                 <div class="ms-3">
                     <button type="button" class="btn btn-primary" onclick="openFilter()">Filter</button>
@@ -106,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="border-2 border-bottom pb-3 mb-3">
-                                <h6>Sort by</h6>
+                                <h6>Job Type</h6>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="jobType" id="type-both" value="BOTH" checked>
                                     <label class="form-check-label" for="type-both" >
@@ -123,6 +130,27 @@
                                     <input class="form-check-input" type="radio" name="jobType" id="type-part-time" value="PART_TIME">
                                     <label class="form-check-label" for="type-part-time">
                                         Part-time
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="border-2 border-bottom pb-3 mb-3">
+                                <h6>On-Site or Remote</h6>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="onSiteOrRemote" id="both-on-and-remote" value="BOTH" checked>
+                                    <label class="form-check-label" for="both-on-and-remote" >
+                                        Both
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="onSiteOrRemote" id="on-site" value="ON_SITE">
+                                    <label class="form-check-label" for="on-site" >
+                                        On-Site
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="onSiteOrRemote" id="remote" value="REMOTE">
+                                    <label class="form-check-label" for="remote">
+                                        Remote
                                     </label>
                                 </div>
                             </div>
@@ -192,50 +220,6 @@
         <!-- Jobs start -->
         <div class="col-md-10 mx-auto" id="jobs-container" style="min-height: 300px; margin-bottom: 90px; margin-top: 30px">
 
-            <div class="card flex-md-row">
-                <div class="card placeholder-card flex-md-row">
-                    <div class="">
-                        <div class="placeholder-img m-3"></div>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title placeholder-line"></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block placeholder-line"></span>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                        <a href="#" class="btn btn-sm btn-primary mb-1 placeholder-button"></a>
-                        <span class="default-font me-4 d-inline-block end-date-text placeholder-line"></span>
-                    </div>
-                </div>
-                <div class="">
-                    <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Fullstack Developer<span
-                            class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> 11
-                            applicants</span></h5>
-                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Post(Job type)"><i class='bx bxs-briefcase'></i>5
-                        (Full-time)</span>
-                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                        3-5 Lakhs</span>
-                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Posted time"><i class='bx bx-time'></i> 1
-                        Hour ago</span>
-                    <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
-                        data-placement="bottom" title="Location"><i class='bx bx-location-plus'></i>MICT Park,
-                        Hlaing Township,Yangon</span>
-                </div>
-                <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                    <a href="details.html" class="btn btn-sm btn-primary mb-1">More Details</a>
-                    <span class="default-font me-4 d-inline-block end-date-text" data-toggle="tooltip"
-                        data-placement="bottom" title="Close date"><i class='bx bx-calendar-exclamation'></i> Aug
-                        8</span>
-                </div>
-            </div>
             <div class="card flex-md-row">
                 <div class="">
                     <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
@@ -381,9 +365,9 @@
     <div th:replace="/fragments/layout ::footer"></div>
     <!-- Footer end -->
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/assets/js/javaScript/app.js"></script>
     <script src="/assets/js/javaScript/filter.js"></script>

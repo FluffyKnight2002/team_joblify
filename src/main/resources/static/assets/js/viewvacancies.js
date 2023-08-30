@@ -66,6 +66,8 @@ $(document).ready(function () {
                 })
                 $('.close-vacancy').remove();
                 $('.reopen-vacancy').remove();
+                $('#timePickerBtn').prop('disabled', true);
+                $('#calendar-btn').prop('disabled', true);
             }else {
                 console.log("Hello")
             }

@@ -41,7 +41,7 @@ function displayVacancies(data) {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.openDate)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address} <span>( ${reconvertToString(vacancy.onSiteOrRemote)} )</span></span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
                         <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1" id="more-detail-btn" style="min-width: 88.59px">More Detail</a>

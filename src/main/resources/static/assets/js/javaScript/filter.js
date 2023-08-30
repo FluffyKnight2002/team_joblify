@@ -4,29 +4,31 @@ let resultCount = 0;
 let totalPages = 0;
 let currentPages = 0;
 async function applyFilter() {
-  // Get selected values
-  let sortBy = $('input[name="sortBy"]:checked').val();
-  let datePosted = $('input[name="datePosted"]:checked').val();
-  let position = $('#title-input').val();
-  let jobType = $('input[name="jobType"]:checked').val();
-  let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
-      $('input[name="level"]:checked').serializeArray().map(item => item.value);
-  // let levelString = levelArray.join(',');
-  let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
-  let page = 0;
-  let itemPerPage = 5;
+    // Get selected values
+    let sortBy = $('input[name="sortBy"]:checked').val();
+    let datePosted = $('input[name="datePosted"]:checked').val();
+    let position = $('#title-input').val();
+    let jobType = $('input[name="jobType"]:checked').val();
+    let onSiteOrRemote = $('input[name="onSiteOrRemote"]:checked').val();
+    let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
+        $('input[name="level"]:checked').serializeArray().map(item => item.value);
+    // let levelString = levelArray.join(',');
+    let isUnder10 = $('input[name="under10"]:checked').val() === undefined ? "false" : "true";
+    let page = 0;
+    let itemPerPage = 5;
 
-  console.log("Sort By Sort By:", sortBy);
-  console.log("Sort By Date Posted:", datePosted);
-  console.log("Sort By Job Type:", jobType);
-  console.log("Sort By Level:",levelArray);
-  console.log("Under 10 Applicants:",isUnder10);
-  console.log("Page from applyJobs :",page);
+    console.log("Sort By Sort By:", sortBy);
+    console.log("Sort By Date Posted:", datePosted);
+    console.log("Sort By Job Type:", jobType);
+    console.log("Sort By Level:",levelArray);
+    console.log("Under 10 Applicants:",isUnder10);
+    console.log("Page from applyJobs :",page);
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, page, itemPerPage);
+        const data = await filterJobs(sortBy, datePosted, position, jobType,onSiteOrRemote, levelArray, isUnder10, page, itemPerPage);
         totalPages = data.totalPages;
         resultCount = data.totalElements;
+        console.log("On_Site or remote : " + onSiteOrRemote)
         console.log("Result Count from apply: " + resultCount);
         console.log("Total Pages: from apply" + totalPages);
         console.log(data);
@@ -42,8 +44,8 @@ async function applyFilter() {
         // Handle errors
         console.log(error);
     }
-  // Apply filter logic based on the selected values
-  // Replace this with your actual filter implementation
+    // Apply filter logic based on the selected values
+    // Replace this with your actual filter implementation
 }
 
 async function resetFilter(event) {
@@ -55,6 +57,7 @@ async function resetFilter(event) {
     $("#title-input").val("");
     $("input[name='level']").prop("checked", false);
     $("#type-both").prop("checked",true);
+    $("#both-on-and-remote").prop("checked", true);
     $("input[name='under10']").prop("checked", false);
 
     let dataOfVacancies =await applyFilter();
@@ -72,27 +75,28 @@ async function resetFilter(event) {
 
 // Function to open the filter
 function openFilter() {
-  document.getElementById("filterOffcanvas").classList.add("show");
-  document.body.classList.add("offcanvas-open");
+    document.getElementById("filterOffcanvas").classList.add("show");
+    document.body.classList.add("offcanvas-open");
 }
 
 // Function to close the filter
 function closeFilter() {
-  document.getElementById("filterOffcanvas").classList.remove("show");
+    document.getElementById("filterOffcanvas").classList.remove("show");
 
-  // Wait for the transition to complete before removing the offcanvas class
-  setTimeout(function() {
-    document.getElementById("filterOffcanvas").classList.remove("offcanvas-transition");
-    document.body.classList.remove("offcanvas-open");
-  }, 300); // 300 milliseconds = transition duration
+    // Wait for the transition to complete before removing the offcanvas class
+    setTimeout(function() {
+        document.getElementById("filterOffcanvas").classList.remove("offcanvas-transition");
+        document.body.classList.remove("offcanvas-open");
+    }, 300); // 300 milliseconds = transition duration
 }
 
-async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder10, page, itemPerPage) {
+async function filterJobs(sortBy, datePosted, position, jobType,onSiteOrRemote, level, isUnder10, page, itemPerPage) {
     let filterData = {
         sortBy: sortBy,
         datePosted: datePosted,
         position: position,
         jobType: jobType,
+        onSiteOrRemote: onSiteOrRemote,
         level: level,
         isUnder10: isUnder10,
     };
@@ -125,52 +129,52 @@ async function filterJobs(sortBy, datePosted, position, jobType, level, isUnder1
 }
 
 $("#title-input").autocomplete({
-  minLength: 1,
-  source: function(request, response) {
-    titleSpinner.show();
-    console.log("Spinner loading..")
-    $.ajax({
-      url: "/fetch-titles", // Replace with your server-side endpoint to fetch names
-      data: {
-        term: request.term
-      },
-      success: function(data) {
-        if(data.length == 0) {
-          console.log(" + Add new ");
-          response(["+ Add new"]);
-        }else {
-          console.log("Spinner hide")
-          response(data);
+    minLength: 1,
+    source: function(request, response) {
+        titleSpinner.show();
+        console.log("Spinner loading..")
+        $.ajax({
+            url: "/fetch-titles", // Replace with your server-side endpoint to fetch names
+            data: {
+                term: request.term
+            },
+            success: function(data) {
+                if(data.length == 0) {
+                    console.log(" + Add new ");
+                    response(["+ Add new"]);
+                }else {
+                    console.log("Spinner hide")
+                    response(data);
+                }
+                titleSpinner.hide()
+            }
+        });
+    },
+    open: function(event, ui) {
+        let menu = $(this).autocomplete("widget");
+        let maxHeight = 200; // Set the maximum height for the suggestion box
+        let itemCount = menu.children('li').length;
+        menu.css('max-height', maxHeight + 'px');
+        if (itemCount > 5) {
+            menu.css({
+                'overflow-y': 'auto',
+                'overflow-x': 'hidden' // Hide the horizontal scrollbar
+            });
+        } else {
+            menu.css('overflow', 'hidden');
         }
-        titleSpinner.hide()
-      }
-    });
-  },
-  open: function(event, ui) {
-    let menu = $(this).autocomplete("widget");
-    let maxHeight = 200; // Set the maximum height for the suggestion box
-    let itemCount = menu.children('li').length;
-    menu.css('max-height', maxHeight + 'px');
-    if (itemCount > 5) {
-      menu.css({
-        'overflow-y': 'auto',
-        'overflow-x': 'hidden' // Hide the horizontal scrollbar
-      });
-    } else {
-      menu.css('overflow', 'hidden');
+        menu.css( {
+            "font-size" : "0.8rem",
+            "border-radius": "0.25rem"
+        });
+        menu.find(".ui-menu-item").css( {
+            "color" :"#6c757d"});
+    },
+    select: function(e, ui) {
+        let titleValue = (ui.item.value === "+ Add new") ? $('#title-input').val() : ui.item.value;
+        $('#title-input').val(titleValue);
+        return false;
     }
-    menu.css( {
-      "font-size" : "0.8rem",
-      "border-radius": "0.25rem"
-    });
-    menu.find(".ui-menu-item").css( {
-      "color" :"#6c757d"});
-  },
-  select: function(e, ui) {
-    let titleValue = (ui.item.value === "+ Add new") ? $('#title-input').val() : ui.item.value;
-    $('#title-input').val(titleValue);
-    return false;
-  }
 });
 
 // Function to update result count and trigger filter
@@ -268,7 +272,7 @@ function countLastPage() {
 
 function showResult() {
     console.log(vacancies)
-  $("#jobs-container").empty();
+    $("#jobs-container").empty();
 
     if(vacancies.length > 0) {
         // Loop through each vacancy and create the card dynamically
@@ -283,7 +287,7 @@ function showResult() {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.openDate)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address} <span>(${reconvertToString(vacancy.onSiteOrRemote)})</span></span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
                         <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1 more-detail-btn" style="min-width: 88.59px">More Details</a>
@@ -351,6 +355,7 @@ async function loadVacancies(page) {
     let datePosted = $('input[name="datePosted"]:checked').val();
     let position = $('#title-input').val();
     let jobType = $('input[name="jobType"]:checked').val();
+    let onSiteOrRemote = $('input[name="onSiteOrRemote"]:checked').val();
     // Extract selected level values into an array
     let levelArray = $('input[name="level"]:checked').val() === undefined ? null :
         $('input[name="level"]:checked').serializeArray().map(item => item.value);
@@ -363,7 +368,7 @@ async function loadVacancies(page) {
     let itemPerPage = 5;
 
     try {
-        const data = await filterJobs(sortBy, datePosted, position, jobType, levelArray, isUnder10, page, itemPerPage);
+        const data = await filterJobs(sortBy, datePosted, position, jobType,onSiteOrRemote, levelArray, isUnder10, page, itemPerPage);
         totalPages = data.totalPages;
         vacancies = data.content; // Update vacancies array
         resultCount = data.totalElements;
@@ -383,6 +388,7 @@ function updateRecentFilter() {
     const sortBy = $('input[name="sortBy"]:checked').siblings('label').text();
     const datePosted = $('input[name="datePosted"]:checked').siblings('label').text();
     const jobType = $('input[name="jobType"]:checked').siblings('label').text();
+    const onSiteOrRemote = $('input[name="onSiteOrRemote"]:checked').siblings('label').text();
     const levelsArray = $('input[name="level"]:checked').map(function () {
         return $(this).siblings('label').text();
     }).get();
@@ -390,10 +396,16 @@ function updateRecentFilter() {
 
     // Create an array of filter elements
     const filterElements = [
-        `<span class="text-muted sub-title me-2 bg-white p-1 rounded-pill"><strong>Filter : </strong></span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${sortBy}</span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${datePosted}</span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${jobType}</span>`
+        `<span class="text-muted sub-title me-2 bg-white p-1 rounded-pill"><strong>Active Filter : </strong></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+           data-bs-toggle="dropdown" data-bs-placement="bottom" title="Sort By">
+            ${sortBy}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="dropdown" data-bs-placement="bottom" title="Date Posted">${datePosted}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="dropdown" data-bs-placement="bottom" title="Job Type">${jobType}</span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="dropdown" data-bs-placement="bottom" title="On-site or remote">${onSiteOrRemote}</span>`
     ];
 
     // Add level filters if levelsArray has values
@@ -416,7 +428,22 @@ function updateRecentFilter() {
     filterElements.forEach(element => {
         recentFilter.append(element);
     });
+
+    // Initialize Bootstrap tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip({
+            placement: 'bottom' // Set the desired placement here
+        });
+    });
 }
+
+$('#quick-search-btn').on('click', function () {
+    const button = $(this);
+    resetFilter(event);
+    $('#title-input').val($('input[name="position"]').val());
+    console.log("Filter value : ",$('#title-input').val())
+    applyFilter().then(r => showResult(vacancies));
+});
 
 $(document).ready(async function () {
     // Add event listeners to relevant input elements
@@ -424,6 +451,7 @@ $(document).ready(async function () {
     $('input[name="datePosted"]').on('change', applyFilter);
     $('#title-input').on('input', applyFilter);
     $('input[name="jobType"]').on('change', applyFilter);
+    $('input[name="onSiteOrRemote"]').on('change', applyFilter);
     $('input[name="level"]').on('change', applyFilter);
     $('input[name="under10"]').on('change', applyFilter);
 
