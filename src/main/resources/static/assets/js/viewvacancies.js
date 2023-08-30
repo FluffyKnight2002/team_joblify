@@ -13,10 +13,37 @@ let rangeBar1;
 let sliderValue1;
 let sliderValue2;
 let tooltipsEnabled1 = false;
+let currentData = {};
 // let tooltipTriggerPost;
 // let tooltipPost;
+let userRole;
+
+// async function validateUIButton() {
+//     const response = await fetch('/authenticated-user-data', {
+//         method: 'POST',
+//         headers: {
+//             [csrfHeader]: csrfToken
+//         }
+//     });
+//
+//     if (response.ok) {
+//         const [userDetails, passwordMatches] = await response.json();
+//         userRole = userDetails.role;
+//     }
+//
+//     console.log("User Role", userRole);
+//     if(userRole != 'DEFAULT_HR' && userRole != 'SENIOR_HR' && userRole != 'JUNIOR_HR') {
+//         $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+//             $(this).remove();
+//         })
+//         $('input[type="text"], input[type="number"], select, textarea').each(function () {
+//             $(this).prop('disabled', true);
+//         })
+//     }
+// }
 $(document).ready(function () {
 
+    // validateUIButton();
     // Check if the currentId is the same as the previousId
     if (currentId != null) {
         showDetailModalForVacancyId(currentId);
@@ -167,9 +194,13 @@ $(document).ready(function () {
                         <ul class="dropdown-menu" id="dropdown-setting${rowID}" aria-labelledby="dropdown-setting${rowID}">
                         <li><a class="dropdown-item show-detail-btn" href="view-vacancy-detail?id=${rowID}">Detail</a></li>`;
                         if (status === 'OPEN') {
-                            dropdown += `<li><a class="dropdown-item close-vacancy" href="close-vacancy?id=${rowID}">Close Vacancy</a></li>`;
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                                dropdown += `<li><a class="dropdown-item close-vacancy" href="close-vacancy?id=${rowID}">Close Vacancy</a></li>`;
+                            // }
                         } else {
-                            dropdown += `<li><a class="dropdown-item reopen-vacancy" href="reopen-vacancy-by-id?id=${rowID}">Reopen Vacancy</a></li>`;
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                                dropdown += `<li><a class="dropdown-item reopen-vacancy" href="reopen-vacancy-by-id?id=${rowID}">Reopen Vacancy</a></li>`;
+                            // }
                         }
                         dropdown += `</ul>
                         </div>`;
@@ -586,6 +617,7 @@ $(document).on("click", ".show-detail-btn", function (event) {
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            currentData = data;
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");
@@ -976,6 +1008,7 @@ function showDetailModalForVacancyId(vacancyId) {
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            currentData = data;
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");

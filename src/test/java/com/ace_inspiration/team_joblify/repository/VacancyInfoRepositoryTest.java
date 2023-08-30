@@ -13,7 +13,6 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -97,11 +96,11 @@ class VacancyInfoRepositoryTest {
                 .vacancy(vacancy)
                 .jobType(JobType.FULL_TIME)
                 .lvl(Level.ENTRY_LEVEL)
-                .closeDate(LocalDate.now().plusMonths(3))
+                .closeDate(LocalDateTime.now().plusMonths(3))
                 .description("aaaa")
                 .onSiteOrRemote(OnSiteOrRemote.ON_SITE)
                 .post(23)
-                .openDate(LocalDate.now())
+                .openDate(LocalDateTime.now())
                 .preferences("aaaaaaa")
                 .requirements("bbbbb")
                 .salary(10000000.5)

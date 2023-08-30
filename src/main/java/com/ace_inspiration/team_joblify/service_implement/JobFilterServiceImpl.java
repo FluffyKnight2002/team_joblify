@@ -138,7 +138,7 @@ public class JobFilterServiceImpl {
 
         if (filterRequest.getIsUnder10().equals("true")) {
             spec = spec.and((root, query, builder) ->
-                    builder.lessThanOrEqualTo(root.get("applicants"), 1));
+                    builder.lessThanOrEqualTo(root.get("applicants"), 10));
         }
 
         spec = spec.and((root, query, builder) -> {

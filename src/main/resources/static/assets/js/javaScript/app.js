@@ -27,6 +27,7 @@ function timeAgo(time) {
   const currentTime = new Date();
   const inputTime = new Date(time);
   const timeDifferenceInSeconds = Math.floor((currentTime - inputTime) / 1000);
+  console.log(time)
 
   // Define time units in seconds
   const minute = 60;
@@ -36,18 +37,23 @@ function timeAgo(time) {
   const month = 30 * day;
 
   if (timeDifferenceInSeconds < minute) {
+    console.log("Just now")
     return 'Just now';
   } else if (timeDifferenceInSeconds < hour) {
     const minutesAgo = Math.floor(timeDifferenceInSeconds / minute);
+    console.log(minutesAgo)
     return `${minutesAgo} minute${minutesAgo > 1 ? 's' : ''} ago`;
   } else if (timeDifferenceInSeconds < day) {
     const hoursAgo = Math.floor(timeDifferenceInSeconds / hour);
+    console.log(hoursAgo)
     return `${hoursAgo} hour${hoursAgo > 1 ? 's' : ''} ago`;
   } else if (timeDifferenceInSeconds < week) {
     const daysAgo = Math.floor(timeDifferenceInSeconds / day);
+    console.log(daysAgo)
     return `${daysAgo} day${daysAgo > 1 ? 's' : ''} ago`;
   } else if (timeDifferenceInSeconds == week) {
     const weeksAgo = Math.floor(timeDifferenceInSeconds / week);
+    console.log(weeksAgo)
     return `${weeksAgo} week${weeksAgo > 1 ? 's' : ''} ago`;
   } else {
     // Display the date in the format: 'MMM DD YYYY'
@@ -56,6 +62,7 @@ function timeAgo(time) {
       month: 'short',
       day: 'numeric'
     });
+    console.log(formattedDate)
     return formattedDate;
   }
 }
