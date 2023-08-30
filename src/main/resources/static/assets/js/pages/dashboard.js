@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
 	chartProfileVisit.render();
 
-	$('#year').on('change', function () {
+	$('#year1').on('change', function () {
 			const selectedValue = $(this).val();
 
 			console.log('neww>>>>>>>>>>>>', post4, post5, post6)
