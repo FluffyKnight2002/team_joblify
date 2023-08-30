@@ -63,7 +63,8 @@ public class SecurityConfig {
                         
                         .requestMatchers("/vacancy/count", "/vacancy/show-all-data", "/allCandidate", "/allPositions", "/changStatus",
                         "/seeMore", "/dashboard", "/view-summaryinfo", "/process", "/getYear", "/interview-process", "/candidate-view-summary",
-                        "/user-profile-edit", "/show-all-vacancies-page", "/all_candidates/**", "/interview_process/**", "/notifications/**"
+                        "/user-profile-edit", "/show-all-vacancies-page", "/all_candidates/**", "/interview_process/**", "/notifications/**", "/yearly-vacancy-count",
+                        "/all-department", "/chart"
                         ).authenticated()
 
                         .anyRequest().authenticated()
