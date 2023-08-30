@@ -89,6 +89,12 @@ $(document).ready(function () {
             "serverSide": true,
             "processing": true,
             "stateSave": true,
+            "scrollY": 300,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "fixedHeader": {
+                "header": true,
+            },
             "ajax": {
                 url: '/vacancy/show-all-data',
                 type: 'GET',
@@ -102,8 +108,7 @@ $(document).ready(function () {
                     d.level = $('#filter-level').val(),
                     d.minAndMax = $('#filter-minAndMax').val(),
                     d.applicants = $('#filter-applicants').val(),
-                    d.status = $('#filter-selection-status').val(),
-                    d.status = $('#filter-interview-status').val()
+                    d.status = $('#filter-status').val()
                 }
             },
             "columns": [
@@ -384,9 +389,9 @@ $(document).ready(function () {
     // Create reset filter button
     let resetFilterButton = `
         <div id="reset-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 reset-filter"  
-            onclick="resetFilters()">
-                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            <img src="/assets/images/candidate-images/filter_reset.svg" class="reset-filter"
+                 style="padding: 8px;border: 2px dotted gray;border-radius: 15px;cursor: pointer;" width="50px" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Reset filter" onclick="resetFilters()">
             </span>
         </div>
     `;
@@ -394,11 +399,11 @@ $(document).ready(function () {
     // Create and append the custom filter inputs and button
     let customFilterHtml = `
         <div id="custom-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
-                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
-             data-bs-placement="right" title="Add filter"></i>
-            </span>
-            <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
+            <div data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Add filter">
+                <img src="/assets/images/candidate-images/filter_plus.png" class="dropdown" data-bs-toggle="dropdown"
+                 style="border: 2px dotted gray;border-radius: 15px;cursor: pointer" width="50px"/>
+                 <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
                 <li class="dropdown-item filter-items date-posted-dropdown-item">
                     <span class="date-posted">Date posted</span>
                     <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-dropdown-submenu">
@@ -500,6 +505,7 @@ $(document).ready(function () {
                     </ul>
                 </li>
             </ul>
+            </div>
         </div>
     `;
 
@@ -641,6 +647,8 @@ $(document).on("click", ".show-detail-btn", function (event) {
     vacancyId = href.split("=")[1];
     $('#reset-form').attr('data-vacancy-id', vacancyId);
 
+    console.log("VVIDDDD",vacancyId)
+
     // Fetch the vacancy details using AJAX
     var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
 
@@ -671,10 +679,10 @@ $(document).on("click", ".show-detail-btn", function (event) {
 $(document).on("click", "#reset-form", function (event) {
     event.preventDefault(); // Prevent the default behavior of the link
 
-    vacancyId = $(this).data('vacancy-id');
-
     // Fetch the vacancy details using AJAX
-    var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
+    var apiUrl = "/vacancy/job-detail?id=" + $('#id').val();
+
+    console.log("IDDDDD",$('#id').val())
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -832,6 +840,9 @@ function populateModalWithData(data) {
 
     $('#calendar-btn').off('click');
     $('#timePickerBtn').off('click');
+
+    // vacancyId = data.id;
+    // console.log("IDDDDDDD",vacancyId)
 
     console.log("Id : ", data.id);
     console.log("Type : ", data.type);

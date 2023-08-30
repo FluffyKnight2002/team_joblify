@@ -620,6 +620,8 @@ function createStatusFilterButton(selectedValue) {
     var selectedText = selectedValue.text();
     $('#filter-status').val(selectedText);
 
+    console.log("Status filter ",$('#filter-status').val())
+
     // Create a filter button with the selected filter item
     var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">

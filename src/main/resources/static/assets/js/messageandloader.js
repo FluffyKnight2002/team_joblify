@@ -322,12 +322,13 @@ $(document).ready(function () {
             // Assuming currentData is already parsed from JSON
             console.log(parseInt(formElement.get('post')));
             console.log(currentData.post)
-            console.log(reconvertToString(formElement.get('type')));
-            console.log(currentData.type)
-            console.log(reconvertToString(formElement.get('lvl')))
-            console.log(currentData.lvl)
+            console.log(reconvertToString(formElement.get('type')).toLowerCase());
+            console.log(currentData.type.toLowerCase())
+            console.log(reconvertToString(formElement.get('lvl')).toLowerCase())
+            console.log(currentData.lvl.toLowerCase())
             console.log(formElement.get('salary'));
-            console.log(reconvertToString(formElement.get('onSiteOrRemote')))
+            console.log(reconvertToString(formElement.get('onSiteOrRemote')).toLowerCase())
+            console.log(currentData.onSiteOrRemote.toLowerCase())
             console.log(formElement.get('descriptions'))
             if (
                 parseInt(formElement.get('post')) === currentData.post &&

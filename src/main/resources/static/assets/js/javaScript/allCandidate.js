@@ -69,6 +69,12 @@ $(document).ready( async function() {
 		{
 			"serverSide": true,
 			"processing": true,
+			"scrollY": 300,
+			"scrollX": true,
+			"scrollCollapse": true,
+			"fixedHeader": {
+				"header": true,
+			},
 			"ajax": {
 
 			url:'/allCandidate',
@@ -151,7 +157,7 @@ $(document).ready( async function() {
 					data: "interviewStatus",
 					targets: 8,
 					render: function(data, type, row) {
-						return '<select id="changeStatus"' + (data === 'ACCEPTED' ? ' disabled' : '') + '>' +
+						return '<select class="form-select" style="font-size: 0.8rem" id="changeStatus"' + (data === 'ACCEPTED' ? ' disabled' : '') + '>' +
 							'<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
 							'<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
 							'<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
@@ -206,9 +212,9 @@ $(document).ready( async function() {
 	// Create reset filter button
 	let resetFilterButton = `
         <div id="reset-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 reset-filter"  
-            onclick="resetFilters()">
-                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            <img src="/assets/images/candidate-images/filter_reset.svg" class="reset-filter"
+                 style="padding: 8px;border: 2px dotted gray;border-radius: 15px;cursor: pointer;" width="50px" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Reset filter" onclick="resetFilters()">
             </span>
         </div>
     `;
@@ -216,10 +222,10 @@ $(document).ready( async function() {
 	// Create and append the custom filter inputs and button
 	let customFilterHtml = `
         <div id="custom-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
-                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
-             data-bs-placement="right" title="Add filter"></i>
-            </span>
+            <div data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Add filter">
+                <img src="/assets/images/candidate-images/filter_plus.png" class="dropdown" data-bs-toggle="dropdown"
+                 style="border: 2px dotted gray;border-radius: 15px;cursor: pointer" width="50px"/>
             <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
                 <li class="dropdown-item filter-items apply-date-dropdown-item">
                     <span class="date-posted">Apply Date</span>
@@ -306,6 +312,7 @@ $(document).ready( async function() {
                     </ul>
                 </li>
             </ul>
+            </div>
         </div>
     `;
 
@@ -329,19 +336,32 @@ $(document).ready( async function() {
 		`<div class="col-auto pt-2" id="report-button-con">
 			<div class="row">
 				<div class="col-4">
-            		<button id="download" class="image-button" aria-label="Download CV"></button>
-                	   <p>CV</p>
+					<div class="text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Download CV">
+            			<button id="download" class="image-button" style="transform: translate(-7%,77%)" aria-label="Download CV"></button>
+					</div>
             		</div>
-            		<div class="col-4">
-                		<a id="pdfDownload" class="image-button" aria-label="Download pdf"
-                    	href="/all_candidates/pdf"></a>
-                		<p>PDF</p>
+            		<div class="col-8 p-0 bg-primary rounded px-1">
+            			<div class="text-center row">
+                			<div class="text-light fw-bolder fs-6" >Reporting</div>
+						</div>
+            			<div class="row">
+            				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf"
+                    			href="/all_candidates/pdf"></a>
+                    		</div>
+                    		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel"
+                				href="/all_candidates/excel"></a>
+                			</div>
+                		</div>
+                		<div class="text-center row">
+                			<div class="form-check form-switch">
+                                <label class="form-check-label text-light" for="withFiler" style="font-size: 0.8rem">Including filter</label>
+                                <input class="form-check-input" type="checkbox" name="withFilter" id="withFilter" style="font-size: 0.7rem;transform: translate(5px,5px);
+}">
+                            </div>
+						</div>
             		</div>
-            		<div class="col-4">
-                		<a id="excelDownload" class="image-button" aria-label="Download Excel"
-                		href="/all_candidates/excel"></a>
-                			<p>Excel</p>
-                	</div>
             	</div>
 			</div>
 		</div>`;
@@ -437,14 +457,14 @@ console.log(data.interviewStage)
 for (const value of data.interviewStage) {
     if (value === 'FIRST') {
 		console.log(data.interviewStage)
-        interviewStageSelect.options[1].disabled = true;
-        interviewStageSelect.options[2].disabled = false;
+        interviewStageSelect.options[0].disabled = true;
+        interviewStageSelect.options[1].disabled = false;
     } else if (value === 'SECOND') {
 		console.log(data.interviewStage)
-        interviewStageSelect.options[2].disabled = true;
+        interviewStageSelect.options[1].disabled = true;
     }else{
+		interviewStageSelect.options[0].disabled = false;
 		interviewStageSelect.options[1].disabled = false;
-		interviewStageSelect.options[2].disabled = false;
 	}
 }
 

@@ -6,7 +6,12 @@ $(document).ready(function () {
             "serverSide": true,
             "processing": true,
             "ajax": '/process',
-
+            "scrollY": 300,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "fixedHeader": {
+                "header": true,
+            },
 
             "columns": [
                 {

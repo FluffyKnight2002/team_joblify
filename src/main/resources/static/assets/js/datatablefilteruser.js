@@ -236,21 +236,21 @@ $(document).ready(function () {
 
     // Create reset filter button
     let resetFilterButton = `
-<div id="reset-filter" class="mt-3 col-1 text-center">
-    <span class="d-inline-block bg-transparent mt-2 reset-filter"
-    onclick="resetFilters()">
-        <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
-    </span>
-</div>
-`;
+        <div id="reset-filter" class="mt-3 col-1 text-center">
+            <img src="/assets/images/candidate-images/filter_reset.svg" class="reset-filter"
+                 style="padding: 8px;border: 2px dotted gray;border-radius: 15px;cursor: pointer;" width="50px" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Reset filter" onclick="resetFilters()">
+            </span>
+        </div>
+    `;
 
     // Create and append the custom filter inputs and button
     let customFilterHtml = `
 <div id="custom-filter" class="mt-3 col-1 text-center">
-    <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
-        <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
-     data-bs-placement="right" title="Add filter"></i>
-    </span>
+    <div data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Add filter">
+                <img src="/assets/images/candidate-images/filter_plus.png" class="dropdown" data-bs-toggle="dropdown"
+                 style="border: 2px dotted gray;border-radius: 15px;cursor: pointer" width="50px"/>
     <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
         <li class="dropdown-item filter-items date-created-dropdown-item">
             <span class="date-posted">Created Date</span>
@@ -287,6 +287,7 @@ $(document).ready(function () {
             </ul>
         </li>
     </ul>
+    </div>
 </div>
 `;
 
