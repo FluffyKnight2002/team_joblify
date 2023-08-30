@@ -3,8 +3,8 @@ let post5;
 let post6;
 let chartProfileVisit;
 let graph;
-
 let monthlyVacancyCount;
+let pchart;
 
 function getYear() {
 	const currentDate = new Date();
@@ -14,7 +14,7 @@ function getYear() {
 		.then(data => {
 			console.log(data);
 			data.forEach(yearArray => {
-				const select = $('#year'); // Assuming you have an element with id 'year' for your select element
+				const select = $('#year1'); // Assuming you have an element with id 'year' for your select element
 				const year = yearArray[0]; // Extract the year from the inner array
 
 				const option = $('<option>').val(year).text(year);
@@ -25,6 +25,10 @@ function getYear() {
 
 				const option3 = $('<option>').val(year3).text(year3);
 				select3.append(option3);
+
+				const year4 = yearArray[0];
+				const select2=$('#pine');
+				select2.append($('<option>').val(year4).text(year4));
 			});
 		})
 		.catch(error => {
@@ -35,26 +39,33 @@ function getYear() {
 
 function getDepartment() {
 	fetch('/all-department')
-	  .then(response => response.json())
-	  .then(data => {
-		const department3 = $('#department3');
-		$.each(data, function(index, department) {
-		  const optionElement = $('<option>')
-			.val(department.name)
-			.text(department.name);
-		  department3.append(optionElement);
+		.then(response => response.json())
+		.then(data => {
+			const department3 = $('#department3');
+			const department4=$('#department4');
+			$.each(data, function(index, department) {
+				const optionElement = $('<option>')
+					.val(department.name)
+					.text(department.name);
+				department3.append(optionElement);
+			});
+			$.each(data, function(index, department) {
+				const optionElement = $('<option>')
+					.val(department.name)
+					.text(department.name);
+				department4.append(optionElement);
+			});
+		})
+		.catch(error => {
+			console.error('Error fetching data:', error);
 		});
-	  })
-	  .catch(error => {
-		console.error('Error fetching data:', error);
-	  });
-  }
-  
+}
+
 
 
 
 async function fetchFor1stChart(selectedValue) {
-	
+
 	try {
 		const response = await fetch('/dashboard?timeSession=' + selectedValue, {
 			method: 'POST',
@@ -63,9 +74,9 @@ async function fetchFor1stChart(selectedValue) {
 				[csrfHeader]: csrfToken
 			},
 		});
-		
+
 		const data = await response.json();
-		
+
 		post4 = [];
 		post5 = [];
 		post6 = [];
@@ -96,13 +107,13 @@ async function fetchFor3rdChart() {
 	if(selectedDepartment === null){
 		selectedDepartment = 'All'
 	} else if(selectedYear === null){
-			selectedYear = 'All'
+		selectedYear = 'All'
 	}
 	try {
 		const response = await fetch('/yearly-vacancy-count?timeSession=' + selectedYear + '&department=' + selectedDepartment)
-		
+
 		const data = await response.json();
-		
+
 		monthlyVacancyCount = [];
 
 		data.forEach(post => {
@@ -146,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function(){
 			width: "100%",
 			height: 380,
 			type: "bar",
-
 		},
 		plotOptions: {
 			bar: {
@@ -200,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function(){
 	chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
 	chartProfileVisit.render();
 
-	$('#year').on('change', function () {
-		const selectedValue = $(this).val();
+	$('#year1').on('change', function () {
+			const selectedValue = $(this).val();
 
-		console.log('neww>>>>>>>>>>>>', post4, post5, post6)
-		fetchFor1stChart(selectedValue);
-	}
+			console.log('neww>>>>>>>>>>>>', post4, post5, post6)
+			fetchFor1stChart(selectedValue);
+		}
 
 	)
 
@@ -287,39 +297,48 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	$("#department3, #year3").change(fetchFor3rdChart);
 
+	////////////////////////////////////////////
+
+
+	fetch('/chart')  .then(response => response.json())
+		.then(data => {
+			var pine = {
+				series: [data.total, data.not, data.panding,data.interviewed,data.passed,data.cancel],
+				labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
+				chart: {
+					width: 400,
+					type: 'polarArea',
+				},
+				stroke: {
+					colors: ['#fff']
+				},
+				fill: {
+					opacity: 0.8
+				},
+				yaxis: {
+					show: false,
+
+				},
+
+				responsive: [{
+					breakpoint: 480,
+					options: {
+						chart: {
+							width: 200
+						},
+						legend: {
+							position: 'bottom'
+						}
+
+					}
+				}]
+			};
+
+			pchart = new ApexCharts(document.querySelector("#chart"), pine);
+			pchart.render();
+		})
 
 })
-
-
-var pine = {
-	series: [14, 23, 21, 17, 15, 10, 12, 17, 21],
-	chart: {
-		type: 'polarArea',
-	},
-	stroke: {
-		colors: ['#fff']
-	},
-	fill: {
-		opacity: 0.8
-	},
-	responsive: [{
-		breakpoint: 480,
-		options: {
-			chart: {
-				width: 200
-			},
-			legend: {
-				position: 'bottom'
-			}
-		}
-	}]
-};
-
-var chart = new ApexCharts(document.querySelector("#chart"), pine);
-chart.render();
-
-
-
 
 
 

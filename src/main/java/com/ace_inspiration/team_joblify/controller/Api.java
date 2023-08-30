@@ -167,7 +167,7 @@ public class Api {
             SummaryDto summaryDto = candidateService.findByid(emailTemplateDto.getCanId());
 
             String message = myUserDetails.getName() + " send Interview Invite Mail to " + emailTemplateDto.getName();
-            String link = "/candidate-view-summary?position=" + summaryDto.getApply_position();
+            String link = "/candidate-view-summary?position=" + summaryDto.getApply_position()+"&candidateId="+summaryDto.getId();
             notificationCreator.createNotification(myUserDetails, message, link);
 
             return true;
