@@ -150,9 +150,18 @@ public class CandidateServiceImplement implements CandidateService{
     public void changeInterviewstatus(long id,String status) {
       Candidate candidate = entityManager.find(Candidate.class, id);
 	        if (candidate != null) {
-	            candidate.setInterviewStatus(Status.valueOf(status)); // Set the new status value
-	            entityManager.persist(candidate); // Save the updated candidate entity
-	        }
+                if (status.equals("ACCEPTED")) {
+                    candidate.setInterviewStatus(Status.valueOf(status)); // Set the new status value
+                    entityManager.persist(candidate);
+                    long viId=candidate.getVacancyInfo().getId();
+                   VacancyInfo vacancy=vacancyInfoRepository.findById(viId).orElseThrow(null);
+                   vacancy.setHiredPost(vacancy.getHiredPost()+1);
+                    vacancyInfoRepository.save(vacancy);
+                } else {
+                    candidate.setInterviewStatus(Status.valueOf(status)); // Set the new status value
+                    entityManager.persist(candidate); // Save the updated candidate entity
+                }
+            }
 	    }
     @Override
     public List<Candidate> getAllCandidates() {

@@ -561,27 +561,49 @@
                             data-bs-target="#loadMe" id="Send_Offer_Mail">Send
                     </button>
 
-                </div>
-            </div>
-        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  -->
+		<!-- This is your modal dialog structure -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <h3> Are you sure you want to proceed?</h3>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmActionBtn">Confirm</button>
+      </div>
     </div>
-    <!--Message Modal -->
-    <div class="modal fade" id="loadMe" data-bs-backdrop="static" tabindex="-1" role="dialog"
-         aria-labelledby="loadMeLabel">
-        <div class="modal-dialog modal-sm modal-dialog-centered"
-             id="message-modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body text-center" id="message-con"
-                     style="background: #0c233d">
-                    <div class="loader"></div>
-                    <div class="loader-txt">
-                        <p>Processing....</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
+
+		<!--Message Modal -->
+		<div class="modal fade" id="loadMe" tabindex="-1" role="dialog"
+			 aria-labelledby="loadMeLabel">
+			<div class="modal-dialog modal-sm modal-dialog-centered"
+				 id="message-modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-body text-center" id="message-con"
+						 style="background: #0c233d">
+						<div class="loader"></div>
+						<div class="loader-txt">
+							<p>Processing....</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <!-- Stomp -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>

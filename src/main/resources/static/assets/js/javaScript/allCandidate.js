@@ -15,6 +15,7 @@ var position1 = currentId.get("position");
 var select = currentId.get("selection");
 var interview1 = currentId.get("interview");
 var postId = currentId.get("postId");
+var candidateId=currentId.get('candidateId');
 var ccMails = [];
 var updatedString = null;
 var concatenatedValue = null;
@@ -139,18 +140,18 @@ $(document).ready( async function() {
 					targets: 7,
 					data: "email",
 					render: function(data, type, row) {
-						return '<a  data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
+						return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invert Mail</a>';
 					},
 					sortable: false,
 					visible: false
 
 				},
 				{
-
+					className:"display",
 					data: "interviewStatus",
 					targets: 8,
 					render: function(data, type, row) {
-						return '<select class="form-control form-control-sm form-control-icon" id="changeStatus">' +
+						return '<select id="changeStatus"' + (data === 'ACCEPTED' ? ' disabled' : '') + '>' +
 							'<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
 							'<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
 							'<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
@@ -426,6 +427,28 @@ $(document).ready( async function() {
 		table.columns([7, 10]).visible(true);
 	});
 
+	table.on('click', '#stage', async function (e) {
+		let tr = e.target.closest('tr');
+		let row = table.row(tr);
+		var rowData = row.data();
+    const data = await seeMoreFetch(rowData.id);
+console.log(data.interviewStage)
+   const interviewStageSelect = document.getElementById('interview-stage-select');
+for (const value of data.interviewStage) {
+    if (value === 'FIRST') {
+		console.log(data.interviewStage)
+        interviewStageSelect.options[1].disabled = true;
+        interviewStageSelect.options[2].disabled = false;
+    } else if (value === 'SECOND') {
+		console.log(data.interviewStage)
+        interviewStageSelect.options[2].disabled = true;
+    }else{
+		interviewStageSelect.options[1].disabled = false;
+		interviewStageSelect.options[2].disabled = false;
+	}
+}
+
+});
 
 
 	table.on('click', 'td.dt-control', async function(e) {
@@ -467,28 +490,16 @@ $(document).ready( async function() {
 		}
 		else {
 			var id = rowData.id;
-			console.log(id),
-				fetch("/seeMore", {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json;charset=utf-8',
-						[csrfHeader]: csrfToken
-					},
-					body: JSON.stringify(id)
-				})
-					.then(async response => {
+        const response = await seeMoreFetch(id);
 
-						if (response.ok) {
-							const data = await response.json();
-							row.child(format(data)).show();
+        if (response) {
+            console.log('Hello', response.interviewStage);
+            row.child(format(response)).show();
+        } else {
+            console.log("Someone is error");
+        }
+    }
 
-						}
-						else {
-							console.log("SomeOne is error");
-						}
-					})
-
-		}
 
 	});
 
@@ -595,11 +606,25 @@ $(document).ready( async function() {
 					this.checked);
 
 		});
+
+
 	$('#table1 tbody').on('change', '#changeStatus', function() {
 		var selectedValue = $(this).val();
 		var tr = $(this).closest('tr');
 		var row = table.row(tr).data();
-		fetch('/changeInterview?id=' + row.id + '&status=' + selectedValue, {
+			console.log(selectedValue)
+		if(selectedValue==='ACCEPTED'){
+	 $('#confirmationModal').modal('show'); // Show the modal
+	  $('#confirmationModal .modal-body').html('Are you sure you want to proceed with ' + row.name + '?');
+  $('#confirmActionBtn').on('click', function() {
+
+    performAction(row.id, selectedValue);
+    $('#confirmationModal').modal('hide');
+   tr.find('td').find('select[id="changeStatus"]').prop('disabled',true);
+  });
+
+		}else{
+				fetch('/changeInterview?id=' + row.id + '&status=' + selectedValue, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json;charset=utf-8',
@@ -622,7 +647,12 @@ $(document).ready( async function() {
 					
 				}
 			});
-	});
+		}
+	})
+
+
+
+
 	//Filter  start
 	// const selectElement = $('#positionSelect');
 	// const selectELement1 = $('#post');
@@ -1311,8 +1341,48 @@ function closeModal() {
 		modalBackdrop.hide();
 	}
 }
+function performAction(id, status) {
+  fetch('/changeInterview?id=' + id + '&status=' + status, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      [csrfHeader]: csrfToken
+    }
+  })
+    .then(response => {
+      if (response.ok) {
+        iziToast.success({
+          title: 'Success',
+          position: 'topCenter',
+          message: 'Success Change Status',
+        });
+      } else {
+        iziToast.error({
+          title: 'Error',
+          position: 'topCenter',
+          message: 'Not Change Status',
+        });
+      }
+    });
+}
 
+async function seeMoreFetch(id){
+				const response = await fetch("/seeMore?id="+id, {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json;charset=utf-8',
+						[csrfHeader]: csrfToken
+					},
 
+				})
+
+				if(response.ok){
+					const data =await response.json();
+					return data
+				}else {
+        throw new Error('Failed to fetch data'); // Throw an error in case of failure
+    }
+				}
 /* 
 document.addEventListener('DOMContentLoaded', function() {
 	var downloadButton = document.querySelector('#download');

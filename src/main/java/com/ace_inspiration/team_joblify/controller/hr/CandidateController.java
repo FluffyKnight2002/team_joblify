@@ -231,8 +231,8 @@ public class CandidateController {
     }
 
     @PostMapping("/seeMore")
-    @ResponseBody
-    public SummaryDto updateStatus(@RequestBody long id) {
+    public SummaryDto updateStatus(@RequestParam("id") long id) {
+    	System.err.println(">>>>>>>>>>>>>>>>>>>>"+id);
         SummaryDto summaryDto = candidateService.findByid(id);
         return summaryDto;
     }
@@ -280,9 +280,10 @@ public class CandidateController {
     }
     @GetMapping("/chart")
     public PindChartDto pineChart(){
-    	  LocalDate postDate = LocalDate.parse("2023-08-27");
+    	int date=2023;
+    	  LocalDate postDate = LocalDate.parse(date+"-08-30");
     	PindChartDto pind =allPostService.findByOpenDate(postDate);
-    	System.out.println(pind.getInterviewed());
+    	System.err.println(pind.getInterviewed());
         return pind;
     }
 
