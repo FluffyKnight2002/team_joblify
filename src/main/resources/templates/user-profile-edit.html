@@ -102,9 +102,9 @@
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                   <h6>
                     <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
-                       style="background: #1e497b !important;" href="javascript:history.back()">
+                      style="background: #1e497b !important;" href="javascript:history.back()">
                       <i class="bi bi-arrow-left-circle position-absolute"
-                         style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                        style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
                   </h6>
                 </nav>
               </div>
@@ -172,7 +172,7 @@
                       </div>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
-                      <input type="email" class="form-control" placeholder="Email" id="email" name="email" required>
+                      <input type="type" class="form-control" placeholder="Email" id="email" name="email" required>
                       <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
                       <span class='spinner-border spinner-border-sm input spinner email-spinner' role='status'></span>
                       <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
@@ -230,8 +230,8 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
 
-                        <textarea class="form-control" id="address" name="address" placeholder="Address"
-                                  style="height: 100px" required></textarea>
+                      <textarea class="form-control" id="address" name="address" placeholder="Address"
+                        style="height: 100px" required></textarea>
                       <label for="address"><span class="px-3">Address</span></label>
                       <div class="invalid-feedback" id="address-error">
                         Please Add Address.
@@ -239,8 +239,8 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
 
-                        <textarea class="form-control" id="note" name="note" placeholder="Note"
-                                  style="height: 100px"></textarea>
+                      <textarea class="form-control" id="note" name="note" placeholder="Note"
+                        style="height: 100px"></textarea>
                       <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                     </div>
@@ -309,7 +309,7 @@
     });
 
 
-      function profileFill(){
+    function profileFill() {
       fetch('/get-user-profile?email=' + encodeURIComponent(email), {
         method: 'POST',
         headers: {
@@ -363,7 +363,7 @@
             });
           }
         });
-      }
+    }
 
 
 
@@ -636,6 +636,8 @@
     // Add event listener to phone number input
     const phoneNumberInput = document.getElementById('phone');
     phoneNumberInput.addEventListener('input', function () {
+      const cleanedValue = phoneNumberInput.value.replace(/\s/g, '');
+            phoneNumberInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(checkPhoneNumber, 300);
       phoneSpinner.style.display = 'inline-block'; // Set a new timer with a delay of 500 milliseconds
@@ -709,6 +711,8 @@
     // Add event listener to email input
     const emailInput = document.getElementById('email');
     emailInput.addEventListener('input', function () {
+      const cleanedValue = emailInput.value.replace(/\s/g, '');
+            emailInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(checkEmail, 300); // Set a new timer with a delay of 500 milliseconds
     });
@@ -771,9 +775,52 @@
     // <----------------------Departmrnt Suggestion end here----------------------->
 
     const usernameInput = document.getElementById('username');
+
     usernameInput.addEventListener('input', function () {
+      const cleanedValue = usernameInput.value.replace(/\s/g, '');
+            usernameInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(usernameDuplicate, 300); // Set a new timer with a delay of 500 milliseconds
+    });
+
+    const nameInput = document.getElementById('name');
+    // Event listener for keydown to prevent typing space as the first character
+    nameInput.addEventListener('keydown', (event) => {
+      if (event.key === ' ' && event.target.selectionStart === 0) {
+        event.preventDefault();
+      }
+    });
+
+    // Event listener for blur to trim spaces from the end
+    nameInput.addEventListener('blur', (event) => {
+      event.target.value = event.target.value.trim();
+    });
+
+    const addressInput = document.getElementById('address');
+    // Event listener for keydown to prevent typing space as the first character
+    addressInput.addEventListener('keydown', (event) => {
+      if (event.key === ' ' && event.target.selectionStart === 0) {
+        event.preventDefault();
+      }
+    });
+
+    // Event listener for blur to trim spaces from the end
+    addressInput.addEventListener('blur', (event) => {
+      event.target.value = event.target.value.trim();
+    });
+
+
+    const noteInput = document.getElementById('note');
+    // Event listener for keydown to prevent typing space as the first character
+    noteInput.addEventListener('keydown', (event) => {
+      if (event.key === ' ' && event.target.selectionStart === 0) {
+        event.preventDefault();
+      }
+    });
+
+    // Event listener for blur to trim spaces from the end
+    noteInput.addEventListener('blur', (event) => {
+      event.target.value = event.target.value.trim();
     });
 
 
