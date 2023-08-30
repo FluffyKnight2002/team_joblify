@@ -5,61 +5,74 @@ let chartProfileVisit;
 let graph;
 let monthlyVacancyCount;
 let pchart;
+let year;
+let department;
 
-function getYear() {
-	const currentDate = new Date();
-	const currentYear = currentDate.getFullYear();
-	fetch('/getYear')
-		.then(response => response.json())
-		.then(data => {
+async function getYear() {
+
+	try {
+
+	const response = await fetch('/getYear')
+	const data = await response.json();
+	
+	
 			console.log(data);
 			data.forEach(yearArray => {
 				const select = $('#year1'); // Assuming you have an element with id 'year' for your select element
 				const year = yearArray[0]; // Extract the year from the inner array
 
-				const option = $('<option>').val(year).text(year);
+				const option = $('<option>').val(year).text(year).attr('selected', 'selected');
 				select.append(option);
 
 				const select3 = $('#year3');
 				const year3 = yearArray[0];
-
-				const option3 = $('<option>').val(year3).text(year3);
+			
+				const option3 = $('<option>').val(year3).text(year3).attr('selected', 'selected');
 				select3.append(option3);
 
 				const year4 = yearArray[0];
 				const select2=$('#pine');
 				select2.append($('<option>').val(year4).text(year4));
+
+				
 			});
-		})
-		.catch(error => {
+			year = data ;
+		}  catch (error) {
 			console.error('Error fetching data:', error);
-		});
+		}
 }
 
 
-function getDepartment() {
-	fetch('/all-department')
-		.then(response => response.json())
-		.then(data => {
-			const department3 = $('#department3');
-			const department4=$('#department4');
-			$.each(data, function(index, department) {
-				const optionElement = $('<option>')
-					.val(department.name)
-					.text(department.name);
-				department3.append(optionElement);
-			});
-			$.each(data, function(index, department) {
-				const optionElement = $('<option>')
-					.val(department.name)
-					.text(department.name);
-				department4.append(optionElement);
-			});
-		})
-		.catch(error => {
-			console.error('Error fetching data:', error);
-		});
+async function getDepartment() {
+    try {
+        const response = await fetch('/all-department'); // Make sure to use await here
+        const data = await response.json();
+
+        const department3 = $('#department3'); // Remove the unnecessary await here
+        const department4 = $('#department4'); // Remove the unnecessary await here
+
+        $.each(data, function(index, department) {
+            const optionElement = $('<option>')
+                .val(department.name)
+                .text(department.name)
+                .attr('selected', 'selected');
+            department3.append(optionElement);
+        });
+
+        $.each(data, function(index, department) {
+            const optionElement = $('<option>')
+                .val(department.name)
+                .text(department.name);
+            department4.append(optionElement);
+        });
+		department = await data;
+		fetchFor3rdChart();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
+	
+
 
 
 
@@ -98,35 +111,39 @@ async function fetchFor1stChart(selectedValue) {
 }
 
 async function fetchFor3rdChart() {
+    try {
+        let selectedDepartment = $("#department3").val();
+        let selectedYear =  $("#year3").val();
 
-	let selectedDepartment = $("#department3").val();
-	let selectedYear = $("#year3").val();
+        // console.log(selectedDepartment + 'sdd');
+        // console.log(selectedYear + 'aa');
+        // if (selectedDepartment === null) {
+        //     selectedDepartment = 'All';
+        // } else if (selectedYear === null) {
+        //     selectedYear = 'All';
+        // }
+        const response = await fetch('/yearly-vacancy-count?timeSession=' + selectedYear + '&department=' + selectedDepartment);
 
-	console.log(selectedDepartment + 'sdd');
-	console.log(selectedYear + 'aa');
-	if(selectedDepartment === null){
-		selectedDepartment = 'All'
-	} else if(selectedYear === null){
-		selectedYear = 'All'
-	}
-	try {
-		const response = await fetch('/yearly-vacancy-count?timeSession=' + selectedYear + '&department=' + selectedDepartment)
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-		const data = await response.json();
+        const data = await response.json();
 
-		monthlyVacancyCount = [];
+        monthlyVacancyCount = [];
 
-		data.forEach(post => {
-			monthlyVacancyCount.push(post.totalVacancyCount);
-		});
+        data.forEach(post => {
+            monthlyVacancyCount.push(post.totalVacancyCount);
+        });
 
-		graph.updateSeries([
-			{ name: 'Vacancy Count', data: monthlyVacancyCount }
-		]);
-	} catch (error) {
-		console.error('Error fetching data:', error);
-	}
+        graph.updateSeries([
+            { name: 'Vacancy Count', data: monthlyVacancyCount }
+        ]);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
+
 
 
 
@@ -137,8 +154,11 @@ document.addEventListener('DOMContentLoaded', function(){
 	post6 = []
 	totalVacancyCount = [];
 
-	getYear();
-	getDepartment();
+	getYear()
+	getDepartment()
+
+	
+	
 
 	var optionsProfileVisit = {
 
@@ -209,6 +229,16 @@ document.addEventListener('DOMContentLoaded', function(){
 	};
 	chartProfileVisit = new ApexCharts(document.querySelector("#chart-profile-visit"), optionsProfileVisit);
 	chartProfileVisit.render();
+
+
+	if(department != undefined && year != undefined){
+
+		let selectedY =  $("#year1").val();
+
+		fetchFor1stChart(selectedY);
+	}
+
+
 
 	$('#year1').on('change', function () {
 			const selectedValue = $(this).val();
@@ -295,8 +325,17 @@ document.addEventListener('DOMContentLoaded', function(){
 	graph = new ApexCharts(document.querySelector("#graph"), options);
 	graph.render();
 
+	if(department != undefined && year != undefined){
+		fetchFor3rdChart();
+
+		let selectedYear =  $("#year1").val();
+
+		fetchFor1stChart(selectedYear);
+	}
+
 	$("#department3, #year3").change(fetchFor3rdChart);
 
+	
 	////////////////////////////////////////////
 
 
