@@ -1,10 +1,7 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
 import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
-import com.ace_inspiration.team_joblify.entity.JobType;
-import com.ace_inspiration.team_joblify.entity.Level;
-import com.ace_inspiration.team_joblify.entity.Status;
-import com.ace_inspiration.team_joblify.entity.VacancyView;
+import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.VacancyViewRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -58,13 +55,14 @@ public class JobFilterServiceImpl {
 
         System.out.println("Position : " + (filterRequest.getPosition().trim() == ""));
         System.out.println("Is Under10 : " + filterRequest.getIsUnder10());
+        System.out.println("Onsit or remote : " + filterRequest.getOnSiteOrRemote());
 
         if (filterRequest.getSortBy() != null) {
             String sortBy = filterRequest.getSortBy();
 
             spec = spec.and((root, query, builder) -> {
                 if ("openDate".equals(sortBy)) {
-                    query.orderBy(builder.desc(root.get("updatedTime")));
+                    query.orderBy(builder.desc(root.get("openDate")));
                 } else if ("post".equals(sortBy)) {
                     query.orderBy(builder.desc(root.get("post")));
                 }
@@ -114,6 +112,17 @@ public class JobFilterServiceImpl {
             });
         }
 
+        if (filterRequest.getOnSiteOrRemote() != null && !filterRequest.getOnSiteOrRemote().isEmpty()) {
+            spec = spec.and((root, query, builder) -> {
+                Predicate fullTime = builder.equal(root.get("onSiteOrRemote"), OnSiteOrRemote.ON_SITE);
+                Predicate partTime = builder.equal(root.get("onSiteOrRemote"), OnSiteOrRemote.REMOTE);
+
+                return filterRequest.getOnSiteOrRemote().equals("BOTH") ?
+                        builder.or(fullTime, partTime) :
+                        builder.equal(root.get("onSiteOrRemote"), OnSiteOrRemote.valueOf(filterRequest.getOnSiteOrRemote()));
+            });
+        }
+
 
         if (filterRequest.getLevel() != null && filterRequest.getLevel().length > 0) {
             String[] levelValues = filterRequest.getLevel();
@@ -138,7 +147,7 @@ public class JobFilterServiceImpl {
 
         if (filterRequest.getIsUnder10().equals("true")) {
             spec = spec.and((root, query, builder) ->
-                    builder.lessThanOrEqualTo(root.get("applicants"), 1));
+                    builder.lessThanOrEqualTo(root.get("applicants"), 10));
         }
 
         spec = spec.and((root, query, builder) -> {

@@ -10,7 +10,19 @@ function showLastVacancies() {
         .then(data => {
             console.log("Data received from server:", data);
             // Handle the data received from the server
-            displayVacancies(data); // Assuming you have the displayVacancies function to handle the data
+            if(data.length > 0) {
+                displayVacancies(data); // Assuming you have the displayVacancies function to handle the data
+            }else {
+                const card = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+                </div>
+                <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+                `;
+
+                // Append the card to the container
+                $("#card-container").append(card);
+            }
         })
         .catch(error => console.error('Error fetching vacancies:', error));
 }
@@ -27,9 +39,9 @@ function displayVacancies(data) {
                     <div class="card-body">
                         <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${vacancy.salary === 0 ? 'Negotiate' : convertToLakhs(vacancy.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.openDate)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address} <span>( ${reconvertToString(vacancy.onSiteOrRemote)} )</span></span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
                         <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1" id="more-detail-btn" style="min-width: 88.59px">More Detail</a>

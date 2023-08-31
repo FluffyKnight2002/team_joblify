@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,7 +21,7 @@ public class VacancyView implements Serializable {
     private long id;
 
     @Column(name = "close_date")
-    private LocalDate closeDate;
+    private LocalDateTime closeDate;
 
     @Column(name = "description")
     private String description;
@@ -46,7 +45,7 @@ public class VacancyView implements Serializable {
     private OnSiteOrRemote onSiteOrRemote;
 
     @Column(name = "open_date")
-    private LocalDate openDate;
+    private LocalDateTime openDate;
 
     @Column(name = "required_post")
     private int post;

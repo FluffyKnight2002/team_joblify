@@ -1,18 +1,15 @@
 let filterElements = [
-    {name: 'date-posted-dropdown-item', isRemove: false, filterId: 'filter-date-posted'},
+    {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
     {name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title'},
     {name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department'},
-    {name: 'job-type-dropdown-item', isRemove: false, filterId: 'filter-jobType'},
     {name: 'level-dropdown-item', isRemove: false, filterId: 'filter-level'},
-    {name: 'salary-dropdown-item', isRemove: false, filterId: 'filter-minAndMax'},
-    {name: 'applicants-dropdown-item', isRemove: false, filterId: 'filter-applicants'},
-    {name: 'status-dropdown-item', isRemove: false, filterId: 'filter-status'}
+    {name: 'selection-status-dropdown-item', isRemove: false, filterId: 'filter-selection-status'},
+    {name: 'interview-status-dropdown-item', isRemove: false, filterId: 'filter-interview-status'}
 ];
 let selectedLevels = [];
-let minValue;
-let maxValue;
 
 function updateDataTable() {
+    $('#filter-vacancy-info-id').val("All");
     table.ajax.reload();
 }
 
@@ -53,8 +50,6 @@ function resetFilters() {
         $(this).closest('.btn-group').remove();
     });
 
-    rangeBar1.noUiSlider.set([250000, 800000]);
-
     $('#reset-filter').hide();
     $('#custom-filter').show();
 
@@ -81,12 +76,12 @@ function changeSelectedFilterName(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-            if(selectedValue != 'Custom') {
-                $('input[name="datefilter2"]').val('');
-                button.text($.trim(selectedValue)); // Update the text of the button
-            }else {
-                $('.date-posted-filter-btn').text('Custom');
-            }
+        if(selectedValue != 'Custom') {
+            $('input[name="datefilter2"]').val('');
+            button.text($.trim(selectedValue)); // Update the text of the button
+        }else {
+            $('.apply-date-filter-btn').text('Custom');
+        }
         // }
 
         updateDataTable();
@@ -152,7 +147,7 @@ function showSelectedDropdownRemoveButton(button) {
 function createDatePostedFilterButton(selectedValue,startDate,endDate) {
 
     filterElements[0].isRemove = true;
-    $('.date-posted-dropdown-item').hide();
+    $('.apply-date-dropdown-item').hide();
 
     let selectedText = null;
 
@@ -160,10 +155,10 @@ function createDatePostedFilterButton(selectedValue,startDate,endDate) {
         $('#filter-start-date').val(startDate);
         $('#filter-end-date').val(endDate);
         selectedText = selectedValue;
-        $('#filter-date-posted').val(selectedText);
+        $('#filter-apply-date').val(selectedText);
     }else {
         selectedText =  selectedValue.text();
-        $('#filter-date-posted').val(selectedText);
+        $('#filter-apply-date').val(selectedText);
     }
 
     // Create a filter button with the selected filter item
@@ -175,13 +170,13 @@ function createDatePostedFilterButton(selectedValue,startDate,endDate) {
                 data-bs-toggle="dropdown" aria-expanded="false">
                 ${selectedText}
             </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="date-posted-dropdown-item">
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="apply-date-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last 24 hours</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last week</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-date-posted">Last month</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last 24 hours</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last week</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-apply-date">Last month</li>
                 <li class="dropdown-item filter-items">
                     <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
                 </li>
@@ -214,7 +209,7 @@ function createDatePostedFilterButton(selectedValue,startDate,endDate) {
             $('.datePostedDropdown').hide();
 
             // Get the selected item with a data-filter-id attribute
-            const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-date-posted">Custom</li>');
+            const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-apply-date">Custom</li>');
 
             // Call the function and pass the selected item
             changeSelectedFilterName(selectedFilterItem);
@@ -340,46 +335,6 @@ function createDepartmentFilterButton(selectedValue) {
     updateDataTable();
 }
 
-function createJopTypeFilterButton(selectedValue) {
-
-    filterElements[3].isRemove = true;
-    $('.job-type-dropdown-item').hide();
-
-    checkAndToggleFilterButton();
-
-    var selectedText = selectedValue.text();
-
-    $('#filter-jobType').val(selectedText);
-
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
-        <div class="btn-group mt-3 p-2 position-relative">
-            <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
-                recent-filter-dropdown-btn position-filter-btn"
-                onmouseenter="showSelectedDropdownRemoveButton(this);"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                ${selectedText}
-            </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="job-type-dropdown-item">
-                <i class="bi bi-x"></i>
-            </span>
-            <ul class="dropdown-menu dropdown-submenu" id="job-type-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-jobType">Full time</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-jobType">Part time</li>
-            </ul>
-        </div>`;
-
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
-
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
-
-    // Update data table
-    updateDataTable();
-}
-
 function createLevelFilterButton(selectedValue) {
 
     // Create a filter button with the selected filter item
@@ -440,7 +395,7 @@ function createLevelFilterButton(selectedValue) {
 
     if($('.level-checkbox:checked').length > 0) {
 
-        filterElements[4].isRemove = true;
+        filterElements[3].isRemove = true;
         $('.level-dropdown-item').hide();
 
         checkAndToggleFilterButton();
@@ -459,168 +414,15 @@ function createLevelFilterButton(selectedValue) {
     }
 }
 
-function createSalaryFilterButton(selectedValue) {
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
+function createSelectionStatusFilterButton(selectedValue) {
 
-    filterElements[5].isRemove = true;
-    $('.salary-dropdown-item').hide();
+    filterElements[4].isRemove = true;
+    $('.selection-status-dropdown-item').hide();
 
     checkAndToggleFilterButton();
 
     var selectedText = selectedValue.text();
-
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
-        <div class="btn-group mt-3 p-2 position-relative">
-            <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
-                recent-filter-dropdown-btn date-posted-filter-btn"
-                onmouseenter="showSelectedDropdownRemoveButton(this);"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Salary
-            </button>
-            <span class="bg-danger selected-dropdown-remove-button salary-filter-remove" data-filter-name="salary-dropdown-item">
-                <i class="bi bi-x"></i>
-            </span>
-            <ul class="dropdown-menu dropdown-submenu p-2" id="salary-filter-dropdown-submenu">
-                <div id="rangeBar2" class="custom-slider"></div>
-                <div class="d-flex justify-content-around text-center">
-                    <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Min: <span id="sliderValue3" class="d-block">100000</span></span>
-                    <span class="selected-salary-label" style="font-size: 0.7rem;max-height: 30px;margin-top: 10px" 
-                    id="confirm-btn" 
-                    onclick="updateFilterValueAndClose(document.getElementById('rangeBar2')); updateDataTable();">Confirm</span>
-                    <span class="col-4 text-primary mt-3" style="font-size: 0.7rem">Max: <span id="sliderValue4" class="d-block">9000000</span></span>
-                </div>
-            </ul>
-        </div>`;
-
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
-    $('#confirm-btn').addClass('col-4 bg-primary text-white rounded-pill d-flex justify-content-center align-items-center');
-    $('#confirm-btn').css('cursor', 'pointer');
-    updateFilterValueAndClose(rangeBar1);
-
-    var rangeBar2 = document.getElementById('rangeBar2');
-    var sliderValue3 = document.getElementById('sliderValue3');
-    var sliderValue4 = document.getElementById('sliderValue4');
-    var tooltipsEnabled2 = false;
-
-    noUiSlider.create(rangeBar2, {
-        start: [minValue, maxValue], // Initial range values
-        connect: true,   // Connect the two handles
-        range: {         // Set the range
-            'min': 100000,
-            'max': 1000000
-        },
-        step: 10000,         // Add a step of 5
-        // Disable tooltips initially
-        tooltips: [false, false],
-        css: [
-            // Change the color of the range bar
-            "background: linear-gradient(to right, #007BFF, #007BFF) !important;",
-            // Change the color of the range buttons and dots
-            ".noUi-connect { background: #007BFF !important; }",
-            ".noUi-handle { background: #007BFF !important; }",
-            ".noUi-tooltip { background: #007BFF !important; }",
-        ],
-    });
-
-    rangeBar2.noUiSlider.on('update', function (values, handle) {
-        sliderValue3.innerText = values[0];
-        sliderValue4.innerText = values[1];
-    });
-
-    // Enable tooltips when handle is pressed
-    // rangeBar2.noUiSlider.on('start', function () {
-    //     if (!tooltipsEnabled2) {
-    //         rangeBar2.noUiSlider.updateOptions({
-    //             tooltips: [true, true]
-    //         });
-    //         tooltipsEnabled2 = true;
-    //     }
-    // });
-
-    // Disable tooltips when handle is released
-    rangeBar2.noUiSlider.on('end', function () {
-        if (tooltipsEnabled2) {
-            rangeBar2.noUiSlider.updateOptions({
-                tooltips: [false, false]
-            });
-            tooltipsEnabled2 = false;
-        }
-    });
-
-    // Prevent dropdown-submenu from closing when interacting with the range slider
-    $(rangeBar2).on('click', function (event) {
-        event.stopPropagation();
-    });
-
-    // Prevent dropdown-submenu from closing when interacting with the range slider values
-    $('#sliderValue3, #sliderValue4').on('click', function (event) {
-        event.stopPropagation();
-    });
-
-    // Add a click event listener to the "Confirm" button
-    // $('#selected-salary-label').on('click', function () {
-    //     updateFilterValueAndClose(rangeBar2);
-    // });
-
-    // Update data table
-    updateDataTable();
-}
-
-
-function createApplicantsFilterButton(selectedValue) {
-
-    filterElements[6].isRemove = true;
-    $('.applicants-dropdown-item').hide();
-
-    checkAndToggleFilterButton();
-
-    var selectedText = selectedValue.text();
-    $('#filter-applicants').val(selectedText);
-
-    // Create a filter button with the selected filter item
-    var selectedDropdown = `
-        <div class="btn-group mt-3 p-2 position-relative">
-            <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
-                recent-filter-dropdown-btn applicants-filter-btn"
-                onmouseenter="showSelectedDropdownRemoveButton(this);"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                ${selectedText}
-            </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="applicants-dropdown-item">
-                <i class="bi bi-x"></i>
-            </span>
-            <ul class="dropdown-menu dropdown-submenu" id="applicants-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Over require</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Doesn't reach half</li>
-            </ul>
-        </div>`;
-
-    // Append the selectedDropdown to the appropriate container
-    $('#recent-filter-dropdown-con').append(selectedDropdown);
-
-    // Hide other remove buttons and show the recent-filter-dropdown-btn
-    $('.selected-dropdown-remove-button').hide();
-    $('.recent-filter-dropdown-btn').show();
-
-    // Update data table
-    updateDataTable();
-}
-
-function createStatusFilterButton(selectedValue) {
-
-    filterElements[7].isRemove = true;
-    $('.status-dropdown-item').hide();
-
-    checkAndToggleFilterButton();
-
-    var selectedText = selectedValue.text();
-    $('#filter-status').val(selectedText);
-
-    console.log("Status filter ",$('#filter-status').val())
+    $('#filter-selection-status').val(selectedText);
 
     // Create a filter button with the selected filter item
     var selectedDropdown = `
@@ -631,13 +433,14 @@ function createStatusFilterButton(selectedValue) {
                 data-bs-toggle="dropdown" aria-expanded="false">
                 ${selectedText}
             </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="status-dropdown-item">
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="selection-status-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Open</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Closed</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-status">Expired</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-selection-status">Received</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-selection-status">Considering</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-selection-status">Viewed</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-selection-status">Offered</li>
             </ul>
         </div>`;
 
@@ -648,6 +451,45 @@ function createStatusFilterButton(selectedValue) {
     $('.selected-dropdown-remove-button').hide();
     $('.recent-filter-dropdown-btn').show();
 
+    // Update data table
+    updateDataTable();
+}
+
+function createInterviewStatusFilterButton(selectedValue) {
+
+    filterElements[5].isRemove = true;
+    $('.interview-status-dropdown-item').hide();
+
+    checkAndToggleFilterButton();
+
+    var selectedText = selectedValue.text();
+    $('#filter-interview-status').val(selectedText);
+
+    // Create a filter button with the selected filter item
+    var selectedDropdown = `
+        <div class="btn-group mt-3 p-2 position-relative">
+            <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
+                recent-filter-dropdown-btn status-filter-btn"
+                onmouseenter="showSelectedDropdownRemoveButton(this);"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                ${selectedText}
+            </button>
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="selection-status-dropdown-item">
+                <i class="bi bi-x"></i>
+            </span>
+            <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Open</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Closed</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Expired</li>
+            </ul>
+        </div>`;
+
+    // Append the selectedDropdown to the appropriate container
+    $('#recent-filter-dropdown-con').append(selectedDropdown);
+
+    // Hide other remove buttons and show the recent-filter-dropdown-btn
+    $('.selected-dropdown-remove-button').hide();
+    $('.recent-filter-dropdown-btn').show();
     // Update data table
     updateDataTable();
 }
@@ -791,5 +633,4 @@ function replaceDateFilter2Value() {
     $('input[name="datefilter2"]').val(dateFilterValue);
     $('input[name="datefilter"]').val('')
 }
-
 

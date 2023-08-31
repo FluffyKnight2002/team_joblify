@@ -11,6 +11,7 @@ public class JobFilterRequest {
     private String datePosted;
     private String position;
     private String jobType;
+    private String onSiteOrRemote;
     private String[] level;
     private String isUnder10;
 }

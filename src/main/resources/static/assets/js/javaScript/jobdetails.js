@@ -4,13 +4,25 @@ formId.value = currentId;
 // Function to fetch job data and create job card UI
 function fetchJobsAndRenderUI() {
 
-    fetch("/vacancy/show-others")
+    fetch("/vacancy/show-others?id="+currentId)
         .then((response) => response.json())
-        .then(data =>{
+        .then(data => {
+            console.log(data)
         // Assuming 'data' is an array of job objects with properties like title, applicants, jobType, salary, postedTime, location, and closeDate
         // Loop through the job data to create job cards
             $("#job-list-container").empty();
-            console.log($('#job-list-container'))
+            if(data.length == 1) {
+                const card = `
+                <div class="d-flex justify-content-center align-items-center">
+                    <img src="/assets/images/candidate-images/nothing_to_show.jpg" class="nothing-to-show" width="auto" height="300px"/>
+                </div>
+                <h4 class="text-center text-muted sub-title fw-bolder">No vacancy was found.</h4>
+                `;
+
+                // Append the card to the container
+                $("#job-list-container").append(card);
+            }
+            console.log(data.length)
             data.forEach(job => {
                 const jobCard = `
                 <div class="card">
@@ -26,17 +38,17 @@ function fetchJobsAndRenderUI() {
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Post(Job type)"><i
                                 class='bx bxs-briefcase'></i> ${job.post}
-                            (${job.type})</span>
+                            (${reconvertToString(job.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            ${convertToLakhs(job.salary)}</span>
+                            ${job.salary === 0 ? 'Negotiate' : convertToLakhs(job.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
-                              ${timeAgo(job.updatedTime)}
+                              ${timeAgo(job.openDate)}
                             </span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Location">
-                            <i class="bi bi-geo-alt-fill"></i>${job.address}</span>
+                            <i class="bi bi-geo-alt-fill"></i>${job.address}<span>( ${reconvertToString(job.onSiteOrRemote)} )</span></span>
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
@@ -46,7 +58,7 @@ function fetchJobsAndRenderUI() {
                         ${changeTimeFormat(job.closeDate)}      
                     </span>
                 </div>
-            </div>
+                </div>
                 `;
                 if (job.id != currentId) {
                     // Append the job card to the container
@@ -68,7 +80,10 @@ function fetchJobsAndRenderUI() {
                 // Call the changeDetail function with the jobId
                 changeDetail(jobId);
             });
-    });
+    })
+        .catch(error => {
+            console.log("Error",error)
+        });
 }
 
 // Function to fetch job details and update the container
@@ -90,7 +105,7 @@ function fetchJobDetails(id) {
                     <div class="detail-header">
                         <div class="title-sesion d-flex justify-content-between">
                             <h4 class="default-font text-start" id="position-name">${data.position}</h4>
-                            <h6 class="text-muted"><i class='bx bx-time'></i>${timeAgo(data.updatedTime)}</h6>
+                            <h6 class="text-muted"><i class='bx bx-time'></i>${timeAgo(data.openDate)}</h6>
                         </div>
                         <div>
                             <h6 class="text-danger" style="font-size: 0.7rem">Close in : ${changeTimeFormat(data.closeDate)}</h6>
@@ -110,7 +125,7 @@ function fetchJobDetails(id) {
                     <span class="my-2 d-block">
                         <i class='bx bx-money' data-toggle="tooltip"
                         data-placement="bottom" title="Salary"></i>
-                        ${convertToLakhs(data.salary)}</span>
+                        ${data.salary === 0 ? 'Negotiate' : convertToLakhs(data.salary)}</span>
                     <span class="my-2 d-block">
                         <i class='bx bxs-award' data-toggle="tooltip"
                         data-placement="bottom" title="Experience Level"></i>
@@ -309,7 +324,7 @@ function changeDetail(id) {
     console.log("ID : ",id)
     currentId = id;
     fetchJobDetails(id);
-    fetchJobsAndRenderUI();
+    fetchJobsAndRenderUI(id);
     updateURLParams();
 }
 
@@ -343,3 +358,14 @@ $(document).ready(function (){
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
+
+function simulateEnterKeyPress(button) {
+
+    const closestFormFloating = button.closest('.form-floating');
+    const inputField = closestFormFloating.find('input[type="text"]');
+
+    if (inputField.length > 0) {
+        // Simulate an Enter key press event on the input field
+        inputField.trigger($.Event('keyup', { keyCode: 13 }));
+    }
+}

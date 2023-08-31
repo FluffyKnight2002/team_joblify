@@ -39,9 +39,6 @@ function actionToVacancy(button) {
         });
     }
 
-    // console.log("FormData : " ,JSON.stringify(formData))
-    //
-    // console.log("FormData : " ,JSON.stringify(formData))
     console.log("Url : ", $('#' + formId).attr('action'));
 
     let bodyData = JSON.stringify(formData);
@@ -52,7 +49,6 @@ function actionToVacancy(button) {
         formData.append('techSkillsString', $('#tech-skills-input').val());
         formData.append('languageSkillsString', $('#language-skills-input').val());
         bodyData = formData;
-        console.warn("TECHSKILL AND LANSKILL", formData.techSkillsString,formData.languageSkillsString);
     }
 
     console.log("Body Data :",bodyData);
@@ -73,10 +69,10 @@ function actionToVacancy(button) {
             .then(response => response.json())
             .then(data => {
 
-                makeAfterRequestSend(data,successMessage,errorMessage);
+                makeAfterRequestSend(formId, data, successMessage, errorMessage);
             })
             .catch(error => {
-                renderCatch();
+                renderCatch(formId, errorMessage);
             });
     }else {
         fetch($('#' + formId).attr('action'), {
@@ -93,16 +89,15 @@ function actionToVacancy(button) {
             )
             .then(response => response.json())
             .then(data => {
-
-                makeAfterRequestSend(data,successMessage,errorMessage);
+                makeAfterRequestSend(formId,data,successMessage,errorMessage);
             })
             .catch(error => {
-                renderCatch();
+                renderCatch(formId,errorMessage);
             });
     }
 }
 
-function makeAfterRequestSend(data,successMessage,errorMessage) {
+function makeAfterRequestSend(formId, data,successMessage,errorMessage) {
     if (data === true) {
         // Handle the success response and update the message-con modal for success
         $('#message-con').html('<p class="text-white">' + successMessage + '</p><div class="text-center"><button class="btn btn-sm btn-light" onclick="closeModal()">Okay</button></div>');
@@ -143,7 +138,7 @@ function makeAfterRequestSend(data,successMessage,errorMessage) {
     }
     hideMessageModalAfterDelay();
     // To change back form
-    if(formId == 'reopen-form'){
+    if(formId === 'reopen-form'){
         $('#submit-btn')
             .attr('data-form-id', 'update-form')
             .attr('data-warning-message', 'Your vacancy will be updated.')
@@ -164,7 +159,7 @@ function makeAfterRequestSend(data,successMessage,errorMessage) {
     console.log("ErrorMessage : ",errorMessage);
 }
 
-function renderCatch(errorMessage) {
+function renderCatch(formId,errorMessage) {
     if(formId === 'upload-form') {
 
         console.log("Upload form !!!!")
@@ -206,10 +201,19 @@ function hideMessageModalAfterDelay() {
 
     if(typeof techSkillsInput  != undefined) {
         techSkillsInput = new Set;
+        $('.tech-skills-block').empty();
     }
 
     if(typeof languageSkillsInput != undefined) {
         languageSkillsInput = new Set;
+        $('.language-skills-block').empty();
+    }
+
+    if($('form#job-apply').length > 0) {
+        $('#dob').removeClass('is-valid');
+        $('#phone').removeClass('is-valid');
+        $('#email').removeClass('is-valid');
+        $('#resume').removeClass('is-valid');
     }
 
     if($('#detailModal').length > 0) {
@@ -264,7 +268,12 @@ $(document).ready(function () {
     // Function to update formStatus based on input emptiness
     function updateFormStatus() {
         let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
-            return $.trim($(this).val()) === '' && $(this).prop('required'); // Only consider required fields
+            if ($(this).attr('name') === 'salary') {
+                console.log("It was salary")
+                return false; // Skip this input
+            }
+
+            return $(this).prop('required') && ($.trim($(this).val()) === '' || ($.trim($(this).val()) <= 0));
         });
 
         emptyInputs.each(function () {
@@ -277,11 +286,98 @@ $(document).ready(function () {
 
         formStatus = emptyInputs.length === 0;
 
+        console.log("Emtpy Inputs ", emptyInputs)
+        console.log("Emtpy Length ", emptyInputs.length)
+
         if($('form#job-apply').length > 0) {
             console.log("JOB APPLY")
             validateFormStatus();
         }
+        if ($('form#update-form').length > 0 && formStatus) {
+            formStatus = vacancyInfoSameOrNot();
+        }
+    }
 
+    function vacancyInfoSameOrNot() {
+        console.log("Update Form");
+        const formElement = document.querySelector('form#update-form');
+        console.log("Form Element :",formElement)
+        const formElementData = new FormData(formElement);
+
+        console.log("FormDataString ", JSON.stringify(formElementData));
+        console.log("CurrentDataString", JSON.stringify(currentData)); // Make sure to stringify currentData
+
+        // Compare the JSON s trings
+        if (isDataSame(formElementData, currentData)) {
+            // Display a notification using iziToast.js
+            iziToast.show({
+                title: '<i class="bi bi-exclamation-triangle-fill"></i>',
+                message: 'No changes were made. Vacancy information are still the same.',
+                position: 'topCenter',
+                timeout: 3000,
+                backgroundColor: 'rgb(255,191,140)',
+                progressBarColor: 'red', // Set the progress bar color to red
+                theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
+                onClosed: function () {
+                }
+            });
+            return false;
+        }
+
+        return true;
+
+        function isDataSame(formElement, currentData) {
+            // Assuming currentData is already parsed from JSON
+            console.log(parseInt(formElement.get('post')));
+            console.log(currentData.post)
+            console.log(reconvertToString(formElement.get('type')).toLowerCase());
+            console.log(currentData.type.toLowerCase())
+            console.log(reconvertToString(formElement.get('lvl')).toLowerCase())
+            console.log(currentData.lvl.toLowerCase())
+            console.log(formElement.get('salary'));
+            console.log(currentData.salary)
+            console.log(reconvertToString(formElement.get('onSiteOrRemote')).toLowerCase())
+            console.log(currentData.onSiteOrRemote.toLowerCase())
+            console.log(formElement.get('descriptions'))
+            console.log(currentData.descriptions)
+            console.log(formElement.get('responsibilities'))
+            console.log(currentData.responsibilities)
+            console.log(formElement.get('requirements'))
+            console.log(currentData.requirements)
+            console.log(formElement.get('preferences'))
+            console.log(currentData.preferences)
+            console.log(formElement.get('address'))
+            console.log(currentData.address)
+            console.log(formElement.get('note'))
+            console.log(currentData.note)
+
+            let salary = formElement.get('salary') === '' ? 0 : formElement.get('salary');
+
+            if (
+                parseInt(formElement.get('post')) === currentData.post &&
+                reconvertToString(formElement.get('type')).toLowerCase() === currentData.type.toLowerCase() &&
+                reconvertToString(formElement.get('lvl')).toLowerCase() === currentData.lvl.toLowerCase() &&
+                parseInt(salary) === currentData.salary &&
+                reconvertToString(formElement.get('onSiteOrRemote')).toLowerCase() === currentData.onSiteOrRemote.toLowerCase() &&
+                formElement.get('descriptions') === currentData.descriptions &&
+                areStringsEqual(formElement.get('responsibilities'), currentData.responsibilities) &&
+                areStringsEqual(formElement.get('requirements'), currentData.requirements) &&
+                areStringsEqual(formElement.get('preferences'), currentData.preferences) &&
+                areStringsEqual(formElement.get('address'), currentData.address) &&
+                areStringsEqual(formElement.get('note'), currentData.note)
+            ) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    function areStringsEqual(str1, str2) {
+        // Remove tabs and whitespace before comparison
+        str1 = str1.replace(/\s/g, '');
+        str2 = str2.replace(/\s/g, '');
+
+        return str1 === str2;
     }
 
     function showFeedback(inputElement) {
@@ -299,8 +395,6 @@ $(document).ready(function () {
         inputElement.removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
         inputElement.css('background-image', 'none');
         inputElement.closest('.mb-3').find('.feedback-message').css('display','none');
-        // Clear feedback message here
-        // Example: inputElement.siblings('.feedback-message').text('');
     }
 
     // Validate inputs on input change
@@ -308,12 +402,19 @@ $(document).ready(function () {
         $('input[type="text"],input[type="number"],input#post, textarea').on('input', function() {
             // console.log("Descriptions  :", $('#descriptions'))
             let inputElement = $(this);
-            if ($.trim(inputElement.val()) === '' || $.trim(inputElement.val()) === '0') {
-                showFeedback(inputElement);
-            } else {
-                clearFeedback(inputElement);
-                inputElement.addClass('is-valid'); // Apply Bootstrap is-valid class
-                inputElement.css('background-image', 'none');
+            if (inputElement.attr('name') != 'salary') {
+
+                if ($.trim(inputElement.val()) === '' || $.trim(inputElement.val()) <= '0') {
+                    showFeedback(inputElement);
+                } else {
+                    clearFeedback(inputElement);
+                    inputElement.addClass('is-valid'); // Apply Bootstrap is-valid class
+                    inputElement.css('background-image', 'none');
+                }
+            }
+            if (inputElement.val() === '0' || (inputElement.val().startsWith('0') || inputElement.val().startsWith(' ') && !inputElement.val().match(/\.\d+/))) {
+                // Display the placeholder value and remove the leading '0'
+                inputElement.val(inputElement.attr('placeholder') || '');
             }
             // updateFormStatus(); // Update formStatus
         });
@@ -335,9 +436,11 @@ $(document).ready(function () {
         if (!formStatus) {
             // Find empty inputs and add 'is-invalid' class
             $('input[type="text"], input[type="number"], input#post, textarea').each(function() {
-                if ($.trim($(this).val()) === '' && $(this).prop('required')) {
-                    $(this).addClass('is-invalid');
-                    $(this).css('background-image', 'none');
+                if($(this).attr('name') != 'salary') {
+                    if ($.trim($(this).val()) === '' && $(this).prop('required')) {
+                        $(this).addClass('is-invalid');
+                        $(this).css('background-image', 'none');
+                    }
                 }
             });
         } else {

@@ -206,7 +206,7 @@ public class VacancyInfoServiceImpl implements VacancyInfoService {
         LocalDate currentDate = LocalDate.now();
 
         for (VacancyInfo vacancyInfo : vacancyInfos) {
-            LocalDate openDate = vacancyInfo.getOpenDate();
+            LocalDateTime openDate = vacancyInfo.getOpenDate();
             long daysDifference = ChronoUnit.DAYS.between(openDate, currentDate);
 
             if (daysDifference >= 30) {

@@ -338,12 +338,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 	fetch('/chart')  .then(response => response.json())
+
 		.then(data => {
+			console.log(data )
 			var pine = {
 				series: [data.total, data.not, data.panding,data.interviewed,data.passed,data.cancel],
 				labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
 				chart: {
-					width: 400,
+					width: 365,
 					type: 'polarArea',
 				},
 				stroke: {

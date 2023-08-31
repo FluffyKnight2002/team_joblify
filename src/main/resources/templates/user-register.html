@@ -102,9 +102,9 @@
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                     <h6>
                                         <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
-                                            style="background: #1e497b !important;" href="javascript:history.back()">
+                                           style="background: #1e497b !important;" href="javascript:history.back()">
                                             <i class="bi bi-arrow-left-circle position-absolute"
-                                                style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                               style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
                                     </h6>
                                 </nav>
                             </div>
@@ -240,15 +240,15 @@
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
 
-                                            <textarea class="form-control" id="note" name="note" placeholder="Note"
-                                                style="height: 100px"></textarea>
+                                                <textarea class="form-control" id="note" name="note" placeholder="Note"
+                                                          style="height: 100px"></textarea>
                                             <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
 
-                                            <textarea class="form-control" id="address" name="address"
-                                                placeholder="Address" style="height: 100px" required></textarea>
+                                                <textarea class="form-control" id="address" name="address"
+                                                          placeholder="Address" style="height: 100px" required></textarea>
                                             <label for="address"><span class="px-3">Address</span></label>
                                             <div class="invalid-feedback">
                                                 Please Add Address.
@@ -292,7 +292,7 @@
 
 
     <script src="/assets/js/main.js"></script>
-
+    
 
     <script>
 
@@ -309,7 +309,7 @@
 
 
         const form = document.getElementById('registration-form');
-
+       
 
         document.querySelector("#registration-form").addEventListener("submit", function (event) {
             event.preventDefault();
@@ -326,17 +326,17 @@
         function showConfirmationModal() {
 
             const confirmationModal = `
-            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-body text center" style="background: #0c233d">
+                        <div class="modal-body text center" style="max-width: 300px;background: #0c233d">
                             <div class="loader"></div>
                             <div class="loader-txt text-center">
                                 <h3 class="text-white">Are you sure?</h3>
                                 <p class="text-white">New User Account Will Be Created.</p>
                                 <div>
-                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
-                                    <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
+                                    <button id="confirmYes" type="button" class="btn btn-sm btn-light mx-1">Yes</button>
+                                    <button id="confirmCancel" class="btn btn-sm btn-secondary mx-1" data-bs-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                         </div>
