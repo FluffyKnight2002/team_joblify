@@ -66,7 +66,7 @@ async function getDepartment() {
             department4.append(optionElement);
         });
 		department = await data;
-		fetchFor3rdChart();
+		
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -233,9 +233,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	if(department != undefined && year != undefined){
 
-		let selectedY =  $("#year1").val();
-
-		fetchFor1stChart(selectedY);
+		let selectedYear =  $("#year1").val();
+		console.log(selectedYear + "aa");
+		fetchFor1stChart(selectedYear);
 	}
 
 
@@ -328,9 +328,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	if(department != undefined && year != undefined){
 		fetchFor3rdChart();
 
-		let selectedYear =  $("#year1").val();
-
-		fetchFor1stChart(selectedYear);
+		
 	}
 
 	$("#department3, #year3").change(fetchFor3rdChart);

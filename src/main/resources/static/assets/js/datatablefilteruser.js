@@ -354,7 +354,9 @@ $(document).ready(function () {
                 <div class="modal-body text center" style="background: #0c233d">
                     <div class="loader"></div>
                     <div class="loader-txt text-center">
-                        <h3 class="text-white">Are you sure to change Candidate Account Status?</h3>
+                    <h3 class="text-white">Are you sure?</h3>
+                    <p class="text-white">This User Account Status Will Be Changed.</p>
+
                         
                         <div>
                             <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
@@ -397,8 +399,8 @@ $(document).ready(function () {
             const reset = `<div class="modal-body text center" style="background: #0c233d">
                     <div class="loader"></div>
                     <div class="loader-txt text-center">
-                        <h3 class="text-white">Are you sure to edit this Account?</h3>
-
+                    <h3 class="text-white">Are you sure?</h3>
+                    <p class="text-white">This User Account Status Will Be Changed.</p>
                         <div>
                             <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
                             <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>

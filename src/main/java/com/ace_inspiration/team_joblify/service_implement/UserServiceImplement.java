@@ -4,20 +4,17 @@ import com.ace_inspiration.team_joblify.config.ProfileGenerator;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
-import com.ace_inspiration.team_joblify.repository.NotificationRepository;
-import com.ace_inspiration.team_joblify.repository.NotificationUserRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -28,9 +25,12 @@ public class UserServiceImplement implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final ResourceLoader resourceLoader;
 
     @Value("${app.default.user.password}")
     private String password;
+
+    private final String location = "classpath:/static/assets/images/faces/5.jpg";
 
     @Override
     public User userCreate(UserDto userDto, long userId) throws IOException {
@@ -38,7 +38,7 @@ public class UserServiceImplement implements UserService {
         byte[] imageBytes;
 
         if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -96,7 +96,7 @@ public class UserServiceImplement implements UserService {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
         if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -143,8 +143,7 @@ public class UserServiceImplement implements UserService {
         byte[] imageBytes;
 
         if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
-
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
         } else {
             imageBytes = userDto.getPhoto().getBytes();
         }
