@@ -357,8 +357,7 @@ $(document).ready( async function() {
                 		<div class="text-center row">
                 			<div class="form-check form-switch">
                                 <label class="form-check-label text-light" for="withFiler" style="font-size: 0.8rem">Including filter</label>
-                                <input class="form-check-input" type="checkbox" name="withFilter" id="withFilter" style="font-size: 0.7rem;transform: translate(5px,5px);
-}">
+                                <input class="form-check-input" type="checkbox" name="withFilter" id="withFilter" style="font-size: 0.7rem;transform: translate(5px,5px);}">
                             </div>
 						</div>
             		</div>

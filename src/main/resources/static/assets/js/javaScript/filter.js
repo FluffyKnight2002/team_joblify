@@ -283,15 +283,15 @@ function showResult() {
                         <img class="m-3" src="/assets/images/candidate-images/backend_icon.png" alt="Backend Icon" width="50" height="50">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bxs-briefcase' data-toggle="tooltip" data-placement="bottom" title="Post(Job type)"></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-money' data-toggle="tooltip" data-placement="bottom" title="Salary"></i> ${convertToLakhs(vacancy.salary)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class='bx bx-time' data-toggle="tooltip" data-placement="bottom" title="Posted time"></i> ${timeAgo(vacancy.openDate)}</span>
-                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block"><i class="bi bi-geo-alt-fill" data-toggle="tooltip" data-placement="bottom" title="Location"></i> ${vacancy.address} <span>(${reconvertToString(vacancy.onSiteOrRemote)})</span></span>
+                        <h5 class="card-title">${vacancy.position}<span class="applicants-text d-inline-block d-md-inline-block" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Applicants"><i class='bx bxs-droplet'></i> ${vacancy.applicants} applicants</span></h5>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Post(Job type)"><span></span><i class='bx bxs-briefcase'></i> ${vacancy.post} (${reconvertToString(vacancy.jobType)})</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Salary"><i class='bx bx-money'></i> ${vacancy.salary === 0 ? 'Negotiate' : convertToLakhs(vacancy.salary)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Posted time"><i class='bx bx-time'></i> ${timeAgo(vacancy.openDate)}</span>
+                        <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Location"><i class="bi bi-geo-alt-fill"></i> ${vacancy.address} <span>( ${reconvertToString(vacancy.onSiteOrRemote)} )</span></span>
                     </div>
                     <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
-                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1 more-detail-btn" style="min-width: 88.59px">More Details</a>
-                        <span class="default-font me-4 d-inline-block end-date-text closed-date" ><i class='bx bx-calendar-exclamation' data-toggle="tooltip" data-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
+                        <a href="/job-detail?id=${vacancy.id}" class="btn btn-sm btn-primary mb-1" id="more-detail-btn" style="min-width: 88.59px">More Detail</a>
+                        <span class="default-font me-4 d-inline-block end-date-text"><i class='bx bx-calendar-exclamation' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Close date"></i> ${changeTimeFormat(vacancy.closeDate)}</span>
                     </div>
                 </div>
             `;
@@ -300,7 +300,7 @@ function showResult() {
 
             // Initialize Bootstrap tooltips
             $(function () {
-                $('[data-toggle="tooltip"]').tooltip({
+                $('[data-bs-toggle="tooltip"]').tooltip({
                     placement: 'bottom' // Set the desired placement here
                 });
             });
@@ -396,16 +396,15 @@ function updateRecentFilter() {
 
     // Create an array of filter elements
     const filterElements = [
-        `<span class="text-muted sub-title me-2 bg-white p-1 rounded-pill"><strong>Active Filter : </strong></span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
-           data-bs-toggle="dropdown" data-bs-placement="bottom" title="Sort By">
-            ${sortBy}</span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
-            data-bs-toggle="dropdown" data-bs-placement="bottom" title="Date Posted">${datePosted}</span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
-            data-bs-toggle="dropdown" data-bs-placement="bottom" title="Job Type">${jobType}</span>`,
-        `<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
-            data-bs-toggle="dropdown" data-bs-placement="bottom" title="On-site or remote">${onSiteOrRemote}</span>`
+        `<span class="bg-light text-dark rounded-pill mx-1 px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+           data-bs-toggle="tooltip" data-bs-placement="bottom" title="Sort By">
+            <span>${sortBy}</span></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Date Posted"><span>${datePosted}</span></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="Job Type"><span>${jobType}</span></span>`,
+        `<span class="bg-light text-dark rounded-pill mx-1 px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem"
+            data-bs-toggle="tooltip" data-bs-placement="bottom" title="On-site or remote"><span>${onSiteOrRemote}</span></span>`
     ];
 
     // Add level filters if levelsArray has values
@@ -414,7 +413,7 @@ function updateRecentFilter() {
             filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${level}</span>`);
         });
     } else {
-        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">ALL</span>`);
+        filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Level" style="border: 3px solid #1f3a62; font-size: 0.7rem"><span>ALL</span></span>`);
     }
 
     // Add under10 and includingClosed filter elements
@@ -422,18 +421,18 @@ function updateRecentFilter() {
         filterElements.push(`<span class="bg-light text-dark rounded-pill mx-1 d-inline-block px-2 p-1" style="border: 3px solid #1f3a62; font-size: 0.7rem">${under10}</span>`);
     }
 
+    // Initialize Bootstrap tooltips
+    $(function () {
+        $('[data-bs-toggle="tooltip"]').tooltip({
+            placement: 'bottom' // Set the desired placement here
+        });
+    });
+
     // Update the recent-filter section with the generated filter elements
     const recentFilter = $('#filter-data-con');
     recentFilter.empty(); // Clear previous content
     filterElements.forEach(element => {
         recentFilter.append(element);
-    });
-
-    // Initialize Bootstrap tooltips
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            placement: 'bottom' // Set the desired placement here
-        });
     });
 }
 

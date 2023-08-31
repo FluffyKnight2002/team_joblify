@@ -133,6 +133,9 @@ $(document).ready(function () {
                 { name: "Salary",
                     data: "salary",
                     render: function (data, type, row, meta) {
+                        if(row.salary === 0) {
+                            return "Negotiate";
+                        }
                         return convertToLakhs(row.salary);
                     },
                     target: 4 }, // Access object property directly
@@ -660,19 +663,18 @@ $(document).on("click", ".show-detail-btn", function (event) {
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");
             let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
-                return $.trim($(this).val()) === '' && $.trim($(this).val()) === '0' && $(this).prop('required'); // Only consider required fields
+                return $.trim($(this).val()) === '' && $.trim($(this).val()) <= 0 && $(this).prop('required'); // Only consider required fields
+            });
+
+            $('input[type="text"], input[type="number"], input#post, textarea').each(function () {
+                $(this).removeClass('is-valid');
+                $(this).removeClass('is-invalid'); // Remove Bootstrap is-invalid class
+                $(this).removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
+                $(this).css('background-image', 'none');
+                $(this).closest('.mb-3').find('.feedback-message').css('display','none');
             });
 
             console.log("Empty Inputs : ",emptyInputs)
-            emptyInputs.each(function () {
-                console.log("Element : ", $(this))
-                if($(this).hasClass('is-invalid')) {
-                    $(this).removeClass('is-invalid');
-                }else if($(this).hasClass('is-valid')) {
-                    $(this).removeClass('is-valid');
-                }
-                $(this).addClass('is-valid');
-            });
         });
 });
 
@@ -873,7 +875,7 @@ function populateModalWithData(data) {
     $("#lvl").val(convertToEnumFormat(data.lvl)); // Convert and set the value
     $("#workingDays").val(data.workingDays);
     $("#workingHours").val(data.workingHours);
-    $("#salary").val(data.salary);
+    $("#salary").val(data.salary != 0 ? data.salary : '');
     $("#onSiteOrRemote").val(convertToEnumFormat(data.onSiteOrRemote)); // Convert and set the value
     $("#descriptions").val(data.descriptions);
     $("#responsibilities").val(data.responsibilities);
