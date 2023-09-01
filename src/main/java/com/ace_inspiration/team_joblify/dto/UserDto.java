@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+
     private MultipartFile photo;
 
     @NotBlank(message = "Username cannot be blank")

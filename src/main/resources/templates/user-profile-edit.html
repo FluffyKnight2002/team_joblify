@@ -387,10 +387,10 @@
     function showConfirmationModal() {
 
       const confirmationModal = `
-            <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+      <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
                     <div class="modal-content">
-                        <div class="modal-body text center" style="background: #0c233d">
+                        <div class="modal-body text center" style="max-width: 300px;background: #0c233d">
                             <div class="loader"></div>
                             <div class="loader-txt text-center">
                               <h3 class="text-white">Are you sure?</h3>
