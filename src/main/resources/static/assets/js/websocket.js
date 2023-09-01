@@ -83,7 +83,7 @@ function displayNotification(notifications) {
         addNotifications(notification);
     });
 
-    notificationCount = unSeenCount;
+    notificationCount = (unSeenCount >= 99) ? '99+' : unSeenCount;
     $('#notifications-count').text(notificationCount);
     unSeenCount = 0;
 }

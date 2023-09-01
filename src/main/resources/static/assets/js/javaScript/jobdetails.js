@@ -4,7 +4,7 @@ formId.value = currentId;
 // Function to fetch job data and create job card UI
 function fetchJobsAndRenderUI() {
 
-    fetch("/vacancy/show-others")
+    fetch("/vacancy/show-others?id="+currentId)
         .then((response) => response.json())
         .then(data => {
             console.log(data)
@@ -41,14 +41,14 @@ function fetchJobsAndRenderUI() {
                             (${reconvertToString(job.jobType)})</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Salary"><i class='bx bx-money'></i>
-                            ${convertToLakhs(job.salary)}</span>
+                            ${job.salary === 0 ? 'Negotiate' : convertToLakhs(job.salary)}</span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Posted time"><i class='bx bx-time'></i>
                               ${timeAgo(job.openDate)}
                             </span>
                         <span class="default-font mx-2 d-block d-md-block d-xl-inline-block" data-toggle="tooltip"
                               data-placement="bottom" title="Location">
-                            <i class="bi bi-geo-alt-fill"></i>${job.address}</span>
+                            <i class="bi bi-geo-alt-fill"></i>${job.address}<span>( ${reconvertToString(job.onSiteOrRemote)} )</span></span>
                     </div>
                 </div>
                 <div class="d-flex flex-column justify-content-center justify-content-md-center align-items-end mb-3">
@@ -125,7 +125,7 @@ function fetchJobDetails(id) {
                     <span class="my-2 d-block">
                         <i class='bx bx-money' data-toggle="tooltip"
                         data-placement="bottom" title="Salary"></i>
-                        ${convertToLakhs(data.salary)}</span>
+                        ${data.salary === 0 ? 'Negotiate' : convertToLakhs(data.salary)}</span>
                     <span class="my-2 d-block">
                         <i class='bx bxs-award' data-toggle="tooltip"
                         data-placement="bottom" title="Experience Level"></i>
@@ -324,7 +324,7 @@ function changeDetail(id) {
     console.log("ID : ",id)
     currentId = id;
     fetchJobDetails(id);
-    fetchJobsAndRenderUI();
+    fetchJobsAndRenderUI(id);
     updateURLParams();
 }
 

@@ -1,9 +1,8 @@
 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
-// let userRole;
 
 // This event listener will trigger your function when the DOM content is loaded
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",  async function () {
     authenticatedUserData();
 
     fetch('/getCookies')
@@ -32,7 +31,6 @@ async function authenticatedUserData() {
             console.log(userDetails);
             console.log(passwordMatches);
             console.log(userDetails.user.role)
-
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
@@ -46,8 +44,6 @@ async function authenticatedUserData() {
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
             const loader = document.getElementById('loader');
             const credentials = document.getElementById('credentials');
-
-            // const sendMail=document.getElementById('mail-1').hidden;
             if (loader) {
                 loader.remove();
             }
@@ -63,6 +59,8 @@ async function authenticatedUserData() {
                     theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
                 });
             }
+
+
 
         } else {
             console.error('Failed to fetch authenticated user data:', response.status, response.statusText);

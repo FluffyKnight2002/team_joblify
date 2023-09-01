@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="_csrf" th:content="${_csrf.token}" />
 	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-	<title>Vacancies page</title>
+	<title>Job Detail</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 	<link rel="stylesheet"
@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
 	<link rel="stylesheet" href="/assets/css/candidate-css/style.css">
 	<link rel="stylesheet" href="/assets/css/candidate-css/detailsstyle.css">
+	<link rel="shortcut icon" type="icon/image" href="https://acedatasystems.com/wp-content/themes/acedata/shared/images/fav/favicon.ico">
 </head>
 
 <body>
@@ -49,7 +50,7 @@
 		<!-- Jobs list start -->
 		<div class="col-md-5 scrollable-container jobs-list-con mb-4">
 			<div class="jobs-con-header py-2 rounded-top">
-				<h6 class="text-white ps-3">Other jobs for you</h6>
+				<h6 class="text-white ps-3">Other related jobs for you</h6>
 			</div>
 			<div class="m-0 p-0" id="job-list-container"></div>
 
@@ -351,8 +352,8 @@
 
 				<div class="modal-footer">
 					<button class="btn btn-primary" type="button" id="submit-btn"
-						   data-form-id="job-apply" data-warning-message="We only accept one applicants per email."
-						   data-success-message="You applied the job.We'll be contact soon."
+						   data-form-id="job-apply" data-warning-message="Are you ready to apply?"
+						   data-success-message="You applied the job.We'll be contact soon.Have a good day."
 						   data-error-message="Sorry!, something went wrong.Please, try again.">
 						Apply <i class='bx bxs-navigation'></i></button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
