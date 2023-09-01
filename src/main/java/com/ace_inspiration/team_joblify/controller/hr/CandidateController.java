@@ -13,13 +13,12 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,18 +31,15 @@ import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-
-import lombok.RequiredArgsConstructor;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -53,13 +49,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,11 +65,13 @@ public class CandidateController {
 
     private final PositionService positionService;
 
-    // private final DasboardService dasboardservice;
+//    private final DasboardService dasboardservice;
 
-    private final InterviewProcessService interviewService;
+//    private final InterviewProcessRepository interviewProcessRepository;
 
-    private final InterviewProcessRepository repo;
+    private  final InterviewProcessService interviewService;
+
+    private final InterviewProcessRepository interviewProcessRepository;
 
     private final VacancyInfoService vacancyInfoService;
 
@@ -90,26 +81,50 @@ public class CandidateController {
 
     private FirstDaySpecification firstDaySpecification;
 
+
+//    @GetMapping("/allCandidate")
+//    @ResponseBody
+//    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+//        System.err.println(input);
+//        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+//        firstDaySpecification = new FirstDaySpecification(input);
+//
+//
+//        if (firstDaySpecification == null) {
+//            return interviewData;
+//        } else {
+//            interviewData = interviewProcessRepository.findAll(input, firstDaySpecification);
+//            return interviewData;
+//        }
+//
+//    }
+
     @GetMapping("/allCandidate")
     public DataTablesOutput<InterviewProcess> getDataTable(
-            @RequestParam(required = false) String datePosted,
+            @RequestParam(required = false) String vacancyInfoId,
+            @RequestParam(required = false) String applyDate,
             @RequestParam(required = false) String startDateInput,
             @RequestParam(required = false) String endDateInput,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) String department,
-            @RequestParam(required = false) String jobType,
             @RequestParam(required = false) List<String> level,
-            @RequestParam(required = false) String minAndMax,
-            @RequestParam(required = false) String applicants,
-            @RequestParam(required = false) String status,
-           DataTablesInput input) {
+            @RequestParam(required = false) String selectionStatus,
+            @RequestParam(required = false) String interviewStatus,
+            @Valid DataTablesInput input) {
 
         // Create a Specification using the DataTablesInput object
         Specification<InterviewProcess> specification = (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
 
+            System.out.println("Vacancy ID " + vacancyInfoId);
+            if(!vacancyInfoId.trim().equals("All")) {
+                long id = Long.valueOf(vacancyInfoId.trim());
+                System.out.println("COndition HTITITITITITI");
+                predicate = criteriaBuilder.equal(root.get("viId"), id);
+            }
+
             // Inside your getDataTable method
-            if (datePosted != null && !datePosted.isEmpty()) {
+            if (applyDate != null && !applyDate.isEmpty()) {
                 LocalDate currentDate = LocalDate.now();
                 LocalDate startDate = null;
                 LocalDate endDate = null;
@@ -117,16 +132,16 @@ public class CandidateController {
                 System.out.println("Start Date Input : " + startDateInput);
                 System.out.println("End Date Input : " + endDateInput);
 
-                if (datePosted.equals("Last 24 hours")) {
+                if (applyDate.equals("Last 24 hours")) {
                     // Calculate the start date as 1 day ago from the current date
                     startDate = currentDate.minusDays(1);
-                } else if (datePosted.equals("Last week")) {
+                } else if (applyDate.equals("Last week")) {
                     // Calculate the start date as 7 days ago from the current date
                     startDate = currentDate.minusDays(7);
-                } else if (datePosted.equals("Last month")) {
+                } else if (applyDate.equals("Last month")) {
                     // Calculate the start date as 30 days ago from the current date
                     startDate = currentDate.minusDays(30);
-                } else if (datePosted.equals("Custom")) {
+                } else if (applyDate.equals("Custom")) {
                     // Check if both startDateInput and endDateInput are provided
                     if (startDateInput != null && endDateInput != null) {
                         // Parse the start and end dates into LocalDate objects
@@ -145,20 +160,22 @@ public class CandidateController {
                 if (startDate != null) {
                     // Add filter condition for the start date
                     predicate = criteriaBuilder.and(
-                            predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("openDate"), startDate)
+                            predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("date"), startDate)
                     );
                 }
 
                 if (endDate != null) {
                     // Add filter condition for the end date
                     predicate = criteriaBuilder.and(
-                            predicate, criteriaBuilder.lessThanOrEqualTo(root.get("openDate"), endDate)
+                            predicate, criteriaBuilder.lessThanOrEqualTo(root.get("date"), endDate)
                     );
                 }
 
                 System.out.println("Start Date : " + startDate);
                 System.out.println("End Date : " + endDate);
-            }if (title != null && !title.isEmpty()) {
+            }
+
+            if (title != null && !title.isEmpty()) {
                 // Add filter condition for title
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("position"), title));
             }
@@ -166,16 +183,11 @@ public class CandidateController {
                 // Add filter condition for department
                 predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("department"), department));
             }
-            if (jobType != null && !jobType.isEmpty()) {
-                String adjustedJobType = jobType.toUpperCase().replace(" ", "_");
-                // Correct job type filtering with a list of values
-                predicate = criteriaBuilder.and(predicate, root.get("jobType").in(JobType.valueOf(adjustedJobType)));
-            }
             if (level != null && level.size() > 0) {
                 List<Predicate> levelPredicates = new ArrayList<>();
                 level.forEach(lvl -> {
                     String adjustedLevel = lvl.toUpperCase().replace(" ", "_");
-                    levelPredicates.add(root.get("level").in(Level.valueOf(adjustedLevel)));
+                    levelPredicates.add(root.get("lvl").in(Level.valueOf(adjustedLevel)));
                 });
 
                 // Combine all level predicates using OR
@@ -184,44 +196,27 @@ public class CandidateController {
                 // Add the combined level predicate to the overall predicate using AND
                 predicate = criteriaBuilder.and(predicate, levelPredicate);
             }
-            if (minAndMax != null && !minAndMax.isEmpty()) {
-                // Correct salary filtering within a range
-                String[] salaryRange = minAndMax.split(",");
-                if (salaryRange.length == 2) {
-                    double minSalary = Double.parseDouble(salaryRange[0]);
-                    double maxSalary = Double.parseDouble(salaryRange[1]);
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.between(root.get("salary"), minSalary, maxSalary));
-                }
-            }
-            if (applicants != null && !applicants.isEmpty()) {
-                Predicate applicantsPredicate = null;
-
-                if (applicants.equals("Over require")) {
-                    // Apply filter condition for "Over require"
-                    applicantsPredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("applicants"), root.get("post"));
-                } else {
-                    // Apply filter condition for "Doesn't reach half"
-                    applicantsPredicate = criteriaBuilder.lessThanOrEqualTo(root.get("applicants"), root.get("post"));
-                }
-
-                // Add the applicantsPredicate to the main predicate with 'AND'
-                predicate = criteriaBuilder.and(predicate, applicantsPredicate);
-            }
-            if (status != null && !status.isEmpty()) {
+            if (selectionStatus != null && !selectionStatus.isEmpty()) {
                 // Add filter condition for status
-                String adjustedStatus = status.toUpperCase().replace(" ", "_");
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("status"), Status.valueOf(adjustedStatus)));
+                String adjustedStatus = selectionStatus.toUpperCase().replace(" ", "_");
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("selectionStatus"), Status.valueOf(adjustedStatus)));
+            }
+
+            if (interviewStatus != null && !interviewStatus.isEmpty()) {
+                // Add filter condition for status
+                String adjustedStatus = interviewStatus.toUpperCase().replace(" ", "_");
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("interviewStatus"), Status.valueOf(adjustedStatus)));
             }
 
             return predicate;
         };
 
         // Use the Specification to filter data
-        DataTablesOutput<InterviewProcess> output = repo.findAll(input, specification);
+        DataTablesOutput<InterviewProcess> output = interviewProcessRepository.findAll(input,specification);
 
         return output;
     }
+
 
     @GetMapping("/allPositions")
     @ResponseBody

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +55,10 @@ public class VacancyInfo implements Serializable {
     private JobType jobType;
 
     @Column(nullable = false)
-    private LocalDate openDate;
+    private LocalDateTime openDate;
 
     @Column(nullable = false)
-    private LocalDate closeDate;
+    private LocalDateTime closeDate;
 
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime updatedTime;
