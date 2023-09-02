@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+    <!--  Date range picker-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link rel="stylesheet" href="/assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="/assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -65,10 +67,10 @@
                 <div class="row" id="table-striped">
                     <div class="col-12">
                         <div class="card">
-                            <div class="card-header">
+                            <div class="card-header p-0">
 
                                 <div class="d-flex justify-content-between">
-                                    <h3 class="text-primary mb-5">Interview Process Report</h3>
+                                    <h3 class="text-primary">Interview Process Report</h3>
                                     <div>
                                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                             <h6>
@@ -84,21 +86,11 @@
                             </div>
                             <div class="card-content">
                                 <div class="table">
-                                    <div class="row ps-3 pb-3">
-                                        <div class="col-md-1 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-                                            <a id="pdfDownload" class="image-button" aria-label="Download pdf"
-                                               href="/all_candidates/pdf"></a>
-                                        </div>
-                                        <div class="col-md-1 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                                            <a id="excelDownload" class="image-button" aria-label="Download Excel"
-                                               href="/interview_process/excel"></a>
-                                        </div>
-                                    </div>
                                     <table class="table table-striped mb-0" id="table2">
                                         <thead>
                                         <tr>
-                                            <th>From Date</th>
-                                            <th>To Date</th>
+                                            <th>Open Date</th>
+                                            <th>Close Date</th>
                                             <th>Position</th>
                                             <th>Total Received</th>
                                             <th>Interview</th>
@@ -129,6 +121,9 @@
 <!-- SockJS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
 <script src="/assets/js/websocket.js"></script>
+<!-- Date range picker-->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 <script src="/assets/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/js/authenticatedUserCredendials.js"></script>
@@ -138,8 +133,8 @@
 <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
-
 <script src="/assets/js/javaScript/process.js"></script>
+<script src="/assets/js/candidateandinterviewfilter.js"></script>
 </body>
 
 </html>
