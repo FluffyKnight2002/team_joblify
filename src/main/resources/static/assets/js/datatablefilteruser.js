@@ -54,7 +54,7 @@ function createdDateFiltered(selectedValue) {
     const endDate = currentDate.toISOString().split('T')[0]; // End date is today
     const startDate = new Date(currentDate);
     const isoStartDate = startDate.toISOString().split('T')[0];
-    
+
     if (selectedValue === '') {
         data = '';
     } else if (selectedValue === 'Last 24 hours') {
@@ -123,7 +123,7 @@ $(document).ready(function () {
                 searchable: false,
                 data: null,
                 defaultContent: '',
-                
+
             },
             { data: "name", targets: 1 },
             { data: "email", targets: 2 },
@@ -131,7 +131,7 @@ $(document).ready(function () {
             { data: "address", targets: 4 },
             { data: "department.name", targets: 5 },
             {
-                
+
                 data: "role",
                 targets: 6, // Adjust the target index to match the column
                 render: function (data, type, row) {
@@ -171,7 +171,7 @@ $(document).ready(function () {
                 data: "createdDate",
                 visible: false
             },
-            
+
 
         ],
         serverSide: true,
@@ -348,13 +348,15 @@ $(document).ready(function () {
 
     function showConfirmationModal(action, id) {
         const confirmationModal = `
-    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered" id="message-modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-body text center" style="background: #0c233d">
+                <div class="modal-body text center" style="max-width: 300px;background: #0c233d">
                     <div class="loader"></div>
                     <div class="loader-txt text-center">
-                        <h3 class="text-white">Are you sure to change Candidate Account Status?</h3>
+                    <h3 class="text-white">Are you sure?</h3>
+                    <p class="text-white">This User Account Status Will Be Changed.</p>
+
                         
                         <div>
                             <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
@@ -397,8 +399,8 @@ $(document).ready(function () {
             const reset = `<div class="modal-body text center" style="background: #0c233d">
                     <div class="loader"></div>
                     <div class="loader-txt text-center">
-                        <h3 class="text-white">Are you sure to edit this Account?</h3>
-
+                    <h3 class="text-white">Are you sure?</h3>
+                    <p class="text-white">This User Account Status Will Be Changed.</p>
                         <div>
                             <button id="confirmYes" type="button" class="btn btn-sm btn-light-danger mx-1">Yes</button>
                             <button id="confirmCancel" class="btn btn-sm btn-light mx-1" data-bs-dismiss="modal">Cancel</button>
@@ -831,10 +833,10 @@ function createRoleFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="role-filter-dropdown-submenu">
-            <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Default-HR</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Senior-HR</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Junior-HR</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Management-HR</li>
+            <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Default HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Senior HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Junior HR</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Management</li>
                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Interviewer</li>
                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-role">Other</li>
             </ul>

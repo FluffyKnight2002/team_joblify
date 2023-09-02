@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="_csrf" th:content="${_csrf.token}" />
 	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-	<title>Vacancies page</title>
+	<title>Job Detail</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 	<link rel="stylesheet"
@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
 	<link rel="stylesheet" href="/assets/css/candidate-css/style.css">
 	<link rel="stylesheet" href="/assets/css/candidate-css/detailsstyle.css">
+	<link rel="shortcut icon" type="icon/image" href="https://acedatasystems.com/wp-content/themes/acedata/shared/images/fav/favicon.ico">
 </head>
 
 <body>
@@ -49,7 +50,7 @@
 		<!-- Jobs list start -->
 		<div class="col-md-5 scrollable-container jobs-list-con mb-4">
 			<div class="jobs-con-header py-2 rounded-top">
-				<h6 class="text-white ps-3">Other jobs for you</h6>
+				<h6 class="text-white ps-3">Other related jobs for you</h6>
 			</div>
 			<div class="m-0 p-0" id="job-list-container"></div>
 
@@ -228,7 +229,7 @@
 
 					<form action="/apply-job" id="job-apply" class="row g-3 needs-validation" enctype="multipart/form-data">
 						<input type="hidden" id="form-id" name="id">
-						
+
 						<div class="form-floating">
 							<input type="text" class="form-control" id="name" name="name" placeholder="Name"
 									oninput="event.stopImmediatePropagation();validateName()" required>
@@ -236,7 +237,7 @@
 							<div class="feedback-message text-danger">Name can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
-						
+
 						<div class="form-floating">
 							<input type="date" class="form-control" id="dob" name="dob" placeholder="Date of Birth"
 								   oninput="event.stopImmediatePropagation();validateDob()" required>
@@ -244,7 +245,7 @@
 							<div class="feedback-message text-danger">Birthday can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
-						
+
 						<div>
 							<div class="form-check form-check-inline w-50">
 								<label class="form-label">Gender</label>
@@ -273,17 +274,19 @@
 							<div class="feedback-message text-danger">Email can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
-						
+
 						<div class="form-floating">
 							<input type="text" class="form-control" id="education" name="education" placeholder="Education" required>
 							<label for="education" class="ms-2">Bachelor Degree/Disploma</label>
 							<div class="feedback-message text-danger">Education can't be empty</div>
 						</div>
-						
+
 						<div class="form-floating mb-1">
 							<input type="text" class="form-control" id="techSkills" placeholder="TechSkills"
 								   oninput="event.stopImmediatePropagation();validateTechSkills()">
 							<label for="techSkills" class="ms-2">Technical Skills</label>
+							<button class="btn btn-sm btn-primary text-white position-absolute btn-adjusted"
+									type="button" onclick="simulateEnterKeyPress($(this))">Add</button>
 							<div class="feedback-message text-danger">Technical skills can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
@@ -294,6 +297,8 @@
 							<input type="text" class="form-control" id="languageSkills" placeholder="LanguageSkills"
 								   oninput="event.stopImmediatePropagation();validateLanguageSkills()">
 							<label for="languageSkills" class="ms-2">Language Skills</label>
+							<button class="btn btn-sm btn-primary text-white position-absolute btn-adjusted"
+									type="button" onclick="simulateEnterKeyPress($(this))">Add</button>
 							<div class="feedback-message text-danger">Language skills can't be empty</div>
 							<div class="custom-feedback-message text-danger"></div>
 						</div>
@@ -302,7 +307,7 @@
 						</div>
 
 						<input type="hidden" id="applyPosition" name="applyPosition"/>
-						
+
 						<div class="form-floating">
 							<select class="form-select" id="lvl" name="lvl" aria-label="Floating label select example">
 								<option value="ENTRY_LEVEL">Entry Level</option>
@@ -314,14 +319,14 @@
 							</select>
 							<label for="lvl" class="ms-2">Level</label>
 						</div>
-					
-						
+
+
 						<div class="form-floating">
 							<input type="text" class="form-control" id="specialistTech" name="specialistTech" placeholder="Main Skill" required>
 							<label for="specialistTech" class="ms-2">Main Skill</label>
 							<div class="feedback-message text-danger">Main can't be empty</div>
 						</div>
-						
+
 						<div class="form-floating mb-1">
 							<input type="text" class="form-control" id="experience" name="experience" placeholder="Experience" required>
 							<label for="experience" class="ms-2">Experience</label>
@@ -347,8 +352,8 @@
 
 				<div class="modal-footer">
 					<button class="btn btn-primary" type="button" id="submit-btn"
-						   data-form-id="job-apply" data-warning-message="We only accept one applicants per email."
-						   data-success-message="You applied the job.We'll be contact soon."
+						   data-form-id="job-apply" data-warning-message="Are you ready to apply?"
+						   data-success-message="You applied the job.We'll be contact soon.Have a good day."
 						   data-error-message="Sorry!, something went wrong.Please, try again.">
 						Apply <i class='bx bxs-navigation'></i></button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

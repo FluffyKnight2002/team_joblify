@@ -182,8 +182,14 @@ public class FetchVacancyController {
                 if (salaryRange.length == 2) {
                     double minSalary = Double.parseDouble(salaryRange[0]);
                     double maxSalary = Double.parseDouble(salaryRange[1]);
-                    predicate = criteriaBuilder.and(predicate,
-                            criteriaBuilder.between(root.get("salary"), minSalary, maxSalary));
+
+                    // Create a condition that checks if salary is within the range or equal to 0
+                    Predicate salaryCondition = criteriaBuilder.or(
+                            criteriaBuilder.between(root.get("salary"), minSalary, maxSalary),
+                            criteriaBuilder.equal(root.get("salary"), 0)
+                    );
+
+                    predicate = criteriaBuilder.and(predicate, salaryCondition);
                 }
             }
             if (applicants != null && !applicants.isEmpty()) {
@@ -216,8 +222,14 @@ public class FetchVacancyController {
     }
 
     @GetMapping("/show-others")
-    public List<VacancyView> getOtherVacancies() {
-        return vacancyViewRepository.findAll();
+    public List<VacancyView> getOtherVacancies(@RequestParam String id) {
+        System.out.println("ID " +id);
+        VacancyView currentVacancyView = vacancyViewRepository.findById(Long.valueOf(id)).orElseThrow(null);
+        List<VacancyView> vacancyViews = new ArrayList<>();
+        if(currentVacancyView != null) {
+            vacancyViews = vacancyViewRepository.findVacancyViewByPositionAndDepartmentAndStatus(currentVacancyView.getPosition(),currentVacancyView.getDepartment());
+        }
+        return vacancyViews;
     }
 
     @GetMapping("/job-detail")

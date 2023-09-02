@@ -4,20 +4,17 @@ import com.ace_inspiration.team_joblify.config.ProfileGenerator;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.DepartmentRepository;
-import com.ace_inspiration.team_joblify.repository.NotificationRepository;
-import com.ace_inspiration.team_joblify.repository.NotificationUserRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -28,17 +25,20 @@ public class UserServiceImplement implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
+    private final ResourceLoader resourceLoader;
 
     @Value("${app.default.user.password}")
     private String password;
+
+    private final String location = "classpath:/static/assets/images/faces/5.jpg";
 
     @Override
     public User userCreate(UserDto userDto, long userId) throws IOException {
         
         byte[] imageBytes;
 
-        if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -95,8 +95,8 @@ public class UserServiceImplement implements UserService {
     public User adminProfileEdit(UserDto userDto, String email) throws IOException {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
-        if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
+        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -142,9 +142,8 @@ public class UserServiceImplement implements UserService {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
 
-        if(userDto.getPhoto().isEmpty()){
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername());
-
+        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
         } else {
             imageBytes = userDto.getPhoto().getBytes();
         }
@@ -177,24 +176,31 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public boolean checkOldPassword(String password, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new NoSuchElementException("User not Found."));
-        return passwordEncoder.matches(password, user.getPassword());
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            passwordEncoder.matches(password, user.get().getPassword());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean passwordChange(String newPassword, String email){
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User not Found"));
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-        return true;
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()) {
+            user.get().setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user.get());
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean suspend(long id) {
-        User user = userRepository.findById(id).orElseThrow(null);
-        if(user != null) {
-            user.setAccountStatus(false);
-            userRepository.save(user);
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+            user.get().setAccountStatus(false);
+            userRepository.save(user.get());
             return true;
         }
         return false;
@@ -202,10 +208,10 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public boolean activate(long id) {
-        User user = userRepository.findById(id).orElseThrow(null);
-        if(user != null) {
-            user.setAccountStatus(true);
-            userRepository.save(user);
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()) {
+            user.get().setAccountStatus(true);
+            userRepository.save(user.get());
             return true;
         }
         return false;
@@ -213,38 +219,37 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.orElse(null);
     }
 
     @Override
     public boolean checkPhoneDuplicate(String phone) {
-        User user = userRepository.findByPhone(phone).orElse(null);
-        return user != null;
+        Optional<User> user = userRepository.findByPhone(phone);
+        return user.isPresent();
     }
 
     @Override
     public boolean checkUsernameDuplicate(String username) {
-       User user = userRepository.findByUsername(username).orElse(null);
-        return user != null;
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
     }
 
     @Override
     public boolean emailDuplicationExceptHimself(String email, long userId) {
-        User user = userRepository.findByEmailAndIdNot(email, userId).orElse(null);
-
-        return user != null;
+        Optional<User> user = userRepository.findByEmailAndIdNot(email, userId);
+        return user.isPresent();
     }
 
     @Override
     public boolean checkPhoneDuplicateExceptHimself(String phone, long userId) {
-        User user = userRepository.findByPhoneAndIdNot(phone, userId).orElse(null);
-        return user != null;
+        Optional<User> user = userRepository.findByPhoneAndIdNot(phone, userId);
+        return user.isPresent();
     }
 
     @Override
     public boolean checkUsernameDuplicateExceptHimself(String username, long userId) {
-       User user = userRepository.findByUsernameAndIdNot(username, userId).orElse(null);
-
-        return user != null;
+        Optional<User> user = userRepository.findByUsernameAndIdNot(username, userId);
+        return user.isPresent();
     }
 }

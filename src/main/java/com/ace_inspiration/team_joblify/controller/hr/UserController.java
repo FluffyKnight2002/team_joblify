@@ -83,8 +83,10 @@ public class UserController {
     }
 
     @GetMapping("/forgot-password-form")
-    public String showForgetPasswordForm(HttpSession session) {
-        if (session.getAttribute("otpChecked") != null && (boolean) session.getAttribute("otpChecked")) {
+    public String showForgetPasswordForm(HttpSession session, Authentication authentication) {
+        if (authentication.isAuthenticated()){
+            return "forgot-password";
+        }else if (session.getAttribute("otpChecked") != null && (boolean) session.getAttribute("otpChecked") || !authentication.isAuthenticated()) {
 
             session.removeAttribute("otpChecked");
             session.invalidate();

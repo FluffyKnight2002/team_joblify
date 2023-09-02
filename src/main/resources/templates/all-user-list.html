@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <title>Vertical Navbar</title>
+    <title>All Users</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -79,7 +79,7 @@
                                                 <th>Address</th>
                                                 <th>Department</th>
                                                 <th>Role</th>
-                                                <th>Profile</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -112,18 +112,6 @@
                     <input type="hidden" name="role" id="filter-role" value="">
 
                 </div>
-
-                <footer>
-                    <div class="footer clearfix mb-0 text-muted">
-                        <div class="float-start">
-                            <p>2023 &copy; Ace Data System</p>
-                        </div>
-                        <div class="float-end">
-                            <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                                by <a href="https://ahmadsaugi.com">Team Joblify</a></p>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </div>
     </div>

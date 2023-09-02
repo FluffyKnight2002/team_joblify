@@ -1,23 +1,18 @@
 package com.ace_inspiration.team_joblify.controller;
 
-import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
 import com.ace_inspiration.team_joblify.config.FirstDaySpecificationUser;
 import com.ace_inspiration.team_joblify.config.MyUserDetails;
 import com.ace_inspiration.team_joblify.controller.hr.NotificationCreator;
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
 import com.ace_inspiration.team_joblify.dto.SummaryDto;
 import com.ace_inspiration.team_joblify.dto.UserDto;
-import com.ace_inspiration.team_joblify.entity.*;
-import com.ace_inspiration.team_joblify.repository.InterviewRepository;
+import com.ace_inspiration.team_joblify.entity.Department;
+import com.ace_inspiration.team_joblify.entity.Role;
+import com.ace_inspiration.team_joblify.entity.User;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
-import com.ace_inspiration.team_joblify.service.DepartmentService;
-import com.ace_inspiration.team_joblify.service.EmailService;
-import com.ace_inspiration.team_joblify.service.InterviewService;
-import com.ace_inspiration.team_joblify.service.OfferMailSendedService;
-import com.ace_inspiration.team_joblify.service.OtpService;
+import com.ace_inspiration.team_joblify.service.*;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
 import com.ace_inspiration.team_joblify.service.hr_service.UserService;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -78,7 +73,7 @@ public class Api {
         User user = userService.userCreate(userDto, myUserDetails.getUserId());
         if (user != null) {
             String message = myUserDetails.getName() + " create a new User named" + user.getName();
-            String link = "/user-profile-edit?id=" + user.getId();
+            String link = "/user-profile-edit?email=" + user.getEmail();
             notificationCreator.createNotification(myUserDetails, message, link);
         }
         return new ResponseEntity<>(user, HttpStatus.OK);

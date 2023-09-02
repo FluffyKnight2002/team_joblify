@@ -13,13 +13,12 @@ import com.ace_inspiration.team_joblify.service.candidate_service.CandidateServi
 import com.ace_inspiration.team_joblify.service.candidate_service.SummaryService;
 import com.ace_inspiration.team_joblify.service.hr_service.InterviewProcessService;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,18 +31,15 @@ import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.ace_inspiration.team_joblify.entity.Position;
-import com.ace_inspiration.team_joblify.entity.Summary;
-import com.ace_inspiration.team_joblify.entity.AllPost;
-import com.ace_inspiration.team_joblify.entity.Candidate;
-import com.ace_inspiration.team_joblify.entity.InterviewProcess;
-
-import lombok.RequiredArgsConstructor;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -53,13 +49,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,9 +67,11 @@ public class CandidateController {
 
     // private final DasboardService dasboardservice;
 
-    private final InterviewProcessService interviewService;
+//    private final InterviewProcessRepository interviewProcessRepository;
 
-    private final InterviewProcessRepository repo;
+    private  final InterviewProcessService interviewService;
+
+    private final InterviewProcessRepository interviewProcessRepository;
 
     private final VacancyInfoService vacancyInfoService;
 
@@ -109,6 +100,7 @@ public class CandidateController {
     }
 
     @GetMapping("/allPositions")
+    @ResponseBody
     public List<Position> getAllPosition() {
         List<Position> position = positionService.selectAllPosition();
         return position;

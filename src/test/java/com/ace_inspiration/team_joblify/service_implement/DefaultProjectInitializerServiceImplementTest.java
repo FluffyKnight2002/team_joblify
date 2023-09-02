@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +18,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StreamUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -94,13 +97,6 @@ class DefaultProjectInitializerServiceImplementTest {
 
         when(userRepository.findByRole(Role.DEFAULT_HR)).thenReturn(Optional.ofNullable(user));
         if (user == null) {
-
-            Resource resource = new ClassPathResource("static/assets/images/faces/5.jpg");
-            when(resourceLoader.getResource("classpath:static/assets/images/faces/5.jpg"))
-                    .thenReturn(resource);
-
-            InputStream inputStream = resource.getInputStream();
-            byte[] photoBytes = IOUtils.toByteArray(inputStream);
 
 
             // Mock userRepository

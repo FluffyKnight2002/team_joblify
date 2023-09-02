@@ -13,9 +13,65 @@ let rangeBar1;
 let sliderValue1;
 let sliderValue2;
 let tooltipsEnabled1 = false;
+let currentData = {};
 // let tooltipTriggerPost;
 // let tooltipPost;
+let userRole;
+
+// async function validateUIButton() {
+//     const response = await fetch('/authenticated-user-data', {
+//         method: 'POST',
+//         headers: {
+//             [csrfHeader]: csrfToken
+//         }
+//     });
+//
+//     if (response.ok) {
+//         const [userDetails, passwordMatches] = await response.json();
+//         userRole = userDetails.role;
+//         console.log("User Role", userRole);
+//         if(userRole != 'DEFAULT_HR' && userRole != 'SENIOR_HR' && userRole != 'JUNIOR_HR') {
+//             $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+//                 $(this).remove();
+//             })
+//             $('input[type="text"], input[type="number"], select, textarea').each(function () {
+//                 $(this).prop('disabled', true);
+//             })
+//         }
+//
+//     }
+//
+// }
 $(document).ready(function () {
+
+    fetch('/authenticated-user-data', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    })
+        .then(async response => {
+            if (response.ok) {
+                const [userDetails, passwordMatches] = await response.json();
+                userRole = await userDetails.user.role;
+                console.log("User Role", userRole);
+            }
+
+            if (userRole === 'OTHER' || userRole === 'MANAGEMENT' || userRole === 'INTERVIEWER') {
+                $('#reset-form, #reopen-btn, #close-btn, #submit-btn, .disabled-warn').each(function () {
+                    $(this).remove();
+                })
+                $('input[type="text"], input[type="number"], select, textarea').each(function () {
+                    $(this).prop('disabled', true);
+                })
+                $('.close-vacancy').remove();
+                $('.reopen-vacancy').remove();
+                $('#timePickerBtn').prop('disabled', true);
+                $('#calendar-btn').prop('disabled', true);
+            }else {
+                console.log("Hello")
+            }
+        });
 
     // Check if the currentId is the same as the previousId
     if (currentId != null) {
@@ -33,6 +89,12 @@ $(document).ready(function () {
             "serverSide": true,
             "processing": true,
             "stateSave": true,
+            "scrollY": 300,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "fixedHeader": {
+                "header": true,
+            },
             "ajax": {
                 url: '/vacancy/show-all-data',
                 type: 'GET',
@@ -71,6 +133,9 @@ $(document).ready(function () {
                 { name: "Salary",
                     data: "salary",
                     render: function (data, type, row, meta) {
+                        if(row.salary === 0) {
+                            return "Negotiate";
+                        }
                         return convertToLakhs(row.salary);
                     },
                     target: 4 }, // Access object property directly
@@ -167,9 +232,13 @@ $(document).ready(function () {
                         <ul class="dropdown-menu" id="dropdown-setting${rowID}" aria-labelledby="dropdown-setting${rowID}">
                         <li><a class="dropdown-item show-detail-btn" href="view-vacancy-detail?id=${rowID}">Detail</a></li>`;
                         if (status === 'OPEN') {
-                            dropdown += `<li><a class="dropdown-item close-vacancy" href="close-vacancy?id=${rowID}">Close Vacancy</a></li>`;
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                                dropdown += `<li><a class="dropdown-item close-vacancy" href="close-vacancy?id=${rowID}">Close Vacancy</a></li>`;
+                            // }
                         } else {
-                            dropdown += `<li><a class="dropdown-item reopen-vacancy" href="reopen-vacancy-by-id?id=${rowID}">Reopen Vacancy</a></li>`;
+                            // if(userRole === 'DEFAULT_HR' || userRole === 'SENIOR_HR' || userRole === 'JUNIOR_HR') {
+                                dropdown += `<li><a class="dropdown-item reopen-vacancy" href="reopen-vacancy-by-id?id=${rowID}">Reopen Vacancy</a></li>`;
+                            // }
                         }
                         dropdown += `</ul>
                         </div>`;
@@ -323,9 +392,9 @@ $(document).ready(function () {
     // Create reset filter button
     let resetFilterButton = `
         <div id="reset-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 reset-filter"  
-            onclick="resetFilters()">
-                <i class="bi bi-arrow-clockwise" data-bs-toggle="tooltip" data-bs-placement="right" title="Reset filter"></i>
+            <img src="/assets/images/candidate-images/filter_reset.svg" class="reset-filter"
+                 style="padding: 8px;border: 2px dotted gray;border-radius: 15px;cursor: pointer;" width="50px" data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Reset filter" onclick="resetFilters()">
             </span>
         </div>
     `;
@@ -333,11 +402,11 @@ $(document).ready(function () {
     // Create and append the custom filter inputs and button
     let customFilterHtml = `
         <div id="custom-filter" class="mt-3 col-1 text-center">
-            <span class="d-inline-block bg-transparent mt-2 add-filter dropdown" data-bs-toggle="dropdown">
-                <i class="bi bi-plus-square-dotted" data-bs-toggle="tooltip"
-             data-bs-placement="right" title="Add filter"></i>
-            </span>
-            <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
+            <div data-bs-toggle="tooltip"
+                data-bs-placement="right" title="Add filter">
+                <img src="/assets/images/candidate-images/filter_plus.png" class="dropdown" data-bs-toggle="dropdown"
+                 style="border: 2px dotted gray;border-radius: 15px;cursor: pointer" width="50px"/>
+                 <ul class="dropdown-menu filter-dropdown rounded-3 glass-transparent text-primary shadow-lg">
                 <li class="dropdown-item filter-items date-posted-dropdown-item">
                     <span class="date-posted">Date posted</span>
                     <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-dropdown-submenu">
@@ -439,6 +508,7 @@ $(document).ready(function () {
                     </ul>
                 </li>
             </ul>
+            </div>
         </div>
     `;
 
@@ -580,39 +650,41 @@ $(document).on("click", ".show-detail-btn", function (event) {
     vacancyId = href.split("=")[1];
     $('#reset-form').attr('data-vacancy-id', vacancyId);
 
+    console.log("VVIDDDD",vacancyId)
+
     // Fetch the vacancy details using AJAX
     var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
 
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            currentData = data;
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");
             let emptyInputs = $('input[type="text"], input[type="number"], input#post, textarea').filter(function() {
-                return $.trim($(this).val()) === '' && $.trim($(this).val()) === '0' && $(this).prop('required'); // Only consider required fields
+                return $.trim($(this).val()) === '' && $.trim($(this).val()) <= 0 && $(this).prop('required'); // Only consider required fields
+            });
+
+            $('input[type="text"], input[type="number"], input#post, textarea').each(function () {
+                $(this).removeClass('is-valid');
+                $(this).removeClass('is-invalid'); // Remove Bootstrap is-invalid class
+                $(this).removeClass('is-valid'); // Remove Bootstrap is-valid class if previously added
+                $(this).css('background-image', 'none');
+                $(this).closest('.mb-3').find('.feedback-message').css('display','none');
             });
 
             console.log("Empty Inputs : ",emptyInputs)
-            emptyInputs.each(function () {
-                console.log("Element : ", $(this))
-                if($(this).hasClass('is-invalid')) {
-                    $(this).removeClass('is-invalid');
-                }else if($(this).hasClass('is-valid')) {
-                    $(this).removeClass('is-valid');
-                }
-                $(this).addClass('is-valid');
-            });
         });
 });
 
 $(document).on("click", "#reset-form", function (event) {
     event.preventDefault(); // Prevent the default behavior of the link
 
-    vacancyId = $(this).data('vacancy-id');
-
     // Fetch the vacancy details using AJAX
-    var apiUrl = "/vacancy/job-detail?id=" + vacancyId;
+    var apiUrl = "/vacancy/job-detail?id=" + $('#id').val();
+
+    console.log("IDDDDD",$('#id').val())
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -658,7 +730,7 @@ $(document).on("click", ".reopen-vacancy", function (event) {
         '<p class="text-center text-white">Reopen will make this vacancy open for 30 days again.</p>' +
         '<div>' +
         '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
-        '<button class="btn btn-sm btn-light-danger mx-1" onclick="closeModal()">Cancel</button></div>' +
+        '<button class="btn btn-sm btn-secondary mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
     $('#loadMe').modal({
@@ -685,8 +757,8 @@ $(document).on("click", ".close-vacancy", function (event) {
         '<h3 class="text-white">Are you sure?</h3>' +
         '<p class="text-center text-white">After closing, no candidate will be allowed to apply this vacancy.</p>' +
         '<div>' +
-        '<button type="button" class="btn btn-sm btn-light-danger mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
-        '<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">Cancel</button></div>' +
+        '<button type="button" class="btn btn-sm btn-light mx-1" onclick="actionForCloseOrReopen(href)">Sure</button>' +
+        '<button class="btn btn-sm btn-secondary mx-1" onclick="closeModal()">Cancel</button></div>' +
         '</div>' +
         '</div>');
     $('#loadMe').modal({
@@ -771,6 +843,9 @@ function populateModalWithData(data) {
     $('#calendar-btn').off('click');
     $('#timePickerBtn').off('click');
 
+    // vacancyId = data.id;
+    // console.log("IDDDDDDD",vacancyId)
+
     console.log("Id : ", data.id);
     console.log("Type : ", data.type);
     console.log("Lvl : ", data.lvl);
@@ -800,7 +875,7 @@ function populateModalWithData(data) {
     $("#lvl").val(convertToEnumFormat(data.lvl)); // Convert and set the value
     $("#workingDays").val(data.workingDays);
     $("#workingHours").val(data.workingHours);
-    $("#salary").val(data.salary);
+    $("#salary").val(data.salary != 0 ? data.salary : '');
     $("#onSiteOrRemote").val(convertToEnumFormat(data.onSiteOrRemote)); // Convert and set the value
     $("#descriptions").val(data.descriptions);
     $("#responsibilities").val(data.responsibilities);
@@ -976,6 +1051,7 @@ function showDetailModalForVacancyId(vacancyId) {
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            currentData = data;
             // Handle the successful response and display the details in the modal
             populateModalWithData(data); // Call the function to populate the modal with data
             $("#detailModal").modal("show");

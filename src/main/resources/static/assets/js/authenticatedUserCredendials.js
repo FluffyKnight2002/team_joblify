@@ -31,8 +31,6 @@ async function authenticatedUserData() {
             console.log(userDetails);
             console.log(passwordMatches);
             console.log(userDetails.user.role)
-            userRole = await userDetails.user.role
-            console.log(userRole)
             const name = document.getElementById('authenticated-name');
             const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
@@ -56,7 +54,9 @@ async function authenticatedUserData() {
                     title: 'Caution',
                     message: 'You\'re Still Using Default Password. Please Change Immediately',
                     position: 'topCenter',
-                    backgroundColor: '#f58787'
+                    backgroundColor: '#f58787',
+                    progressBarColor: 'red', // Set the progress bar color to red
+                    theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
                 });
             }
 

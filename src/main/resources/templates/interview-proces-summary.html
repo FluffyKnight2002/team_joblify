@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="_csrf" th:content="${_csrf.token}" />
-	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <title>Upload Vacancy</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>Interview Process</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
-<link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
@@ -17,46 +17,50 @@
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
 
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-<style>
-    #download {
-        display: inline-block;
-        width: 40px; /* Adjust the width as needed */
-        height: 40px; /* Adjust the height as needed */
-        background: url('assets/icon/cv.png') no-repeat center center;
-        background-size: 90%;
-        border: none;
-        cursor: pointer;
-    }
-    #pdfDownload {
-        display: inline-block;
-        width: 40px; /* Adjust the width as needed */
-        height: 40px; /* Adjust the height as needed */
-        background: url('assets/icon/pdf.png') no-repeat center center;
-        background-size: 90%;
-        border: none;
-        cursor: pointer;
-    }
-    #excelDownload {
-        display: inline-block;
-        width: 40px; /* Adjust the width as needed */
-        height: 40px; /* Adjust the height as needed */
-        background: url('assets/icon/excel.png') no-repeat center center;
-        background-size: 90%;
-        border: none;
-        cursor: pointer;
-    }
-</style>
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <style>
+
+        #download {
+            display: inline-block;
+            width: 40px; /* Adjust the width as needed */
+            height: 40px; /* Adjust the height as needed */
+            background: url('assets/icon/cv.png') no-repeat center center;
+            background-size: 90%;
+            border: none;
+            cursor: pointer;
+        }
+
+        #pdfDownload {
+            display: inline-block;
+            width: 40px; /* Adjust the width as needed */
+            height: 40px; /* Adjust the height as needed */
+            background: url('assets/icon/pdf.png') no-repeat center center;
+            background-size: 90%;
+            border: none;
+            cursor: pointer;
+        }
+
+        #excelDownload {
+            display: inline-block;
+            width: 40px; /* Adjust the width as needed */
+            height: 40px; /* Adjust the height as needed */
+            background: url('assets/icon/excel.png') no-repeat center center;
+            background-size: 90%;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="app">
-        <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
-        <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
-        <div id="main">
+<div id="app">
+    <div th:replace="/fragments/dashboard-layout ::sidebar"></div>
+    <div th:replace="/fragments/dashboard-layout ::layout-navbar"></div>
+    <div id="main">
+        <div id="main-content" class="rounded-3 p-3" style="background: #fff">
             <section class="section">
                 <div class="row" id="table-striped">
                     <div class="col-12">
@@ -69,41 +73,45 @@
                                         <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                             <h6>
                                                 <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
-                                                   style="background: #1e497b !important;" href="javascript:history.back()">
-                                                    <i class="bi bi-arrow-left-circle position-absolute" style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                                   style="background: #1e497b !important;"
+                                                   href="javascript:history.back()">
+                                                    <i class="bi bi-arrow-left-circle position-absolute"
+                                                       style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
                                             </h6>
                                         </nav>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-content">
-                                <div class="table-responsive">
-                                <div class="row">
-                                    <div class="col-md-1">
-                                        <a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/interview_process/pdf"></a>
+                                <div class="table">
+                                    <div class="row ps-3 pb-3">
+                                        <div class="col-md-1 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
+                                            <a id="pdfDownload" class="image-button" aria-label="Download pdf"
+                                               href="/all_candidates/pdf"></a>
+                                        </div>
+                                        <div class="col-md-1 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
+                                            <a id="excelDownload" class="image-button" aria-label="Download Excel"
+                                               href="/interview_process/excel"></a>
+                                        </div>
                                     </div>
-                                    <div class="col-md-1">
-                                        <a id="excelDownload" class="image-button" aria-label="Download Excel" href="/interview_process/excel"></a>
-                                    </div>
-                                </div>
                                     <table class="table table-striped mb-0" id="table2">
                                         <thead>
-                                            <tr>
-                                                <th>From Date</th>
-                                                <th>To Date</th>
-                                                <th>Vacant Position</th>
-                                                <th>Total Received Candidates</th>
-                                                <th>Invert Interview Candidates</th>
-                                                <th>Passed Candidates</th>
-                                                <th>Pending Candidates</th>
-                                                <th>Cancel Candidates</th>
-                                                <th>Not Interview Candidates</th>
-                                                <th>Accepted Candidates</th>
-                                            </tr>
+                                        <tr>
+                                            <th>From Date</th>
+                                            <th>To Date</th>
+                                            <th>Position</th>
+                                            <th>Total Received</th>
+                                            <th>Interview</th>
+                                            <th>Passed</th>
+                                            <th>Pending</th>
+                                            <th>Cancel</th>
+                                            <th>Not Interview</th>
+                                            <th>Accepted</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            
-                                           
+
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -114,27 +122,24 @@
             </section>
         </div>
     </div>
-    <!-- Stomp -->
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <!-- SockJS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-    <script src="/assets/js/websocket.js"></script>
-    <script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/authenticatedUserCredendials.js"></script>
-    <!-- <script src="/assets/vendors/apexcharts/apexcharts.js"></script> -->
-    <script src="/assets/js/pages/dashboard.js"></script>
-    <script src="/assets/js/vacancyform.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
-    <script src="/assets/js/main.js"></script>
-	<script src="/assets/ajax/jquery.spring-friendly.js"></script>
-	<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+</div>
+<!-- Stomp -->
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<!-- SockJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+<script src="/assets/js/websocket.js"></script>
+<script src="/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/authenticatedUserCredendials.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/dist/boxicons.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/ajax/jquery.spring-friendly.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
 
-    <script src="/assets/js/javaScript/process.js"></script>
+<script src="/assets/js/javaScript/process.js"></script>
 </body>
 
 </html>

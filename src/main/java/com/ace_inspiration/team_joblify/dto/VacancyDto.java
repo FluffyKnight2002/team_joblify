@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -39,8 +38,8 @@ public class VacancyDto {
     private long createdUserId;
     private String createdUsername;
     private LocalDateTime createdDateTime;
-    private LocalDate openDate;
-    private LocalDate closeDate;
+    private LocalDateTime openDate;
+    private LocalDateTime closeDate;
     private String note;
 
 }
