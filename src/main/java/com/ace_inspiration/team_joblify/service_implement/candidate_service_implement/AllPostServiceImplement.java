@@ -28,8 +28,8 @@ public class AllPostServiceImplement implements AllPostService{
 	    	return allpostRepository.findAll(input);
 	    }
 	@Override
-	public PindChartDto findByOpenDate(LocalDate post) {
-	    List<AllPost> allpost = allpostRepository.findAllByOpenDate(post);
+	public PindChartDto findByOpenDate(String year,String month,String position) {
+//	    List<AllPost> allpost = allpostRepository.findAllByOpenDate(post);
 	    PindChartDto pin=new PindChartDto();
 	    int total=0;
 	    int cancelCount = 0;
@@ -37,23 +37,23 @@ public class AllPostServiceImplement implements AllPostService{
 	    int pendingCount = 0;
 	    int passedCount = 0;
 	    int Interviewed=0;
-	    for (AllPost all : allpost) {
-	        long totalCandidates = all.getTotalCandidate(); // Assuming this returns the total count of candidates
-	        
-	        total += totalCandidates;
-	        cancelCount += all.getCancelCandidate();
-	        notInterviewCount += all.getNotInterviewCandidate();
-	        pendingCount += all.getPendingCandidate();
-	        passedCount += all.getAcceptedCandidate();
-	        Interviewed +=all.getInterviewedCounts();
-	    }
-	    System.err.println(Interviewed);
-	    pin.setInterviewed(Interviewed);
-	    pin.setTotal(total);
-	   pin.setCancel(cancelCount);
-	    pin.setNot(notInterviewCount);
-	    pin.setPanding(pendingCount);
-	    pin.setPassed(passedCount);
+//	    for (AllPost all : allpost) {
+//	        long totalCandidates = all.getTotalCandidate(); // Assuming this returns the total count of candidates
+//
+//	        total += totalCandidates;
+//	        cancelCount += all.getCancelCandidate();
+//	        notInterviewCount += all.getNotInterviewCandidate();
+//	        pendingCount += all.getPendingCandidate();
+//	        passedCount += all.getAcceptedCandidate();
+//	        Interviewed +=all.getInterviewedCounts();
+//	    }
+//	    System.err.println(Interviewed);
+//	    pin.setInterviewed(Interviewed);
+//	    pin.setTotal(total);
+//	   pin.setCancel(cancelCount);
+//	    pin.setNot(notInterviewCount);
+//	    pin.setPanding(pendingCount);
+//	    pin.setPassed(passedCount);
 	    return pin;
 	}
 	 

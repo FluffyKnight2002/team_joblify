@@ -53,29 +53,30 @@ public class CandidateServiceImplement implements CandidateService{
 		         Candidate candidate = candiDate.get();
 		         String interviewType;
 		         List<String>interviewStages=new ArrayList<>();
-//		         List<String> lan=new ArrayList<>(); 
-//		         List<String> tec=new ArrayList<>();
+		         List<String> lan=new ArrayList<>();
+		         List<String> tec=new ArrayList<>();
 		         List<Interview> interviews = interviewService.findInterviewsByCandidateId(id);
-//                 List<LanguageSkills> languageSkill=languageSkillsRepository.findLanguageSkillIdBySummaryId(candidate.getSummary().getId());
-//		        List<TechSkills> techSkill=techSkillsRepository.findTechSkillsIdBySummaryId(candidate.getSummary().getId());
-//		        if(!languageSkill.isEmpty()) {
-//		        	languageSkill=languageSkill.get(0).getSummary().get(0).getLanguageSkills();
-//		        	for(LanguageSkills language: languageSkill) {
-//		        		lan.add(language.getName());
-//		        		System.err.println(">>>>>>>>>>>>>>>>"+language.getName());
-//		        	}
-//		        }else {
-//		        	lan.add("not have data");
-//		        }
-//		        if(!techSkill.isEmpty()) {
-//		        	techSkill=techSkill.get(0).getSummary().get(0).getTechSkills();
-//		        	for(TechSkills tech: techSkill) {
-//		        		tec.add(tech.getName());
-//		        		System.err.println(">>>>>>>>>>>>>>>>"+tech.getName());
-//		        	}
-//		        }else {
-//		        	lan.add("not have data");
-//		        }
+                 List<LanguageSkills> languageSkill=languageSkillsRepository.findLanguageSkillIdBySummaryId(candidate.getSummary().getId());
+		        List<TechSkills> techSkill=techSkillsRepository.findTechSkillsIdBySummaryId(candidate.getSummary().getId());
+		        if(!languageSkill.isEmpty()) {
+		        	languageSkill=languageSkill.get(0).getSummary().get(0).getLanguageSkills();
+		        	for(LanguageSkills language: languageSkill) {
+		        		lan.add(language.getName());
+		        		System.err.println("language___"+language.getName());
+		        	}
+		        }else {
+		        	lan.add("not have data");
+		        }
+		        if(!techSkill.isEmpty()) {
+		        	techSkill=techSkill.get(0).getSummary().get(0).getTechSkills();
+		        	for(TechSkills tech: techSkill) {
+                        System.err.println("techSkill___"+tech.getName());
+		        		tec.add(tech.getName());
+
+		        	}
+		        }else {
+		        	lan.add("not have data");
+		        }
                  if(!interviews.isEmpty()) {
 		        	 interviewType=interviews.get(0).getType().toString();
 		        	 for (Interview interview : interviews) {
@@ -104,9 +105,9 @@ public class CandidateServiceImplement implements CandidateService{
 		             candidate.getSummary().getSpecialistTech(),
 		         	candidate.getVacancyInfo().getVacancy().getPosition().getName(),
 		         	interviewStages,
-		         	interviewType
-//                         lan,
-//                         tec
+		         	interviewType,
+                         lan,
+                         tec
 		         );
 		       
 

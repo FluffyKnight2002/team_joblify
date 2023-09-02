@@ -52,7 +52,9 @@ $(document).ready(function() {table = $('#table2').DataTable(
 															
 														},
 														{
-															targets : 5,
+															targets : 5,createdCell: function (td) {
+																$(td).css('background-color', "#D5F5E3")
+															},
 															data:"passedCandidate",
 															 render:function(data)
 														    {
@@ -70,6 +72,9 @@ $(document).ready(function() {table = $('#table2').DataTable(
 															
 															data : "pendingCandidate",
 															targets : 6,
+															createdCell: function (td) {
+																$(td).css('background-color', "#D5F5E3")
+															},
 															 render:function(data)
 														    {let pend=data == null ? '<span>-</span>' :
 																'<input type="submit" value="'+data+'">';
@@ -81,6 +86,9 @@ $(document).ready(function() {table = $('#table2').DataTable(
 														{
 															targets:7,
 															data:'cancelCandidate',
+															createdCell: function (td) {
+																$(td).css('background-color', "#D5F5E3")
+															},
 															 render:function(data)
 														    {let cancel=data == null ? '<span>-</span>' :
 																'<input type="submit" value="'+data+'">';
@@ -90,6 +98,9 @@ $(document).ready(function() {table = $('#table2').DataTable(
 														{
 															targets : 8,
 															data:"notInterviewCandidate",
+															createdCell: function (td) {
+																$(td).css('background-color', "#D5F5E3 ")
+															},
 															 render:function(data)
 														    {let not=data == null ? '<span>-</span>' :
 																'<input type="submit" value="'+data+'">';

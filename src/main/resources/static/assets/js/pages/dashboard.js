@@ -42,26 +42,37 @@ function getDepartment() {
 		.then(response => response.json())
 		.then(data => {
 			const department3 = $('#department3');
-			const department4=$('#department4');
 			$.each(data, function(index, department) {
 				const optionElement = $('<option>')
 					.val(department.name)
 					.text(department.name);
 				department3.append(optionElement);
 			});
-			$.each(data, function(index, department) {
-				const optionElement = $('<option>')
-					.val(department.name)
-					.text(department.name);
-				department4.append(optionElement);
-			});
+
 		})
 		.catch(error => {
 			console.error('Error fetching data:', error);
 		});
 }
 
+function getPosition(){
+	fetch('/allPositions')
+		.then(response => response.json())
+		.then(data => {
+			console.log('>>>>>>>>>>>>'+data);
+			const position=$('#position');
+			$.each(data, function(index, department) {
+				const optionElement = $('<option>')
+					.val(department.name)
+					.text(department.name);
+				position.append(optionElement);
+			});
 
+		})
+		.catch(error => {
+			console.error('Error fetching data:', error);
+		});
+}
 
 
 async function fetchFor1stChart(selectedValue) {
@@ -128,7 +139,27 @@ async function fetchFor3rdChart() {
 	}
 }
 
+async function fetchForPineChart() {
+	const year = $("#pine").val();
+	const month = $("#month").val();
+	const position = $("#position").val();
 
+	console.log('>>>>>' + year + '<<<<<' + position + '<<<<<<' + month);
+
+	try {
+		const response = await fetch('/chart?year='+year+'&month='+month+'&position='+position);
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! Status: ${response.status}`);
+		}
+
+		const data = await response.json();
+		// Do something with the data
+		console.log(data);
+	} catch (error) {
+		console.error('Error:', error);
+	}
+}
 
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -139,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	getYear();
 	getDepartment();
-
+	getPosition()
 	var optionsProfileVisit = {
 
 		series: [{
@@ -212,7 +243,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	$('#year1').on('change', function () {
 			const selectedValue = $(this).val();
-
 			console.log('neww>>>>>>>>>>>>', post4, post5, post6)
 			fetchFor1stChart(selectedValue);
 		}
@@ -299,44 +329,42 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	////////////////////////////////////////////
 
+	var pine = {
+		series: [1, 1, 1,1,1,1],
+		labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
+		chart: {
+			width: 400,
+			type: 'polarArea',
+		},
+		stroke: {
+			colors: ['#fff']
+		},
+		fill: {
+			opacity: 0.8
+		},
+		yaxis: {
+			show: false,
 
-	fetch('/chart')  .then(response => response.json())
-		.then(data => {
-			var pine = {
-				series: [data.total, data.not, data.panding,data.interviewed,data.passed,data.cancel],
-				labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
+		},
+
+		responsive: [{
+			breakpoint: 480,
+			options: {
 				chart: {
-					width: 400,
-					type: 'polarArea',
+					width: 200
 				},
-				stroke: {
-					colors: ['#fff']
-				},
-				fill: {
-					opacity: 0.8
-				},
-				yaxis: {
-					show: false,
+				legend: {
+					position: 'bottom'
+				}
 
-				},
+			}
+		}]
+	};
 
-				responsive: [{
-					breakpoint: 480,
-					options: {
-						chart: {
-							width: 200
-						},
-						legend: {
-							position: 'bottom'
-						}
-
-					}
-				}]
-			};
-
-			pchart = new ApexCharts(document.querySelector("#chart"), pine);
-			pchart.render();
-		})
+	pchart = new ApexCharts(document.querySelector("#chart"), pine);
+	pchart.render();
+	$("#pine,#position,#month").change(fetchForPineChart);
+	console.log($('#pine'))
 
 })
 

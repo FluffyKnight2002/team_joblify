@@ -12,6 +12,6 @@ import com.ace_inspiration.team_joblify.entity.AllPost;
 public interface AllPostService {
 	
 	DataTablesOutput<AllPost> getAll(DataTablesInput input);
-	PindChartDto findByOpenDate(LocalDate post);
+	PindChartDto findByOpenDate(String year,String month,String position);
 
 }
