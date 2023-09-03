@@ -93,7 +93,7 @@ public class CandidateController {
         if (firstDaySpecification == null) {
             return interviewData;
         } else {
-            interviewData = repo.findAll(input, firstDaySpecification);
+            interviewData = interviewProcessRepository.findAll(input, firstDaySpecification);
             return interviewData;
         }
 
@@ -160,11 +160,22 @@ public class CandidateController {
         return dtoList;
     }
     @GetMapping("/chart")
-    public PindChartDto pineChart(@RequestParam("year") String year,@RequestParam("month") String month,@RequestParam("position") String position){
-        System.err.println(year+month+position);
-    	PindChartDto pind =allPostService.findByOpenDate(year,month,position);
-//    	System.err.println(pind.getInterviewed());
-        return pind;
+    public Object pineChart(@RequestParam("year") String year,@RequestParam("month") String month,@RequestParam("position") String position){
+
+       Object data = allPostService.findByOpenDate(year,month,position);
+        System.out.println(data.toString());
+
+//        PineData pineData = new PineData();
+//        pineData.setTotal_candidates((Integer) data[3]);
+//        pineData.setPassed_candidates((Integer) data[4]);
+//        pineData.setPending_candidates((Integer) data[5]);
+//        pineData.setCancel_candidates((Integer) data[6]);
+//        pineData.setNot_interview_candidates((Integer) data[7]);
+//        pineData.setAccepted_candidates((Integer) data[8]);
+//        pineData.setInterviewed_counts((Integer) data[9]);
+//        pineData.setOffered_letter_mail((Integer) data[10]);
+
+        return data;
     }
 
     @GetMapping("/yearly-vacancy-count")

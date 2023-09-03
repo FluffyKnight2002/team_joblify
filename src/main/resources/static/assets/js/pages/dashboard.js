@@ -7,6 +7,8 @@ let monthlyVacancyCount;
 let pchart;
 let year;
 let department;
+let pine;
+let position;
 
 async function getYear() {
 
@@ -36,7 +38,7 @@ async function getYear() {
 
 
 			});
-			year = data ;
+			return data ;
 		}  catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -65,18 +67,31 @@ async function getDepartment() {
                 .text(department.name);
             department4.append(optionElement);
         });
-		department = await data;
+		return data;
 
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
+async function getPosition(){
+	try {
+		const response = await fetch('/allPositions')
+		const data = await response.json();
+		const position1 = $('#position');
+		$.each(data, function (index, position) {
+			const optionElement = $('<option>')
+				.val(position.name)
+				.text(position.name);
+			position1.append(optionElement);
+		});
 
+		return data;
 
-
-
-
+	}catch (error) {
+		console.error('Error fetching data:', error);
+	}
+}
 async function fetchFor1stChart(selectedValue) {
 
 	try {
@@ -154,13 +169,10 @@ async function fetchForPineChart() {
 	try {
 		const response = await fetch('/chart?year='+year+'&month='+month+'&position='+position);
 
-		if (!response.ok) {
-			throw new Error(`HTTP error! Status: ${response.status}`);
-		}
-
 		const data = await response.json();
 		// Do something with the data
-		console.log(data);
+		console.log(data)
+		pchart.updateOptions({series:data,});
 	} catch (error) {
 		console.error('Error:', error);
 	}
@@ -168,15 +180,15 @@ async function fetchForPineChart() {
 
 
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', async function(){
 	post4 = [];
 	post5 = [];
 	post6 = []
 	totalVacancyCount = [];
 
-	getYear();
-	getDepartment();
-	getPosition()
+	year = await getYear();
+	department = await getDepartment()
+	position = await getPosition()
 	var optionsProfileVisit = {
 
 		series: [{
@@ -248,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function(){
 	chartProfileVisit.render();
 
 
-	if(department != undefined && year != undefined){
+	if(department !== undefined && year !== undefined && position !== undefined){
 
 		let selectedYear =  $("#year1").val();
 		console.log(selectedYear + "aa");
@@ -341,7 +353,8 @@ document.addEventListener('DOMContentLoaded', function(){
 	graph = new ApexCharts(document.querySelector("#graph"), options);
 	graph.render();
 
-	if(department != undefined && year != undefined){
+	if(department !== undefined && year !== undefined && position !== undefined){
+		console.log('fetch3rd')
 		fetchFor3rdChart();
 
 
@@ -351,24 +364,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
 	////////////////////////////////////////////
 
-	var pine = {
-		series: [1, 1, 1,1,1,1],
-		labels:['Total Candidate','Not Interview','Panding','Interviewed','Passed','Cancel'],
+	pine =  options = {
+		name:"Total",
+		series: [0, 0, 0, 0, 0],
 		chart: {
-			width: 400,
-			type: 'polarArea',
+			width: 380,
+			type: 'pie',
 		},
-		stroke: {
-			colors: ['#fff']
-		},
-		fill: {
-			opacity: 0.8
-		},
-		yaxis: {
-			show: false,
-
-		},
-
+		labels: ['Passed', 'Pending', 'Cancel', 'Not Interview', 'Accepted'],
 		responsive: [{
 			breakpoint: 480,
 			options: {
@@ -378,15 +381,15 @@ document.addEventListener('DOMContentLoaded', function(){
 				legend: {
 					position: 'bottom'
 				}
-
 			}
 		}]
 	};
 
+
 	pchart = new ApexCharts(document.querySelector("#chart"), pine);
 	pchart.render();
 	$("#pine,#position,#month").change(fetchForPineChart);
-	console.log($('#pine'))
+
 
 })
 

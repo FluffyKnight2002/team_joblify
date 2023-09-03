@@ -45,9 +45,13 @@ $(document).ready(function () {
                     sortable: false
 
                 },
-
                 {
-                    targets: 3,
+                  targets:3,
+                  data:'department'
+
+                },
+                {
+                    targets: 4,
                     data: "totalCandidate",
                     render: function (data) {
                         let total = data == null ? '<div class="text-center"><span>-</span></div>' :
@@ -57,7 +61,7 @@ $(document).ready(function () {
                     sortable: false
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     data: 'interviewedCounts',
                     render: function (data) {
                         let inter = data == null ? '<div class="text-center"><span>-</span></div>' :
@@ -70,7 +74,7 @@ $(document).ready(function () {
 															
 														},
 														{
-															targets : 5,createdCell: function (td) {
+															targets : 6,createdCell: function (td) {
 																$(td).css('background-color', "#D5F5E3")
 															},
 															data:"passedCandidate",
@@ -89,7 +93,7 @@ $(document).ready(function () {
 														{
 
 															data : "pendingCandidate",
-															targets : 6,
+															targets : 7,
 															createdCell: function (td) {
 																$(td).css('background-color', "#D5F5E3")
 															},
@@ -102,7 +106,7 @@ $(document).ready(function () {
 
 														},
 														{
-															targets:7,
+															targets:8,
 															data:'cancelCandidate',
 															createdCell: function (td) {
 																$(td).css('background-color', "#D5F5E3")
@@ -114,7 +118,7 @@ $(document).ready(function () {
 														    sortable:false
 														},
 														{
-															targets : 8,
+															targets : 9,
 															data:"notInterviewCandidate",
 															createdCell: function (td) {
 																$(td).css('background-color', "#D5F5E3 ")
@@ -126,7 +130,7 @@ $(document).ready(function () {
 														    sortable:false
 														},
 														{
-															targets:9,
+															targets:10,
 															data:'acceptedCandidate',
 															 render:function(data)
 														    {let acc=data == null ? '<span>-</span>' :
