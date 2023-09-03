@@ -16,7 +16,7 @@ public interface AllPostRepository extends DataTablesRepository<AllPost,Long>{
 
 
 	@Query(value = "CALL GetPostStatsByYearMonthAndPosition(:year, :month, :position)", nativeQuery = true)
-	Object getAllByOpenDate(String year, String month, String position);
+	int [][]getAllByOpenDate(String year, String month, String position);
 
 
 }

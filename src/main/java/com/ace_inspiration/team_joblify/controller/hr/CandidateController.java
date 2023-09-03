@@ -69,9 +69,9 @@ public class CandidateController {
 
     // private final DasboardService dasboardservice;
 
-//    private final InterviewProcessRepository interviewProcessRepository;
+    // private final InterviewProcessRepository interviewProcessRepository;
 
-    private  final InterviewProcessService interviewService;
+    private final InterviewProcessService interviewService;
 
     private final InterviewProcessRepository interviewProcessRepository;
 
@@ -117,7 +117,7 @@ public class CandidateController {
 
     @PostMapping("/seeMore")
     public SummaryDto updateStatus(@RequestParam("id") long id) {
-    	System.err.println(">>>>>>>>>>>>>>>>>>>>"+id);
+        System.err.println(">>>>>>>>>>>>>>>>>>>>" + id);
         SummaryDto summaryDto = candidateService.findByid(id);
         return summaryDto;
     }
@@ -152,11 +152,10 @@ public class CandidateController {
         return year;
     }
 
-
-    @PostMapping ("/dashboard")
-    public List<CountDto> getCounts(@RequestParam("timeSession")String year) {
-        String starDate=year+"-01-01";
-        String endDate=year+"-12-31";
+    @PostMapping("/dashboard")
+    public List<CountDto> getCounts(@RequestParam("timeSession") String year) {
+        String starDate = year + "-01-01";
+        String endDate = year + "-12-31";
 
         List<Object[]> results = vanInfoReopository.getVacancyInfoWithCandidateCounts(starDate, endDate);
         List<CountDto> dtoList = new ArrayList<>();
@@ -172,40 +171,47 @@ public class CandidateController {
 
         return dtoList;
     }
+
     @GetMapping("/chart")
-    public Object pineChart(@RequestParam("year") String year,@RequestParam("month") String month,@RequestParam("position") String position){
+    public Object pineChart(@RequestParam("year") String year, @RequestParam("month") String month,
+            @RequestParam("position") String position) {
 
-       Object data = allPostService.findByOpenDate(year,month,position);
-        System.out.println(data.toString());
+        // Assuming 'data' is your original 2D array
+        int[][] data = allPostService.findByOpenDate(year, month, position);
 
-//        PineData pineData = new PineData();
-//        pineData.setTotal_candidates((Integer) data[3]);
-//        pineData.setPassed_candidates((Integer) data[4]);
-//        pineData.setPending_candidates((Integer) data[5]);
-//        pineData.setCancel_candidates((Integer) data[6]);
-//        pineData.setNot_interview_candidates((Integer) data[7]);
-//        pineData.setAccepted_candidates((Integer) data[8]);
-//        pineData.setInterviewed_counts((Integer) data[9]);
-//        pineData.setOffered_letter_mail((Integer) data[10]);
+        // Assuming 'data' is a 2D array containing your data
 
-        return data;
+        int numRows = data.length;
+        int numCols = data[0].length;
+
+        int[] combinedRow = new int[numCols];
+
+        // Iterate through the rows and columns, adding each element to the
+        // corresponding position in 'combinedRow'
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                combinedRow[j] += data[i][j];
+            }
+        }
+
+        // 'combinedRow' now contains the sums of each column from 'data'
+
+        return combinedRow;
     }
 
     @GetMapping("/yearly-vacancy-count")
     public List<YearlyVacancyCountDto> getYearlyVacancyCount(@RequestParam("timeSession") String year,
-                                                             @RequestParam("department") String department) {
-
-
+            @RequestParam("department") String department) {
 
         String starDate = null;
         String endDate = null;
 
-        if(year.equals("All")){
+        if (year.equals("All")) {
             starDate = LocalDate.now().getYear() + "-01-01";
             endDate = LocalDate.now().getYear() + "-12-31";
 
         } else {
-             starDate = year + "-01-01";
+            starDate = year + "-01-01";
             endDate = year + "-12-31";
 
         }
@@ -231,7 +237,6 @@ public class CandidateController {
     public CandidateDto getCandidateDto() {
         return new CandidateDto();
     }
-
 
     @PostMapping("/update-xml-content")
     public ResponseEntity<String> updateXmlContent(@RequestBody String updatedContent) {
@@ -279,7 +284,6 @@ public class CandidateController {
         return foundElement;
     }
 
-
     @PostMapping("/apply")
     public boolean submitJobDetail(@ModelAttribute("candidate") CandidateDto dto) {
         Candidate candidate = candidateService.saveCandidate(dto);
@@ -322,23 +326,24 @@ public class CandidateController {
 
     }
 
-//	 @PostMapping("/downloadFile")
-//	    public void downloadFile(@RequestBody Long ids,HttpServletResponse response) throws IOException {
-//		 Optional<Candidate> result=repo.findById(ids);
-//		 if(!result.isPresent()) {
-//			 System.err.println("could nt download");
-//		 }
-//		 Candidate can=result.get();
-//		 response.setContentType("application/octet-stream");
-//		 String headerKey="Content-Disposition";
-//		 String headerValue="attachment;filename"+can.getSummary().getName();
-//		 response.setHeader(headerKey, headerValue);
-//
-//		 ServletOutputStream output=response.getOutputStream();
-//		 output.write(can.getResume());
-//		 output.close();
-//
-//	 }
+    // @PostMapping("/downloadFile")
+    // public void downloadFile(@RequestBody Long ids,HttpServletResponse response)
+    // throws IOException {
+    // Optional<Candidate> result=repo.findById(ids);
+    // if(!result.isPresent()) {
+    // System.err.println("could nt download");
+    // }
+    // Candidate can=result.get();
+    // response.setContentType("application/octet-stream");
+    // String headerKey="Content-Disposition";
+    // String headerValue="attachment;filename"+can.getSummary().getName();
+    // response.setHeader(headerKey, headerValue);
+    //
+    // ServletOutputStream output=response.getOutputStream();
+    // output.write(can.getResume());
+    // output.close();
+    //
+    // }
 
     @GetMapping("/post")
     @ResponseBody
@@ -346,95 +351,101 @@ public class CandidateController {
         List<VacancyDto> vacancyDto = vacancyInfoService.selectAllVacancyInfo();
         return vacancyDto;
     }
+
     @GetMapping("/reject")
     public String handleReject(@RequestParam("id") String id) {
-        System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"+id);
-
+        System.err.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" + id);
 
         return "/thank-you"; // Redirect to a thank-you page or appropriate location
     }
 
     @GetMapping("/accept")
     public String handleAccept(@RequestParam("id") String id) {
-        System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS"+id);
+        System.err.println("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS" + id);
 
         return "/thank-you"; // Redirect to a thank-you page or appropriate location
     }
 
-
-//	  @GetMapping("/downloadFile")
-//	  public ResponseEntity<StreamingResponseBody> getFile(@RequestParam List<Long> id) {
-//				System.err.println(id);
-//			 List<Candidate> fileEntities = candidateImpl.getFile(id);
-//		        if (!fileEntities.isEmpty()) {
-//					if(fileEntities.size()==1){
-//						Candidate fileEntity = fileEntities.get(0);
-//
-//					HttpHeaders headers = new HttpHeaders();
-//					headers.setContentDispositionFormData("attachment",
-//							fileEntity.getSummary().getName() + "." + getFileExtension(fileEntity.getType()));
-//					headers.setContentType(MediaType.parseMediaType(fileEntity.getType()));
-//
-//					return ResponseEntity.ok().headers(headers)
-//							.body(outputStream -> {
-//								 byte[] decodedResume = Base64.getDecoder().decode(fileEntity.getResume());
-//								outputStream.write(decodedResume);
-//							});
-//
-//					} else {
-//						// multiple candidates, create a zip file
-//						StreamingResponseBody responseBody = outputStream -> {
-//							try (ZipOutputStream zos = new ZipOutputStream(outputStream)) {
-//								for (Candidate fileEntity : fileEntities) {
-//									byte[] fileContent =  Base64.getDecoder().decode(fileEntity.getResume());
-//									String fileName = generateUniqueFileName(fileEntity.getSummary().getName() + "-cv.",
-//											fileEntity.getType());
-//
-//									ZipEntry zipEntry = new ZipEntry(fileName);
-//									zos.putNextEntry(zipEntry);
-//									zos.write(fileContent);
-//									zos.closeEntry();
-//								}
-//
-//								zos.finish();
-//							} catch (IOException e) {
-//								throw new RuntimeException("Error while streaming file", e);
-//							}
-//						};
-//
-//						HttpHeaders headers = new HttpHeaders();
-//						headers.setContentDispositionFormData("attachment", "candidate.zip");
-//						headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-//
-//						return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
-//					}
-//				}
-//
-//				return ResponseEntity.notFound().build();
-//			}
-//
-//		    private String generateUniqueFileName(String originalFileName, String fileType) {
-//		        // Appending a unique identifier (UUID) to the original file name to avoid duplicates
-//		        String uniqueIdentifier = UUID.randomUUID().toString().substring(0, 8);
-//		        return originalFileName + "_" + uniqueIdentifier + "." + getFileExtension(fileType);
-//		    }
-//		    private String getFileExtension(String contentType) {
-//		        switch (contentType) {
-//		            case "application/msword":
-//		                return "doc";
-//		            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-//		                return "docx";
-//		            case "application/pdf":
-//		                return "pdf";
-//		            case "image/png":
-//		                return "png";
-//		            case "image/jpg":
-//		               return "jpg";
-//
-//		            default:
-//		                return "txt"; // Default to txt if the content type is unknown
-//		        }
-//		    }
+    // @GetMapping("/downloadFile")
+    // public ResponseEntity<StreamingResponseBody> getFile(@RequestParam List<Long>
+    // id) {
+    // System.err.println(id);
+    // List<Candidate> fileEntities = candidateImpl.getFile(id);
+    // if (!fileEntities.isEmpty()) {
+    // if(fileEntities.size()==1){
+    // Candidate fileEntity = fileEntities.get(0);
+    //
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setContentDispositionFormData("attachment",
+    // fileEntity.getSummary().getName() + "." +
+    // getFileExtension(fileEntity.getType()));
+    // headers.setContentType(MediaType.parseMediaType(fileEntity.getType()));
+    //
+    // return ResponseEntity.ok().headers(headers)
+    // .body(outputStream -> {
+    // byte[] decodedResume = Base64.getDecoder().decode(fileEntity.getResume());
+    // outputStream.write(decodedResume);
+    // });
+    //
+    // } else {
+    // // multiple candidates, create a zip file
+    // StreamingResponseBody responseBody = outputStream -> {
+    // try (ZipOutputStream zos = new ZipOutputStream(outputStream)) {
+    // for (Candidate fileEntity : fileEntities) {
+    // byte[] fileContent = Base64.getDecoder().decode(fileEntity.getResume());
+    // String fileName = generateUniqueFileName(fileEntity.getSummary().getName() +
+    // "-cv.",
+    // fileEntity.getType());
+    //
+    // ZipEntry zipEntry = new ZipEntry(fileName);
+    // zos.putNextEntry(zipEntry);
+    // zos.write(fileContent);
+    // zos.closeEntry();
+    // }
+    //
+    // zos.finish();
+    // } catch (IOException e) {
+    // throw new RuntimeException("Error while streaming file", e);
+    // }
+    // };
+    //
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setContentDispositionFormData("attachment", "candidate.zip");
+    // headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+    //
+    // return new ResponseEntity<>(responseBody, headers, HttpStatus.OK);
+    // }
+    // }
+    //
+    // return ResponseEntity.notFound().build();
+    // }
+    //
+    // private String generateUniqueFileName(String originalFileName, String
+    // fileType) {
+    // // Appending a unique identifier (UUID) to the original file name to avoid
+    // duplicates
+    // String uniqueIdentifier = UUID.randomUUID().toString().substring(0, 8);
+    // return originalFileName + "_" + uniqueIdentifier + "." +
+    // getFileExtension(fileType);
+    // }
+    // private String getFileExtension(String contentType) {
+    // switch (contentType) {
+    // case "application/msword":
+    // return "doc";
+    // case
+    // "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    // return "docx";
+    // case "application/pdf":
+    // return "pdf";
+    // case "image/png":
+    // return "png";
+    // case "image/jpg":
+    // return "jpg";
+    //
+    // default:
+    // return "txt"; // Default to txt if the content type is unknown
+    // }
+    // }
 
     @GetMapping("/downloadFile")
     public ResponseEntity<Resource> getFile(@RequestParam List<Long> id) {
@@ -483,10 +494,9 @@ public class CandidateController {
         return ResponseEntity.notFound().build();
     }
 
-
     private byte[] generateZipBytes(List<Candidate> fileEntities) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(baos)) {
+                ZipOutputStream zos = new ZipOutputStream(baos)) {
 
             for (Candidate candidate : fileEntities) {
                 byte[] fileContent = Base64.getDecoder().decode(candidate.getResume());
@@ -508,7 +518,8 @@ public class CandidateController {
     }
 
     private String generateUniqueFileName(String originalFileName, String fileType) {
-        // Appending a unique identifier (UUID) to the original file name to avoid duplicates
+        // Appending a unique identifier (UUID) to the original file name to avoid
+        // duplicates
         String uniqueIdentifier = UUID.randomUUID().toString().substring(0, 8);
         return originalFileName + "_" + uniqueIdentifier + "." + getFileExtension(fileType);
     }
