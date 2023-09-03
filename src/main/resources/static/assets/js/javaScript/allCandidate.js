@@ -1644,9 +1644,9 @@ function createLevelFilterButton(selectedValue) {
 
     if($('.level-checkbox:checked').length > 0) {
 
-        filterElements[3].isRemove = true;
+        filterElements[2].isRemove = true;
         $('.level-dropdown-item').hide();
-
+        console.log("true");
         checkAndToggleFilterButton();
 
         // Append the selectedDropdown to the appropriate container
@@ -1822,7 +1822,7 @@ function changeSelectedFilterName(item) {
 }
 function createInterviewStatusFilterButton(selectedValue) {
 
-    filterElements[5].isRemove = true;
+    filterElements[4].isRemove = true;
     $('.interview-status-dropdown-item').hide();
 
     checkAndToggleFilterButton();
@@ -1891,7 +1891,61 @@ function InterviewStatusFilterButton(item) {
         updateDataTable();
     }
 }
+$(document).on('click', '.selected-dropdown-remove-button', function () {
+    let filterName = $(this).data('filter-name');
 
+    // Find and update the isRemove property in filterElements
+    for (let i = 0; i < filterElements.length; i++) {
+        if (filterElements[i].name === filterName) {
+            filterElements[i].isRemove = false;
+            $('.' +filterElements[i].name).show();
+            $('#'+filterElements[i].filterId).val('');
+            break; // Exit the loop once the element is found
+        }
+    }
+
+    console.log("Filter name : ", filterName);
+
+    if(filterName === 'level-dropdown-item') {
+
+        const selectedLevels = [];
+
+        $('.level-checkbox').each(function () {
+
+            let checkbox = $(this);
+            const checkboxes2 = $('.level-filter-checkbox:checked');
+
+            // Iterate through the checked checkboxes and collect their values
+            checkboxes2.each(function () {
+                selectedLevels.push($(this).val());
+            });
+
+            console.log("Selected Levels :",selectedLevels)
+            console.log("It match : ", selectedLevels.includes(checkbox.val()));
+            if (selectedLevels.includes(checkbox.val())) {
+                console.log("checkbox change!!!!")
+                checkbox.prop('checked', true).trigger('change');
+            }
+            console.log("level-checkbox.val() ", checkbox.val());
+            console.log("checked : ", checkbox.is(":checked"));
+        });
+        table.column(9).search('').draw();
+    }else if (filterName === 'apply-date-dropdown-item') {
+        table.column(12).search('').draw();
+    }else if(filterName==='position-dropdown-item'){
+        table.column(4).search('').draw();
+    }else if (filterName === 'selection-status-dropdown-item') {
+        table.column(5).search('').draw();
+    }else if(filterName==='post-dropdown-item'){
+        table.column(1).search('').draw();
+    }else if(filterName==='interview-status-dropdown-item'){
+        table.column(8).search('').draw();
+    }
+
+    $(this).closest('.btn-group').remove();
+    checkAndToggleFilterButton();
+
+});
 
 function resetFilters() {
 

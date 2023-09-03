@@ -79,71 +79,63 @@ $(document).ready(function () {
 														
 															
 														},
-														{
-															targets : 6,createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															data:"passedCandidate",
-															 render:function(data)
-														    {
-																let passed=data == null ?'-':data;
-																let passBtn = (passed=='-')  ?
-																'<span>'+passed+'</span>':
-																'<input type="submit" value="'+passed+'">';
-																return passBtn;
+                {
+                    targets: 6,
+                    data: "passedCandidate",
+                    render: function (data) {
+                        let passed = data == null ? '-' : data;
+                        let passBtn = (passed == '-') ?
+                            '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-success bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return passBtn;
 
 
-															},
-															sortable:false
-														},
-														{
+                    },
+                    sortable: false
+                },
+                {
 
-															data : "pendingCandidate",
-															targets : 7,
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															 render:function(data)
-														    {let pend=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return pend;},
-														    sortable:false
+                    data: "pendingCandidate",
+                    targets: 7,
+                    render: function (data) {
+                        let pend = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-warning bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return pend;
+                    },
+                    sortable: false
 
 
-														},
-														{
-															targets:8,
-															data:'cancelCandidate',
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															 render:function(data)
-														    {let cancel=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return cancel;},
-														    sortable:false
-														},
-														{
-															targets : 9,
-															data:"notInterviewCandidate",
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3 ")
-															},
-															 render:function(data)
-														    {let not=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return not;},
-														    sortable:false
-														},
-														{
-															targets:10,
-															data:'acceptedCandidate',
-															 render:function(data)
-														    {let acc=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return acc;},
-														    sortable:false
-														},
+                },
+                {
+                    targets: 8,
+                    data: 'cancelCandidate',
+                    render: function (data) {
+                        let cancel = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-danger bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return cancel;
+                    },
+                    sortable: false
+                },
+                {
+                    targets: 9,
+                    data: "notInterviewCandidate",
+                    render: function (data) {
+                        let not = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-secondary bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return not;
+                    },
+                    sortable: false
+                },
+                {
+                    targets: 10,
+                    data: 'acceptedCandidate',
+                    render: function (data) {
+                        let acc = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-gradient-ltr rounded-pill px-4">' + data +'</span></div>';
+                        return acc;
+                    },
+                    sortable: false
+                },
 												
 												],
 												order:[[0,'desc']]
