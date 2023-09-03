@@ -78,13 +78,21 @@ public class UserController {
     }
 
     @GetMapping("/password-change")
-    public String showPasswordChangeForm() {
-        return "password-change";
+    public String showPasswordChangeForm(@RequestParam("email") String email, Authentication authentication) {
+        
+        MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
+        if(myUserDetails.getEmail() == email) {
+            return "password-change";
+
+        }
+        return "redirect:/403";
     }
 
     @GetMapping("/forgot-password-form")
-    public String showForgetPasswordForm(HttpSession session) {
-        if (session.getAttribute("otpChecked") != null && (boolean) session.getAttribute("otpChecked")) {
+    public String showForgetPasswordForm(HttpSession session, Authentication authentication) {
+        if (authentication.isAuthenticated()){
+            return "forgot-password";
+        }else if (session.getAttribute("otpChecked") != null && (boolean) session.getAttribute("otpChecked") || !authentication.isAuthenticated()) {
 
             session.removeAttribute("otpChecked");
             session.invalidate();
@@ -109,4 +117,8 @@ public class UserController {
         return "email-check-for-otp";
     }
 
+    @GetMapping("/admin-password-change-user")
+    public String adminPasswordChangeUser() {
+        return "admin-password-change-for-user";
+    }
 }

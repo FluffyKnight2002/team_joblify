@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface VacancyRepository extends DataTablesRepository<Vacancy, Long> {
-    List<Vacancy> findAllByDepartment(Department department);
+
 }

@@ -18,5 +18,6 @@ public interface UserRepository extends DataTablesRepository<User, Long> {
    Optional<User> findByUsernameAndIdNot(String username, long userId);
    Optional<User> findByEmailAndIdNot(String email, long userId);
     Optional<User> findByPhoneAndIdNot(String phone, long userId);
+
 }
 

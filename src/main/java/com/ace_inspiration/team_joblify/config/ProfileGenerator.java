@@ -1,26 +1,35 @@
 package com.ace_inspiration.team_joblify.config;
 
-import org.springframework.stereotype.Component;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-@Component
+import java.io.IOException;
+import java.io.InputStream;
+
 public class ProfileGenerator {
-    
-    
-    public static byte[] generateAvatar(String username) {
+
+    public static byte[] generateAvatar(String username, ResourceLoader resourceLoader) {
         try {
             // Construct the API URL
             String apiUrl = "https://ui-avatars.com/api/?name=" + username + "&background=random&size=512&font-size=0.33&length=3&rounded=true";
 
-            // Make a request to the API and retrieve the avatar URL
             RestTemplate restTemplate = new RestTemplate();
-            byte[] imageBytes = restTemplate.getForObject(apiUrl, byte[].class);
-            return imageBytes;
+            return restTemplate.getForObject(apiUrl, byte[].class);
         } catch (RestClientException e) {
-            // Handle exception here, such as logging the error
             e.printStackTrace();
-            return null; // or a default avatar byte array
+            try {
+                Resource resource = resourceLoader.getResource("classpath:/static/assets/images/faces/5.jpg");
+                try (InputStream inputStream = resource.getInputStream()) {
+                    return StreamUtils.copyToByteArray(inputStream);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                // Handle the IOException properly, e.g., return a default image
+                return new byte[0];
+            }
         }
     }
 }
