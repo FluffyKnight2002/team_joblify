@@ -6,15 +6,7 @@ $(document).ready(function() {
 
 });
 
-function pdfDownload(){
-    console.log("run");
-    fetch("/all_candidates/pdf")
-}
 
-function excelDownload(){
-    console.log("run");
-    fetch("/all_candidates/excel")
-}
 
 let filterElements = [
     {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
@@ -325,11 +317,11 @@ $(document).ready( async function() {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/all_candidates/pdf"
                     			></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/all_candidates/excel
                 				></a>
                 			</div>
                 		</div>

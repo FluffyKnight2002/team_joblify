@@ -6,15 +6,7 @@ let filterElements = [
     { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
 ];
 
-function pdfDownload(){
-    console.log("run");
-    fetch("/interview_process/pdf")
-}
 
-function excelDownload(){
-    console.log("run");
-    fetch("/interview_process/excel")
-}
 
 
 $(document).ready(function () {
@@ -241,11 +233,11 @@ $(document).ready(function () {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/interview_process/pdf"
                     			></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/interview_process/excel"
                 				></a>
                 			</div>
                 		</div>
