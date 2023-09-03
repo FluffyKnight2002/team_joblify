@@ -27,6 +27,8 @@ public class AllPost {
 
 	private String position;
 
+	private String department;
+
 	@Column(name = "total_candidates")
 	private long totalCandidate;
 

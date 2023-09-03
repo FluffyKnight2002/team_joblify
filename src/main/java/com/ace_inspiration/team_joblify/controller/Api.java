@@ -72,7 +72,7 @@ public class Api {
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
         User user = userService.userCreate(userDto, myUserDetails.getUserId());
         if (user != null) {
-            String message = myUserDetails.getName() + " create a new User named" + user.getName();
+            String message = myUserDetails.getName() + " create a new User named " + user.getName();
             String link = "/user-profile-edit?email=" + user.getEmail();
             notificationCreator.createNotification(myUserDetails, message, link);
         }

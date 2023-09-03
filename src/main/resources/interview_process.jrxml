@@ -20,6 +20,8 @@
 	</field>
 	<field name="position" class="java.lang.String">
 	</field>
+	<field name="department" class="java.lang.String">
+	</field>
 	<field name="totalCandidate" class="java.lang.Long">
 	</field>
 	<field name="passedCandidate" class="java.lang.Long">
@@ -65,10 +67,10 @@
 		</band>
 	</title>
 	<columnHeader>
-		<band height="37" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+		<band height="41" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<staticText>
-				<reportElement x="0" y="0" width="73" height="37" uuid="1da77c83-09ff-4ee7-810c-ef4658186bcc"/>
+				<reportElement x="0" y="0" width="70" height="41" uuid="1da77c83-09ff-4ee7-810c-ef4658186bcc"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -81,7 +83,7 @@
 				<text><![CDATA[No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="73" y="0" width="73" height="37" uuid="95c98bea-d9f7-4ea5-997b-45fcfcbae90b"/>
+				<reportElement x="70" y="0" width="61" height="41" uuid="95c98bea-d9f7-4ea5-997b-45fcfcbae90b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -94,7 +96,7 @@
 				<text><![CDATA[Open Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="146" y="0" width="73" height="37" uuid="3df91e10-8353-424b-9597-eb2a6f919ac6"/>
+				<reportElement x="131" y="0" width="61" height="41" uuid="3df91e10-8353-424b-9597-eb2a6f919ac6"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -107,7 +109,33 @@
 				<text><![CDATA[Close Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="219" y="0" width="73" height="37" uuid="4f70a79c-6b44-45e2-8d98-a9b789950fc8"/>
+				<reportElement x="192" y="0" width="61" height="41" uuid="dd39801a-3a37-40ff-be24-8134beb14230"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Position]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="253" y="0" width="61" height="41" uuid="8d019886-4685-42ac-9878-f84b32305762"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Department]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="0" width="61" height="41" uuid="3818db88-b3e0-44e2-a718-00e3b0ab9ccb"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -120,7 +148,7 @@
 				<text><![CDATA[Total Candidates]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="292" y="0" width="73" height="37" uuid="2f350aa0-5b99-45d7-8491-9a0effa95934"/>
+				<reportElement x="375" y="0" width="61" height="41" uuid="dbe96e63-68f3-4c57-b283-4761f7b161c2"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -130,36 +158,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[Interviewed Candidates]]></text>
+				<text><![CDATA[Offered Letter Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="365" y="0" width="73" height="37" uuid="74e19f91-0aba-4812-9e24-efbd24d2b702"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Passed Candidates]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="438" y="0" width="73" height="37" uuid="41b2ce8e-eb3f-4e25-b271-e0e4e4ea987b"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Pending Candidates]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="511" y="0" width="73" height="37" uuid="223b2e44-f6a5-49c1-8876-5d9ac953ea9e"/>
+				<reportElement x="436" y="0" width="61" height="41" uuid="527fc15e-2e66-4f4f-a0e9-0d5167389f88"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -172,7 +174,20 @@
 				<text><![CDATA[Cancel Candidates]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="584" y="0" width="73" height="37" uuid="86e037f5-058e-4c00-87b2-9f82723d335a"/>
+				<reportElement x="497" y="0" width="61" height="41" uuid="62df30e6-4860-475b-ba58-df9e52f36bae"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Pending Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="0" width="61" height="41" uuid="cab4132e-d07a-482b-8143-c510d94f3e49"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -185,7 +200,20 @@
 				<text><![CDATA[Not Interview Candidates]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="657" y="0" width="73" height="37" uuid="5cb7da40-c22e-4a8a-bad3-29f3180aeb7b"/>
+				<reportElement x="619" y="0" width="61" height="41" uuid="a202ba9f-6d55-4aa6-af4b-6153c1341ae0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Passed Candidates]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="61" height="41" uuid="10539555-6f77-42e5-bfa4-38a9e900f3ca"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -198,7 +226,7 @@
 				<text><![CDATA[Accepted Candidates]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="730" y="0" width="72" height="37" uuid="2b16facd-849f-4aa6-81c6-d4c56de27a23"/>
+				<reportElement x="741" y="0" width="61" height="41" uuid="78e0ced1-92a8-4ac3-88f7-c07388d8365b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -208,15 +236,15 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[Offered Letter Email]]></text>
+				<text><![CDATA[Interviewed Candidates]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="31" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+		<band height="47" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
 			<textField>
-				<reportElement x="0" y="0" width="73" height="31" uuid="f2235ef1-ec77-494c-911a-f83a8dc7bbdc"/>
+				<reportElement x="0" y="0" width="70" height="47" uuid="f2235ef1-ec77-494c-911a-f83a8dc7bbdc"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -229,7 +257,7 @@
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="73" y="0" width="73" height="31" uuid="3f66f521-1a66-41de-956d-54e91cca6518"/>
+				<reportElement x="70" y="0" width="61" height="47" uuid="3f66f521-1a66-41de-956d-54e91cca6518"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -242,7 +270,7 @@
 				<textFieldExpression><![CDATA[$F{openDate}.toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="146" y="0" width="73" height="31" uuid="2c731b5a-43d4-4257-9c45-5b861d0eb21c"/>
+				<reportElement x="131" y="0" width="61" height="47" uuid="2c731b5a-43d4-4257-9c45-5b861d0eb21c"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -255,7 +283,33 @@
 				<textFieldExpression><![CDATA[$F{closeDate}.toString()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="219" y="0" width="73" height="31" uuid="68ef8c6a-37f8-45bd-80e7-2e3e074a095c"/>
+				<reportElement x="192" y="0" width="61" height="47" uuid="3922ad12-4f59-4d4d-8afc-d923a355faf4"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{position}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="253" y="0" width="61" height="47" uuid="03ef3b57-25ce-44a3-953c-ce5b0baad177"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{department}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="0" width="61" height="47" uuid="4cdf4bc2-3b56-422b-968a-f4a4b1621759"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -268,7 +322,7 @@
 				<textFieldExpression><![CDATA[$F{totalCandidate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="292" y="0" width="73" height="31" uuid="5b05862e-5cc2-4326-aabe-f5da62d70da0"/>
+				<reportElement x="375" y="0" width="61" height="47" uuid="3d315ced-65ba-4916-9f8d-7ecb96c64cbe"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -278,36 +332,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{interviewedCounts}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{offeredLetterEmail}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="365" y="0" width="73" height="31" uuid="601a9bc7-590b-43b0-a834-3844a06396f3"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{passedCandidate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="438" y="0" width="73" height="31" uuid="9f4ed822-2cc7-495f-a707-82aa8099c510"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{pendingCandidate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="511" y="0" width="73" height="31" uuid="77373dad-f2c2-44dd-a3d9-73badae03e2e"/>
+				<reportElement x="436" y="0" width="61" height="47" uuid="8811db11-65f1-47f5-a4bf-9e60cd14b091"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -320,7 +348,20 @@
 				<textFieldExpression><![CDATA[$F{cancelCandidate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="584" y="0" width="73" height="31" uuid="a903ef3d-87ac-491c-ab40-b67aaa323578"/>
+				<reportElement x="497" y="0" width="61" height="47" uuid="6c0c6380-26a3-4b00-ab45-2f01be407f30"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pendingCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="558" y="0" width="61" height="47" uuid="6ea6f209-aa24-4174-be0a-67131248c30b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -333,7 +374,20 @@
 				<textFieldExpression><![CDATA[$F{notInterviewCandidate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="657" y="0" width="73" height="31" uuid="6e85528e-8b9f-41f6-9857-a51543af2a65"/>
+				<reportElement x="619" y="0" width="61" height="47" uuid="63e36e98-a13c-4561-937e-ab0f2571b3ab"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{passedCandidate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="0" width="61" height="47" uuid="aa0e92cd-6fd1-40b3-8796-854e701d362e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -346,7 +400,7 @@
 				<textFieldExpression><![CDATA[$F{acceptedCandidate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="730" y="0" width="72" height="31" uuid="030ecad9-3c57-40b8-a341-75e497ec65a3"/>
+				<reportElement x="741" y="0" width="61" height="47" uuid="a3ef7b00-d48b-4257-95b0-0345e729cc7d"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -356,7 +410,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{offeredLetterEmail}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{interviewedCounts}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -364,9 +418,9 @@
 		<band height="45" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="97" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="130" splitType="Stretch"/>
 	</summary>
 </jasperReport>

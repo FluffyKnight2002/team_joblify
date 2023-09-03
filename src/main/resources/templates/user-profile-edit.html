@@ -291,22 +291,66 @@
     let currentEmail;
     let userId;
     let passwordChangeLink = document.getElementById('password-change-link');
+    let authenticatedUserRole;
+    let authenticatedUserEmail;
 
     document.addEventListener('DOMContentLoaded', function () {
       profileFill();
+      forgotPasswordButton();
+
+
 
     });
 
 
-    function profileFill() {
-      fetch('/get-user-profile?email=' + encodeURIComponent(email), {
-        method: 'POST',
-        headers: {
-          [csrfHeader]: csrfToken // Include CSRF token as a request header
+    async function forgotPasswordButton() {
+
+      try {
+        const response = await fetch('/authenticated-user-data', {
+          method: 'POST',
+          headers: {
+            [csrfHeader]: csrfToken
+          }
+        });
+
+        if (response.ok) {
+          const [userDetails, passwordMatches] = await response.json();
+          authenticatedUserRole = userDetails.user.role;
+          authenticatedUserEmail = userDetails.email;
+
+          if ((authenticatedUserRole === "DEFAULT_HR" || authenticatedUserRole === "SENIOR_HR") && email !== authenticatedUserEmail) {
+            passwordChangeLink.href = '/admin-password-change-user?email=' + encodeURIComponent(email);
+          } else {
+            passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(email);
+          }
+
+
+
+        } else {
+          console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
         }
-      })
-        .then(response => response.json())
-        .then(data => {
+
+      } catch (error) {
+        console.error('An error occurred while fetching authenticated user data:', error);
+      }
+    }
+
+
+
+    async function profileFill() {
+      try {
+        const response = await fetch('/get-user-profile?email=' + encodeURIComponent(email), {
+          method: 'POST',
+          headers: {
+            [csrfHeader]: csrfToken // Include CSRF token as a request header
+          }
+        })
+
+        if (response.ok) {
+          const data = await response.json();
+
+          console.log("Data : ", data);
+
           const name = document.getElementById('name');
           const username = document.getElementById('username');
           const email = document.getElementById('email');
@@ -314,9 +358,11 @@
           const address = document.getElementById('address');
           const note = document.getElementById('note');
           let preview = document.getElementById('uploadedImage');
+
+
           const stringDepartment = data.department.name;
 
-          console.log("Data : ", data);
+
 
           userId = data.id;
           name.value = data.name;
@@ -326,7 +372,6 @@
           address.value = data.address;
           note.value = data.note;
           preview.src = 'data:image/jpeg;base64,' + data.photo;
-          passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(data.email);
 
           // Check if department select element exists
           if ($('#department').length > 0) {
@@ -351,7 +396,13 @@
               }
             });
           }
-        });
+        } else {
+          console.error('Failed to fetch authenticated user data:', response.status, response.statusText);
+        }
+
+      } catch (error) {
+        console.error('An error occurred while fetching authenticated user data:', error);
+      }
     }
 
 
@@ -628,7 +679,7 @@
     const phoneNumberInput = document.getElementById('phone');
     phoneNumberInput.addEventListener('input', function () {
       const cleanedValue = phoneNumberInput.value.replace(/\s/g, '');
-            phoneNumberInput.value = cleanedValue;
+      phoneNumberInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(checkPhoneNumber, 300);
       phoneSpinner.style.display = 'inline-block'; // Set a new timer with a delay of 500 milliseconds
@@ -703,7 +754,7 @@
     const emailInput = document.getElementById('email');
     emailInput.addEventListener('input', function () {
       const cleanedValue = emailInput.value.replace(/\s/g, '');
-            emailInput.value = cleanedValue;
+      emailInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(checkEmail, 300); // Set a new timer with a delay of 500 milliseconds
     });
@@ -769,7 +820,7 @@
 
     usernameInput.addEventListener('input', function () {
       const cleanedValue = usernameInput.value.replace(/\s/g, '');
-            usernameInput.value = cleanedValue;
+      usernameInput.value = cleanedValue;
       clearTimeout(delayTimer); // Clear the previous timer (if any)
       delayTimer = setTimeout(usernameDuplicate, 300); // Set a new timer with a delay of 500 milliseconds
     });
