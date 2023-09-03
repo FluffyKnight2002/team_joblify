@@ -6,6 +6,15 @@ $(document).ready(function() {
 
 });
 
+function pdfDownload(){
+    console.log("run");
+    fetch("/all_candidates/pdf")
+}
+
+function excelDownload(){
+    console.log("run");
+    fetch("/all_candidates/excel")
+}
 
 let filterElements = [
     {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
@@ -27,9 +36,6 @@ var ccMails = [];
 var updatedString = null;
 var concatenatedValue = null;
 let role;
-
-
-
 
 $(document).ready( async function() {
     const isHidden = document.getElementById('second');
@@ -66,125 +72,139 @@ $(document).ready( async function() {
     });
 
 
-    table = $('#table1').DataTable(
+    table = $('#table2').DataTable(
         {
             "serverSide": true,
             "processing": true,
-            "ajax": '/allCandidate',
-            "sScrollY": "auto",
-            "search": {
-                "regex": true,
-                "smart": false
+            "ajax": '/process',
+            "scrollY": 300,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "fixedHeader": {
+                "header": true,
             },
-            // "bScrollCollapse": true,
 
             "columns": [
-
                 {
-                    targets: 0,
-                    data: "id",
-                    render: function(data, type, row) { return '<input type="checkbox" class="ck" value="' + data + '">'; },
-                    sortable: false
+                    data: "openDate",
+                    render: function (data, type, row) {
+                        return changeTimeFormat(data);
+                    },
+                    targets: 0
                 },
                 {
-                    processing: false,
-                    target: 1,
-                    className: 'dt-control',
-                    orderable: false,
-                    data: "viId",
-                    render: function(data) {
-                        return "";
-                    }
-
+                    data: "closeDate",
+                    render: function (data, type, row) {
+                        return changeTimeFormat(data);
+                    },
+                    targets: 1
                 },
                 {
-                    data: "id",
                     targets: 2,
-                    visible: false
+                    data: "position",
+                    className: "position",
+                    render: function (data, type, row) {
+                        return `
+                            <div>
+                                <a class="btn btn-sm btn-primary show-position w-100 d-flex justify-content-center align-items-center"
+                                    style="min-height: 51.33px"
+                                   href="/candidate-view-summary?viId=${row.id}&name=${data}">${data}</a>
+                            </div>
+                            `;
+
+                    },
+                    // sortable: false
+
                 },
                 {
-                    data: "name",
-                    targets: 3
+                  targets:3,
+                  data:'department'
+
                 },
                 {
                     targets: 4,
-                    data: "position",
-
-
+                    data: "totalCandidate",
+                    render: function (data) {
+                        let total = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-info bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return total;
+                    },
+                    sortable: false
                 },
-
                 {
                     targets: 5,
-                    data: "selectionStatus",
+                    data: 'interviewedCounts',
+                    render: function (data) {
+                        let inter = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-dark bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return inter;
+                    },
+                    sortable: false
 
-                },
+                            
+                              
+                            },
                 {
                     targets: 6,
-                    data: 'phone',
+                    data: "passedCandidate",
+                    render: function (data) {
+                        let passed = data == null ? '-' : data;
+                        let passBtn = (passed == '-') ?
+                            '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-success bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return passBtn;
 
 
-
+                    },
+                    sortable: false
                 },
                 {
+
+                    data: "pendingCandidate",
                     targets: 7,
-                    data: "email",
-                    render: function(data, type, row) {
-                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invert Mail</a>';
+                    render: function (data) {
+                        let pend = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-warning bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return pend;
                     },
-                    sortable: false,
-                    visible: false
-
+                    sortable: false
                 },
                 {
-                    className:"display",
-                    data: "interviewStatus",
                     targets: 8,
-                    render: function(data, type, row) {
-                        return '<select id="changeStatus"' + (data === 'ACCEPTED' ? ' disabled' : '') + '>' +
-                            '<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
-                            '<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
-                            '<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
-                            '<option value="CANCEL"' + (data === 'CANCEL' ? ' selected' : '') + '>CANCEL</option>' +
-                            '<option value="ACCEPTED"' + (data === 'ACCEPTED' ? ' selected' : '') + '>ACCEPTED</option>' +
-                            '</select>';
+                    data: 'cancelCandidate',
+                    render: function (data) {
+                        let cancel = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-danger bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return cancel;
                     },
-                    sortable: false,
-
+                    sortable: false
                 },
                 {
                     targets: 9,
-                    data: 'lvl',
-
+                    data: "notInterviewCandidate",
+                    render: function (data) {
+                        let not = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-secondary bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                        return not;
+                    },
+                    sortable: false
                 },
                 {
                     targets: 10,
-                    data: "email",
-                    render: function(data, type, row) {
-                        return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
+                    data: 'acceptedCandidate',
+                    render: function (data) {
+                        let acc = data == null ? '<div class="text-center"><span>-</span></div>' :
+                            '<div class="text-center"><span class="badge bg-gradient-ltr rounded-pill px-4">' + data +'</span></div>';
+                        return acc;
                     },
-                    sortable: false,
-                    visible: false
-
+                    sortable: false
                 },
-                {
-                    targets: 11,
-                    data: 'experience',
-                }, {
-                    targets: 12,
-                    data: 'date',
-                    render: function(data, type, row) {
-                        if (type === 'display' || type === 'filter') {
-                            // Assuming data is in the format '2023-01-01T00:00:00'
-                            var dateParts = data.split('T')[0].split('-');
-                            return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                        }
-                        return data; // For other types, return the original data
-                    }
-                },
+                        
+                        ],
+                        order:[[0,'desc']]
 
-            ],
-            order: [[2, 'desc']]
         });
+
     // Assuming you have initialized DataTable properly
     let searchRow = $('#table1_filter').closest('.row');
     $('.dt-row').css('margin-bottom','40px')
@@ -305,10 +325,12 @@ $(document).ready( async function() {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdf()"></a>
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
+                    			></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excel()" ></a>
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
+                				></a>
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -1377,7 +1399,7 @@ function showSelectedDropdownRemoveButton(button) {
 }
 function SelectedFilterName(item) {
     console.log(item)
-    let selectedValue = item; // Get the selected value from the clicked item
+    let selectedValue = $(item).text(); // Get the selected value from the clicked item
     console.log("Selected Value : " , selectedValue);
     let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
@@ -1447,12 +1469,10 @@ function SelectedFilterName(item) {
             return false;
     }
 
-    console.warn(item, typeof(item));
-
     // if ($('input[name="datefilter2"]').length > 0) {
-    if(item !== 'Custom') {
+    if(item != 'Custom') {
         $('input[name="datefilter2"]').val('');
-        button.text($.trim(item)); // Update the text of the button
+        button.text($.trim(selectedValue)); // Update the text of the button
     }else {
         $('.date-posted-filter-btn').text('Custom');
     }
@@ -1470,7 +1490,7 @@ function createTitleFilterButton(selectedValue) {
     filterElements[1].isRemove = true;
     $('.position-dropdown-item').hide();
 
-    $('#filter-position').val(selectedValue);
+    $('#filter-title').val(selectedValue);
     console.log(selectedValue)
     checkAndToggleFilterButton();
 
@@ -1511,7 +1531,7 @@ function createTitleFilterButton(selectedValue) {
                 }
                 submenuHTML += `
                 <li class="dropdown-item filter-items"
-                    onclick="createTitleFilterButton('${item.name}'); checkAndToggleFilterButton();" data-filter-id="filter-position">
+                    onclick="createTitleFilterButton('${item.name}'); checkAndToggleFilterButton();" data-filter-id="filter-title">
                   ${item.name}
                 </li>`;
             });
@@ -1825,7 +1845,7 @@ function changeSelectedFilterName(item) {
 }
 function createInterviewStatusFilterButton(selectedValue) {
 
-    filterElements[5].isRemove = true;
+    filterElements[4].isRemove = true;
     $('.interview-status-dropdown-item').hide();
 
     checkAndToggleFilterButton();
@@ -1920,3 +1940,59 @@ function resetFilters() {
 
     updateDataTable();
 }
+
+$(document).on('click', '.selected-dropdown-remove-button', function () {
+    let filterName = $(this).data('filter-name');
+
+    // Find and update the isRemove property in filterElements
+    for (let i = 0; i < filterElements.length; i++) {
+        if (filterElements[i].name === filterName) {
+            filterElements[i].isRemove = false;
+            $('.' +filterElements[i].name).show();
+            $('#'+filterElements[i].filterId).val('');
+            break; // Exit the loop once the element is found
+        }
+    }
+
+    console.log("Filter name : ", filterName);
+
+    if(filterName === 'level-dropdown-item') {
+
+        const selectedLevels = [];
+
+        $('.level-checkbox').each(function () {
+
+            let checkbox = $(this);
+            const checkboxes2 = $('.level-filter-checkbox:checked');
+
+            // Iterate through the checked checkboxes and collect their values
+            checkboxes2.each(function () {
+                selectedLevels.push($(this).val());
+            });
+
+            console.log("Selected Levels :",selectedLevels)
+            console.log("It match : ", selectedLevels.includes(checkbox.val()));
+            if (selectedLevels.includes(checkbox.val())) {
+                console.log("checkbox change!!!!")
+                checkbox.prop('checked', true).trigger('change');
+            }
+            console.log("level-checkbox.val() ", checkbox.val());
+            console.log("checked : ", checkbox.is(":checked"));
+        });
+        table.column(9).search('').draw();
+    }else if (filterName === 'apply-date-dropdown-item') {
+        table.column(12).search('').draw();
+    }else if(filterName==='position-dropdown-item'){
+        table.column(4).search('').draw();
+    }else if (filterName === 'selection-status-dropdown-item') {
+        table.column(5).search('').draw();
+    }else if(filterName==='post-dropdown-item'){
+        table.column(1).search('').draw();
+    }else if(filterName==='interview-status-dropdown-item'){
+        table.column(8).search('').draw();
+    }
+
+    $(this).closest('.btn-group').remove();
+    checkAndToggleFilterButton();
+
+});

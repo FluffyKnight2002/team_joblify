@@ -1,10 +1,22 @@
 var table;
 
 let filterElements = [
-    {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
-    {name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title'},
-    {name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department'},
+    { name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date' },
+    { name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title' },
+    { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
 ];
+
+function pdfDownload(){
+    console.log("run");
+    fetch("/interview_process/pdf")
+}
+
+function excelDownload(){
+    console.log("run");
+    fetch("/interview_process/excel")
+}
+
+
 $(document).ready(function () {
 
     table = $('#table2').DataTable(
@@ -52,8 +64,8 @@ $(document).ready(function () {
 
                 },
                 {
-                  targets:3,
-                  data:'department'
+                    targets: 3,
+                    data: 'department'
 
                 },
                 {
@@ -61,7 +73,7 @@ $(document).ready(function () {
                     data: "totalCandidate",
                     render: function (data) {
                         let total = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-info bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                            '<div class="text-center"><span class="badge bg-info bg-gradient rounded-pill px-4">' + data + '</span></div>';
                         return total;
                     },
                     sortable: false
@@ -71,82 +83,85 @@ $(document).ready(function () {
                     data: 'interviewedCounts',
                     render: function (data) {
                         let inter = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-dark bg-gradient rounded-pill px-4">' + data +'</span></div>';
+                            '<div class="text-center"><span class="badge bg-dark bg-gradient rounded-pill px-4">' + data + '</span></div>';
                         return inter;
                     },
                     sortable: false
 
-														
-															
-														},
-														{
-															targets : 6,createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															data:"passedCandidate",
-															 render:function(data)
-														    {
-																let passed=data == null ?'-':data;
-																let passBtn = (passed=='-')  ?
-																'<span>'+passed+'</span>':
-																'<input type="submit" value="'+passed+'">';
-																return passBtn;
 
 
-															},
-															sortable:false
-														},
-														{
-
-															data : "pendingCandidate",
-															targets : 7,
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															 render:function(data)
-														    {let pend=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return pend;},
-														    sortable:false
+                },
+                {
+                    targets: 6, createdCell: function (td) {
+                        $(td).css('background-color', "#D5F5E3")
+                    },
+                    data: "passedCandidate",
+                    render: function (data) {
+                        let passed = data == null ? '-' : data;
+                        let passBtn = (passed == '-') ?
+                            '<span>' + passed + '</span>' :
+                            '<input type="submit" value="' + passed + '">';
+                        return passBtn;
 
 
-														},
-														{
-															targets:8,
-															data:'cancelCandidate',
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3")
-															},
-															 render:function(data)
-														    {let cancel=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return cancel;},
-														    sortable:false
-														},
-														{
-															targets : 9,
-															data:"notInterviewCandidate",
-															createdCell: function (td) {
-																$(td).css('background-color', "#D5F5E3 ")
-															},
-															 render:function(data)
-														    {let not=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return not;},
-														    sortable:false
-														},
-														{
-															targets:10,
-															data:'acceptedCandidate',
-															 render:function(data)
-														    {let acc=data == null ? '<span>-</span>' :
-																'<input type="submit" value="'+data+'">';
-																return acc;},
-														    sortable:false
-														},
-												
-												],
-												order:[[0,'desc']]
+                    },
+                    sortable: false
+                },
+                {
+
+                    data: "pendingCandidate",
+                    targets: 7,
+                    createdCell: function (td) {
+                        $(td).css('background-color', "#D5F5E3")
+                    },
+                    render: function (data) {
+                        let pend = data == null ? '<span>-</span>' :
+                            '<input type="submit" value="' + data + '">';
+                        return pend;
+                    },
+                    sortable: false
+
+
+                },
+                {
+                    targets: 8,
+                    data: 'cancelCandidate',
+                    createdCell: function (td) {
+                        $(td).css('background-color', "#D5F5E3")
+                    },
+                    render: function (data) {
+                        let cancel = data == null ? '<span>-</span>' :
+                            '<input type="submit" value="' + data + '">';
+                        return cancel;
+                    },
+                    sortable: false
+                },
+                {
+                    targets: 9,
+                    data: "notInterviewCandidate",
+                    createdCell: function (td) {
+                        $(td).css('background-color', "#D5F5E3 ")
+                    },
+                    render: function (data) {
+                        let not = data == null ? '<span>-</span>' :
+                            '<input type="submit" value="' + data + '">';
+                        return not;
+                    },
+                    sortable: false
+                },
+                {
+                    targets: 10,
+                    data: 'acceptedCandidate',
+                    render: function (data) {
+                        let acc = data == null ? '<span>-</span>' :
+                            '<input type="submit" value="' + data + '">';
+                        return acc;
+                    },
+                    sortable: false
+                },
+
+            ],
+            order: [[0, 'desc']]
 
         });
 
@@ -201,7 +216,7 @@ $(document).ready(function () {
         </div>
     `;
 
-    console.log("Table" , $('#table2'))
+    console.log("Table", $('#table2'))
 
     fetchTitleAndGenerateHTML().then(submenuHTML => {
         // Use the generated submenuHTML as needed
@@ -215,7 +230,7 @@ $(document).ready(function () {
 
     // Find the search input's parent div.row and append the custom filter inputs
     let searchRow = $('#table2_filter').closest('.row');
-    $('.dt-row').css('margin-bottom','40px')
+    $('.dt-row').css('margin-bottom', '40px')
     let recentFilterDropdownCon = `<div class="col-9" id="recent-filter-dropdown-con"></div>`;
     let reportButtonCon =
         `<div class="col-auto pt-2" id="report-button-con">
@@ -226,12 +241,12 @@ $(document).ready(function () {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf"
-                    			href="/all_candidates/pdf"></a>
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
+                    			></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel"
-                				href="/interview_process/excel"></a>
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
+                				></a>
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -251,8 +266,8 @@ $(document).ready(function () {
     $(reportButtonCon).appendTo(searchRow);
 
     $('.dropdown-menu > li').hover(function () {
-            $(this).children('.dropdown-submenu').css('display', 'block');
-        }
+        $(this).children('.dropdown-submenu').css('display', 'block');
+    }
         , function () {
             $(this).children('.dropdown-submenu').css('display', '');
         });
@@ -261,7 +276,7 @@ $(document).ready(function () {
     const currentDate = moment();
 
     // Date range picker
-    $(function() {
+    $(function () {
         // Initialize the daterangepicker
         $('input[name="datefilter"]').daterangepicker({
             autoUpdateInput: false,
@@ -274,19 +289,19 @@ $(document).ready(function () {
         console.log($('#apply-date-dropdown-submenu'));
 
         // Handle apply event to update the input value and set start and end times
-        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+        $('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
             const startDate = picker.startDate.format('MM/DD/YYYY');
             const endDate = picker.endDate.format('MM/DD/YYYY');
 
             $(this).val(startDate + ' - ' + endDate);
 
             // Set the start and end times in your input fields
-            createDatePostedFilterButton('Custom',startDate,endDate);
+            createDatePostedFilterButton('Custom', startDate, endDate);
             checkAndToggleFilterButton();
         });
 
         // Handle cancel event to clear the input value and reset start and end times
-        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
             $('#filter-start-time').val('');
             $('#filter-end-time').val('');
@@ -296,9 +311,9 @@ $(document).ready(function () {
             $('#apply-date-dropdown-submenu').css('display', 'block');
         });
 
-        $('.daterangepicker th').each(function() {
-            console.log("TH:",$(this))
-            $(this).on('click', function(event) {
+        $('.daterangepicker th').each(function () {
+            console.log("TH:", $(this))
+            $(this).on('click', function (event) {
                 console.log("Click!!!!")
                 event.stopPropagation();
                 $('#apply-date-dropdown-submenu').css('display', 'block');
@@ -426,7 +441,7 @@ function changeTimeFormat(time) {
     return formattedDate;
 }
 function createDatePostedFilterButton(selectedValue) {
-    console.log('>>>>>>>>>>>>',selectedValue)
+    console.log('>>>>>>>>>>>>', selectedValue)
     var filterOption = $(this).find('option:selected').val();
     var currentDate = new Date();
     var endDate = currentDate.toISOString().split('T')[0]; // End date is today
@@ -438,13 +453,13 @@ function createDatePostedFilterButton(selectedValue) {
     let selectedText = null;
 
 
-    if(selectedValue === 'Custom') {
+    if (selectedValue === 'Custom') {
         $('#filter-start-date').val(startDate);
         $('#filter-end-date').val(endDate);
         selectedText = selectedValue;
         $('#filter-apply-date').val(selectedText);
-    }else {
-        selectedText =  selectedValue;
+    } else {
+        selectedText = selectedValue;
         $('#filter-apply-date').val(selectedText);
     }
     switch (selectedValue) {
@@ -483,7 +498,7 @@ function createDatePostedFilterButton(selectedValue) {
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            startDate.setFullYear( currentDate.getFullYear() - 1)
+            startDate.setFullYear(currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
             console.log(startDate);
             console.log(endDate);
@@ -523,7 +538,7 @@ function createDatePostedFilterButton(selectedValue) {
 
     // Append the selectedDropdown to the appropriate container
     $('#recent-filter-dropdown-con').append(selectedDropdown);
-    $(function() {
+    $(function () {
         // Replace value of date range
         replaceDateFilter2Value();
         // Initialize the daterangepicker
@@ -535,7 +550,7 @@ function createDatePostedFilterButton(selectedValue) {
         });
 
         // Handle apply event to update the input value and set start and end times
-        $('input[name="datefilter2"]').on('apply.daterangepicker', function(ev, picker) {
+        $('input[name="datefilter2"]').on('apply.daterangepicker', function (ev, picker) {
             const startDate = picker.startDate.format('MM/DD/YYYY');
             const endDate = picker.endDate.format('MM/DD/YYYY');
 
@@ -554,7 +569,7 @@ function createDatePostedFilterButton(selectedValue) {
         });
 
         // Handle cancel event to clear the input value and reset start and end times
-        $('input[name="datefilter2"]').on('cancel.daterangepicker', function(ev, picker) {
+        $('input[name="datefilter2"]').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
             $('#filter-start-time').val('');
             $('#filter-end-time').val('');
@@ -562,7 +577,7 @@ function createDatePostedFilterButton(selectedValue) {
 
         $('.daterangepicker').hover(function () {
             $('.datePostedDropdown').css('display', 'block');
-        },function() {
+        }, function () {
             $('.datePostedDropdown').css('display', '');
         });
     });
@@ -585,7 +600,7 @@ function checkAndToggleFilterButton() {
     }
 
     console.log("Filter Elements", filterElements)
-    console.log("AnyIsRemove",anyIsRemove)
+    console.log("AnyIsRemove", anyIsRemove)
 
     // Toggle the visibility of the buttons based on the anyIsRemove variable
     if (anyIsRemove) {
@@ -599,7 +614,7 @@ function checkAndToggleFilterButton() {
 function SelectedFilterName(item) {
     console.log(item)
     let selectedValue = $(item).text(); // Get the selected value from the clicked item
-    console.log("Selected Value : " , selectedValue);
+    console.log("Selected Value : ", selectedValue);
     let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
     let filterId = $(item).data('filter-id');
@@ -653,7 +668,7 @@ function SelectedFilterName(item) {
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            startDate.setFullYear( currentDate.getFullYear() - 1)
+            startDate.setFullYear(currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
             console.log(startDate);
             console.log(endDate);
@@ -669,10 +684,10 @@ function SelectedFilterName(item) {
     }
 
     // if ($('input[name="datefilter2"]').length > 0) {
-    if(item != 'Custom') {
+    if (item != 'Custom') {
         $('input[name="datefilter2"]').val('');
         button.text($.trim(selectedValue)); // Update the text of the button
-    }else {
+    } else {
         $('.date-posted-filter-btn').text('Custom');
     }
     // }
@@ -758,7 +773,7 @@ function checkAndToggleFilterButton() {
     }
 
     console.log("Filter Elements", filterElements)
-    console.log("AnyIsRemove",anyIsRemove)
+    console.log("AnyIsRemove", anyIsRemove)
 
     // Toggle the visibility of the buttons based on the anyIsRemove variable
     if (anyIsRemove) {
@@ -782,7 +797,7 @@ function changeSelectedFilterName(item) {
 
         console.log("hello")
         table.column(2).search(selectedValue).draw();
-        console.log("Selected Value-2 : " , selectedValue);
+        console.log("Selected Value-2 : ", selectedValue);
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
         let filterId = $(item).data('filter-id');
 
@@ -797,10 +812,10 @@ function changeSelectedFilterName(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
+        if (selectedValue != 'Custom') {
             $('input[name="datefilter2"]').val('');
             button.text($.trim(selectedValue)); // Update the text of the button
-        }else {
+        } else {
             $('.apply-date-filter-btn').text('Custom');
         }
         // }
@@ -816,7 +831,7 @@ function changeSelectedFilterDepartment(item) {
 
         console.log("hello")
         table.column(3).search(selectedValue).draw();
-        console.log("Selected Value-2 : " , selectedValue);
+        console.log("Selected Value-2 : ", selectedValue);
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
         let filterId = $(item).data('filter-id');
 
@@ -831,10 +846,10 @@ function changeSelectedFilterDepartment(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
+        if (selectedValue != 'Custom') {
             $('input[name="datefilter2"]').val('');
             button.text($.trim(selectedValue)); // Update the text of the button
-        }else {
+        } else {
             $('.apply-date-filter-btn').text('Custom');
         }
         // }
@@ -899,8 +914,8 @@ function resetFilters() {
     // Find and update the isRemove property in filterElements
     for (let i = 0; i < filterElements.length; i++) {
         filterElements[i].isRemove = false;
-        $('.' +filterElements[i].name).show();
-        $('#' +filterElements[i].filterId).val('');
+        $('.' + filterElements[i].name).show();
+        $('#' + filterElements[i].filterId).val('');
     }
     $('.selected-dropdown-remove-button').each(function () {
         $(this).closest('.btn-group').remove();
@@ -926,8 +941,8 @@ $(document).on('click', '.selected-dropdown-remove-button', function () {
     for (let i = 0; i < filterElements.length; i++) {
         if (filterElements[i].name === filterName) {
             filterElements[i].isRemove = false;
-            $('.' +filterElements[i].name).show();
-            $('#'+filterElements[i].filterId).val('');
+            $('.' + filterElements[i].name).show();
+            $('#' + filterElements[i].filterId).val('');
             break; // Exit the loop once the element is found
         }
     }
@@ -937,9 +952,9 @@ $(document).on('click', '.selected-dropdown-remove-button', function () {
 
     if (filterName === 'apply-date-dropdown-item') {
         table.column(0).search('').draw();
-    }else if(filterName==='position-dropdown-item'){
+    } else if (filterName === 'position-dropdown-item') {
         table.column(2).search('').draw();
-    }else if (filterName === 'department-dropdown-item') {
+    } else if (filterName === 'department-dropdown-item') {
         table.column(5).search('').draw();
     }
 
