@@ -6,33 +6,54 @@ let filterElements = [
     { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
 ];
 
-async function filterSwitch(){
+async function filterSwitch() {
 
     // Get a reference to the checkbox and the filter input element
     const checkbox = document.getElementById("withFilter");
-    const filterInput = document.getElementById("filter");
+    const pdfFilterInput = document.getElementById("filter");
 
     // Add an event listener to the checkbox to monitor changes
-    checkbox.addEventListener("change", function() {
+    checkbox.addEventListener("change", function () {
         if (checkbox.checked) {
             // If the checkbox is checked, set the value of the filter input to "1"
-            filterInput.value = "1";
+            pdfFilterInput.value = "1";
+            
         } else {
             // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
-            filterInput.value = "0";
+            pdfFilterInput.value = "0";
         }
+
+})
+}
+
+
+async function reportDownload(){
+
+    // JavaScript to handle form submission when links are clicked
+    document.getElementById('pdfDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+        
+        document.getElementById('combinedForm').action = '/interview_process/pdf'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
     });
+
+    document.getElementById('excelDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+        
+        document.getElementById('combinedForm').action = '/interview_process/excel'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
+    });
+
 
 }
 
 
-
 $(document).ready(function () {
 
-     
 
 
-    
+
+
     table = $('#table2').DataTable(
         {
             "serverSide": true,
@@ -255,24 +276,18 @@ $(document).ready(function () {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-                                <form action="/interview_process/pdf">
-                                <input type="hidden" name="filter" id="filter" value="0">
-                                <input type="hidden" name="openDate" id="filter-apply-date" value="">    
-                                <input type="hidden" name="position" id="filter-title" value="">                            
-                                <input type="hidden" name="department" id="filter-department" value="">
-                                    <button id="pdfDownload" class="image-button" aria-label="Download pdf" 
-                                    ></button>
-                                </form>
+                                
+                                
+                                    <a id="pdfDownload" class="image-button" aria-label="Download pdf" 
+                                    ></a>
+                                
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                                <form action="/interview_process/excel">
-                                <input type="hidden" name="filter" id="filter" value="0">
-                                <input type="hidden" name="openDate" id="filter-apply-date" value="">    
-                                <input type="hidden" name="position" id="filter-title" value="">                            
-                                <input type="hidden" name="department" id="filter-department" value="">
-                                    <button id="excelDownload" class="image-button" aria-label="Download Excel" 
-                                    ></btutton>
-                                </form>
+                                
+                                
+                                    <a id="excelDownload" class="image-button" aria-label="Download Excel" 
+                                    ></a>
+                                
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -319,6 +334,8 @@ $(document).ready(function () {
             const startDate = picker.startDate.format('MM/DD/YYYY');
             const endDate = picker.endDate.format('MM/DD/YYYY');
 
+            console.log(startDate + 'aaaaaaaa' + endDate);
+
             $(this).val(startDate + ' - ' + endDate);
 
             // Set the start and end times in your input fields
@@ -354,8 +371,10 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    if(table !== undefined){
-    filterSwitch();
+    if (table !== undefined) {
+        filterSwitch();
+
+        reportDownload();
     }
 });
 async function fetchTitleAndGenerateHTML() {
@@ -469,7 +488,7 @@ function changeTimeFormat(time) {
     var formattedDate = day + suffix + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
     return formattedDate;
 }
-function createDatePostedFilterButton(selectedValue) {
+function createDatePostedFilterButton(selectedValue,a,b) {
     console.log('>>>>>>>>>>>>', selectedValue)
     var filterOption = $(this).find('option:selected').val();
     var currentDate = new Date();
@@ -483,10 +502,11 @@ function createDatePostedFilterButton(selectedValue) {
 
 
     if (selectedValue === 'Custom') {
-        $('#filter-start-date').val(startDate);
-        $('#filter-end-date').val(endDate);
+        $('#filter-start-date').val(a);
+        $('#filter-end-date').val(b);
         selectedText = selectedValue;
-        $('#filter-apply-date').val(selectedText);
+        $('#filter-apply-date').val(a + '-' + b);
+
     } else {
         selectedText = selectedValue;
         $('#filter-apply-date').val(selectedText);
@@ -535,6 +555,17 @@ function createDatePostedFilterButton(selectedValue) {
             // Perform action for 'past_year' option
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
+
+        case 'Custom':
+            startDate.setFullYear(currentDate.getFullYear() - 1)
+            var isoStartDate = startDate.toISOString().split('T')[0];
+            console.log(startDate);
+            console.log(endDate);
+
+            // Perform action for 'past_year' option
+            table.column(0).search(isoStartDate + ';' + endDate).draw();
+            break;
+
         case '':
             table.column(0).search('' + ';' + '').draw();
             break;
@@ -584,6 +615,8 @@ function createDatePostedFilterButton(selectedValue) {
             const endDate = picker.endDate.format('MM/DD/YYYY');
 
             $(this).val(startDate + ' - ' + endDate);
+
+
 
             $('#filter-start-date').val(startDate);
             $('#filter-end-date').val(endDate);
@@ -705,6 +738,16 @@ function SelectedFilterName(item) {
             // Perform action for 'past_year' option
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
+            case 'Custom':
+                startDate.setFullYear(currentDate.getFullYear() - 1)
+                var isoStartDate = startDate.toISOString().split('T')[0];
+                console.log(startDate);
+                console.log(endDate);
+    
+                // Perform action for 'past_year' option
+                table.column(0).search(isoStartDate + ';' + endDate).draw();
+                break;
+
         case '':
             table.column(0).search('' + ';' + '').draw();
             break;
