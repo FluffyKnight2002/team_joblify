@@ -1,5 +1,7 @@
 package com.ace_inspiration.team_joblify.service_implement;
 
+import com.ace_inspiration.team_joblify.config.MyUserDetails;
+import com.ace_inspiration.team_joblify.config.MyUserDetailsService;
 import com.ace_inspiration.team_joblify.config.ProfileGenerator;
 import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.*;
@@ -9,12 +11,16 @@ import com.ace_inspiration.team_joblify.service.hr_service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -26,6 +32,8 @@ public class UserServiceImplement implements UserService {
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final ResourceLoader resourceLoader;
+    private final SessionRegistry sessionRegistry;
+    private final MyUserDetailsService myUserDetailsService;
 
     @Value("${app.default.user.password}")
     private String password;
@@ -34,10 +42,10 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public User userCreate(UserDto userDto, long userId) throws IOException {
-        
+
         byte[] imageBytes;
 
-        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+        if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
             imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
@@ -95,7 +103,7 @@ public class UserServiceImplement implements UserService {
     public User adminProfileEdit(UserDto userDto, String email) throws IOException {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
-        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+        if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
             imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
 
         } else {
@@ -106,7 +114,8 @@ public class UserServiceImplement implements UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            Optional<Department> departmentOptional = departmentRepository.findByNameIgnoreCase(userDto.getDepartment());
+            Optional<Department> departmentOptional = departmentRepository
+                    .findByNameIgnoreCase(userDto.getDepartment());
             Department department;
 
             if (departmentOptional.isPresent()) {
@@ -135,14 +144,13 @@ public class UserServiceImplement implements UserService {
         return null;
     }
 
-
     @Override
     public User userProfileEdit(UserDto userDto, String email) throws IOException {
 
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
 
-        if(userDto.getPhoto() == null || userDto.getPhoto().isEmpty()){
+        if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
             imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -152,7 +160,6 @@ public class UserServiceImplement implements UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            
             user.setUsername(userDto.getUsername());
             user.setName(userDto.getName());
             user.setEmail(userDto.getEmail());
@@ -167,6 +174,7 @@ public class UserServiceImplement implements UserService {
         }
         return null;
     }
+
     @Override
     public boolean emailDuplication(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
@@ -177,7 +185,7 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean checkOldPassword(String password, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             passwordEncoder.matches(password, user.get().getPassword());
             return true;
         }
@@ -185,9 +193,9 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public boolean passwordChange(String newPassword, String email){
+    public boolean passwordChange(String newPassword, String email) {
         Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             user.get().setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user.get());
             return true;
@@ -198,9 +206,25 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean suspend(long id) {
         Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             user.get().setAccountStatus(false);
             userRepository.save(user.get());
+
+            List<Object> principals = sessionRegistry.getAllPrincipals();
+
+            for (Object principal : principals) {
+                if (principal instanceof MyUserDetails) {
+                    MyUserDetails myUserDetails = (MyUserDetails) principal;
+                    if (myUserDetails.getUsername().equals(user.get().getUsername())) {
+                        List<SessionInformation> sessionInfoList = sessionRegistry.getAllSessions(myUserDetails, false);
+        
+                        for (SessionInformation sessionInformation : sessionInfoList) {
+                            sessionInformation.expireNow(); // Invalidates the session
+                        }
+                    }
+                }
+            }
+
             return true;
         }
         return false;
@@ -209,7 +233,7 @@ public class UserServiceImplement implements UserService {
     @Override
     public boolean activate(long id) {
         Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             user.get().setAccountStatus(true);
             userRepository.save(user.get());
             return true;

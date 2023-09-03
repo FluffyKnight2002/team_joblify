@@ -633,6 +633,9 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+    table.columns([0, 5]).visible(true);
+    table.columns([6, 9]).visible(false);
+
 });
 
 // Prevent the dropdown from closing when date inputs are clicked
@@ -837,8 +840,21 @@ function toggleColumn() {
 
 // Function to populate the modal with data fetched from the server
 function populateModalWithData(data) {
-    // Replace the content of the form fields with the data you received from the server
-    // Assuming the data object contains properties with the same names as the form field IDs
+
+    if (reopenBtn.hasClass('btn-bright')) {
+        console.log("BTN BRIGHT")
+    } else {
+        $('#submit-btn')
+            .data('form-id', 'update-form')
+            .data('warning-message', 'Your vacancy will be updated.')
+            .data('success-message', 'Update successful!')
+            .data('error-message', 'Update failed. Please try again.')
+            .html('Update');
+        // reopenModeWarn.hide();
+        $('#reopen-form')
+            .attr('id', 'update-form')
+            .attr('action', 'update-vacancy');
+    }
 
     $('#calendar-btn').off('click');
     $('#timePickerBtn').off('click');

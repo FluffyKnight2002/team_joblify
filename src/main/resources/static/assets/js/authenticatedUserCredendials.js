@@ -36,8 +36,12 @@ async function authenticatedUserData() {
             const department = document.getElementById('authenticated-department');
             const profileLink = document.getElementById('profile-link');
             const profileImg = document.getElementById('profile-img');
+            const passwordChange = document.getElementById('self-password-change');
 
-            name.innerHTML = userDetails.name;
+            const role = userDetails.user.role.replace(/_/g, ' ');
+
+            passwordChange.href = '/password-change?email=' + encodeURIComponent(userDetails.email);
+            name.innerHTML = userDetails.name + ' (' + role + ')';
             username.innerHTML = userDetails.username;
             department.innerHTML = userDetails.department;
             profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(userDetails.email);

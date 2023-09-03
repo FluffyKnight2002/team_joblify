@@ -74,6 +74,22 @@ function actionToVacancy(button) {
             .catch(error => {
                 renderCatch(formId, errorMessage);
             });
+        if(formId === 'reopen-form'){
+            console.log("REOPEN FORM EXIT")
+            $('#submit-btn')
+                .attr('data-form-id', 'update-form')
+                .attr('data-warning-message', 'Your vacancy will be updated.')
+                .attr('data-success-message', 'Update successful!')
+                .attr('data-error-message', 'Update failed. Please try again.')
+                .html('Update');
+            reopenBtn.removeClass('btn-bright');
+            reopenBtn.addClass('btn-un-bright');
+            // reopenModeWarn.hide();
+            $('#reopen-form')
+                .attr('id', 'update-form')
+                .attr('action', 'update-vacancy');
+        }
+
     }else {
         fetch($('#' + formId).attr('action'), {
             method: 'POST',
@@ -94,6 +110,21 @@ function actionToVacancy(button) {
             .catch(error => {
                 renderCatch(formId,errorMessage);
             });
+        if(formId === 'reopen-form'){
+            console.log("REOPEN FORM EXIT")
+            $('#submit-btn')
+                .attr('data-form-id', 'update-form')
+                .attr('data-warning-message', 'Your vacancy will be updated.')
+                .attr('data-success-message', 'Update successful!')
+                .attr('data-error-message', 'Update failed. Please try again.')
+                .html('Update');
+            reopenBtn.removeClass('btn-bright');
+            reopenBtn.addClass('btn-un-bright');
+            // reopenModeWarn.hide();
+            $('#reopen-form')
+                .attr('id', 'update-form')
+                .attr('action', 'update-vacancy');
+        }
     }
 }
 
@@ -138,25 +169,12 @@ function makeAfterRequestSend(formId, data,successMessage,errorMessage) {
     }
     hideMessageModalAfterDelay();
     // To change back form
-    if(formId === 'reopen-form'){
-        $('#submit-btn')
-            .attr('data-form-id', 'update-form')
-            .attr('data-warning-message', 'Your vacancy will be updated.')
-            .attr('data-success-message', 'Update successful!')
-            .attr('data-error-message', 'Update failed. Please try again.')
-            .html('Update');
-        reopenBtn.removeClass('btn-bright');
-        reopenBtn.addClass('btn-un-bright');
-        // reopenModeWarn.hide();
-        $('#reopen-form')
-            .attr('id', 'update-form')
-            .attr('action', 'update-vacancy');
-    }
 
     console.log("After that....")
-    console.log("FormId : ",formId);
-    console.log("SuccessMessage : ",successMessage);
-    console.log("ErrorMessage : ",errorMessage);
+    console.log("FormId : ",$('#submit-btn').attr('data-form-id'));
+    console.log("SuccessMessage : ",$('#submit-btn').attr('data-success-message'));
+    console.log("ErrorMessage : ",$('#submit-btn').attr('data-error-message'));
+
 }
 
 function renderCatch(formId,errorMessage) {

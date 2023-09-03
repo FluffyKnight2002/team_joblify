@@ -65,7 +65,7 @@ public class CandidateController {
 
     private final PositionService positionService;
 
-//    private final DasboardService dasboardservice;
+    // private final DasboardService dasboardservice;
 
 //    private final InterviewProcessRepository interviewProcessRepository;
 
@@ -81,142 +81,23 @@ public class CandidateController {
 
     private FirstDaySpecification firstDaySpecification;
 
-
-//    @GetMapping("/allCandidate")
-//    @ResponseBody
-//    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
-//        System.err.println(input);
-//        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
-//        firstDaySpecification = new FirstDaySpecification(input);
-//
-//
-//        if (firstDaySpecification == null) {
-//            return interviewData;
-//        } else {
-//            interviewData = interviewProcessRepository.findAll(input, firstDaySpecification);
-//            return interviewData;
-//        }
-//
-//    }
-
     @GetMapping("/allCandidate")
-    public DataTablesOutput<InterviewProcess> getDataTable(
-            @RequestParam(required = false) String vacancyInfoId,
-            @RequestParam(required = false) String applyDate,
-            @RequestParam(required = false) String startDateInput,
-            @RequestParam(required = false) String endDateInput,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String department,
-            @RequestParam(required = false) List<String> level,
-            @RequestParam(required = false) String selectionStatus,
-            @RequestParam(required = false) String interviewStatus,
-            @Valid DataTablesInput input) {
+    @ResponseBody
+    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
 
-        // Create a Specification using the DataTablesInput object
-        Specification<InterviewProcess> specification = (root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.conjunction();
+        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
+        firstDaySpecification = new FirstDaySpecification(input);
 
-            System.out.println("Vacancy ID " + vacancyInfoId);
-            if(!vacancyInfoId.trim().equals("All")) {
-                long id = Long.valueOf(vacancyInfoId.trim());
-                System.out.println("COndition HTITITITITITI");
-                predicate = criteriaBuilder.equal(root.get("viId"), id);
-            }
+        System.out.println(input);
 
-            // Inside your getDataTable method
-            if (applyDate != null && !applyDate.isEmpty()) {
-                LocalDate currentDate = LocalDate.now();
-                LocalDate startDate = null;
-                LocalDate endDate = null;
+        if (firstDaySpecification == null) {
+            return interviewData;
+        } else {
+            interviewData = interviewProcessRepository.findAll(input, firstDaySpecification);
+            return interviewData;
+        }
 
-                System.out.println("Start Date Input : " + startDateInput);
-                System.out.println("End Date Input : " + endDateInput);
-
-                if (applyDate.equals("Last 24 hours")) {
-                    // Calculate the start date as 1 day ago from the current date
-                    startDate = currentDate.minusDays(1);
-                } else if (applyDate.equals("Last week")) {
-                    // Calculate the start date as 7 days ago from the current date
-                    startDate = currentDate.minusDays(7);
-                } else if (applyDate.equals("Last month")) {
-                    // Calculate the start date as 30 days ago from the current date
-                    startDate = currentDate.minusDays(30);
-                } else if (applyDate.equals("Custom")) {
-                    // Check if both startDateInput and endDateInput are provided
-                    if (startDateInput != null && endDateInput != null) {
-                        // Parse the start and end dates into LocalDate objects
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-
-                        try {
-                            startDate = LocalDate.parse(startDateInput, formatter);
-                            endDate = LocalDate.parse(endDateInput, formatter);
-                        } catch (DateTimeParseException e) {
-                            // Handle date parsing error
-                        }
-                    }
-                }
-
-                // Now, you can use the startDate and endDate to filter your data
-                if (startDate != null) {
-                    // Add filter condition for the start date
-                    predicate = criteriaBuilder.and(
-                            predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("date"), startDate)
-                    );
-                }
-
-                if (endDate != null) {
-                    // Add filter condition for the end date
-                    predicate = criteriaBuilder.and(
-                            predicate, criteriaBuilder.lessThanOrEqualTo(root.get("date"), endDate)
-                    );
-                }
-
-                System.out.println("Start Date : " + startDate);
-                System.out.println("End Date : " + endDate);
-            }
-
-            if (title != null && !title.isEmpty()) {
-                // Add filter condition for title
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("position"), title));
-            }
-            if (department != null && !department.isEmpty()) {
-                // Add filter condition for department
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("department"), department));
-            }
-            if (level != null && level.size() > 0) {
-                List<Predicate> levelPredicates = new ArrayList<>();
-                level.forEach(lvl -> {
-                    String adjustedLevel = lvl.toUpperCase().replace(" ", "_");
-                    levelPredicates.add(root.get("lvl").in(Level.valueOf(adjustedLevel)));
-                });
-
-                // Combine all level predicates using OR
-                Predicate levelPredicate = criteriaBuilder.or(levelPredicates.toArray(new Predicate[0]));
-
-                // Add the combined level predicate to the overall predicate using AND
-                predicate = criteriaBuilder.and(predicate, levelPredicate);
-            }
-            if (selectionStatus != null && !selectionStatus.isEmpty()) {
-                // Add filter condition for status
-                String adjustedStatus = selectionStatus.toUpperCase().replace(" ", "_");
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("selectionStatus"), Status.valueOf(adjustedStatus)));
-            }
-
-            if (interviewStatus != null && !interviewStatus.isEmpty()) {
-                // Add filter condition for status
-                String adjustedStatus = interviewStatus.toUpperCase().replace(" ", "_");
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("interviewStatus"), Status.valueOf(adjustedStatus)));
-            }
-
-            return predicate;
-        };
-
-        // Use the Specification to filter data
-        DataTablesOutput<InterviewProcess> output = interviewProcessRepository.findAll(input,specification);
-
-        return output;
     }
-
 
     @GetMapping("/allPositions")
     @ResponseBody
@@ -279,12 +160,22 @@ public class CandidateController {
         return dtoList;
     }
     @GetMapping("/chart")
-    public PindChartDto pineChart(){
-    	int date=2023;
-    	  LocalDate postDate = LocalDate.parse(date+"-08-30");
-    	PindChartDto pind =allPostService.findByOpenDate(postDate);
-    	System.err.println(pind.getInterviewed());
-        return pind;
+    public Object pineChart(@RequestParam("year") String year,@RequestParam("month") String month,@RequestParam("position") String position){
+
+       Object data = allPostService.findByOpenDate(year,month,position);
+        System.out.println(data.toString());
+
+//        PineData pineData = new PineData();
+//        pineData.setTotal_candidates((Integer) data[3]);
+//        pineData.setPassed_candidates((Integer) data[4]);
+//        pineData.setPending_candidates((Integer) data[5]);
+//        pineData.setCancel_candidates((Integer) data[6]);
+//        pineData.setNot_interview_candidates((Integer) data[7]);
+//        pineData.setAccepted_candidates((Integer) data[8]);
+//        pineData.setInterviewed_counts((Integer) data[9]);
+//        pineData.setOffered_letter_mail((Integer) data[10]);
+
+        return data;
     }
 
     @GetMapping("/yearly-vacancy-count")
@@ -578,6 +469,7 @@ public class CandidateController {
 
         return ResponseEntity.notFound().build();
     }
+
 
     private byte[] generateZipBytes(List<Candidate> fileEntities) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();

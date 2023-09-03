@@ -16,12 +16,14 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException exception) throws IOException, ServletException {
 
-                if (!(exception instanceof DisabledException)) {
-                    // Handle incorrect credentials condition
-                    response.sendRedirect("/login?error=true");
-                } else {
-                    // Handle disabled account condition
+                if (exception instanceof DisabledException) {
+                    // Log the disabled exception
+                    System.out.println("DisabledException caught: " + exception.getMessage());
                     response.sendRedirect("/login?disabled=true");
+                } else {
+                    // Log other exceptions
+                    System.out.println("Other exception caught: " + exception.getMessage());
+                    response.sendRedirect("/login?error=true");
                 }
 }
 }
