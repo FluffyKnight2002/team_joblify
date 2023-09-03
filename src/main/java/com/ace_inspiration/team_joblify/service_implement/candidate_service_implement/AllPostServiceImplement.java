@@ -29,7 +29,7 @@ public class AllPostServiceImplement implements AllPostService{
 	    	return allpostRepository.findAll(input);
 	    }
 	@Override
-	public Object findByOpenDate(String year,String month,String position) {
+	public int [][]findByOpenDate(String year,String month,String position) {
 		return allpostRepository.getAllByOpenDate(year,month,position);
 	}
 	 

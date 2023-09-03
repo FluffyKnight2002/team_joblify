@@ -30,6 +30,9 @@ var updatedString = null;
 var concatenatedValue = null;
 let role;
 
+
+
+
 $(document).ready( async function() {
     const isHidden = document.getElementById('second');
     const response = await fetch('/authenticated-user-data', {
@@ -314,12 +317,10 @@ $(document).ready( async function() {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf"
-                    			href="/all_candidates/pdf"></a>
+            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdf()"></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel"
-                				href="/all_candidates/excel"></a>
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excel()" ></a>
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -1390,7 +1391,7 @@ function showSelectedDropdownRemoveButton(button) {
 }
 function SelectedFilterName(item) {
     console.log(item)
-    let selectedValue = $(item).text(); // Get the selected value from the clicked item
+    let selectedValue = item; // Get the selected value from the clicked item
     console.log("Selected Value : " , selectedValue);
     let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
@@ -1462,10 +1463,12 @@ function SelectedFilterName(item) {
             return false;
     }
 
+    console.warn(item, typeof(item));
+
     // if ($('input[name="datefilter2"]').length > 0) {
-    if(item != 'Custom') {
+    if(item !== 'Custom') {
         $('input[name="datefilter2"]').val('');
-        button.text($.trim(selectedValue)); // Update the text of the button
+        button.text($.trim(item)); // Update the text of the button
     }else {
         $('.date-posted-filter-btn').text('Custom');
     }
@@ -1483,7 +1486,7 @@ function createTitleFilterButton(selectedValue) {
     filterElements[1].isRemove = true;
     $('.position-dropdown-item').hide();
 
-    $('#filter-title').val(selectedValue);
+    $('#filter-position').val(selectedValue);
     console.log(selectedValue)
     checkAndToggleFilterButton();
 
@@ -1524,7 +1527,7 @@ function createTitleFilterButton(selectedValue) {
                 }
                 submenuHTML += `
                 <li class="dropdown-item filter-items"
-                    onclick="createTitleFilterButton('${item.name}'); checkAndToggleFilterButton();" data-filter-id="filter-title">
+                    onclick="createTitleFilterButton('${item.name}'); checkAndToggleFilterButton();" data-filter-id="filter-position">
                   ${item.name}
                 </li>`;
             });

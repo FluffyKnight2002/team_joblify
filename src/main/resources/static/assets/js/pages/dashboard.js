@@ -388,6 +388,15 @@ document.addEventListener('DOMContentLoaded', async function(){
 
 	pchart = new ApexCharts(document.querySelector("#chart"), pine);
 	pchart.render();
+
+	if(department !== undefined && year !== undefined && position !== undefined){
+		
+		fetchForPineChart();
+
+
+	}
+	fetchForPineChart
+
 	$("#pine,#position,#month").change(fetchForPineChart);
 
 
