@@ -7,7 +7,6 @@ $(document).ready(function() {
 });
 
 
-
 let filterElements = [
     {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
     {name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title'},
@@ -321,7 +320,7 @@ $(document).ready( async function() {
                     			></a>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/all_candidates/excel
+                				<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/all_candidates/excel"
                 				></a>
                 			</div>
                 		</div>

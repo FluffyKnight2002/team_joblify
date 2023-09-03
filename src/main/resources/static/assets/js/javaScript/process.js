@@ -6,11 +6,33 @@ let filterElements = [
     { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
 ];
 
+async function filterSwitch(){
+
+    // Get a reference to the checkbox and the filter input element
+    const checkbox = document.getElementById("withFilter");
+    const filterInput = document.getElementById("filter");
+
+    // Add an event listener to the checkbox to monitor changes
+    checkbox.addEventListener("change", function() {
+        if (checkbox.checked) {
+            // If the checkbox is checked, set the value of the filter input to "1"
+            filterInput.value = "1";
+        } else {
+            // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
+            filterInput.value = "0";
+        }
+    });
+
+}
 
 
 
 $(document).ready(function () {
 
+     
+
+
+    
     table = $('#table2').DataTable(
         {
             "serverSide": true,
@@ -233,12 +255,24 @@ $(document).ready(function () {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" href="/interview_process/pdf"
-                    			></a>
+                                <form action="/interview_process/pdf">
+                                <input type="hidden" name="filter" id="filter" value="0">
+                                <input type="hidden" name="openDate" id="filter-apply-date" value="">    
+                                <input type="hidden" name="position" id="filter-title" value="">                            
+                                <input type="hidden" name="department" id="filter-department" value="">
+                                    <button id="pdfDownload" class="image-button" aria-label="Download pdf" 
+                                    ></button>
+                                </form>
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" href="/interview_process/excel"
-                				></a>
+                                <form action="/interview_process/excel">
+                                <input type="hidden" name="filter" id="filter" value="0">
+                                <input type="hidden" name="openDate" id="filter-apply-date" value="">    
+                                <input type="hidden" name="position" id="filter-title" value="">                            
+                                <input type="hidden" name="department" id="filter-department" value="">
+                                    <button id="excelDownload" class="image-button" aria-label="Download Excel" 
+                                    ></btutton>
+                                </form>
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -320,6 +354,9 @@ $(document).ready(function () {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
+    if(table !== undefined){
+    filterSwitch();
+    }
 });
 async function fetchTitleAndGenerateHTML() {
     try {
