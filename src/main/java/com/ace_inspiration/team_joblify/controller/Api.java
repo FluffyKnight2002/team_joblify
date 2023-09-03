@@ -179,6 +179,10 @@ public class Api {
         if(email){
             offerMailSendedService.setDataInOfferMail(emailTemplateDto);
             candidateService.offer(emailTemplateDto.getCanId());
+            SummaryDto summaryDto = candidateService.findByid(emailTemplateDto.getCanId());
+            String message = myuser.getName() + " send Offer Mail to " + emailTemplateDto.getName();
+            String link = "/candidate-view-summary?position=" + summaryDto.getApply_position()+"&candidateId="+summaryDto.getId();
+            notificationCreator.createNotification(myuser, message, link);
             return true;
         }else{
            return false;

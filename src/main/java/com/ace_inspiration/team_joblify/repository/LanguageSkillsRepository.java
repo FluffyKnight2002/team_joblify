@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface LanguageSkillsRepository extends DataTablesRepository<LanguageSkills, Long> {
 
     Optional<LanguageSkills> findByNameIgnoreCase(String name);
+
+    List<LanguageSkills> findLanguageSkillIdBySummaryId(long id);
 //    List<LanguageSkills> findLanguageSkillIdBySummaryId(long id);
 }
