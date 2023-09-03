@@ -10,8 +10,6 @@ $(document).ready(function() {
 let filterElements = [
     {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
     {name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title'},
-    {name: 'post-dropdown-item', isRemove: false, filterId: 'filter-post'},
-    {name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department'},
     {name: 'level-dropdown-item', isRemove: false, filterId: 'filter-level'},
     {name: 'selection-status-dropdown-item', isRemove: false, filterId: 'filter-selection-status'},
     {name: 'interview-status-dropdown-item', isRemove: false, filterId: 'filter-interview-status'}
@@ -222,17 +220,7 @@ $(document).ready( async function() {
                         <li class="dropdown-item filter-items"></li>
                     </ul>
                 </li>
-                 <li class="dropdown-item filter-items post-dropdown-item">
-                    <span>Post</span>
-                    <ul class="dropdown-menu dropdown-submenu postDropdown scrollable-submenu" id="post-dropdown-submenu">
-                        <li class="dropdown-item filter-items"></li>
-                    </ul>
-                </li>
-                <li class="dropdown-item filter-items department-dropdown-item">
-                    <span>Department</span>
-                    <ul class="dropdown-menu dropdown-submenu scrollable-submenu" id="department-dropdown-submenu">
-                    </ul>
-                </li>
+                
                 <li class="dropdown-item filter-items level-dropdown-item">
                     <span>Level</span>
                     <ul class="dropdown-menu dropdown-submenu ps-3" id="level-dropdown-submenu" style="top: -20px">
@@ -1318,15 +1306,13 @@ function DateFilterButton(selectedValue) {
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            var startDate = new Date(currentDate.getFullYear() - 1, 0, 1); // January 1 of the previous year
-            var endDate = new Date(currentDate.getFullYear(), 0, 1); // January 1 of the year before the previous year
+            startDate.setFullYear( currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
-            var isoEndDate = endDate.toISOString().split('T')[0]; // Convert dates to ISO format
-            console.log(isoStartDate);
-            console.log(isoEndDate);
+            console.log(startDate);
+            console.log(endDate);
 
             // Perform action for 'past_year' option
-            table.column(12).search(isoStartDate + ';' + isoEndDate).draw();
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case '':
             table.column(12).search('' + ';' + '').draw();
@@ -1346,11 +1332,11 @@ function DateFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="SelectedFilterName('Today');" data-filter-id="filter-apply-date">Today</li>
-                <li class="dropdown-item filter-items" onclick="SelectedFilterName('Last Week');" data-filter-id="filter-apply-date">Last Week</li>
-                <li class="dropdown-item filter-items" onclick="SelectedFilterName('Last Month');" data-filter-id="filter-apply-date">Last Month</li>
-                <li class="dropdown-item filter-items" onclick="SelectedFilterName('Last 6 Month');" data-filter-id="filter-apply-date">Last 6 Month</li>
-                <li class="dropdown-item filter-items" onclick="SelectedFilterName('Last Year');" data-filter-id="filter-apply-date">Last Year</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Today</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Week</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Month</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last 6 Month</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Year</li>
 
                 <li class="dropdown-item filter-items">
                     <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
@@ -1409,7 +1395,7 @@ function SelectedFilterName(item) {
     var currentDate = new Date();
     var endDate = currentDate.toISOString().split('T')[0]; // End date is today
     var startDate = new Date(currentDate);
-    switch (item) {
+    switch (selectedValue) {
         case 'Today':
             var first = currentDate.toISOString().split('T')[0];
             console.log(first) // Convert to ISO format (YYYY-MM-DD)
@@ -1445,15 +1431,13 @@ function SelectedFilterName(item) {
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            var startDate = new Date(currentDate.getFullYear() - 1, 0, 1); // January 1 of the previous year
-            var endDate = new Date(currentDate.getFullYear(), 0, 1); // January 1 of the year before the previous year
+            startDate.setFullYear( currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
-            var isoEndDate = endDate.toISOString().split('T')[0]; // Convert dates to ISO format
-            console.log(isoStartDate);
-            console.log(isoEndDate);
+            console.log(startDate);
+            console.log(endDate);
 
             // Perform action for 'past_year' option
-            table.column(12).search(isoStartDate + ';' + isoEndDate).draw();
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case '':
             table.column(12).search('' + ';' + '').draw();
@@ -1774,9 +1758,10 @@ function createSelectionStatusFilterButton(selectedValue) {
 }
 function changeSelectedFilterName(item) {
     console.log(item)
-
+    let selectedValue = $(item).text();
+    console.log(selectedValue)
     if (item) {
-        let selectedValue = $(item).text();
+
         if(selectedValue==='OFFERED' || selectedValue==='CONSIDERING' || selectedValue==='VIEWED' || selectedValue==='RECEIVED'){
             table.column(5).search($(item).text()).draw();// Get the selected value from the clicked item
             console.log("Selected Value-1 : " , selectedValue);
@@ -1802,31 +1787,34 @@ function changeSelectedFilterName(item) {
             }
             // }
         }
-    }else{
-        table.column(4).search($(item).text()).draw();
-        console.log("Selected Value-2 : " , selectedValue);
-        let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
-        let filterId = $(item).data('filter-id');
+        else{
+            console.log("hello")
+            table.column(4).search(selectedValue).draw();
+            console.log("Selected Value-2 : " , selectedValue);
+            let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
+            let filterId = $(item).data('filter-id');
 
-        // Find and update the isRemove property in filterElements
-        console.log(filterId)
-        for (let i = 0; i < filterElements.length; i++) {
-            console.log(filterElements[i].filterId)
-            if (filterElements[i].filterId === filterId) {
-                $('#' + filterElements[i].filterId).val($.trim(selectedValue));
-                break; // Exit the loop once the element is found
+            // Find and update the isRemove property in filterElements
+            console.log(filterId)
+            for (let i = 0; i < filterElements.length; i++) {
+                console.log(filterElements[i].filterId)
+                if (filterElements[i].filterId === filterId) {
+                    $('#' + filterElements[i].filterId).val($.trim(selectedValue));
+                    break; // Exit the loop once the element is found
+                }
             }
-        }
 
-        // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
-            $('input[name="datefilter2"]').val('');
-            button.text($.trim(selectedValue)); // Update the text of the button
-        }else {
-            $('.apply-date-filter-btn').text('Custom');
+            // if ($('input[name="datefilter2"]').length > 0) {
+            if(selectedValue != 'Custom') {
+                $('input[name="datefilter2"]').val('');
+                button.text($.trim(selectedValue)); // Update the text of the button
+            }else {
+                $('.apply-date-filter-btn').text('Custom');
+            }
+            // }
         }
-        // }
     }
+
 
 
 
@@ -1903,58 +1891,29 @@ function InterviewStatusFilterButton(item) {
         updateDataTable();
     }
 }
-$(document).on('click', '.selected-dropdown-remove-button', function () {
-    let filterName = $(this).data('filter-name');
+
+
+function resetFilters() {
+
+    console.log("Reset filters work");
 
     // Find and update the isRemove property in filterElements
     for (let i = 0; i < filterElements.length; i++) {
-        if (filterElements[i].name === filterName) {
-            filterElements[i].isRemove = false;
-            $('.' +filterElements[i].name).show();
-            $('#'+filterElements[i].filterId).val('');
-            break; // Exit the loop once the element is found
-        }
+        filterElements[i].isRemove = false;
+        $('.' +filterElements[i].name).show();
+        $('#' +filterElements[i].filterId).val('');
     }
+    $('.selected-dropdown-remove-button').each(function () {
+        $(this).closest('.btn-group').remove();
+    });
+    table.column(1).search('').draw();
+    table.column(4).search('').draw();
+    table.column(5).search('').draw();
+    table.column(8).search('').draw();
+    table.column(9).search('').draw();
 
-    console.log("Filter name : ", filterName);
+    $('#reset-filter').hide();
+    $('#custom-filter').show();
 
-    if(filterName === 'level-dropdown-item') {
-
-        const selectedLevels = [];
-
-        $('.level-checkbox').each(function () {
-
-            let checkbox = $(this);
-            const checkboxes2 = $('.level-filter-checkbox:checked');
-
-            // Iterate through the checked checkboxes and collect their values
-            checkboxes2.each(function () {
-                selectedLevels.push($(this).val());
-            });
-
-            console.log("Selected Levels :",selectedLevels)
-            console.log("It match : ", selectedLevels.includes(checkbox.val()));
-            if (selectedLevels.includes(checkbox.val())) {
-                console.log("checkbox change!!!!")
-                checkbox.prop('checked', true).trigger('change');
-            }
-            console.log("level-checkbox.val() ", checkbox.val());
-            console.log("checked : ", checkbox.is(":checked"));
-        });
-        table.column(9).search('').draw();
-    }else if (filterName === 'apply-date-dropdown-item') {
-        table.column(12).search('').draw();
-    }else if(filterName==='position-dropdown-item'){
-        table.column(4).search('').draw();
-    }else if (filterName === 'selection-status-dropdown-item') {
-        table.column(5).search('').draw();
-    }else if(filterName==='post-dropdown-item'){
-        table.column(1).search('').draw();
-    }else if(filterName==='interview-status-dropdown-item'){
-        table.column(8).search('').draw();
-    }
-
-    $(this).closest('.btn-group').remove();
-    checkAndToggleFilterButton();
-
-});
+    updateDataTable();
+}

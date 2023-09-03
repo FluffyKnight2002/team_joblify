@@ -1,8 +1,10 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
 import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
+import com.ace_inspiration.team_joblify.config.FirstDaySpecificationInterview;
 import com.ace_inspiration.team_joblify.dto.*;
 import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
@@ -73,6 +75,8 @@ public class CandidateController {
 
     private final InterviewProcessRepository interviewProcessRepository;
 
+    private final AllPostRepository allPostRepository;
+
     private final VacancyInfoService vacancyInfoService;
 
     private final VacancyInfoRepository vanInfoReopository;
@@ -80,7 +84,7 @@ public class CandidateController {
     private final OfferMailSendedService offerMailSendedService;
 
     private FirstDaySpecification firstDaySpecification;
-
+    private FirstDaySpecificationInterview firstDaySpecificationInterview;
     @GetMapping("/allCandidate")
     @ResponseBody
     public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
@@ -130,7 +134,16 @@ public class CandidateController {
     @ResponseBody
     public DataTablesOutput<AllPost> interviewProcess(DataTablesInput input) {
         DataTablesOutput<AllPost> allpost = allPostService.getAll(input);
-        return allpost;
+        firstDaySpecificationInterview = new FirstDaySpecificationInterview(input);
+
+        System.out.println(input);
+
+        if (firstDaySpecificationInterview == null) {
+            return allpost;
+        } else {
+            allpost = allPostRepository.findAll(input, firstDaySpecificationInterview);
+            return allpost;
+        }
     }
 
     @GetMapping("/getYear")
