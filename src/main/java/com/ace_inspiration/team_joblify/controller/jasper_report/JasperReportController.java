@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.service.ReportService;
 
 import net.sf.jasperreports.engine.JRException;
@@ -37,9 +38,13 @@ public class JasperReportController {
 			@RequestParam(name = "interviewStatus", required = false) String interviewStatus)
 			throws JRException, IOException {
 
+
+				System.out.println(openDate + position + level + selectionStatus + interviewStatus);
 		LocalDate startDate = null;
 		LocalDate endDate = null;
 		List<Level> levelList = new ArrayList<>();
+Status selection = null;
+Status interview = null;
 
 		if (filter == 1) {
 
@@ -53,7 +58,15 @@ public class JasperReportController {
 				}
 			}
 
-				System.out.println(openDate + "acwsca");
+			if(!selectionStatus.isEmpty()){
+				selection = Status.valueOf(selectionStatus);
+			}
+
+			if(!interviewStatus.isEmpty()){
+				interview = Status.valueOf(interviewStatus);
+			}
+
+				
 
 
 			if (openDate != null) {
@@ -92,8 +105,8 @@ public class JasperReportController {
 		}
 		System.out.println("start=" + startDate);
 		System.out.println("end=" + endDate);
-		return reportService.allCandidate(format, startDate, endDate, position, levelList, selectionStatus,
-				interviewStatus);
+		return reportService.allCandidate(format, startDate, endDate, position, levelList, selection,
+				interview);
 
 	}
 
