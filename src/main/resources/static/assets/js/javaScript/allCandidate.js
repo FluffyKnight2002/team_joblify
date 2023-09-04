@@ -7,6 +7,9 @@ $(document).ready(function () {
 });
 
 
+
+
+
 async function filterSwitchCandidate() {
 
     // Get a reference to the checkbox and the filter input element
@@ -18,29 +21,29 @@ async function filterSwitchCandidate() {
         if (checkbox.checked) {
             // If the checkbox is checked, set the value of the filter input to "1"
             pdfFilterInput.value = "1";
-            
+
         } else {
             // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
             pdfFilterInput.value = "0";
         }
 
-})
+    })
 }
 
 
-async function reportDownloadCandidate(){
+async function reportDownloadCandidate() {
 
     // JavaScript to handle form submission when links are clicked
-    document.getElementById('pdfDownload').addEventListener('click', function(e) {
+    document.getElementById('pdfDownload').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent the default link behavior
-        
+
         document.getElementById('combinedForm').action = '/all_candidates/pdf'; // Set the form action
         document.getElementById('combinedForm').submit(); // Submit the form
     });
 
-    document.getElementById('excelDownload').addEventListener('click', function(e) {
+    document.getElementById('excelDownload').addEventListener('click', function (e) {
         e.preventDefault(); // Prevent the default link behavior
-        
+
         document.getElementById('combinedForm').action = '/all_candidates/excel'; // Set the form action
         document.getElementById('combinedForm').submit(); // Submit the form
     });
@@ -220,7 +223,7 @@ $(document).ready(async function () {
                         return data; // For other types, return the original data
                     }
                 },
-                
+
 
             ],
             order: [[2, 'desc']]
@@ -813,8 +816,13 @@ $(document).ready(async function () {
 
     });
 
+    // Initialize Bootstrap tooltips
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 
-    if(table != undefined){
+    if (table != undefined) {
         filterSwitchCandidate();
         reportDownloadCandidate();
     }
@@ -829,7 +837,7 @@ function updateCcMails() {
     })
 }
 
-function createDatePostedFilterButton(selectedValue,a,b) {
+function createDatePostedFilterButton(selectedValue, a, b) {
     console.log('>>>>>>>>>>>>', selectedValue)
     var filterOption = $(this).find('option:selected').val();
     var currentDate = new Date();
@@ -852,7 +860,10 @@ function createDatePostedFilterButton(selectedValue,a,b) {
         selectedText = selectedValue;
         $('#filter-apply-date').val(selectedText);
     }
+
+    var isoStartDate = startDate.toISOString().split('T')[0];
     switch (selectedValue) {
+
         case 'Today':
             var first = currentDate.toISOString().split('T')[0];
             console.log(first) // Convert to ISO format (YYYY-MM-DD)
@@ -862,7 +873,7 @@ function createDatePostedFilterButton(selectedValue,a,b) {
         case 'Last Week':
             // Copy current date to calculate the start date
             startDate.setDate(currentDate.getDate() - 7); // Subtract 7 days from current date
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+
             console.log(isoStartDate); // Output: 2023-07-16 (example)
             console.log(endDate);
             // Perform action for 'last_week' option
@@ -871,7 +882,7 @@ function createDatePostedFilterButton(selectedValue,a,b) {
 
         case 'Last Month':
             startDate.setMonth(currentDate.getMonth() - 1); // Subtract 1 month
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+
             console.log(isoStartDate); // Output: 2023-07-16 (example)
             console.log(endDate); // Output: 2023-08-16 (example)
 
@@ -880,7 +891,7 @@ function createDatePostedFilterButton(selectedValue,a,b) {
             break;
         case 'Last 6 Month':
             startDate.setMonth(currentDate.getMonth() - 6); // Subtract 1 month
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+
             console.log(isoStartDate); // Output: 2023-07-16 (example)
             console.log(endDate); // Output: 2023-08-16 (example)
 
@@ -889,7 +900,7 @@ function createDatePostedFilterButton(selectedValue,a,b) {
             break;
         case 'Last Year':
             startDate.setFullYear(currentDate.getFullYear() - 1)
-            var isoStartDate = startDate.toISOString().split('T')[0];
+
             console.log(startDate);
             console.log(endDate);
 
@@ -898,16 +909,28 @@ function createDatePostedFilterButton(selectedValue,a,b) {
             break;
 
         case 'Custom':
-            // Perform action for 'past_year' option
-            table.column(12).search(a + ';' + b).draw();
+
+            // Convert the date strings into Date objects
+            var startDate = new Date(a);
+            var endDate = new Date(b);
+
+            // Format the Date objects as "yyyy-MM-dd" strings
+            var formattedStartDate = startDate.toISOString().split('T')[0];
+            var formattedEndDate = endDate.toISOString().split('T')[0];
+
+
+            data = `${formattedStartDate};${formattedEndDate}`;
+
+            table.column(12).search(data).draw();
             break;
 
         case '':
-            table.column(12).search('' + ';' + '').draw();
+            table.column(12).search('').draw();
             break;
         default:
             return false;
     }
+
     var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
@@ -1237,23 +1260,6 @@ $('#time').on('input', function () {
 
 });
 
-/*function updateDateSetting() {
-    var selectedDate = $('#date').val();
-    var emailContent = $('#emailModal #data').summernote('code');
-
-    // Update the Date Setting section in the email content
-    emailContent = emailContent.replace(/Date Setting\s+-.*\n/,
-        'Date Setting    - ' + selectedDate + '\n');
-console.log(emailContent)
-    // Replace newline characters with HTML <br> tags
-    //emailContent = emailContent.replace(/\n/g, '<br>');
-
-    // Set the updated content back to the textarea
-    $('#emailModal #data').summernote('code', emailContent);
-}*/
-// Function to get the CSRF token from the cookie
-
-
 
 
 
@@ -1555,87 +1561,81 @@ function showSelectedDropdownRemoveButton(button) {
     const removeButton = $(button).next('.selected-dropdown-remove-button');
     removeButton.show();
 }
+
 function SelectedFilterName(item) {
-    console.log(item)
-    let selectedValue = $(item).text(); // Get the selected value from the clicked item
-    console.log("Selected Value : ", selectedValue);
-    let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
-    let filterId = $(item).data('filter-id');
+    if (item) {
+        let selectedValue = $(item).text(); // Get the selected value from the clicked item
 
+
+
+        let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
+
+        let filterId = $(item).data('filter-id');
+
+        console.log(filterId + ' AKZ');
+
+        if (filterId === 'filter-title') {
+            table.column(4).search(selectedValue).draw();
+
+        } else if (filterId === 'filter-apply-date') {
+            if (selectedValue !== 'Custom') {
+                table.column(4).search(selectedValue).draw();
+            } else {
+                const inputData = $('input[name="datefilter2"]').val();
+
+                var dateRangeArray = inputData.split(" - ");
+
+                // Extract the start and end date strings
+                var startDateString = dateRangeArray[0];
+                var endDateString = dateRangeArray[1];
+
+                // Convert the date strings into Date objects
+                var startDate = new Date(startDateString);
+                var endDate = new Date(endDateString);
+
+                // Format the Date objects as "yyyy-MM-dd" strings
+                var formattedStartDate = startDate.toISOString().split('T')[0];
+                var formattedEndDate = endDate.toISOString().split('T')[0];
+
+                table.column(4).search(formattedStartDate + ';' + formattedEndDate).draw();
+            }
+
+
+        } else if (filterId === 'filter-selection-status') {
+            statusFiltered(selectedValue);
+
+        }
+    } else if (filterId === 'filter-selection-level') {
+        statusFiltered(selectedValue);
+
+    } else if (filterId === 'filter-interview-status') {
+        roleFiltered(selectedValue);
+    }
     // Find and update the isRemove property in filterElements
-    console.log(filterId)
+
     for (let i = 0; i < filterElements.length; i++) {
-        console.log(filterElements[i].filterId)
+        console.log("Filter Element Name : ", filterElements[i].name)
         if (filterElements[i].filterId === filterId) {
             $('#' + filterElements[i].filterId).val($.trim(selectedValue));
             break; // Exit the loop once the element is found
         }
     }
-    var filterOption = $(this).find('option:selected').val();
-    var currentDate = new Date();
-    var endDate = currentDate.toISOString().split('T')[0]; // End date is today
-    var startDate = new Date(currentDate);
-    switch (selectedValue) {
-        case 'Today':
-            var first = currentDate.toISOString().split('T')[0];
-            console.log(first) // Convert to ISO format (YYYY-MM-DD)
-            table.column(12).search(first).draw();
-            break;
-
-        case 'Last Week':
-            // Copy current date to calculate the start date
-            startDate.setDate(currentDate.getDate() - 7); // Subtract 7 days from current date
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
-            console.log(isoStartDate); // Output: 2023-07-16 (example)
-            console.log(endDate);
-            // Perform action for 'last_week' option
-            table.column(12).search(isoStartDate + ';' + endDate).draw();
-            break;
-
-        case 'Last Month':
-            startDate.setMonth(currentDate.getMonth() - 1); // Subtract 1 month
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
-            console.log(isoStartDate); // Output: 2023-07-16 (example)
-            console.log(endDate); // Output: 2023-08-16 (example)
-
-            // Perform action for 'last_month' option
-            table.column(12).search(isoStartDate + ';' + endDate).draw();
-            break;
-        case 'Last 6 Month':
-            startDate.setMonth(currentDate.getMonth() - 6); // Subtract 1 month
-            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
-            console.log(isoStartDate); // Output: 2023-07-16 (example)
-            console.log(endDate); // Output: 2023-08-16 (example)
-
-            // Perform action for 'last_month' option
-            table.column(12).search(isoStartDate + ';' + endDate).draw();
-            break;
-        case 'Last Year':
-            startDate.setFullYear(currentDate.getFullYear() - 1)
-            var isoStartDate = startDate.toISOString().split('T')[0];
-            console.log(startDate);
-            console.log(endDate);
-
-            // Perform action for 'past_year' option
-            table.column(12).search(isoStartDate + ';' + endDate).draw();
-            break;
-        case '':
-            table.column(12).search('' + ';' + '').draw();
-            break;
-        default:
-            return false;
-    }
 
     // if ($('input[name="datefilter2"]').length > 0) {
-    if (item != 'Custom') {
+    if (selectedValue != 'Custom') {
         $('input[name="datefilter2"]').val('');
-        button.text($.trim(selectedValue)); // Update the text of the button
+        button.text(selectedValue); // Update the text of the button
     } else {
         $('.date-posted-filter-btn').text('Custom');
     }
     // }
+
+    // updateDataTable();
 }
+}
+
+
 function handleFilterChange(columnIndex, filterValue, idKey) {
     table.column(columnIndex).search(filterValue).draw();
     currentId.delete('viId');
@@ -1804,14 +1804,14 @@ function updateFilterLevel() {
     // Iterate through the checked checkboxes and collect their values
     const selectedValues = checkboxes.map(function () {
         return this.value;
-    }).get().join('|');
+    }).get().join('+');
     console.log('satge-1', selectedValues)
     table.column(9).search(selectedValues).draw()
     if (selectedLevels.length === 0) {
         console.log("selectedLevels ", selectedLevels)
         const selectedValues = checkboxes2.map(function () {
             return this.value;
-        }).get().join('|');
+        }).get().join('+');
         console.log('satge-2', selectedValues)
         table.column(9).search(selectedValues).draw()
     } else {
@@ -2088,7 +2088,7 @@ function resetFilters() {
     $('.selected-dropdown-remove-button').each(function () {
         $(this).closest('.btn-group').remove();
     });
-  
+
     table.column(4).search('').draw();
     table.column(5).search('').draw();
     table.column(8).search('').draw();

@@ -137,12 +137,14 @@ public class ReportServiceImplement implements ReportService {
 
   @Override
   public ResponseEntity<byte[]> allCandidate(String format, LocalDate startDate, LocalDate endDate, String position,
-      List<String> level, String selectionStatus, String interviewStatus) throws JRException, IOException {
+      List<Level> level, Status selectionStatus, Status interviewStatus) throws JRException, IOException {
 
     CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
     CriteriaQuery<AllCandidatesReport> criteriaQuery = criteriaBuilder.createQuery(AllCandidatesReport.class);
     Root<AllCandidatesReport> root = criteriaQuery.from(AllCandidatesReport.class);
     List<Predicate> predicates = new ArrayList<>();
+
+        System.out.println(level.size());
 
     // Check if all parameters are null, and if so, return all records
     if (startDate != null && endDate != null) {
@@ -159,15 +161,19 @@ public class ReportServiceImplement implements ReportService {
       predicates.add(criteriaBuilder.equal(root.get("applyPosition"), position));
     }
 
-    if (!level.isEmpty()) {
-      predicates.add(criteriaBuilder.equal(root.get("lvl"), level));
-    }
+    if (level != null && !level.isEmpty()) { // Check if level is not empty
+      List<Predicate> levelPredicates = new ArrayList<>();
+      level.forEach(lvl -> {
+          levelPredicates.add(criteriaBuilder.equal(root.get("lvl"), lvl)); // Use 'equal' for each level
+      });
+      predicates.add(criteriaBuilder.or(levelPredicates.toArray(new Predicate[0]))); // Combine level predicates with 'or'
+  }
 
-    if (!selectionStatus.isEmpty()) {
+    if (selectionStatus != null) {
       predicates.add(criteriaBuilder.equal(root.get("selectionStatus"), selectionStatus));
     }
 
-    if (!interviewStatus.isEmpty()) {
+    if (interviewStatus != null) {
       predicates.add(criteriaBuilder.equal(root.get("interviewStatus"), interviewStatus));
     }
     if (!predicates.isEmpty()) {
