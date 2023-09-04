@@ -6,18 +6,53 @@ let filterElements = [
     { name: 'department-dropdown-item', isRemove: false, filterId: 'filter-department' },
 ];
 
-function pdfDownload(){
-    console.log("run");
-    fetch("/interview_process/pdf")
+async function filterSwitch() {
+
+    // Get a reference to the checkbox and the filter input element
+    const checkbox = document.getElementById("withFilter");
+    const pdfFilterInput = document.getElementById("filter");
+
+    // Add an event listener to the checkbox to monitor changes
+    checkbox.addEventListener("change", function () {
+        if (checkbox.checked) {
+            // If the checkbox is checked, set the value of the filter input to "1"
+            pdfFilterInput.value = "1";
+
+        } else {
+            // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
+            pdfFilterInput.value = "0";
+        }
+
+})
 }
 
-function excelDownload(){
-    console.log("run");
-    fetch("/interview_process/excel")
+
+async function reportDownload(){
+
+    // JavaScript to handle form submission when links are clicked
+    document.getElementById('pdfDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        document.getElementById('combinedForm').action = '/interview_process/pdf'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
+    });
+
+    document.getElementById('excelDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        document.getElementById('combinedForm').action = '/interview_process/excel'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
+    });
+
+
 }
 
 
 $(document).ready(function () {
+
+
+
+
 
     table = $('#table2').DataTable(
         {
@@ -88,8 +123,8 @@ $(document).ready(function () {
                     },
                     sortable: false
 
-														
-															
+
+
 														},
                 {
                     targets: 6,
@@ -148,7 +183,7 @@ $(document).ready(function () {
                     },
                     sortable: false
                 },
-												
+
 												],
 												order:[[0,'desc']]
 
@@ -230,12 +265,18 @@ $(document).ready(function () {
 						</div>
             			<div class="row">
             				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
-                    			></a>
+                                
+                                
+                                    <a id="pdfDownload" class="image-button" aria-label="Download pdf" 
+                                    ></a>
+                                
                     		</div>
                     		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
-                				></a>
+                                
+                                
+                                    <a id="excelDownload" class="image-button" aria-label="Download Excel" 
+                                    ></a>
+                                
                 			</div>
                 		</div>
                 		<div class="text-center row">
@@ -290,6 +331,8 @@ $(document).ready(function () {
             const startDate = picker.startDate.format('MM/DD/YYYY');
             const endDate = picker.endDate.format('MM/DD/YYYY');
 
+            console.log(startDate + 'aaaaaaaa' + endDate);
+
             $(this).val(startDate + ' - ' + endDate);
 
             // Set the start and end times in your input fields
@@ -318,6 +361,18 @@ $(document).ready(function () {
         });
 
     });
+
+    // Initialize Bootstrap tooltips
+    let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    if (table !== undefined) {
+        filterSwitch();
+
+        reportDownload();
+    }
 });
 /////////////////////////////////////////////////////////////
 async function fetchTitleAndGenerateHTML() {

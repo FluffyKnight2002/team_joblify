@@ -33,7 +33,6 @@ public class UserServiceImplement implements UserService {
     private final DepartmentRepository departmentRepository;
     private final ResourceLoader resourceLoader;
     private final SessionRegistry sessionRegistry;
-    private final MyUserDetailsService myUserDetailsService;
 
     @Value("${app.default.user.password}")
     private String password;

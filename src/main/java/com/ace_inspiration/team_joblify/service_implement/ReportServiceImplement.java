@@ -3,6 +3,8 @@ package com.ace_inspiration.team_joblify.service_implement;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,10 +18,21 @@ import org.springframework.util.ResourceUtils;
 
 import com.ace_inspiration.team_joblify.entity.AllCandidatesReport;
 import com.ace_inspiration.team_joblify.entity.AllPost;
+import com.ace_inspiration.team_joblify.entity.InterviewProcess;
+import com.ace_inspiration.team_joblify.entity.Level;
+import com.ace_inspiration.team_joblify.entity.Role;
+import com.ace_inspiration.team_joblify.entity.Status;
 import com.ace_inspiration.team_joblify.repository.AllCandidatesReportRepository;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.service.ReportService;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -32,17 +45,61 @@ import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 @Service
+@RequiredArgsConstructor
 public class ReportServiceImplement implements ReportService {
-  @Autowired
-  private AllPostRepository allPostRepository;
 
-  @Autowired
-  private AllCandidatesReportRepository allCandidatesReportRepository;
+  private final AllPostRepository allPostRepository;
+
+  private final AllCandidatesReportRepository allCandidatesReportRepository;
+
+  private final EntityManager entityManager;
 
   @Override
-  public ResponseEntity<byte[]> interviewProcess(String format) throws JRException, IOException {
+  public ResponseEntity<byte[]> interviewProcess(String format, LocalDate startDate,
+      LocalDate endDate, String department, String position) throws JRException, IOException {
 
-    List<AllPost> allPosts = allPostRepository.findAll();
+    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<AllPost> criteriaQuery = criteriaBuilder.createQuery(AllPost.class);
+    Root<AllPost> root = criteriaQuery.from(AllPost.class);
+    List<Predicate> predicates = new ArrayList<>();
+
+
+
+    if (startDate != null && endDate != null) {
+      predicates.add(criteriaBuilder.between(root.get("openDate"), startDate, endDate));
+    } else if (startDate != null) {
+      predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("openDate"), startDate));
+    } else if (endDate != null) {
+      predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("openDate"), endDate));
+    }
+    
+    // Check and add predicates for department
+    if (!department.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("department"), department));
+    }
+
+    // Check and add predicates for position
+    if (!position.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("position"), position));
+    }
+
+    // Combine all predicates using AND
+    if (!predicates.isEmpty()) {
+      criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+  }
+
+  TypedQuery<AllPost> query = entityManager.createQuery(criteriaQuery);
+
+  List<AllPost> allPosts;
+  if (predicates.isEmpty()) {
+      // If all values are null, find all records
+      CriteriaQuery<AllPost> selectAllQuery = criteriaBuilder.createQuery(AllPost.class);
+      Root<AllPost> selectAllRoot = selectAllQuery.from(AllPost.class);
+      allPosts = entityManager.createQuery(selectAllQuery.select(selectAllRoot)).getResultList();
+  } else {
+      allPosts = query.getResultList();
+  }
+
     System.err.println(allPosts);
 
     File file = ResourceUtils.getFile("classpath:interview_process.jrxml");
@@ -79,10 +136,57 @@ public class ReportServiceImplement implements ReportService {
   }
 
   @Override
-  public ResponseEntity<byte[]> allCandidate(String format) throws JRException, IOException {
+  public ResponseEntity<byte[]> allCandidate(String format, LocalDate startDate, LocalDate endDate, String position,
+      List<String> level, String selectionStatus, String interviewStatus) throws JRException, IOException {
 
-    List<AllCandidatesReport> allCandidatesReports = allCandidatesReportRepository.findAll();
-    System.err.println(allCandidatesReports);
+    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+    CriteriaQuery<AllCandidatesReport> criteriaQuery = criteriaBuilder.createQuery(AllCandidatesReport.class);
+    Root<AllCandidatesReport> root = criteriaQuery.from(AllCandidatesReport.class);
+    List<Predicate> predicates = new ArrayList<>();
+
+    // Check if all parameters are null, and if so, return all records
+    if (startDate != null && endDate != null) {
+      predicates.add(criteriaBuilder.between(root.get("applyDate"), startDate, endDate));
+    } else if (startDate != null) {
+      predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("applyDate"), startDate));
+    } else if (endDate != null) {
+      predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("applyDate"), endDate));
+    }
+
+  
+
+    if (!position.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("applyPosition"), position));
+    }
+
+    if (!level.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("lvl"), level));
+    }
+
+    if (!selectionStatus.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("selectionStatus"), selectionStatus));
+    }
+
+    if (!interviewStatus.isEmpty()) {
+      predicates.add(criteriaBuilder.equal(root.get("interviewStatus"), interviewStatus));
+    }
+    if (!predicates.isEmpty()) {
+      criteriaQuery.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
+  }
+
+  TypedQuery<AllCandidatesReport> query = entityManager.createQuery(criteriaQuery);
+
+  List<AllCandidatesReport> allCandidatesReports;
+  if (predicates.isEmpty()) {
+      // If all values are null, find all records
+      CriteriaQuery<AllCandidatesReport> selectAllQuery = criteriaBuilder.createQuery(AllCandidatesReport.class);
+      Root<AllCandidatesReport> selectAllRoot = selectAllQuery.from(AllCandidatesReport.class);
+      allCandidatesReports = entityManager.createQuery(selectAllQuery.select(selectAllRoot)).getResultList();
+  } else {
+      allCandidatesReports = query.getResultList();
+  }
+
+  System.err.println(allCandidatesReports);
 
     File file = ResourceUtils.getFile("classpath:all_candidates.jrxml");
     JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());

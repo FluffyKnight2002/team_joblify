@@ -1,27 +1,60 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $('#data').summernote({
         height: 'auto'
     });
-    $('#data_1').summernote({height: 'auto'});
+    $('#data_1').summernote({ height: 'auto' });
 
 });
 
-function pdfDownload(){
-    console.log("run");
-    fetch("/all_candidates/pdf")
+
+async function filterSwitchCandidate() {
+
+    // Get a reference to the checkbox and the filter input element
+    const checkbox = document.getElementById("withFilter");
+    const pdfFilterInput = document.getElementById("filter");
+
+    // Add an event listener to the checkbox to monitor changes
+    checkbox.addEventListener("change", function () {
+        if (checkbox.checked) {
+            // If the checkbox is checked, set the value of the filter input to "1"
+            pdfFilterInput.value = "1";
+
+        } else {
+            // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
+            pdfFilterInput.value = "0";
+        }
+
+})
 }
 
-function excelDownload(){
-    console.log("run");
-    fetch("/all_candidates/excel")
+
+async function reportDownloadCandidate(){
+
+    // JavaScript to handle form submission when links are clicked
+    document.getElementById('pdfDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        document.getElementById('combinedForm').action = '/all_candidates/pdf'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
+    });
+
+    document.getElementById('excelDownload').addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        document.getElementById('combinedForm').action = '/all_candidates/excel'; // Set the form action
+        document.getElementById('combinedForm').submit(); // Submit the form
+    });
+
+
 }
+
 
 let filterElements = [
-    {name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date'},
-    {name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title'},
-    {name: 'level-dropdown-item', isRemove: false, filterId: 'filter-level'},
-    {name: 'selection-status-dropdown-item', isRemove: false, filterId: 'filter-selection-status'},
-    {name: 'interview-status-dropdown-item', isRemove: false, filterId: 'filter-interview-status'}
+    { name: 'apply-date-dropdown-item', isRemove: false, filterId: 'filter-apply-date' },
+    { name: 'position-dropdown-item', isRemove: false, filterId: 'filter-title' },
+    { name: 'level-dropdown-item', isRemove: false, filterId: 'filter-level' },
+    { name: 'selection-status-dropdown-item', isRemove: false, filterId: 'filter-selection-status' },
+    { name: 'interview-status-dropdown-item', isRemove: false, filterId: 'filter-interview-status' }
 ];
 var table;
 var currentId = new URLSearchParams(window.location.search);
@@ -31,13 +64,13 @@ var position1 = currentId.get("position");
 var select = currentId.get("selection");
 var interview1 = currentId.get("interview");
 var postId = currentId.get("postId");
-var candidateId=currentId.get('candidateId');
+var candidateId = currentId.get('candidateId');
 var ccMails = [];
 var updatedString = null;
 var concatenatedValue = null;
 let role;
 
-$(document).ready( async function() {
+$(document).ready(async function () {
     const isHidden = document.getElementById('second');
     const response = await fetch('/authenticated-user-data', {
         method: 'POST',
@@ -50,9 +83,9 @@ $(document).ready( async function() {
         const [userDetails, passwordMatches] = await response.json();
         role = await userDetails.user.role;
 
-        if(role==='DEFAULT_HR' || role==='SENIOR_HR'){
+        if (role === 'DEFAULT_HR' || role === 'SENIOR_HR') {
             document.getElementById('second').hidden = false;
-        }else{
+        } else {
             console.log(isHidden)
             document.getElementById('second').hidden = true;
 
@@ -61,7 +94,7 @@ $(document).ready( async function() {
 
 
 
-    $('#emailModal').on('show.bs.modal', function() {
+    $('#emailModal').on('show.bs.modal', function () {
         // Reset specific input fields, selects, and textarea inside the form
         $('#send-mail').find('input[type="date"], input[type="time"], select, textarea').val('');
         $('#data').summernote('reset');
@@ -134,6 +167,9 @@ $(document).ready( async function() {
                 {
                     targets: 7,
                     data: "email",
+                    render: function (data, type, row) {
+                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invert Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invert Mail</a>';
+                    data: "email",
                     render: function(data, type, row) {
                         return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
                     },
@@ -193,7 +229,7 @@ $(document).ready( async function() {
         });
     // Assuming you have initialized DataTable properly
     let searchRow = $('#table1_filter').closest('.row');
-    $('.dt-row').css('margin-bottom','40px')
+    $('.dt-row').css('margin-bottom', '40px')
     let recentFilterDropdownCon = `<div class="col-8" id="recent-filter-dropdown-con"></div>`;
     let resetFilterButton = `
         <div id="reset-filter" class="mt-3 col-1 text-center">
@@ -299,37 +335,36 @@ $(document).ready( async function() {
     `;
     let reportButtonCon =
         `<div class="col-auto pt-2" id="report-button-con">
-			<div class="row">
-				<div class="col-4">
-					<div class="text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Download CV">
-            			<button id="download" class="image-button" style="transform: translate(-7%,77%)" aria-label="Download CV"></button>
-					</div>
-            		</div>
-            		<div class="col-8 p-0 bg-primary rounded px-1">
-            			<div class="text-center row">
-                			<div class="text-light fw-bolder fs-6" >Reporting</div>
-						</div>
-            			<div class="row">
-            <div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            <a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
-                >  </a>
-</div>
+        <div class="row">
+            <div class="col-4">
+                <div class="text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Download CV">
+                    <button id="download" class="image-button" style="transform: translate(-7%,77%)" aria-label="Download CV"></button>
+                </div>
+            </div>
+            <div class="col-8 p-0 bg-primary rounded px-1">
+                <div class="text-center row">
+                    <div class="text-light fw-bolder fs-6">Reporting</div>
+                </div>
+                <div class="row">
+                    <div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
+                        <a id="pdfDownload" class="image-button" aria-label="Download pdf" 
+                        ></a>
+                    </div>
                     <div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-          <a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
-               ></a>
-              </div>
-               </div>
-                		<div class="text-center row">
+                        <a id="excelDownload" class="image-button" aria-label="Download Excel" 
+                        ></a>
+                    </div>
+                </div>
+                <div class="text-center row">
                 			<div class="form-check form-switch">
                                 <label class="form-check-label text-light" for="withFiler" style="font-size: 0.8rem">Including filter</label>
-                                <input class="form-check-input" type="checkbox" name="withFilter" id="withFilter" style="font-size: 0.7rem;transform: translate(5px,5px);
-}">
+                                <input class="form-check-input" type="checkbox" name="withFilter" id="withFilter" style="font-size: 0.7rem;transform: translate(5px,5px);}">
                             </div>
-						</div>
-            		</div>
-            	</div>
-			</div>  
-		</div>`;
+				</div>
+            </div>
+        </div>
+    </div>
+    `;
     $(customFilterHtml).appendTo(searchRow);
     $(resetFilterButton).appendTo(searchRow);
     $('#reset-filter').hide();
@@ -440,7 +475,7 @@ $(document).ready( async function() {
 
     $('#selectAll').on(
         'change',
-        function() {
+        function () {
             var checkboxes = $('#table1').find(
                 ':checkbox');
             checkboxes
@@ -451,7 +486,7 @@ $(document).ready( async function() {
         });
 
     $('#table1').on('change', ':checkbox',
-        function() {
+        function () {
             var checkboxes = $('#table1')
                 .find(':checkbox');
             var selectAllCheckbox = $('#selectAll');
@@ -474,22 +509,22 @@ $(document).ready( async function() {
         });
 
 
-    $('#table1 tbody').on('change', '#changeStatus', function() {
+    $('#table1 tbody').on('change', '#changeStatus', function () {
         var selectedValue = $(this).val();
         var tr = $(this).closest('tr');
         var row = table.row(tr).data();
         console.log(selectedValue)
-        if(selectedValue==='ACCEPTED'){
+        if (selectedValue === 'ACCEPTED') {
             $('#confirmationModal').modal('show'); // Show the modal
             $('#confirmationModal .modal-body').html('Are you sure Accepted ' + row.name + '?');
-            $('#confirmActionBtn').on('click', function() {
+            $('#confirmActionBtn').on('click', function () {
 
                 performAction(row.id, selectedValue);
                 $('#confirmationModal').modal('hide');
-                tr.find('td').find('select[id="changeStatus"]').prop('disabled',true);
+                tr.find('td').find('select[id="changeStatus"]').prop('disabled', true);
             });
 
-        }else{
+        } else {
             fetch('/changeInterview?id=' + row.id + '&status=' + selectedValue, {
                 method: 'POST',
                 headers: {
@@ -500,15 +535,15 @@ $(document).ready( async function() {
                 .then(response => {
                     if (response.ok) {
                         iziToast.success({
-                            title:'Success',
-                            position:'topCenter',
-                            message:'Success Change Stataus',
+                            title: 'Success',
+                            position: 'topCenter',
+                            message: 'Success Change Stataus',
                         })
                     } else {
                         iziToast.error({
-                            title:'Error',
-                            position:'topCenter',
-                            message:'Not Change Stataus',
+                            title: 'Error',
+                            position: 'topCenter',
+                            message: 'Not Change Stataus',
                         })
 
                     }
@@ -527,11 +562,11 @@ $(document).ready( async function() {
     $.ajax({
         url: '/allPositions',
         type: 'GET',
-        success: function(response) {
+        success: function (response) {
             let submenuHTML = '';
 
             let currentLetter = null;
-            $.each(response, function(index, item) {
+            $.each(response, function (index, item) {
                 const startingLetter = item.name[0].toUpperCase();
                 if (startingLetter !== currentLetter) {
                     submenuHTML += `<li style="background: #1e497b"><b class="ps-2 text-white">${startingLetter}</b></li>`;
@@ -545,7 +580,7 @@ $(document).ready( async function() {
             });
             $('#position-dropdown-submenu').html(submenuHTML);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log(status);
             console.error('Error fetching positions:', error);
         }
@@ -553,11 +588,11 @@ $(document).ready( async function() {
     $.ajax({
         url: '/post',
         type: 'GET',
-        success: function(response) {
+        success: function (response) {
             let submenuHTML = '';
 
             let currentLetter = null;
-            $.each(response, function(index, post) {
+            $.each(response, function (index, post) {
                 const startingLetter = post.openDate.substring(0, 4);
                 if (startingLetter !== currentLetter) {
                     submenuHTML += `<li style="background: #1e497b"><b class="ps-2 text-white">${startingLetter}</b></li>`;
@@ -571,24 +606,24 @@ $(document).ready( async function() {
             });
             $('#post-dropdown-submenu').html(submenuHTML);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.log(status);
             console.error('Error fetching positions:', error);
         }
     });
 
-    selectElement.on('change', function() {
+    selectElement.on('change', function () {
         handleFilterChange(4, this.value, 'position');
     });
 
-    statusSelect.on('change', function() {
+    statusSelect.on('change', function () {
         handleFilterChange(5, this.value, 'selection');
     });
 
-    interview.on('change', function() {
+    interview.on('change', function () {
         handleFilterChange(8, this.value, 'interview');
     });
-    selectELement1.on('change', function() {
+    selectELement1.on('change', function () {
         handleFilterChange(1, this.value, 'postId');
     })
 
@@ -596,19 +631,19 @@ $(document).ready( async function() {
         console.log(id)
         table.column(1).search(id).draw();
         table.column(4).search(dname).draw();
-        selectElement.on('change', function() {
+        selectElement.on('change', function () {
             table.column(1).search("").draw();
             handleFilterChange(4, this.value, 'position');
         });
-        statusSelect.on('change', function() {
+        statusSelect.on('change', function () {
             table.column(1).search("").draw();
             handleFilterChange(5, this.value, 'selection');
         });
-        interview.on('change', function() {
+        interview.on('change', function () {
             table.column(1).search("").draw();
             handleFilterChange(8, this.value, 'interview');
         });
-        selectELement1.on('change', function() {
+        selectELement1.on('change', function () {
             table.column(1).search("").draw();
             handleFilterChange(1, this.value, 'postId');
         });
@@ -633,7 +668,7 @@ $(document).ready( async function() {
             interview.val(postId);
             filters.push({ column: 1, value: postId });
         }
-        if(candidateId){
+        if (candidateId) {
             filters.push({ column: 0, value: candidateId });
         }
         filters.forEach(filter => {
@@ -649,12 +684,12 @@ $(document).ready( async function() {
     //CV dowload starst
     var downloadButton = document.querySelector('#download');
 
-    downloadButton.addEventListener('click', async function() {
+    downloadButton.addEventListener('click', async function () {
         var selectedIds = [];
         var checkboxe = document.querySelectorAll('.ck:checked');
 
 
-        checkboxe.forEach(function(checkbox) {
+        checkboxe.forEach(function (checkbox) {
             selectedIds.push(checkbox.value);
         });
 
@@ -688,59 +723,9 @@ $(document).ready( async function() {
             console.log("Select at least one checkbox.");
         }
     });
-    //CV download end
 
-    // //Pdf download Start
-    // $('#pdfDownload').on('click',function (){
-    // 	fetch('/all_candidates/pdf')
-    // 		.then(response => {
-    // 		if (response.ok) {
-    // 			iziToast.success({
-    // 				title:'Success',
-    // 				position:'topCenter',
-    // 				message:'Success Download PDF',
-    // 			})
-    // 		} else {
-    // 			iziToast.error({
-    // 				title:'Error',
-    // 				position:'topCenter',
-    // 				message:'Not Download PDF',
-    // 			})
-    //
-    // 		}
-    // 	});
-    // })
-    // //Pdf Download End
-    //
-    // //excel download start
-    // $('#excelDownload').on('click',function (){
-    // 	fetch('/all_candidates/excel',{
-    // 		method:'POST',
-    // 		headers: {
-    // 			'Content-Type': 'application/json;charset=utf-8',
-    // 			[csrfHeader]: csrfToken
-    //
-    // 		}
-    // 	})	.then(response => {
-    // 		if (response.ok) {
-    // 			iziToast.success({
-    // 				title:'Success',
-    // 				position:'topCenter',
-    // 				message:'Success Download excel',
-    // 			})
-    // 		} else {
-    // 			iziToast.error({
-    // 				title:'Error',
-    // 				position:'topCenter',
-    // 				message:'Not Download excel',
-    // 			})
-    //
-    // 		}
-    // 	});
-    // })
-    //excel download end
 
-    $('.cc').keyup(function(data) {
+    $('.cc').keyup(function (data) {
         if (data.keyCode === 13) {
             var value = $(this).val();
             ccMails.push($(this).val());
@@ -762,7 +747,7 @@ $(document).ready( async function() {
             }
         }
     })
-    $(document).on("click", ".remove-skill", function() {
+    $(document).on("click", ".remove-skill", function () {
         var count = $(this).data("count");
         var valueToRemove = $("#skill" + count + " .default-font").text().trim();
         // Remove the element with the matching value from the array
@@ -773,7 +758,7 @@ $(document).ready( async function() {
 
         $("#skill" + count).remove();
         updateCcMails();
-        console.log("ConcateValue:",concatenatedValue)
+        console.log("ConcateValue:", concatenatedValue)
         console.log("Removed count:", count);
         console.log("Value to remove:", valueToRemove);
         console.log("Updated ccMails array:", ccMails);
@@ -830,14 +815,170 @@ $(document).ready( async function() {
 /////////////////////////
 function updateCcMails() {
 
-    ccMails.forEach(function() {
+    ccMails.forEach(function () {
         concatenatedValue = ccMails.join(',');
         $('#mails').val(concatenatedValue);
         console.log(concatenatedValue);
     })
 }
 
-//document ready end
+function createDatePostedFilterButton(selectedValue,a,b) {
+    console.log('>>>>>>>>>>>>', selectedValue)
+    var filterOption = $(this).find('option:selected').val();
+    var currentDate = new Date();
+    var endDate = currentDate.toISOString().split('T')[0]; // End date is today
+    var startDate = new Date(currentDate);
+
+    filterElements[0].isRemove = true;
+    $('.apply-date-dropdown-item').hide();
+
+    let selectedText = null;
+
+
+    if (selectedValue === 'Custom') {
+        $('#filter-start-date').val(a);
+        $('#filter-end-date').val(b);
+        selectedText = selectedValue;
+        $('#filter-apply-date').val(a + '-' + b);
+
+    } else {
+        selectedText = selectedValue;
+        $('#filter-apply-date').val(selectedText);
+    }
+    switch (selectedValue) {
+        case 'Today':
+            var first = currentDate.toISOString().split('T')[0];
+            console.log(first) // Convert to ISO format (YYYY-MM-DD)
+            table.column(12).search(first).draw();
+            break;
+
+        case 'Last Week':
+            // Copy current date to calculate the start date
+            startDate.setDate(currentDate.getDate() - 7); // Subtract 7 days from current date
+            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+            console.log(isoStartDate); // Output: 2023-07-16 (example)
+            console.log(endDate);
+            // Perform action for 'last_week' option
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
+            break;
+
+        case 'Last Month':
+            startDate.setMonth(currentDate.getMonth() - 1); // Subtract 1 month
+            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+            console.log(isoStartDate); // Output: 2023-07-16 (example)
+            console.log(endDate); // Output: 2023-08-16 (example)
+
+            // Perform action for 'last_month' option
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
+            break;
+        case 'Last 6 Month':
+            startDate.setMonth(currentDate.getMonth() - 6); // Subtract 1 month
+            var isoStartDate = startDate.toISOString().split('T')[0]; // Convert start date to ISO format
+            console.log(isoStartDate); // Output: 2023-07-16 (example)
+            console.log(endDate); // Output: 2023-08-16 (example)
+
+            // Perform action for 'last_month' option
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
+            break;
+        case 'Last Year':
+            startDate.setFullYear(currentDate.getFullYear() - 1)
+            var isoStartDate = startDate.toISOString().split('T')[0];
+            console.log(startDate);
+            console.log(endDate);
+
+            // Perform action for 'past_year' option
+            table.column(12).search(isoStartDate + ';' + endDate).draw();
+            break;
+
+        case 'Custom':
+            // Perform action for 'past_year' option
+            table.column(12).search(a + ';' + b).draw();
+            break;
+
+        case '':
+            table.column(12).search('' + ';' + '').draw();
+            break;
+        default:
+            return false;
+    }
+    var selectedDropdown = `
+        <div class="btn-group mt-3 p-2 position-relative">
+            <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
+                recent-filter-dropdown-btn date-posted-filter-btn"
+                onmouseenter="showSelectedDropdownRemoveButton(this);"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                ${selectedValue}
+            </button>
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="apply-date-dropdown-item">
+                <i class="bi bi-x"></i>
+            </span>
+            <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="date-posted-filter-dropdown-submenu">
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Today</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Week</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Month</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last 6 Month</li>
+                <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Year</li>
+
+                <li class="dropdown-item filter-items">
+                    <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
+                </li>
+            </ul>
+        </div>`;
+
+    // Append the selectedDropdown to the appropriate container
+    $('#recent-filter-dropdown-con').append(selectedDropdown);
+    $(function () {
+        // Replace value of date range
+        replaceDateFilter2Value();
+        // Initialize the daterangepicker
+        $('input[name="datefilter2"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            }
+        });
+
+        // Handle apply event to update the input value and set start and end times
+        $('input[name="datefilter2"]').on('apply.daterangepicker', function (ev, picker) {
+            const startDate = picker.startDate.format('MM/DD/YYYY');
+            const endDate = picker.endDate.format('MM/DD/YYYY');
+
+            $(this).val(startDate + ' - ' + endDate);
+
+
+
+            $('#filter-start-date').val(startDate);
+            $('#filter-end-date').val(endDate);
+            $('.datePostedDropdown').hide();
+
+            // Get the selected item with a data-filter-id attribute
+            const selectedFilterItem = $('<li class="dropdown-item filter-items" data-filter-id="filter-apply-date">Custom</li>');
+
+            // Call the function and pass the selected item
+            changeSelectedFilterName(selectedFilterItem);
+
+        });
+
+        // Handle cancel event to clear the input value and reset start and end times
+        $('input[name="datefilter2"]').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            $('#filter-start-time').val('');
+            $('#filter-end-time').val('');
+        });
+
+        $('.daterangepicker').hover(function () {
+            $('.datePostedDropdown').css('display', 'block');
+        }, function () {
+            $('.datePostedDropdown').css('display', '');
+        });
+    });
+
+    // Hide other remove buttons and show the recent-filter-dropdown-btn
+    $('.selected-dropdown-remove-button').hide();
+    $('.recent-filter-dropdown-btn').show();
+
+
+}
 
 
 
@@ -875,7 +1016,7 @@ function format(d) {
 
 }
 
-$('#table1 tbody').on('click', '.btn-outline-primary', function() {
+$('#table1 tbody').on('click', '.btn-outline-primary', function () {
     var modalTitle = $(this).data('modal-title');
     var row = table.row($(this).closest('tr')).data();
 
@@ -888,24 +1029,24 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
     $('#offer-Email-Modal .vacancy_id').val(row.viId);
 
 
-    $('#type').on('change',function(){
-        const type=$(this).val();
-        const content=getofferMail(type,row.name);
-        $('#data_1').summernote('code',content);
+    $('#type').on('change', function () {
+        const type = $(this).val();
+        const content = getofferMail(type, row.name);
+        $('#data_1').summernote('code', content);
     });
 
-    $('#where').on('change', function() {
+    $('#where').on('change', function () {
         const type = $(this).val();
-        const updatedContent = getEmailContent(type, row.name,row.id);
+        const updatedContent = getEmailContent(type, row.name, row.id);
         $('#data').summernote('code', updatedContent);
     });
-    $('#add-date').on('click', function() {
+    $('#add-date').on('click', function () {
         const edit = '<span style="color:red" class="date-setting">Date</span>'
         $('#data').summernote('pasteHTML', edit);
         edit = '';
 
     })
-    $('#add-time').on('click', function() {
+    $('#add-time').on('click', function () {
         const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
         $('#data').summernote('pasteHTML', edit);
         edit = '';
@@ -915,7 +1056,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 
 
     const fetchValueButton = document.getElementById('fetchValueButton');
-    fetchValueButton.addEventListener('click', function() {
+    fetchValueButton.addEventListener('click', function () {
         const hiddenInput = document.getElementById('content');
         const to = document.getElementById('to');
         const subject = document.getElementById('subject');
@@ -924,8 +1065,8 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
         const time = document.getElementById('time');
         const type = document.getElementById('where');
         const stage = document.getElementById('interview-stage-select');
-        const canid=document.getElementById('candidate-id');
-        const name=document.getElementById('userName');
+        const canid = document.getElementById('candidate-id');
+        const name = document.getElementById('userName');
         updateCcMails();
         if ($('#data').summernote('isEmpty')) {
 
@@ -943,7 +1084,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
             hiddenInput.value = document.querySelector('#data').value;
             console.log(stage.value)
             const data = {
-                name:name.value,
+                name: name.value,
                 to: to.value,
                 ccmail: ccMails,
                 subject: subject.value,
@@ -983,7 +1124,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
                                 '<div class="loader"></div>' +
                                 '<div class="loader-txt">' +
                                 '<h3 class="text-white">Email was not sent</h3>' +
-                                '<h3 class="text-white">Something have error</h3>'+
+                                '<h3 class="text-white">Something have error</h3>' +
                                 '<div>' +
                                 `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
                                 '</div>');
@@ -1230,8 +1371,8 @@ function getEmailContent(type, name,id) {
 
 function closeModal() {
     let modal = $('#loadMe');
-    let colse=$('#confirmationModal');
-    if(colse.length){
+    let colse = $('#confirmationModal');
+    if (colse.length) {
         colse.modal('hide');
         table.ajax.reload();
     }
@@ -1268,8 +1409,8 @@ function performAction(id, status) {
         });
 }
 
-async function seeMoreFetch(id){
-    const response = await fetch("/seeMore?id="+id, {
+async function seeMoreFetch(id) {
+    const response = await fetch("/seeMore?id=" + id, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -1278,37 +1419,16 @@ async function seeMoreFetch(id){
 
     })
 
-    if(response.ok){
-        const data =await response.json();
+    if (response.ok) {
+        const data = await response.json();
         return data
-    }else {
+    } else {
         throw new Error('Failed to fetch data'); // Throw an error in case of failure
     }
 }
-/*
-document.addEventListener('DOMContentLoaded', function() {
-	var downloadButton = document.querySelector('#download');
 
-	downloadButton.addEventListener('click', function() {
-		var selectedIds = [];
-		var checkboxes = document.querySelectorAll('.ck:checked');
-
-		checkboxes.forEach(function(checkbox) {
-			selectedIds.push(checkbox.value);
-		});
-
-		if (selectedIds.length > 0) {
-			var downloadUrl = '/downloadFile?id=' + selectedIds.join(',');
-			window.location.href = downloadUrl;
-		} else {
-			console.log("No checkboxes are selected.");
-		}
-	});
-});
-
-*/
-function DateFilterButton(selectedValue,start,end) {
-    console.log('>>>>>>>>>>>>',selectedValue)
+function DateFilterButton(selectedValue) {
+    console.log('>>>>>>>>>>>>', selectedValue)
     var filterOption = $(this).find('option:selected').val();
     var currentDate = new Date();
     var endDate = currentDate.toISOString().split('T')[0]; // End date is today
@@ -1367,7 +1487,7 @@ function DateFilterButton(selectedValue,start,end) {
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            startDate.setFullYear( currentDate.getFullYear() - 1)
+            startDate.setFullYear(currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
             console.log(startDate);
             console.log(endDate);
@@ -1418,7 +1538,7 @@ function checkAndToggleFilterButton() {
     }
 
     console.log("Filter Elements", filterElements)
-    console.log("AnyIsRemove",anyIsRemove)
+    console.log("AnyIsRemove", anyIsRemove)
 
     // Toggle the visibility of the buttons based on the anyIsRemove variable
     if (anyIsRemove) {
@@ -1436,7 +1556,7 @@ function showSelectedDropdownRemoveButton(button) {
 function SelectedFilterName(item) {
     console.log(item)
     let selectedValue = $(item).text(); // Get the selected value from the clicked item
-    console.log("Selected Value : " , selectedValue);
+    console.log("Selected Value : ", selectedValue);
     let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
     let filterId = $(item).data('filter-id');
@@ -1490,7 +1610,7 @@ function SelectedFilterName(item) {
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
         case 'Last Year':
-            startDate.setFullYear( currentDate.getFullYear() - 1)
+            startDate.setFullYear(currentDate.getFullYear() - 1)
             var isoStartDate = startDate.toISOString().split('T')[0];
             console.log(startDate);
             console.log(endDate);
@@ -1502,7 +1622,7 @@ function SelectedFilterName(item) {
     }
 
     // if ($('input[name="datefilter2"]').length > 0) {
-    if(item != 'Custom') {
+    if (item != 'Custom') {
         $('input[name="datefilter2"]').val('');
         button.text($.trim(selectedValue)); // Update the text of the button
     }else {
@@ -1588,58 +1708,7 @@ function createTitleFilterButton(selectedValue) {
 
 
 }
-// function createPostFilterButton(selectedValue,date,name) {
-//
-//     filterElements[1].isRemove = true;
-//     $('.post-dropdown-item').hide();
-//
-//     $('#filter-post').val(selectedValue);
-//
-//     checkAndToggleFilterButton();
-//     console.log(selectedValue,date,name)
-//     table.column(1).search(selectedValue).draw();
-//
-//     // Create a filter button with the selected filter item
-//     var selectedDropdown = `
-//         <div class="btn-group mt-3 p-2 position-relative">
-//             <button type="button" class="btn btn-sm btn-primary dropdown-toggle col-3
-//                 recent-filter-dropdown-btn position-filter-btn"
-//                 onmouseenter="showSelectedDropdownRemoveButton(this);"
-//                 data-bs-toggle="dropdown" aria-expanded="false">
-//                ${date} (${name})
-//             </button>
-//             <span class="bg-danger selected-dropdown-remove-button post-filter-remove" data-filter-name="post-dropdown-item">
-//                 <i class="bi bi-x"></i>
-//             </span>
-//             <ul class="dropdown-menu dropdown-submenu scrollable-submenu" id="post-filter-dropdown-submenu">
-//                 <!-- Submenu items will be populated here -->
-//             </ul>
-//         </div>`;
-//
-//     // Append the selectedDropdown to the appropriate container
-//     $('#recent-filter-dropdown-con').append(selectedDropdown);
-//
-//     // Fetch and populate submenu items
-//     fetch('/post')
-//         .then(response => response.text())
-//         .then(submenuHTML => {
-//             name=submenuHTML.name;
-//             console.log(name)
-//             // Use the generated submenuHTML to populate the submenu
-//             $('#position-filter-dropdown-submenu').html(submenuHTML);
-//
-//             // Remove the existing onclick attribute from recent-filter-items
-//             $('#position-filter-dropdown-submenu .filter-items').removeAttr('onclick');
-//
-//             // Add the onclick attribute to every recent-filter-items
-//             $('#position-filter-dropdown-submenu .filter-items').attr('onclick', 'changeSelectedFilterName(this);');
-//
-//             // Hide other remove buttons and show the recent-filter-dropdown-btn
-//             $('.selected-dropdown-remove-button').hide();
-//             $('.recent-filter-dropdown-btn').show();
-//         });
-//
-// }
+
 function createLevelFilterButton(selectedValue) {
 
     // Create a filter button with the selected filter item
@@ -1698,7 +1767,7 @@ function createLevelFilterButton(selectedValue) {
             </ul>
         </div>`;
 
-    if($('.level-checkbox:checked').length > 0) {
+    if ($('.level-checkbox:checked').length > 0) {
 
         filterElements[2].isRemove = true;
         $('.level-dropdown-item').hide();
@@ -1731,16 +1800,16 @@ function updateFilterLevel() {
     const selectedValues = checkboxes.map(function () {
         return this.value;
     }).get().join('|');
-    console.log('satge-1',selectedValues)
+    console.log('satge-1', selectedValues)
     table.column(9).search(selectedValues).draw()
     if (selectedLevels.length === 0) {
         console.log("selectedLevels ", selectedLevels)
         const selectedValues = checkboxes2.map(function () {
             return this.value;
         }).get().join('|');
-        console.log('satge-2',selectedValues)
+        console.log('satge-2', selectedValues)
         table.column(9).search(selectedValues).draw()
-    }else {
+    } else {
         console.log("selectedLevels ", selectedLevels)
         $('.level-filter-checkbox').each(function () {
             var checkbox = $(this);
@@ -1818,9 +1887,9 @@ function changeSelectedFilterName(item,startDate,endDate) {
     console.log(selectedValue)
     if (item) {
 
-        if(selectedValue==='OFFERED' || selectedValue==='CONSIDERING' || selectedValue==='VIEWED' || selectedValue==='RECEIVED'){
+        if (selectedValue === 'OFFERED' || selectedValue === 'CONSIDERING' || selectedValue === 'VIEWED' || selectedValue === 'RECEIVED') {
             table.column(5).search($(item).text()).draw();// Get the selected value from the clicked item
-            console.log("Selected Value-1 : " , selectedValue);
+            console.log("Selected Value-1 : ", selectedValue);
             let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
             let filterId = $(item).data('filter-id');
 
@@ -1835,7 +1904,7 @@ function changeSelectedFilterName(item,startDate,endDate) {
             }
 
             // if ($('input[name="datefilter2"]').length > 0) {
-            if(selectedValue != 'Custom') {
+            if (selectedValue != 'Custom') {
                 $('input[name="datefilter2"]').val('');
                 button.text($.trim(selectedValue)); // Update the text of the button
             }else {
@@ -1844,10 +1913,10 @@ function changeSelectedFilterName(item,startDate,endDate) {
             }
             // }
         }
-        else{
+        else {
             console.log("hello")
             table.column(4).search(selectedValue).draw();
-            console.log("Selected Value-2 : " , selectedValue);
+            console.log("Selected Value-2 : ", selectedValue);
             let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
             let filterId = $(item).data('filter-id');
 
@@ -1862,7 +1931,7 @@ function changeSelectedFilterName(item,startDate,endDate) {
             }
 
             // if ($('input[name="datefilter2"]').length > 0) {
-            if(selectedValue != 'Custom') {
+            if (selectedValue != 'Custom') {
                 $('input[name="datefilter2"]').val('');
                 button.text($.trim(selectedValue)); // Update the text of the button
             }else {
@@ -1921,7 +1990,7 @@ function createInterviewStatusFilterButton(selectedValue) {
 function InterviewStatusFilterButton(item) {
     if (item) {
         let selectedValue = $(item).text(); // Get the selected value from the clicked item
-        console.log("Selected Value : " , selectedValue);
+        console.log("Selected Value : ", selectedValue);
         table.column(8).search(selectedValue).draw();
         let button = $(item).closest('.btn-group').find('.recent-filter-dropdown-btn');
 
@@ -1938,10 +2007,10 @@ function InterviewStatusFilterButton(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
+        if (selectedValue != 'Custom') {
             $('input[name="datefilter2"]').val('');
             button.text($.trim(selectedValue)); // Update the text of the button
-        }else {
+        } else {
             $('.apply-date-filter-btn').text('Custom');
         }
         // }
@@ -1956,15 +2025,15 @@ $(document).on('click', '.selected-dropdown-remove-button', function () {
     for (let i = 0; i < filterElements.length; i++) {
         if (filterElements[i].name === filterName) {
             filterElements[i].isRemove = false;
-            $('.' +filterElements[i].name).show();
-            $('#'+filterElements[i].filterId).val('');
+            $('.' + filterElements[i].name).show();
+            $('#' + filterElements[i].filterId).val('');
             break; // Exit the loop once the element is found
         }
     }
 
     console.log("Filter name : ", filterName);
 
-    if(filterName === 'level-dropdown-item') {
+    if (filterName === 'level-dropdown-item') {
 
         const selectedLevels = [];
 
@@ -1978,7 +2047,7 @@ $(document).on('click', '.selected-dropdown-remove-button', function () {
                 selectedLevels.push($(this).val());
             });
 
-            console.log("Selected Levels :",selectedLevels)
+            console.log("Selected Levels :", selectedLevels)
             console.log("It match : ", selectedLevels.includes(checkbox.val()));
             if (selectedLevels.includes(checkbox.val())) {
                 console.log("checkbox change!!!!")
@@ -2023,7 +2092,7 @@ function resetFilters() {
     table.column(5).search('').draw();
     table.column(8).search('').draw();
     table.column(9).search('').draw();
-
+    table.column(12).search('').draw();
     $('#reset-filter').hide();
     $('#custom-filter').show();
 
