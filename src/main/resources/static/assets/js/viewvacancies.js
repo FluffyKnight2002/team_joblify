@@ -84,7 +84,7 @@ $(document).ready(function () {
     // console.log("Input To Disable : ", inputsToDisable)
 
     // Store the initial visibility status of each column
-        let columnVisibility = [true,true, true, true, true, true, false, false, false, true];
+        let columnVisibility = [true, true, true, true, true, true, false, false, false, true];
         table = $('table#table').DataTable({
             "serverSide": true,
             "processing": true,
@@ -225,7 +225,7 @@ $(document).ready(function () {
 
                         // Create the dropdown with Detail and Closed options
                         var dropdown = `
-                        <div class="dropdown">
+                        <div class="dropdown position-relative">
                             <button class="btn btn-secondary btn-sm bg-transparent border-0 text-dark" type="button" data-bs-toggle="dropdown" data-bs-target="#dropdown-setting${rowID}" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical"></i>
                             </button>
@@ -495,8 +495,8 @@ $(document).ready(function () {
                 <li class="dropdown-item filter-items applicants-dropdown-item">
                     <span>Applicants</span>
                     <ul class="dropdown-menu dropdown-submenu" id="applicants-dropdown-submenu">
-                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Over require</li>
-                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Doesn't reach half</li>
+                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Required met</li>
+                        <li class="dropdown-item filter-items" onclick="createApplicantsFilterButton($(this));checkAndToggleFilterButton();">Required doesn't met</li>
                     </ul>
                 </li>
                 <li class="dropdown-item filter-items status-dropdown-item">
@@ -632,9 +632,6 @@ $(document).ready(function () {
     let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
-    table.columns([0, 5]).visible(true);
-    table.columns([6, 9]).visible(false);
 
 });
 
@@ -814,29 +811,29 @@ function actionForCloseOrReopen(href) {
 }
 
 // Toggle column function
-function toggleColumn() {
-    for (var i = 6; i <= 8; i++) {
-        var column = table.column(i);
-        var isVisible = column.visible();
-        if (isVisible) {
-            // Hide columns 7 to 9 and show columns 3 to 6
-            columnVisibility[i] = isVisible;
-            column.visible(false);
-            for (var j = 2; j <= 5; j++) {
-                var col = table.column(j);
-                col.visible(true);
-            }
-        } else {
-            // Show columns 7 to 9 and hide columns 3 to 6
-            columnVisibility[i] = isVisible;
-            column.visible(true);
-            for (var j = 2; j <= 5; j++) {
-                var col = table.column(j);
-                col.visible(false);
-            }
-        }
-    }
-}
+// function toggleColumn() {
+//     for (var i = 6; i <= 9; i++) {
+//         var column = table.column(i);
+//         var isVisible = column.visible();
+//         if (isVisible) {
+//             // Hide columns 7 to 9 and show columns 3 to 6
+//             columnVisibility[i] = isVisible;
+//             column.visible(false);
+//             for (var j = 2; j <= 6; j++) {
+//                 var col = table.column(j);
+//                 col.visible(true);
+//             }
+//         } else {
+//             // Show columns 7 to 9 and hide columns 3 to 6
+//             columnVisibility[i] = isVisible;
+//             column.visible(true);
+//             for (var j = 2; j <= 6; j++) {
+//                 var col = table.column(j);
+//                 col.visible(false);
+//             }
+//         }
+//     }
+// }
 
 // Function to populate the modal with data fetched from the server
 function populateModalWithData(data) {

@@ -310,6 +310,17 @@ public class Api {
         return false; // Return the name of the page to display cookie not found message
     }
 
+    @PostMapping("/contact-us")
+    public boolean sendDirectEmail(@RequestParam("name")String name,
+                                   @RequestParam("email")String email,
+                                   @RequestParam("about")String about,
+                                   @RequestParam("message")String message) {
+        if(emailService.sendDirectMail(name, email, about, message)) {
+            return true;
+        }
+        return false;
+    }
+
     // @GetMapping("/filtered-vacancies")
     // public List <Object[]> getFilteredVacancies() {
     // List<Object[]> result = vacancyInfoRepository.vacancyFilter("recent", true,

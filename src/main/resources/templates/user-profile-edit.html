@@ -320,6 +320,10 @@
 
           if ((authenticatedUserRole === "DEFAULT_HR" || authenticatedUserRole === "SENIOR_HR") && email !== authenticatedUserEmail) {
             passwordChangeLink.href = '/admin-password-change-user?email=' + encodeURIComponent(email);
+            $('input[name="username"], input[name="name"], input[name="email"]').each(function() {
+                console.log($(this));
+                $(this).prop('readonly', true);
+            });
           } else {
             passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(email);
           }
