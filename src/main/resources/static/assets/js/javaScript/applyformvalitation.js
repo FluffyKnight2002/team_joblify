@@ -51,16 +51,28 @@ function validateDob() {
     }
 
     let dobDate = new Date(dobValue);
-    let thirteenYearsAgo = new Date();
+    let eighteenYearsAgo = new Date();
+    let hundredYearsAgo = new Date();
 
-    thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
+    eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+    hundredYearsAgo.setFullYear(hundredYearsAgo.getFullYear() - 100);
 
-    if (dobDate > thirteenYearsAgo) {
-        showFeedback(dob, 'Your age must be greater than 13');
+    if (dobDate > eighteenYearsAgo || dobDate < hundredYearsAgo) {
+        showFeedback(dob, 'Your age must be between 18 and 100');
     } else {
         changeFeedback(dob);
     }
 }
+
+$('#phone').on('input', function() {
+    const inputValue = $(this).val();
+
+    // Remove all non-numeric characters using regex
+    const numericValue = inputValue.replace(/\D/g, '');
+
+    // Update the input value with the cleaned numeric value
+    $(this).val(numericValue);
+});
 
 function validatePhone() {
 

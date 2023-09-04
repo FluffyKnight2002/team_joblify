@@ -594,8 +594,8 @@ function createApplicantsFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="applicants-filter-dropdown-submenu">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Over require</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Doesn't reach half</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Required met</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-applicants">Required doesn't met</li>
             </ul>
         </div>`;
 

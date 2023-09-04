@@ -39,12 +39,12 @@ public class JasperReportController {
 			throws JRException, IOException {
 
 
-				System.out.println(openDate + position + level + selectionStatus + interviewStatus);
-		LocalDate startDate = null;
-		LocalDate endDate = null;
-		List<Level> levelList = new ArrayList<>();
-Status selection = null;
-Status interview = null;
+				System.err.println(openDate + position + level + selectionStatus + interviewStatus);
+				LocalDate startDate = null;
+				LocalDate endDate = null;
+				List<Level> levelList = new ArrayList<>();
+				Status selection = null;
+				Status interview = null;
 
 		if (filter == 1) {
 
@@ -59,11 +59,12 @@ Status interview = null;
 			}
 
 			if(!selectionStatus.isEmpty()){
-				selection = Status.valueOf(selectionStatus);
+
+				selection = Status.valueOf(selectionStatus.toUpperCase());
 			}
 
 			if(!interviewStatus.isEmpty()){
-				interview = Status.valueOf(interviewStatus);
+				interview = Status.valueOf(interviewStatus.toUpperCase());
 			}
 
 				
@@ -102,6 +103,10 @@ Status interview = null;
 					endDate = LocalDate.parse(endDateStr, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
 				}
 			}
+		} else if (filter == 0){
+			position = "";
+
+
 		}
 		System.out.println("start=" + startDate);
 		System.out.println("end=" + endDate);
@@ -157,6 +162,9 @@ Status interview = null;
 					endDate = LocalDate.parse(endDateStr, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
 				}
 			}
+		} else if (filter == 0) {
+			position = "";
+			department = "";
 		}
 
 		System.out.println("start=" + startDate);

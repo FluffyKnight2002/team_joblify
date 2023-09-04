@@ -38,6 +38,7 @@ public class FirstDaySpecificationUser implements Specification<User> {
         minFirstDay = getValue(bounds, 0);
         maxFirstDay = getValue(bounds, 1);
         System.err.println(maxFirstDay + " >>>>>>>>>> " + minFirstDay);
+        
     }
 
     private LocalDate getValue(String[] bounds, int index) {

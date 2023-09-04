@@ -1,7 +1,11 @@
 package com.ace_inspiration.team_joblify.service_implement.candidate_service_implement;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
+import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import org.springframework.stereotype.Service;
 
 import com.ace_inspiration.team_joblify.dto.EmailTemplateDto;
@@ -19,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class InterviewServiceImplement implements InterviewService {
-
+	private final CandidateRepository candidateRepository;
 	private final InterviewRepository interviewRepository;
 
 	@Override
@@ -47,6 +51,38 @@ public class InterviewServiceImplement implements InterviewService {
 	public List<String> findInterviewStageByCandidateId(long candidateId) {
 		
 		return interviewRepository.findInterviewStageByCandidateId(candidateId);
+	}
+
+	@Override
+	public void savefirst(long id){
+		Optional<Candidate> candiDate=candidateRepository.findById(id);
+		LocalDateTime dateTime = LocalDateTime.now();
+
+		// Create a DateTimeFormatter for formatting just the time
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+		// Format the LocalDateTime as a string with only the time
+		String timeString = dateTime.format(timeFormatter);  DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		// Format the LocalDateTime as a string with only the date
+		String dateString = dateTime.format(dateFormatter);
+
+
+		if (candiDate.isPresent()) {
+			Candidate candidate = candiDate.get();
+			Optional<Interview> interview = interviewRepository.findByIdAndInterviewStage(candiDate.get().getId(), InterviewStage.FIRST);
+			if (interview.isEmpty()) {
+
+				Interview interview1 = new Interview();
+				interview1.setInterviewStage(InterviewStage.FIRST);
+				interview1.setCandidate(candiDate.get());
+				interview1.setInterviewTime(timeString);
+				interview1.setInterviewDate(dateString);
+				interview1.setType(InterviewType.ONLINE);
+				interview1.setCandidate(candidate);
+				interviewRepository.save(interview1);
+			}
+		}
 	}
 	
 	

@@ -193,7 +193,7 @@ public class FetchVacancyController {
             if (applicants != null && !applicants.isEmpty()) {
                 Predicate applicantsPredicate = null;
 
-                if (applicants.equals("Over require")) {
+                if (applicants.equals("Required met")) {
                     // Apply filter condition for "Over require"
                     applicantsPredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("applicants"), root.get("post"));
                 } else {

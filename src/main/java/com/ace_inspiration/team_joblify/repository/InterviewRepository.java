@@ -5,6 +5,7 @@ import com.ace_inspiration.team_joblify.entity.Interview;
 import java.util.List;
 import java.util.Optional;
 
+import com.ace_inspiration.team_joblify.entity.InterviewStage;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,5 @@ public interface InterviewRepository extends DataTablesRepository<Interview, Lon
 
 	 List<Interview> findInterviewsByCandidateId(long candidateId);
 	 List<String> findInterviewStageByCandidateId(long candidateId);
+	 Optional<Interview> findByIdAndInterviewStage(long candidateId, InterviewStage interviewStage);
 }
