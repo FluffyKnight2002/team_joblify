@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#data').summernote({
-        height: 'auto'
+        height: 300
     });
     $('#data_1').summernote({height: 'auto'});
 
@@ -96,15 +96,15 @@ $(document).ready( async function() {
 
 
 
-    $('#emailModal').on('show.bs.modal', function() {
-        // Reset specific input fields, selects, and textarea inside the form
-        $('#send-mail').find('input[type="date"], input[type="time"], select, textarea').val('');
-        $('#data').summernote('reset');
-        // Call getEmailContent with appropriate values for type and name
-        var emailContent = '';
-        getEmailContent(emailContent, 'John Doe'); // Example values
-        // Do something with emailContent, like updating the modal content
-    });
+    // $('#emailModal').on('show.bs.modal', function() {
+    //     // Reset specific input fields, selects, and textarea inside the form
+    //     $('#send-mail').find('input[type="date"], input[type="time"], select, textarea').val('');
+    //     $('#data').summernote('reset');
+    //     // Call getEmailContent with appropriate values for type and name
+    //     var emailContent = '';
+    //     getEmailContent(emailContent, 'John Doe'); // Example values
+    //     // Do something with emailContent, like updating the modal content
+    // });
 
 
     table = $('#table1').DataTable(
