@@ -365,7 +365,7 @@
                 </div>
             </div>
         </div>
-        <!--Inver Mail-->
+        <!--Invite Mail-->
         <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="vacancyDetail" aria-hidden="true">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
@@ -414,65 +414,61 @@
                                 <div class="col-md-4">
                                     <label>Subject</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8 mb-2">
                                     <input type="text" class="form-control subject"
                                            id="subject">
                                 </div>
-                                <div class="status">
-                                    <div class="col-md-1">
+                                <div class="status col-8 mb-3">
+                                    <div class="col-md-2">
                                         <label>Interview Type</label>
                                     </div>
-                                    <div class="col-md-2">
-                                        <select id="where">
-                                            <option value="">Custom</option>
-                                            <option value="ONLINE" selected>Online</option>
-                                            <option value="OFFLINE">In person</option>
-                                        </select>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <select class="form-select" id="where">
+                                                <option value="">Custom</option>
+                                                <option value="ONLINE" selected>Online</option>
+                                                <option value="OFFLINE">In person</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+
+                                            <input type="button" id="add-date"
+                                                   class="btn btn-outline-primary" value="Add Date">
+                                        </div>
+                                        <div class="col-md-2">
+
+                                            <input type="button" id="add-time"
+                                                   class="btn btn-outline-primary" value="Add Time">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-
-                                    <input type="button" id="add-date"
-                                           class="btn btn-outline-primary" value="Add Date">
+                                <div class="row mb-3">
+                                    <div class="col-md-2">
+                                        <label class="form-label" for="date">From Date</label>
+                                        <input type="date" class="form-control" id="date">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label class="form-label" for="time">From Time</label>
+                                        <input type="time" class="form-control time" id="time">
+                                    </div>
+                                    <div class="status col-md-3">
+                                        <div>
+                                            <label class="form-label" for="interview-stage-select">Interview Status</label>
+                                            <select class="form-select" id="interview-stage-select">
+                                                <option value="FIRST">FIRST</option>
+                                                <option value="SECOND">SECOND</option>
+                                                <option value="THIRD">THIRD</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
 
-                                    <input type="button" id="add-time"
-                                           class="btn btn-outline-primary" value="Add Time">
+                                <br>
+                                <div id="object">
+                                    <textarea class="summernote" id="data"></textarea>
                                 </div>
+                                <input type="hidden" id="content" name="content" required>
                             </div>
-                            <div class="col-md-1">
-                                <label>From Date</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="date" class="form-control" id="date">
-                            </div>
-                            <div class="col-md-1">
-                                <label>From Time</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="time" class="form-control time" id="time">
-                            </div>
-
-                            <div class="status">
-                                <div class="col-md-1">
-                                    <label>Interview Status</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <select id="interview-stage-select">
-                                        <option value="FIRST">FIRST</option>
-                                        <option value="SECOND">SECOND</option>
-                                        <option value="THIRD">THIRD</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <br>
-                            <div id="object">
-                                <textarea class="summernote" id="data"></textarea>
-                            </div>
-                            <input type="hidden" id="content" name="content" required>
                         </form>
                     </div>
 
@@ -588,7 +584,7 @@
         </div>
 
         <!--Message Modal -->
-        <div class="modal fade" id="loadMe" tabindex="-1" role="dialog"
+        <div class="modal fade" id="loadMe" data-bs-backdrop="static" tabindex="-1" role="dialog"
              aria-labelledby="loadMeLabel">
             <div class="modal-dialog modal-sm modal-dialog-centered"
                  id="message-modal-dialog" role="document">

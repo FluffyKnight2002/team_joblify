@@ -1,22 +1,16 @@
 package com.ace_inspiration.team_joblify.entity;
 
 
-import java.time.LocalDateTime;
-
 import com.querydsl.core.annotations.Immutable;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Immutable
-@Table(name="all_post")
+@Table(name="interview_process")
 public class InterviewProcess  {
 	@Id
 	private long id;

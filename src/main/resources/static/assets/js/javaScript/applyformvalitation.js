@@ -81,7 +81,7 @@ function validatePhone() {
     const myanmarPhonePattern = /^[0-9]{9,11}$/;
 
     if (!myanmarPhonePattern.test(phoneValue)) {
-        showFeedback(phone, 'Please enter a valid Myanmar phone number');
+        showFeedback(phone, 'Please enter a valid phone number');
     } else {
         changeFeedback(phone);
     }
@@ -105,9 +105,9 @@ function validateEmail() {
 
 function validateTechSkills() {
 
-    if(techSkillsInput.size === 0 ) {
+    if (techSkillsInput.length === 0) {
         showFeedback(techSkill, 'One skill must be added');
-    }else {
+    } else {
         changeFeedback(techSkill);
     }
 
@@ -116,7 +116,7 @@ function validateTechSkills() {
 function validateLanguageSkills() {
 
     console.log(languageSkillsInput.size)
-    if(languageSkillsInput.size === 0 ) {
+    if(languageSkillsInput.length === 0 ) {
         showFeedback(languageSkill, 'One skill must be added');
     }else {
         changeFeedback(languageSkill);
