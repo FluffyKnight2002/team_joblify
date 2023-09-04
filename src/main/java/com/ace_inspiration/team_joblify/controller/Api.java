@@ -147,6 +147,7 @@ public class Api {
     @PostMapping("/sendOTP")
     public String sendEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
         emailService.sendForgetPasswordEmail(emailTemplateDto.getTo());
+        
         return "Email sent successfully!";
     }
 
