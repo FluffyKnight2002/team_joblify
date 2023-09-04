@@ -477,7 +477,7 @@ function createInterviewStatusFilterButton(selectedValue) {
                 data-bs-toggle="dropdown" aria-expanded="false">
                 ${selectedText}
             </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="selection-status-dropdown-item">
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="interview-status-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">

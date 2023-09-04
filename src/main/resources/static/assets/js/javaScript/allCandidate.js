@@ -305,6 +305,8 @@ $(document).ready( async function() {
                         <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Pending</li>
                         <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Cancel</li>
                         <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Passed</li>
+                        <li class="dropdown-item filter-items" onclick="createInterviewStatusFilterButton($(this));checkAndToggleFilterButton();">Accepted</li>
+
                     </ul>
                 </li>
             </ul>
