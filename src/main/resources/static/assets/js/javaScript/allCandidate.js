@@ -944,7 +944,8 @@ $(document).ready( async function() {
     //excel download end
 
     $('.cc').keyup(function(data) {
-        if (data.keyCode === 13) {
+        if (data.keyCode === 13 && emailPattern.match(data)) {
+            $('#cc-error').hide();
             var value = $(this).val();
             ccMails.push($(this).val());
             if (value.trim() !== "") {
@@ -961,10 +962,12 @@ $(document).ready( async function() {
                     "</div>";
                 $(".Ccmail").append(CcMail);
                 $(this).val("");
-
             }
+        }else {
+            $('#cc-error').show();
         }
     })
+
     $(document).on("click", ".remove-skill", function() {
         var count = $(this).data("count");
         var valueToRemove = $("#skill" + count + " .default-font").text().trim();
@@ -1031,7 +1034,6 @@ $(document).ready( async function() {
         filterSwitchCandidate();
         reportDownloadCandidate();
     }
-});
 
 function updateCcMails() {
 
