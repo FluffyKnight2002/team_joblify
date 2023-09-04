@@ -91,7 +91,7 @@ $(document).ready(function () {
             "stateSave": true,
             "scrollY": 300,
             "scrollX": true,
-            "scrollCollapse": true,
+            "scrollCollapse": false,
             "fixedHeader": {
                 "header": true,
             },
@@ -225,7 +225,7 @@ $(document).ready(function () {
 
                         // Create the dropdown with Detail and Closed options
                         var dropdown = `
-                        <div class="dropdown position-relative">
+                        <div class="dropdown">
                             <button class="btn btn-secondary btn-sm bg-transparent border-0 text-dark" type="button" data-bs-toggle="dropdown" data-bs-target="#dropdown-setting${rowID}" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical"></i>
                             </button>
@@ -270,6 +270,8 @@ $(document).ready(function () {
             '</dl>'
         );
     }
+
+    $('.dataTables_scrollBody').css('max-height','210px');
 
     // Add event listener for opening and closing details
     table.on('click', 'td.dt-control', function (e) {
@@ -547,7 +549,7 @@ $(document).ready(function () {
         connect: true,   // Connect the two handles
         range: {         // Set the range
             'min': 100000,
-            'max': 1000000
+            'max': 10000000
         },
         step: 10000,         // Add a step of 5
         // Disable tooltips initially

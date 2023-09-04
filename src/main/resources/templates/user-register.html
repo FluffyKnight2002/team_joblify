@@ -102,9 +102,9 @@
                                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                     <h6>
                                         <a class="btn btn-sm rounded-pill px-2 py-1 ps-4 text-white position-relative"
-                                           style="background: #1e497b !important;" href="javascript:history.back()">
+                                            style="background: #1e497b !important;" href="javascript:history.back()">
                                             <i class="bi bi-arrow-left-circle position-absolute"
-                                               style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
+                                                style="top: 5px;left: 5px;font-size: 1.15rem"></i> Back</a>
                                     </h6>
                                 </nav>
                             </div>
@@ -153,7 +153,7 @@
                                     <div class="row">
                                         <div class="form-floating mb-3 col-md-6">
                                             <input type="text" class="form-control" id="username" name="username"
-                                                placeholder="Username" required>
+                                                placeholder="Username" required minlength="5" maxlength="15">
                                             <label for="username"><i class="bi bi-person px-3"></i>Username</label>
                                             <span
                                                 class='spinner-border spinner-border-sm input spinner username-spinner'
@@ -164,7 +164,7 @@
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
                                             <input type="text" class="form-control" placeholder="Name" id="name"
-                                                name="name" required>
+                                                name="name" required minlength="5" maxlength="15">
                                             <label for="name"><i class="bi bi-person px-3"></i>Name</label>
                                             <div class="invalid-feedback">
                                                 Please add Name.
@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
                                             <input type="text" class="form-control" placeholder="Email" id="email"
-                                                name="email" required>
+                                                name="email" required minlength="15" maxlength="50">
                                             <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
                                             <span class='spinner-border spinner-border-sm input spinner email-spinner'
                                                 role='status'></span>
@@ -195,7 +195,7 @@
                                         <div class="form-floating mb-3 col-md-6">
 
                                             <input type="text" class="form-control" placeholder="Department"
-                                                id="department" name="department" required>
+                                                id="department" name="department" required minlength="5" maxlength="25">
                                             <label for="department"><i
                                                     class="bi bi-card-list px-3"></i>Department</label>
                                             <span class='spinner-border spinner-border-sm spinner department-spinner'
@@ -240,15 +240,15 @@
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
 
-                                                <textarea class="form-control" id="note" name="note" placeholder="Note"
-                                                          style="height: 100px"></textarea>
+                                            <textarea class="form-control" id="note" name="note" placeholder="Note"
+                                                style="height: 100px"></textarea>
                                             <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                                         </div>
                                         <div class="form-floating mb-3 col-md-6">
 
-                                                <textarea class="form-control" id="address" name="address"
-                                                          placeholder="Address" style="height: 100px" required></textarea>
+                                            <textarea class="form-control" id="address" name="address"
+                                                placeholder="Address" style="height: 100px" required></textarea>
                                             <label for="address"><span class="px-3">Address</span></label>
                                             <div class="invalid-feedback">
                                                 Please Add Address.
@@ -292,7 +292,7 @@
 
 
     <script src="/assets/js/main.js"></script>
-    
+
 
     <script>
 
@@ -309,13 +309,16 @@
 
 
         const form = document.getElementById('registration-form');
-       
+
 
         document.querySelector("#registration-form").addEventListener("submit", function (event) {
             event.preventDefault();
 
             if (!isFormValid()) {
                 console.log("Form data is not valid. Please fill all required fields.");
+
+                
+
                 return;
             } else {
 
@@ -403,8 +406,9 @@
             }
 
             $(document).on("click", "#close", function () {
-
-                resetModal();
+                setTimeout(function () {
+                    resetModal();
+                }, 1500); // Delay in milliseconds (1 second in this example)
             });
 
             $(document).on("click", "#confirmYes", function () {
@@ -468,6 +472,16 @@
                     continue;
                 }
                 if (!field.value.trim() || !checkPhoneNumber() || !checkEmail() || !usernameDuplicate()) {
+                   
+                    iziToast.warning({
+                    title: 'Error',
+                    message: 'You have to finish to fill Data for Submit.',
+                    position: 'topCenter',
+                    backgroundColor: '#f58787',
+                    progressBarColor: 'red', // Set the progress bar color to red
+                    theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
+                });
+                   
                     return false; // Form data is not valid
                 }
 
@@ -710,6 +724,7 @@
 
 
         const nameInput = document.getElementById('name');
+
         // Event listener for keydown to prevent typing space as the first character
         nameInput.addEventListener('keydown', (event) => {
             if (event.key === ' ' && event.target.selectionStart === 0) {

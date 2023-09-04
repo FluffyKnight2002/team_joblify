@@ -42,7 +42,7 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
     @Override
     public void initialize() throws IOException {
 
-        String username = "Admin";
+        String name = "Admin";
         LocalDateTime currentDate = LocalDateTime.now();
         Department department = Department.builder()
                 .name("Human Resources")
@@ -58,12 +58,12 @@ public class DefaultProjectInitializerServiceImplement implements DefaultProject
         Optional<User> u = userRepository.findByRole(Role.DEFAULT_HR);
         if (u.isEmpty()) {
 
-            byte[] imageBytes = ProfileGenerator.generateAvatar(username, resourceLoader);
+            byte[] imageBytes = ProfileGenerator.generateAvatar(name, resourceLoader);
 
 
             User defaultUser = User.builder()
-                    .username(username)
-                    .name("Admin")
+                    .username("admin")
+                    .name(name)
                     .phone("09777159555")
                     .email("ace@gmail.com")
                     .address("Ace Data System")

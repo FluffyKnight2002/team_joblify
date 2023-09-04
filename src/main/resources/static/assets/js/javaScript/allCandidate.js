@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#data').summernote({
-        height: 'auto'
+        height: 300
     });
     $('#data_1').summernote({height: 'auto'});
 
@@ -96,15 +96,15 @@ $(document).ready( async function() {
 
 
 
-    $('#emailModal').on('show.bs.modal', function() {
-        // Reset specific input fields, selects, and textarea inside the form
-        $('#send-mail').find('input[type="date"], input[type="time"], select, textarea').val('');
-        $('#data').summernote('reset');
-        // Call getEmailContent with appropriate values for type and name
-        var emailContent = '';
-        getEmailContent(emailContent, 'John Doe'); // Example values
-        // Do something with emailContent, like updating the modal content
-    });
+    // $('#emailModal').on('show.bs.modal', function() {
+    //     // Reset specific input fields, selects, and textarea inside the form
+    //     $('#send-mail').find('input[type="date"], input[type="time"], select, textarea').val('');
+    //     $('#data').summernote('reset');
+    //     // Call getEmailContent with appropriate values for type and name
+    //     var emailContent = '';
+    //     getEmailContent(emailContent, 'John Doe'); // Example values
+    //     // Do something with emailContent, like updating the modal content
+    // });
 
 
     table = $('#table1').DataTable(
@@ -112,8 +112,8 @@ $(document).ready( async function() {
             "serverSide": true,
             "processing": true,
             "scrollY": 300,
-            "scrollX": true,
-            "scrollCollapse": true,
+            "scrollX": false,
+            "scrollCollapse": false,
             "fixedHeader": {
                 "header": true,
             },
@@ -188,7 +188,7 @@ $(document).ready( async function() {
                     targets: 7,
                     data: "email",
                     render: function(data, type, row) {
-                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
+                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Invite Mail</a>';
                     },
                     sortable: false,
                     visible: false
@@ -223,7 +223,7 @@ $(document).ready( async function() {
                     data: "email",
                     render: function(data, type, row) {
                         return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail"' +
-                            'style="font-size: 0.8rem" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
+                            'style="font-size: 0.8rem" class="btn btn-outline-primary btn-sm btn-block">Offer Mail</a>';
                     },
                     sortable: false,
                     visible: false
@@ -249,6 +249,8 @@ $(document).ready( async function() {
             ],
             order: [[2, 'desc']]
         });
+
+    $('.dataTables_scrollBody').css('max-height','210px');
 
     // Filter session start
     // Create reset filter button
@@ -1058,8 +1060,6 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
 
     })
 
-
-
     const fetchValueButton = document.getElementById('fetchValueButton');
     fetchValueButton.addEventListener('click', function() {
         const hiddenInput = document.getElementById('content');
@@ -1079,12 +1079,30 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
             $('#message-con').html('' +
                 '<div class="loader"></div>' +
                 '<div class="loader-txt">' +
-                '<h3 class="text-white">Email is Empty</h3>' +
+                '<h3 class="text-white">Failed</h3>' +
+                '<p class="text-white text-center">Email was empty</p>'+
                 '<div>' +
                 `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
                 '</div>');
         }
         else {
+
+            $('#message-con').html(
+                `<div class='container'>
+            <div class='animation'>
+                <div class='i-mail'>
+                    <div class='mail-anim'></div>
+                </div>
+                <div class='line'></div>
+                <div class='i-success'>
+                    <div class='success-anim'></div>
+                </div>
+            </div>
+            <div class='message'>
+                Your message has been sent successfully
+            </div>
+        </div>`);
+
             $('#data').summernote('insertText', '');
             hiddenInput.value = document.querySelector('#data').value;
 
@@ -1143,6 +1161,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
             }
         }
     });
+
     const fetchofferMail=document.getElementById('Send_Offer_Mail');
     fetchofferMail.addEventListener('click',function (){
         const hiddenInput = document.getElementById('content_1');
