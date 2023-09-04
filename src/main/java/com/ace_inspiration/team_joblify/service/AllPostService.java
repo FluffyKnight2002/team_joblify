@@ -14,6 +14,6 @@ import com.ace_inspiration.team_joblify.entity.AllPost;
 public interface AllPostService {
 	
 	DataTablesOutput<AllPost> getAll(DataTablesInput input);
-	Object findByOpenDate(String year, String month, String position);
+	int [][]findByOpenDate(String year, String month, String position);
 
 }
