@@ -122,12 +122,10 @@ public class FetchVacancyController {
                         // Parse the start and end dates into LocalDate objects
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-                        try {
+                        
                             startDate = LocalDate.parse(startDateInput, formatter);
                             endDate = LocalDate.parse(endDateInput, formatter);
-                        } catch (DateTimeParseException e) {
-                            // Handle date parsing error
-                        }
+                        
                     }
                 }
 

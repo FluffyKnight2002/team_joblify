@@ -38,11 +38,9 @@ public class FirstDaySpecificationInterview implements Specification<AllPost> {
 
     private LocalDate getValue(String[] bounds, int index) {
         if (bounds.length > index && hasText(bounds[index])) {
-            try {
+            
                 return LocalDate.parse(bounds[index]);
-            } catch (DateTimeParseException e) {
-                return null;
-            }
+            
         }
         return null;
     }
