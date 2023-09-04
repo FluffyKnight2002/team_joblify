@@ -41,7 +41,7 @@ async function authenticatedUserData() {
             const role = userDetails.user.role.replace(/_/g, ' ');
 
             passwordChange.href = '/password-change?email=' + encodeURIComponent(userDetails.email);
-            name.innerHTML = userDetails.name + ' (' + role + ')';
+            name.innerHTML = userDetails.name + ' <span class="d-block text-muted text-right sub-title" style="font-size: 0.7rem">(' + role + ')</span>';
             username.innerHTML = userDetails.username;
             department.innerHTML = userDetails.department;
             profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(userDetails.email);

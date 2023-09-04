@@ -96,34 +96,28 @@
                         <p role="status" aria-live="polite" aria-atomic="true"></p>
                         <ul></ul>
                     </div>
-                    <form notification="/contact-us/#wpcf7-f252-p237-o1" method="post" class="wpcf7-form init"
+                    <form th:action="@{/contact-us}" method="post" class="wpcf7-form init"
                         novalidate="novalidate" data-status="init">
                         <div style="display: none;">
-                            <input type="hidden" name="_wpcf7" value="252" />
-                            <input type="hidden" name="_wpcf7_version" value="5.3" />
-                            <input type="hidden" name="_wpcf7_locale" value="en_US" />
-                            <input type="hidden" name="_wpcf7_unit_tag" value="wpcf7-f252-p237-o1" />
-                            <input type="hidden" name="_wpcf7_container_post" value="237" />
-                            <input type="hidden" name="_wpcf7_posted_data_hash" value="" />
                         </div>
                         <div class="p-3 pt-0">
                             <span class="wpcf7-form-control-wrap text-693">
-                                <input type="text" name="text-693" value="" size="40"
+                                <input type="text" name="name" value="" size="40"
                                     class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required form-control"
                                     aria-required="true" aria-invalid="false" placeholder="Name" />
                             </span>
                             <br />
-                            <span class="wpcf7-form-control-wrap email-427"><input type="email" name="email-427"
+                            <span class="wpcf7-form-control-wrap email-427"><input type="email" name="email"
                                     value="" size="40"
                                     class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email form-control"
                                     aria-required="true" aria-invalid="false" placeholder="Email" /></span><br />
-                            <span class="wpcf7-form-control-wrap recipient"><select name="recipient"
+                            <span class="wpcf7-form-control-wrap recipient"><select name="about"
                                     class="wpcf7-form-control wpcf7-select wpcf7-validates-as-required form-control"
                                     aria-required="true" aria-invalid="false">
                                     <option value="Request For Quote">Request For Quote</option>
                                     <option value="Request For Job Opportunity">Request For Job Opportunity</option>
                                 </select></span><br />
-                            <span class="wpcf7-form-control-wrap textarea-553"><textarea name="textarea-553" cols="10"
+                            <span class="wpcf7-form-control-wrap textarea-553"><textarea name="message" cols="10"
                                     rows="3"
                                     class="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required form-control"
                                     aria-required="true" aria-invalid="false"
