@@ -88,23 +88,122 @@ public class CandidateController {
     private FirstDaySpecificationInterview firstDaySpecificationInterview;
 
     @GetMapping("/allCandidate")
-    @ResponseBody
-    public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {
+    public DataTablesOutput<InterviewProcess> getDataTable(
+            @RequestParam(required = false) String vacancyInfoId,
+            @RequestParam(required = false) String applyDate,
+            @RequestParam(required = false) String startDateInput,
+            @RequestParam(required = false) String endDateInput,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) List<String> level,
+            @RequestParam(required = false) String selectionStatus,
+            @RequestParam(required = false) String interviewStatus,
+            @Valid DataTablesInput input) {
 
-        DataTablesOutput<InterviewProcess> interviewData = interviewService.getAll(input);
-        firstDaySpecification = new FirstDaySpecification(input);
+        // Create a Specification using the DataTablesInput object
+        Specification<InterviewProcess> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
 
-        System.out.println(input);
+            System.out.println("Vacancy ID " + vacancyInfoId);
+            if(!vacancyInfoId.trim().equals("All")) {
+                long id = Long.valueOf(vacancyInfoId.trim());
+                System.out.println("COndition HTITITITITITI");
+                predicate = criteriaBuilder.equal(root.get("viId"), id);
+            }
 
-        if (firstDaySpecification == null) {
-            return interviewData;
-        } else {
-            interviewData = interviewProcessRepository.findAll(input, firstDaySpecification);
-            return interviewData;
-        }
+            // Inside your getDataTable method
+            if (applyDate != null && !applyDate.isEmpty()) {
+                LocalDate currentDate = LocalDate.now();
+                LocalDate startDate = null;
+                LocalDate endDate = null;
 
+                System.out.println("Start Date Input : " + startDateInput);
+                System.out.println("End Date Input : " + endDateInput);
+
+                if (applyDate.equals("Last 24 hours")) {
+                    // Calculate the start date as 1 day ago from the current date
+                    startDate = currentDate.minusDays(1);
+                } else if (applyDate.equals("Last week")) {
+                    // Calculate the start date as 7 days ago from the current date
+                    startDate = currentDate.minusDays(7);
+                } else if (applyDate.equals("Last month")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(30);
+                } else if (applyDate.equals("Custom")) {
+                    // Check if both startDateInput and endDateInput are provided
+                    if (startDateInput != null && endDateInput != null) {
+                        // Parse the start and end dates into LocalDate objects
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+                        try {
+                            startDate = LocalDate.parse(startDateInput, formatter);
+                            endDate = LocalDate.parse(endDateInput, formatter);
+                        } catch (DateTimeParseException e) {
+                            // Handle date parsing error
+                        }
+                    }
+                }
+
+                // Now, you can use the startDate and endDate to filter your data
+                if (startDate != null) {
+                    // Add filter condition for the start date
+                    predicate = criteriaBuilder.and(
+                            predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("date"), startDate)
+                    );
+                }
+
+                if (endDate != null) {
+                    // Add filter condition for the end date
+                    predicate = criteriaBuilder.and(
+                            predicate, criteriaBuilder.lessThanOrEqualTo(root.get("date"), endDate)
+                    );
+                }
+
+                System.out.println("Start Date : " + startDate);
+                System.out.println("End Date : " + endDate);
+            }
+
+            if (title != null && !title.isEmpty()) {
+                // Add filter condition for title
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("position"), title));
+            }
+            if (department != null && !department.isEmpty()) {
+                // Add filter condition for department
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("department"), department));
+            }
+            if (level != null && level.size() > 0) {
+                List<Predicate> levelPredicates = new ArrayList<>();
+                level.forEach(lvl -> {
+                    String adjustedLevel = lvl.toUpperCase().replace(" ", "_");
+                    levelPredicates.add(root.get("lvl").in(Level.valueOf(adjustedLevel)));
+                });
+
+                // Combine all level predicates using OR
+                Predicate levelPredicate = criteriaBuilder.or(levelPredicates.toArray(new Predicate[0]));
+
+                // Add the combined level predicate to the overall predicate using AND
+                predicate = criteriaBuilder.and(predicate, levelPredicate);
+            }
+            if (selectionStatus != null && !selectionStatus.isEmpty()) {
+                // Add filter condition for status
+                String adjustedStatus = selectionStatus.toUpperCase().replace(" ", "_");
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("selectionStatus"), Status.valueOf(adjustedStatus)));
+            }
+
+            if (interviewStatus != null && !interviewStatus.isEmpty()) {
+                // Add filter condition for status
+                String adjustedStatus = interviewStatus.toUpperCase().replace(" ", "_");
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("interviewStatus"), Status.valueOf(adjustedStatus)));
+            }
+
+            return predicate;
+        };
+
+        // Use the Specification to filter data
+        DataTablesOutput<InterviewProcess> output = interviewProcessRepository.findAll(input,specification);
+
+        return output;
     }
-
     @GetMapping("/allPositions")
     @ResponseBody
     public List<Position> getAllPosition() {

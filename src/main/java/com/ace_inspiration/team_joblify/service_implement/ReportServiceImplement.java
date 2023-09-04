@@ -137,7 +137,7 @@ public class ReportServiceImplement implements ReportService {
 
   @Override
   public ResponseEntity<byte[]> allCandidate(String format, LocalDate startDate, LocalDate endDate, String position,
-      List<String> level, String selectionStatus, String interviewStatus) throws JRException, IOException {
+      List<Level> level, String selectionStatus, String interviewStatus) throws JRException, IOException {
 
     CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
     CriteriaQuery<AllCandidatesReport> criteriaQuery = criteriaBuilder.createQuery(AllCandidatesReport.class);
