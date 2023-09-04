@@ -76,11 +76,15 @@ function changeSelectedFilterName(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
+        if(selectedValue !== 'Custom') {
             $('input[name="datefilter2"]').val('');
             button.text($.trim(selectedValue)); // Update the text of the button
         }else {
-            $('.apply-date-filter-btn').text('Custom');
+            if($('.apply-date-fliter-btn').length > 0) {
+                $('.apply-date-filter-btn').text('Custom');
+            }else {
+                $('.date-posted-filter-btn').text('Custom');
+            }
         }
         // }
 
@@ -477,7 +481,7 @@ function createInterviewStatusFilterButton(selectedValue) {
                 data-bs-toggle="dropdown" aria-expanded="false">
                 ${selectedText}
             </button>
-            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="selection-status-dropdown-item">
+            <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="interview-status-dropdown-item">
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">

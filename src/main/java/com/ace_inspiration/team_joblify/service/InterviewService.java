@@ -9,5 +9,6 @@ public interface InterviewService {
 	void saveInterview(EmailTemplateDto emailTemplateDto);
 	 List<Interview> findInterviewsByCandidateId(long candidateId);
 	 List<String> findInterviewStageByCandidateId(long candidateId);
+	 void savefirst(long id);
 
 }

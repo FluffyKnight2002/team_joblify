@@ -81,11 +81,6 @@ public class CandidateController {
 
     private final VacancyInfoRepository vanInfoReopository;
 
-    private final OfferMailSendedService offerMailSendedService;
-
-    private FirstDaySpecification firstDaySpecification;
-    
-    private FirstDaySpecificationInterview firstDaySpecificationInterview;
 
     @GetMapping("/allCandidate")
     public DataTablesOutput<InterviewProcess> getDataTable(
@@ -120,16 +115,23 @@ public class CandidateController {
                 System.out.println("Start Date Input : " + startDateInput);
                 System.out.println("End Date Input : " + endDateInput);
 
-                if (applyDate.equals("Last 24 hours")) {
+                if (applyDate.equals("Today")) {
                     // Calculate the start date as 1 day ago from the current date
                     startDate = currentDate.minusDays(1);
-                } else if (applyDate.equals("Last week")) {
+                } else if (applyDate.equals("Last Week")) {
                     // Calculate the start date as 7 days ago from the current date
                     startDate = currentDate.minusDays(7);
-                } else if (applyDate.equals("Last month")) {
+                } else if (applyDate.equals("Last Month")) {
                     // Calculate the start date as 30 days ago from the current date
                     startDate = currentDate.minusDays(30);
-                } else if (applyDate.equals("Custom")) {
+                } else if (applyDate.equals("Last 6 Month")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(180);
+                } else if (applyDate.equals("Last Year")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(365);
+                }
+                else if (applyDate.equals("Custom")) {
                     // Check if both startDateInput and endDateInput are provided
                     if (startDateInput != null && endDateInput != null) {
                         // Parse the start and end dates into LocalDate objects
@@ -233,18 +235,90 @@ public class CandidateController {
 
     @GetMapping("/process")
     @ResponseBody
-    public DataTablesOutput<AllPost> interviewProcess(DataTablesInput input) {
-        DataTablesOutput<AllPost> allpost = allPostService.getAll(input);
-        firstDaySpecificationInterview = new FirstDaySpecificationInterview(input);
+    public DataTablesOutput<AllPost> interviewProcess(  @RequestParam(required = false) String applyDate,
+                                                         @RequestParam(required = false) String startDateInput,
+                                                         @RequestParam(required = false) String endDateInput,
+                                                         @RequestParam(required = false) String title,
+                                                         @RequestParam(required = false) String department,
+                                                         @Valid DataTablesInput input) {
 
-        System.out.println(input);
+        // Create a Specification using the DataTablesInput object
+        Specification<AllPost> specification = (root, query, criteriaBuilder) -> {
+            Predicate predicate = criteriaBuilder.conjunction();
 
-        if (firstDaySpecificationInterview == null) {
-            return allpost;
-        } else {
-            allpost = allPostRepository.findAll(input, firstDaySpecificationInterview);
-            return allpost;
-        }
+            if (applyDate != null && !applyDate.isEmpty()) {
+                LocalDate currentDate = LocalDate.now();
+                LocalDate startDate = null;
+                LocalDate endDate = null;
+
+                System.out.println("Start Date Input : " + startDateInput);
+                System.out.println("End Date Input : " + endDateInput);
+
+                if (applyDate.equals("Today")) {
+                    // Calculate the start date as 1 day ago from the current date
+                    startDate = currentDate.minusDays(1);
+                } else if (applyDate.equals("Last Week")) {
+                    // Calculate the start date as 7 days ago from the current date
+                    startDate = currentDate.minusDays(7);
+                } else if (applyDate.equals("Last Month")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(30);
+                } else if (applyDate.equals("Last 6 Month")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(180);
+                } else if (applyDate.equals("Last Year")) {
+                    // Calculate the start date as 30 days ago from the current date
+                    startDate = currentDate.minusDays(365);
+                }
+                else if (applyDate.equals("Custom")) {
+                    // Check if both startDateInput and endDateInput are provided
+                    if (startDateInput != null && endDateInput != null) {
+                        // Parse the start and end dates into LocalDate objects
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+                        try {
+                            startDate = LocalDate.parse(startDateInput, formatter);
+                            endDate = LocalDate.parse(endDateInput, formatter);
+                        } catch (DateTimeParseException e) {
+                            // Handle date parsing error
+                        }
+                    }
+                }
+
+                // Now, you can use the startDate and endDate to filter your data
+                if (startDate != null) {
+                    // Add filter condition for the start date
+                    predicate = criteriaBuilder.and(
+                            predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("openDate"), startDate)
+                    );
+                }
+
+                if (endDate != null) {
+                    // Add filter condition for the end date
+                    predicate = criteriaBuilder.and(
+                            predicate, criteriaBuilder.lessThanOrEqualTo(root.get("closeDate"), endDate)
+                    );
+                }
+
+                System.out.println("Start Date : " + startDate);
+                System.out.println("End Date : " + endDate);
+            }
+            if (title != null && !title.isEmpty()) {
+                // Add filter condition for title
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("position"), title));
+            }
+            if (department != null && !department.isEmpty()) {
+                // Add filter condition for department
+                predicate = criteriaBuilder.and(predicate, criteriaBuilder.equal(root.get("department"), department));
+            }
+
+            return predicate;
+        };
+
+        // Use the Specification to filter data
+        DataTablesOutput<AllPost> output = allPostRepository.findAll(input,specification);
+
+        return output;
     }
 
     @GetMapping("/getYear")
