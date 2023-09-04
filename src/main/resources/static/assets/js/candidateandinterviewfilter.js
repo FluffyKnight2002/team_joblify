@@ -481,9 +481,11 @@ function createInterviewStatusFilterButton(selectedValue) {
                 <i class="bi bi-x"></i>
             </span>
             <ul class="dropdown-menu dropdown-submenu" id="status-filter-dropdown-submenu" style="top: -90px">
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Open</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Closed</li>
-                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Expired</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">None</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Pending</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Cancel</li>
+                 <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Passed</li>
+                <li class="dropdown-item filter-items" onclick="changeSelectedFilterName(this);" data-filter-id="filter-interview-status">Accepted</li>
             </ul>
         </div>`;
 

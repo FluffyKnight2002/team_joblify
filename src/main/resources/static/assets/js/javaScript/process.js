@@ -17,13 +17,13 @@ async function filterSwitch() {
         if (checkbox.checked) {
             // If the checkbox is checked, set the value of the filter input to "1"
             pdfFilterInput.value = "1";
-            
+
         } else {
             // If the checkbox is unchecked, set the value of the filter input to an empty string or any other desired value
             pdfFilterInput.value = "0";
         }
 
-})
+    })
 }
 
 
@@ -32,14 +32,14 @@ async function reportDownload(){
     // JavaScript to handle form submission when links are clicked
     document.getElementById('pdfDownload').addEventListener('click', function(e) {
         e.preventDefault(); // Prevent the default link behavior
-        
+
         document.getElementById('combinedForm').action = '/interview_process/pdf'; // Set the form action
         document.getElementById('combinedForm').submit(); // Submit the form
     });
 
     document.getElementById('excelDownload').addEventListener('click', function(e) {
         e.preventDefault(); // Prevent the default link behavior
-        
+
         document.getElementById('combinedForm').action = '/interview_process/excel'; // Set the form action
         document.getElementById('combinedForm').submit(); // Submit the form
     });
@@ -307,8 +307,8 @@ $(document).ready(function () {
     $(reportButtonCon).appendTo(searchRow);
 
     $('.dropdown-menu > li').hover(function () {
-        $(this).children('.dropdown-submenu').css('display', 'block');
-    }
+            $(this).children('.dropdown-submenu').css('display', 'block');
+        }
         , function () {
             $(this).children('.dropdown-submenu').css('display', '');
         });
@@ -566,11 +566,6 @@ function createDatePostedFilterButton(selectedValue,a,b) {
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
 
-        case '':
-            table.column(0).search('' + ';' + '').draw();
-            break;
-        default:
-            return false;
     }
     var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
@@ -738,15 +733,15 @@ function SelectedFilterName(item) {
             // Perform action for 'past_year' option
             table.column(0).search(isoStartDate + ';' + endDate).draw();
             break;
-            case 'Custom':
-                startDate.setFullYear(currentDate.getFullYear() - 1)
-                var isoStartDate = startDate.toISOString().split('T')[0];
-                console.log(startDate);
-                console.log(endDate);
-    
-                // Perform action for 'past_year' option
-                table.column(0).search(isoStartDate + ';' + endDate).draw();
-                break;
+        case 'Custom':
+            startDate.setFullYear(currentDate.getFullYear() - 1)
+            var isoStartDate = startDate.toISOString().split('T')[0];
+            console.log(startDate);
+            console.log(endDate);
+
+            // Perform action for 'past_year' option
+            table.column(0).search(isoStartDate + ';' + endDate).draw();
+            break;
 
         case '':
             table.column(0).search('' + ';' + '').draw();
