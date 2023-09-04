@@ -76,11 +76,15 @@ function changeSelectedFilterName(item) {
         }
 
         // if ($('input[name="datefilter2"]').length > 0) {
-        if(selectedValue != 'Custom') {
+        if(selectedValue !== 'Custom') {
             $('input[name="datefilter2"]').val('');
             button.text($.trim(selectedValue)); // Update the text of the button
         }else {
-            $('.apply-date-filter-btn').text('Custom');
+            if($('.apply-date-fliter-btn').length > 0) {
+                $('.apply-date-filter-btn').text('Custom');
+            }else {
+                $('.date-posted-filter-btn').text('Custom');
+            }
         }
         // }
 

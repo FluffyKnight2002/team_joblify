@@ -17,9 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalQueries;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 import java.util.Optional;
 
@@ -34,7 +36,7 @@ public class CandidateServiceImplement implements CandidateService{
     private final LanguageSkillsRepository languageSkillsRepository;
     private final TechSkillsRepository techSkillsRepository;
     private final VacancyInfoRepository vacancyInfoRepository;
-
+    private final InterviewRepository interviewRepository;
 
 
 
@@ -48,8 +50,8 @@ public class CandidateServiceImplement implements CandidateService{
 	@Override
 	public SummaryDto findByid(long id) {
 		Optional<Candidate> candiDate=candidateRepository.findById(id);
+        if (candiDate.isPresent()) {
 
-		   if (candiDate.isPresent()) {
 		         Candidate candidate = candiDate.get();
 		         String interviewType;
 		         List<String>interviewStages=new ArrayList<>();
@@ -79,39 +81,37 @@ public class CandidateServiceImplement implements CandidateService{
 		        }
                  if(!interviews.isEmpty()) {
 		        	 interviewType=interviews.get(0).getType().toString();
-		        	 for (Interview interview : interviews) {
-		        		 interviewStages.add(interview.getInterviewStage().toString());
+		        	 for (Interview interview2 : interviews) {
+		        		 interviewStages.add(interview2.getInterviewStage().toString());
 		        		 
 		        	 }
 		         }else {
 		        	 interviewStages.add("Not in avable");
 		        	 interviewType="Not in Interview";
 		         }
-		         
-		         SummaryDto summaryDto = new SummaryDto(
-		             candidate.getId(),
-		             candidate.getSummary().getName(),
-		             candidate.getSummary().getEmail(),
-		             candidate.getSelectionStatus(),
-		             candidate.getInterviewStatus(),
-		             candidate.getSummary().getDob(),
-		             candidate.getSummary().getApplyPosition(),
-		             candidate.getSummary().getEducation(),
-		             candidate.getSummary().getExperience(),
-		             candidate.getSummary().getExpectedSalary(),
-		             candidate.getSummary().getGender(),
-		             candidate.getSummary().getLvl(),
-		             candidate.getSummary().getPhone(),
-		             candidate.getSummary().getSpecialistTech(),
-		         	candidate.getVacancyInfo().getVacancy().getPosition().getName(),
-		         	interviewStages,
-		         	interviewType,
-                         lan,
-                         tec
-		         );
-		       
 
-		     return summaryDto;
+
+               return new SummaryDto(
+                   candidate.getId(),
+                   candidate.getSummary().getName(),
+                   candidate.getSummary().getEmail(),
+                   candidate.getSelectionStatus(),
+                   candidate.getInterviewStatus(),
+                   candidate.getSummary().getDob(),
+                   candidate.getSummary().getApplyPosition(),
+                   candidate.getSummary().getEducation(),
+                   candidate.getSummary().getExperience(),
+                   candidate.getSummary().getExpectedSalary(),
+                   candidate.getSummary().getGender(),
+                   candidate.getSummary().getLvl(),
+                   candidate.getSummary().getPhone(),
+                   candidate.getSummary().getSpecialistTech(),
+                   candidate.getVacancyInfo().getVacancy().getPosition().getName(),
+                   interviewStages,
+                   interviewType,
+lan,
+tec
+               );
 
 		 }else {
 		 	 return null;
