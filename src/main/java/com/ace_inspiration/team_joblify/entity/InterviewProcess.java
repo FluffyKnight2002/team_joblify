@@ -16,7 +16,7 @@ import lombok.Data;
 @Entity
 @Data
 @Immutable
-@Table(name="all_post")
+@Table(name="interview_process")
 public class InterviewProcess  {
 	@Id
 	private long id;

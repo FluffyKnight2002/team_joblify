@@ -90,8 +90,20 @@ function createdDateFiltered(selectedValue) {
 
 
 let table;
+let role;
+$(document).ready(async function () {
 
-$(document).ready(function () {
+    const response = await fetch('/authenticated-user-data', {
+        method: 'POST',
+        headers: {
+            [csrfHeader]: csrfToken
+        }
+    });
+
+    if (response.ok) {
+        const [userDetails, passwordMatches] = await response.json();
+        role = userDetails.user.role;
+    }
 
     function format(d) {
         const createdDate = new Date(d.createdDate).toLocaleString(); // Format createdDate
@@ -153,7 +165,22 @@ $(document).ready(function () {
                     const buttonText = row.accountStatus ? "Suspend" : "Activate";
                     const buttonLink = row.accountStatus ? "suspend" : "activate";
 
-                    return `<div class="dropdown">
+                    if((role === 'DEFAULT_HR' && row.role === 'DEFAULT_HR') || (role === 'SENIOR_HR' && row.role === 'SENIOR_HR')){
+
+                        return `<div class="dropdown">
+                    <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu"> 
+                        <a class="dropdown-item" href="/user-profile-edit?email=${encodeURIComponent(row.email)}">Profile</a>
+                    </div>
+                </div>`;
+
+                    } else if(role === 'SENIOR_HR' && row.role === 'DEFAULT_HR'){
+                        return ` - `;
+                    } else {
+
+                        return `<div class="dropdown">
                     <button class="btn border-0 text-dark bg-transparent drop" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
@@ -163,6 +190,10 @@ $(document).ready(function () {
                         <a class="dropdown-item" href="#" data-action="${buttonLink}" data-id="${row.id}">${buttonText}</a>
                     </div>
                 </div>`;
+
+                    }
+
+
                 },
                 sortable: false
             },

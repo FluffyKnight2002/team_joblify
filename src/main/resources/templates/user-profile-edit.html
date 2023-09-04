@@ -148,7 +148,7 @@
                     <div class="form-floating mb-3 col-md-6">
 
                       <input type="text" class="form-control" id="username" name="username" placeholder="Username"
-                        required>
+                        required minlength="5" maxlength="15">
                       <label for="username"><i class="bi bi-person px-3"></i>Username</label>
                       <span class='spinner-border spinner-border-sm input spinner username-spinner'
                         role='status'></span>
@@ -157,7 +157,8 @@
                       </div>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
-                      <input type="text" class="form-control" placeholder="Name" id="name" name="name" required>
+                      <input type="text" class="form-control" placeholder="Name" id="name" name="name" required
+                        minlength="5" maxlength="15">
                       <label for="name"><i class="bi bi-person px-3"></i>Name</label>
                       <div class="invalid-feedback" id="name-error">
                         Please add Name.
@@ -172,7 +173,8 @@
                       </div>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
-                      <input type="type" class="form-control" placeholder="Email" id="email" name="email" required>
+                      <input type="type" class="form-control" placeholder="Email" id="email" name="email" required
+                        minlength="15" maxlength="30">
                       <label for="email"><i class="bi bi-shield-lock px-3"></i>Email</label>
                       <span class='spinner-border spinner-border-sm input spinner email-spinner' role='status'></span>
                       <span class='spinner-border spinner-border-sm spinner email-spinner' role='status'></span>
@@ -186,7 +188,7 @@
                       class="form-floating mb-3 col-md-6">
 
                       <input type="text" class="form-control" placeholder="Department" id="department" name="department"
-                        required>
+                        required minlength="5" maxlength="25">
                       <label for="department"><i class="bi bi-card-list px-3"></i>Department</label>
                       <span class='spinner-border spinner-border-sm spinner department-spinner' role='status'></span>
                       <div id="department-suggestions"></div>
@@ -239,8 +241,8 @@
                     </div>
                     <div class="form-floating mb-3 col-md-6">
 
-                      <textarea class="form-control" id="note" name="note" placeholder="Note"
-                        style="height: 100px"></textarea>
+                      <textarea class="form-control" id="note" name="note" placeholder="Note" style="height: 100px"
+                        readonly></textarea>
                       <label for="note"><span class="px-3">Note(Optional)</span></label>
 
                     </div>
@@ -300,6 +302,9 @@
 
 
 
+
+
+
     });
 
 
@@ -320,10 +325,16 @@
 
           if ((authenticatedUserRole === "DEFAULT_HR" || authenticatedUserRole === "SENIOR_HR") && email !== authenticatedUserEmail) {
             passwordChangeLink.href = '/admin-password-change-user?email=' + encodeURIComponent(email);
-            $('input[name="username"], input[name="name"], input[name="email"]').each(function() {
-                console.log($(this));
-                $(this).prop('readonly', true);
+            $('input[name="username"], input[name="name"], input[name="email"]').each(function () {
+              console.log($(this));
+              $(this).prop('readonly', true);
             });
+
+            $('textarea[name="note"]').each(function () {
+              console.log($(this));
+              $(this).prop('readonly', false);
+            });
+
           } else {
             passwordChangeLink.href = '/password-change?email=' + encodeURIComponent(email);
           }
@@ -339,15 +350,71 @@
       }
     }
 
-let originalName;
-let originalUsername;
-let originalEmail;
-let originalPhone;
-let originalNote;
-let originalPreview;
-let originalDepartment;
-let originalGender;
-let originalRole;
+    let originalName;
+    let originalUsername;
+    let originalEmail;
+    let originalPhone;
+    let originalAddress;
+    let originalNote;
+    let originalPreview;
+    let originalDepartment;
+    let originalGender;
+    let originalRole;
+
+    let data;
+
+
+    function submitWithoutChange() {
+      let newDepartment;
+      let newRole;
+
+      if ($('#department').length > 0) {
+        newDepartment = document.getElementById('department').value;
+      }
+
+      if ($('#role').length > 0) {
+        newRole = document.getElementById('role').value;
+      }
+
+
+
+      if (
+        originalName === document.getElementById('name').value &&
+        originalUsername === document.getElementById('username').value &&
+        originalEmail === document.getElementById('email').value &&
+        originalPhone === document.getElementById('phone').value &&
+        originalAddress === document.getElementById('address').value &&
+        originalNote === document.getElementById('note').value &&
+        originalPreview === document.getElementById('uploadedImage').src &&
+        originalDepartment === newDepartment &&
+        originalGender === document.getElementById('gender').value &&
+        originalRole === newRole
+      ) {
+
+        console.log("didntchange");
+
+        iziToast.show({
+          title: '<i class="bi bi-exclamation-triangle-fill"></i>',
+          message: 'No changes were made. User\'s information are still the same.',
+          position: 'topCenter',
+          timeout: 3000,
+          backgroundColor: 'rgb(255,191,140)',
+          progressBarColor: 'red', // Set the progress bar color to red
+          theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
+          onClosed: function () {
+          }
+        });
+
+        return false;
+
+      } else {
+
+        console.log("change");
+        return true;
+      }
+
+    }
+
 
     async function profileFill() {
       try {
@@ -359,7 +426,7 @@ let originalRole;
         })
 
         if (response.ok) {
-          const data = await response.json();
+          data = await response.json();
 
           console.log("Data : ", data);
 
@@ -385,9 +452,20 @@ let originalRole;
           note.value = data.note;
           preview.src = 'data:image/jpeg;base64,' + data.photo;
 
+          originalName = data.name;
+          originalUsername = data.username;
+          originalPhone = data.phone;
+          originalEmail = data.email;
+          originalAddress = data.address;
+          originalNote = data.note;
+          originalPreview = 'data:image/jpeg;base64,' + data.photo;
+          originalGender = data.gender;
+
+
           // Check if department select element exists
           if ($('#department').length > 0) {
-            $('#department').val(stringDepartment); // Assign the stringified department name
+            $('#department').val(stringDepartment);
+            originalDepartment = stringDepartment; // Assign the stringified department name
           }
 
           const gender = document.getElementById('gender');
@@ -401,6 +479,7 @@ let originalRole;
 
           // Check if role select element exists using jQuery
           if ($('#role').length > 0) {
+            originalRole = data.role;
             const role = $('#role');
             role.find('option').each(function () {
               if ($(this).val() === data.role) {
@@ -436,8 +515,10 @@ let originalRole;
     document.querySelector("#profile-edit-form").addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent the form from submitting normally
 
-      if (!isFormValid()) {
+      if (!isFormValid() || !submitWithoutChange()) {
         console.log("Form data is not valid. Please fill all required fields.");
+
+
         return;
       } else {
 
@@ -529,9 +610,11 @@ let originalRole;
       }
 
       $(document).on("click", "#close", function () {
-
-        resetModal();
+        setTimeout(function () {
+          resetModal();
+        }, 1500); // Delay in milliseconds (1 second in this example)
       });
+
 
       $(document).on("click", "#confirmYes", function () {
 
@@ -582,6 +665,11 @@ let originalRole;
       });
       $('#confirmationModal').modal('show');
     }
+
+
+
+
+
     function isFormValid() {
       // Get all required input fields, textareas, and select elements
       const requiredFields = document.querySelectorAll('input[required], textarea[required], select[required]');
@@ -593,6 +681,16 @@ let originalRole;
           continue;
         }
         if (!field.value.trim() || !checkPhoneNumber() || !checkEmail() || !usernameDuplicate()) {
+
+          iziToast.warning({
+            title: 'Error',
+            message: 'You have to finish to fill Data for Submit.',
+            position: 'topCenter',
+            backgroundColor: '#f58787',
+            progressBarColor: 'red', // Set the progress bar color to red
+            theme: 'dark', // Optionally, you can set the theme to 'dark' to ensure the text color is visible on the red background
+          });
+
           return false; // Form data is not valid
         }
       }
@@ -838,6 +936,7 @@ let originalRole;
     });
 
     const nameInput = document.getElementById('name');
+
     // Event listener for keydown to prevent typing space as the first character
     nameInput.addEventListener('keydown', (event) => {
       if (event.key === ' ' && event.target.selectionStart === 0) {

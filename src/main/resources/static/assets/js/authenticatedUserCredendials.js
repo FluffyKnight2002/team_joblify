@@ -32,7 +32,6 @@ async function authenticatedUserData() {
             console.log(passwordMatches);
             console.log(userDetails.user.role)
             const name = document.getElementById('authenticated-name');
-            const username = document.getElementById('authenticated-username');
             const department = document.getElementById('authenticated-department');
             const profileLink = document.getElementById('profile-link');
             const profileImg = document.getElementById('profile-img');
@@ -42,7 +41,7 @@ async function authenticatedUserData() {
 
             passwordChange.href = '/password-change?email=' + encodeURIComponent(userDetails.email);
             name.innerHTML = userDetails.name + ' <span class="d-block text-muted text-right sub-title" style="font-size: 0.7rem">(' + role + ')</span>';
-            username.innerHTML = userDetails.username;
+
             department.innerHTML = userDetails.department;
             profileLink.href = '/user-profile-edit?email=' + encodeURIComponent(userDetails.email);
             profileImg.src = 'data:image/png;base64,' + userDetails.photo;
