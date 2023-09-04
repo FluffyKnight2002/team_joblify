@@ -60,12 +60,12 @@ class UserServiceImplementTest {
     private UserServiceImplement implement;
     Department d;
 
-    @BeforeEach
-    void setUp() {
-
-        implement = new UserServiceImplement(passwordEncoder, userRepository, departmentRepository, resourceLoader);
-
-    }
+//    @BeforeEach
+//    void setUp() {
+//
+//        implement = new UserServiceImplement(passwordEncoder, userRepository, departmentRepository, resourceLoader);
+//
+//    }
 
 
     @ParameterizedTest

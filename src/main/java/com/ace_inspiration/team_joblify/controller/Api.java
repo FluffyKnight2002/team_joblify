@@ -175,6 +175,7 @@ public class Api {
     public boolean sendOfferMail(@RequestBody EmailTemplateDto emailTemplateDto, Authentication authentication) {
         MyUserDetails myuser = (MyUserDetails) authentication.getPrincipal();
         emailTemplateDto.setUserId(myuser.getUserId());
+        System.err.println(emailTemplateDto.getName());
         boolean email = emailService.sendJobOfferEmail(emailTemplateDto);
         if(email){
             offerMailSendedService.setDataInOfferMail(emailTemplateDto);

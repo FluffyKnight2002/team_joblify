@@ -84,7 +84,9 @@ public class CandidateController {
     private final OfferMailSendedService offerMailSendedService;
 
     private FirstDaySpecification firstDaySpecification;
+    
     private FirstDaySpecificationInterview firstDaySpecificationInterview;
+
     @GetMapping("/allCandidate")
     @ResponseBody
     public DataTablesOutput<InterviewProcess> getAllCandidate(DataTablesInput input) {

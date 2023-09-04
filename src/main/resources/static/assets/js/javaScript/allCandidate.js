@@ -72,139 +72,125 @@ $(document).ready( async function() {
     });
 
 
-    table = $('#table2').DataTable(
+    table = $('#table1').DataTable(
         {
             "serverSide": true,
             "processing": true,
-            "ajax": '/process',
-            "scrollY": 300,
-            "scrollX": true,
-            "scrollCollapse": true,
-            "fixedHeader": {
-                "header": true,
+            "ajax": '/allCandidate',
+            "sScrollY": "auto",
+            "search": {
+                "regex": true,
+                "smart": false
             },
+            // "bScrollCollapse": true,
 
             "columns": [
+
                 {
-                    data: "openDate",
-                    render: function (data, type, row) {
-                        return changeTimeFormat(data);
-                    },
-                    targets: 0
+                    targets: 0,
+                    data: "id",
+                    render: function(data, type, row) { return '<input type="checkbox" class="ck" value="' + data + '">'; },
+                    sortable: false
                 },
                 {
-                    data: "closeDate",
-                    render: function (data, type, row) {
-                        return changeTimeFormat(data);
-                    },
-                    targets: 1
+                    processing: false,
+                    target: 1,
+                    className: 'dt-control',
+                    orderable: false,
+                    data: "viId",
+                    render: function(data) {
+                        return "";
+                    }
+
                 },
                 {
+                    data: "id",
                     targets: 2,
-                    data: "position",
-                    className: "position",
-                    render: function (data, type, row) {
-                        return `
-                            <div>
-                                <a class="btn btn-sm btn-primary show-position w-100 d-flex justify-content-center align-items-center"
-                                    style="min-height: 51.33px"
-                                   href="/candidate-view-summary?viId=${row.id}&name=${data}">${data}</a>
-                            </div>
-                            `;
-
-                    },
-                    // sortable: false
-
+                    visible: false
                 },
                 {
-                  targets:3,
-                  data:'department'
-
+                    data: "name",
+                    targets: 3
                 },
                 {
                     targets: 4,
-                    data: "totalCandidate",
-                    render: function (data) {
-                        let total = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-info bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return total;
-                    },
-                    sortable: false
+                    data: "position",
+
+
                 },
+
                 {
                     targets: 5,
-                    data: 'interviewedCounts',
-                    render: function (data) {
-                        let inter = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-dark bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return inter;
-                    },
-                    sortable: false
+                    data: "selectionStatus",
 
-                            
-                              
-                            },
+                },
                 {
                     targets: 6,
-                    data: "passedCandidate",
-                    render: function (data) {
-                        let passed = data == null ? '-' : data;
-                        let passBtn = (passed == '-') ?
-                            '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-success bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return passBtn;
+                    data: 'phone',
 
 
-                    },
-                    sortable: false
+
                 },
                 {
-
-                    data: "pendingCandidate",
                     targets: 7,
-                    render: function (data) {
-                        let pend = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-warning bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return pend;
+                    data: "email",
+                    render: function(data, type, row) {
+                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
                     },
-                    sortable: false
+                    sortable: false,
+                    visible: false
+
                 },
                 {
+                    className:"display",
+                    data: "interviewStatus",
                     targets: 8,
-                    data: 'cancelCandidate',
-                    render: function (data) {
-                        let cancel = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-danger bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return cancel;
+                    render: function(data, type, row) {
+                        return '<select id="changeStatus"' + (data === 'ACCEPTED' ? ' disabled' : '') + '>' +
+                            '<option value="NONE"' + (data === 'NONE' ? ' selected' : '') + ' >NONE</option>' +
+                            '<option value="PENDING"' + (data === 'PENDING' ? ' selected' : '') + '>PENDING</option>' +
+                            '<option value="PASSED"' + (data === 'PASSED' ? ' selected' : '') + '>PASSED</option>' +
+                            '<option value="CANCEL"' + (data === 'CANCEL' ? ' selected' : '') + '>CANCEL</option>' +
+                            '<option value="ACCEPTED"' + (data === 'ACCEPTED' ? ' selected' : '') + '>ACCEPTED</option>' +
+                            '</select>';
                     },
-                    sortable: false
+                    sortable: false,
+
                 },
                 {
                     targets: 9,
-                    data: "notInterviewCandidate",
-                    render: function (data) {
-                        let not = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-secondary bg-gradient rounded-pill px-4">' + data +'</span></div>';
-                        return not;
-                    },
-                    sortable: false
+                    data: 'lvl',
+
                 },
                 {
                     targets: 10,
-                    data: 'acceptedCandidate',
-                    render: function (data) {
-                        let acc = data == null ? '<div class="text-center"><span>-</span></div>' :
-                            '<div class="text-center"><span class="badge bg-gradient-ltr rounded-pill px-4">' + data +'</span></div>';
-                        return acc;
+                    data: "email",
+                    render: function(data, type, row) {
+                        return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
                     },
-                    sortable: false
+                    sortable: false,
+                    visible: false
+
                 },
-                        
-                        ],
-                        order:[[0,'desc']]
+                {
+                    targets: 11,
+                    data: 'experience',
+                }, {
+                    targets: 12,
+                    data: 'date',
+                    render: function(data, type, row) {
+                        if (type === 'display' || type === 'filter') {
+                            // Assuming data is in the format '2023-01-01T00:00:00'
+                            var dateParts = data.split('T')[0].split('-');
+                            return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+                        }
+                        return data; // For other types, return the original data
+                    }
+                },
 
+            ],
+            order: [[2, 'desc']]
         });
-
     // Assuming you have initialized DataTable properly
     let searchRow = $('#table1_filter').closest('.row');
     $('.dt-row').css('margin-bottom','40px')
@@ -227,11 +213,11 @@ $(document).ready( async function() {
                 <li class="dropdown-item filter-items apply-date-dropdown-item">
                     <span class="date-posted">Apply Date</span>
                     <ul class="dropdown-menu dropdown-submenu datePostedDropdown" id="apply-date-dropdown-submenu">
-                        <li class="dropdown-item filter-items" onclick="DateFilterButton('Today');checkAndToggleFilterButton();">Today</li>
-                        <li class="dropdown-item filter-items" onclick="DateFilterButton('Last Week');checkAndToggleFilterButton();">Last Week</li>
-                        <li class="dropdown-item filter-items" onclick="DateFilterButton('Last Month');checkAndToggleFilterButton();">Last Month</li>
-                        <li class="dropdown-item filter-items" onclick="DateFilterButton('Last 6 Month');checkAndToggleFilterButton();">Last 6 Month</li>
-                        <li class="dropdown-item filter-items" onclick="DateFilterButton('Last Year');checkAndToggleFilterButton();">Last Year</li>
+                        <li class="dropdown-item filter-items" onclick="DateFilterButton($(this));checkAndToggleFilterButton();">Today</li>
+                        <li class="dropdown-item filter-items" onclick="DateFilterButton($(this));checkAndToggleFilterButton();">Last Week</li>
+                        <li class="dropdown-item filter-items" onclick="DateFilterButton($(this));checkAndToggleFilterButton();">Last Month</li>
+                        <li class="dropdown-item filter-items" onclick="DateFilterButton($(this));checkAndToggleFilterButton();">Last 6 Month</li>
+                        <li class="dropdown-item filter-items" onclick="DateFilterButton($(this));checkAndToggleFilterButton();">Last Year</li>
                         <li class="dropdown-item filter-items">
                             <input type="text" class="px-2 rounded datefilter" name="datefilter" value="" placeholder="Custom" />
                         </li>
@@ -324,15 +310,15 @@ $(document).ready( async function() {
                 			<div class="text-light fw-bolder fs-6" >Reporting</div>
 						</div>
             			<div class="row">
-            				<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
-            					<a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
-                    			></a>
-                    		</div>
-                    		<div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
-                				<a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
-                				></a>
-                			</div>
-                		</div>
+            <div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report PDF">
+            <a id="pdfDownload" class="image-button" aria-label="Download pdf" onclick="pdfDownload()"
+                >  </a>
+</div>
+                    <div class="col-6 text-center" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Report Excel">
+          <a id="excelDownload" class="image-button" aria-label="Download Excel" onclick="excelDownload()"
+               ></a>
+              </div>
+               </div>
                 		<div class="text-center row">
                 			<div class="form-check form-switch">
                                 <label class="form-check-label text-light" for="withFiler" style="font-size: 0.8rem">Including filter</label>
@@ -792,11 +778,56 @@ $(document).ready( async function() {
         console.log("Value to remove:", valueToRemove);
         console.log("Updated ccMails array:", ccMails);
     });
+    const currentDate = moment();
+    $(function() {
+        // Initialize the daterangepicker
+        $('input[name="datefilter"]').daterangepicker({
+            autoUpdateInput: false,
+            locale: {
+                cancelLabel: 'Clear'
+            },
+            maxDate: currentDate // Set the maximum date initially to the current date
+        });
 
+        console.log($('#date-posted-dropdown-submenu'));
+
+        // Handle apply event to update the input value and set start and end times
+        $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+            const startDate = picker.startDate.format('MM/DD/YYYY');
+            const endDate = picker.endDate.format('MM/DD/YYYY');
+
+            $(this).val(startDate + ' - ' + endDate);
+
+            // Set the start and end times in your input fields
+            DateFilterButton('Custom',startDate,endDate);
+            checkAndToggleFilterButton();
+        });
+
+        // Handle cancel event to clear the input value and reset start and end times
+        $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+            $('#filter-start-time').val('');
+            $('#filter-end-time').val('');
+        });
+
+        $('.daterangepicker').hover(function () {
+            $('#date-posted-dropdown-submenu').css('display', 'block');
+        });
+
+        $('.daterangepicker th').each(function() {
+            console.log("TH:",$(this))
+            $(this).on('click', function(event) {
+                console.log("Click!!!!")
+                event.stopPropagation();
+                $('#date-posted-dropdown-submenu').css('display', 'block');
+            });
+        });
+
+    });
 
 
 });
-
+/////////////////////////
 function updateCcMails() {
 
     ccMails.forEach(function() {
@@ -974,6 +1005,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
         const ccmail=document.getElementById('mails_1');
         const canid = document.getElementById('candidate-id');
         const viId=document.getElementById('viId');
+        const name=document.getElementsById('UserName');
         console.log('<<<<<',viId.value)
         if ($('#data_1').summernote('isEmpty')) {
 
@@ -993,6 +1025,7 @@ $('#table1 tbody').on('click', '.btn-outline-primary', function() {
             /*	console.log('>>>>>>',date,'>>>>>>>',time,'<<<<<',row.viId)*/
             const data={
                 to:to.value,
+                name:name.value,
                 subject:subject.value,
                 ccmail:ccMails,
                 vacancyId:viId.value,
@@ -1274,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 */
-function DateFilterButton(selectedValue) {
+function DateFilterButton(selectedValue,start,end) {
     console.log('>>>>>>>>>>>>',selectedValue)
     var filterOption = $(this).find('option:selected').val();
     var currentDate = new Date();
@@ -1286,14 +1319,19 @@ function DateFilterButton(selectedValue) {
     let selectedText = null;
 
     if(selectedValue === 'Custom') {
-        $('#filter-start-date').val(startDate);
-        $('#filter-end-date').val(endDate);
+        $('#filter-start-date').val(start);
+        $('#filter-end-date').val(end);
         selectedText = selectedValue;
         $('#filter-apply-date').val(selectedText);
+        const start1 = formatDate(start);
+        const end2 = formatDate(end);
+        console.log('<<<<<<<<<<<<',selectedText,'....',selectedValue)
+        table.column(12).search(start1 + ';' + end2).draw();
     }else {
+        selectedText =  selectedValue.text();
         $('#filter-apply-date').val(selectedText);
     }
-    switch (selectedValue) {
+    switch (selectedText) {
         case 'Today':
             var first = currentDate.toISOString().split('T')[0];
             console.log(first) // Convert to ISO format (YYYY-MM-DD)
@@ -1337,11 +1375,6 @@ function DateFilterButton(selectedValue) {
             // Perform action for 'past_year' option
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
-        case '':
-            table.column(12).search('' + ';' + '').draw();
-            break;
-        default:
-            return false;
     }
     var selectedDropdown = `
         <div class="btn-group mt-3 p-2 position-relative">
@@ -1349,7 +1382,7 @@ function DateFilterButton(selectedValue) {
                 recent-filter-dropdown-btn date-posted-filter-btn"
                 onmouseenter="showSelectedDropdownRemoveButton(this);"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                ${selectedValue}
+                ${selectedText}
             </button>
             <span class="bg-danger selected-dropdown-remove-button position-filter-remove" data-filter-name="apply-date-dropdown-item">
                 <i class="bi bi-x"></i>
@@ -1361,14 +1394,17 @@ function DateFilterButton(selectedValue) {
                 <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last 6 Month</li>
                 <li class="dropdown-item filter-items" onclick="SelectedFilterName($(this));" data-filter-id="filter-apply-date">Last Year</li>
 
-                <li class="dropdown-item filter-items">
-                    <input type="text" class="px-2 rounded datefilter2" name="datefilter2" value="" placeholder="Custom" />
-                </li>
+        
             </ul>
         </div>`;
 
     // Append the selectedDropdown to the appropriate container
     $('#recent-filter-dropdown-con').append(selectedDropdown);
+
+
+    // Hide other remove buttons and show the recent-filter-dropdown-btn
+    $('.selected-dropdown-remove-button').hide();
+    $('.recent-filter-dropdown-btn').show();
 
 }
 function checkAndToggleFilterButton() {
@@ -1462,11 +1498,7 @@ function SelectedFilterName(item) {
             // Perform action for 'past_year' option
             table.column(12).search(isoStartDate + ';' + endDate).draw();
             break;
-        case '':
-            table.column(12).search('' + ';' + '').draw();
-            break;
-        default:
-            return false;
+
     }
 
     // if ($('input[name="datefilter2"]').length > 0) {
@@ -1474,6 +1506,7 @@ function SelectedFilterName(item) {
         $('input[name="datefilter2"]').val('');
         button.text($.trim(selectedValue)); // Update the text of the button
     }else {
+        table.column(12).search(isoStartDate + ';' + endDate).draw();
         $('.date-posted-filter-btn').text('Custom');
     }
     // }
@@ -1779,7 +1812,7 @@ function createSelectionStatusFilterButton(selectedValue) {
     // Update data table
     updateDataTable();
 }
-function changeSelectedFilterName(item) {
+function changeSelectedFilterName(item,startDate,endDate) {
     console.log(item)
     let selectedValue = $(item).text();
     console.log(selectedValue)
@@ -1806,7 +1839,8 @@ function changeSelectedFilterName(item) {
                 $('input[name="datefilter2"]').val('');
                 button.text($.trim(selectedValue)); // Update the text of the button
             }else {
-                $('.apply-date-filter-btn').text('Custom');
+                table.column(12).search(startDate + ';' + endDate).draw();
+                $('.date-posted-filter-btn').text('Custom');
             }
             // }
         }
@@ -1832,7 +1866,8 @@ function changeSelectedFilterName(item) {
                 $('input[name="datefilter2"]').val('');
                 button.text($.trim(selectedValue)); // Update the text of the button
             }else {
-                $('.apply-date-filter-btn').text('Custom');
+                table.column(12).search(startDate + ';' + endDate).draw()
+                $('.date-posted-filter-btn').text('Custom');
             }
             // }
         }
@@ -1994,59 +2029,16 @@ function resetFilters() {
 
     updateDataTable();
 }
+function formatDate(inputDate) {
+    // Split the input date string into month, day, and year
+    const parts = inputDate.split('/');
+    const month = parts[0];
+    const day = parts[1];
+    const year = parts[2];
 
-$(document).on('click', '.selected-dropdown-remove-button', function () {
-    let filterName = $(this).data('filter-name');
+    // Create a new Date object with the rearranged format
+    const formattedDate = new Date(`${year}-${month}-${day}`);
 
-    // Find and update the isRemove property in filterElements
-    for (let i = 0; i < filterElements.length; i++) {
-        if (filterElements[i].name === filterName) {
-            filterElements[i].isRemove = false;
-            $('.' +filterElements[i].name).show();
-            $('#'+filterElements[i].filterId).val('');
-            break; // Exit the loop once the element is found
-        }
-    }
-
-    console.log("Filter name : ", filterName);
-
-    if(filterName === 'level-dropdown-item') {
-
-        const selectedLevels = [];
-
-        $('.level-checkbox').each(function () {
-
-            let checkbox = $(this);
-            const checkboxes2 = $('.level-filter-checkbox:checked');
-
-            // Iterate through the checked checkboxes and collect their values
-            checkboxes2.each(function () {
-                selectedLevels.push($(this).val());
-            });
-
-            console.log("Selected Levels :",selectedLevels)
-            console.log("It match : ", selectedLevels.includes(checkbox.val()));
-            if (selectedLevels.includes(checkbox.val())) {
-                console.log("checkbox change!!!!")
-                checkbox.prop('checked', true).trigger('change');
-            }
-            console.log("level-checkbox.val() ", checkbox.val());
-            console.log("checked : ", checkbox.is(":checked"));
-        });
-        table.column(9).search('').draw();
-    }else if (filterName === 'apply-date-dropdown-item') {
-        table.column(12).search('').draw();
-    }else if(filterName==='position-dropdown-item'){
-        table.column(4).search('').draw();
-    }else if (filterName === 'selection-status-dropdown-item') {
-        table.column(5).search('').draw();
-    }else if(filterName==='post-dropdown-item'){
-        table.column(1).search('').draw();
-    }else if(filterName==='interview-status-dropdown-item'){
-        table.column(8).search('').draw();
-    }
-
-    $(this).closest('.btn-group').remove();
-    checkAndToggleFilterButton();
-
-});
+    // Use the toISOString() method to get the desired format (YYYY-MM-DD)
+    return formattedDate.toISOString().split('T')[0];
+}
