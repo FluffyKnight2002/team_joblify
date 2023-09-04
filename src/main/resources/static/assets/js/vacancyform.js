@@ -124,7 +124,7 @@ $(document).ready(function() {
         var lvl = $('#lvl').val();
         var workingDays = $("#workingDays").val();
         var workingHours = $("#workingHours").val();
-        var salary = $("#salary").val();
+        var salary = $("#salary").val() === '' ? 'Negotiate' : $("#salary").val();
         var address = $("#address").val();
         var description = $("#descriptions").val();
         var requirements = $("#requirements").val();

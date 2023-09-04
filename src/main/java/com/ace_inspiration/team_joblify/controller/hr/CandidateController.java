@@ -1,14 +1,11 @@
 package com.ace_inspiration.team_joblify.controller.hr;
 
-import com.ace_inspiration.team_joblify.config.FirstDaySpecification;
-import com.ace_inspiration.team_joblify.config.FirstDaySpecificationInterview;
 import com.ace_inspiration.team_joblify.dto.*;
 import com.ace_inspiration.team_joblify.entity.*;
 import com.ace_inspiration.team_joblify.repository.AllPostRepository;
 import com.ace_inspiration.team_joblify.repository.InterviewProcessRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.service.AllPostService;
-import com.ace_inspiration.team_joblify.service.OfferMailSendedService;
 import com.ace_inspiration.team_joblify.service.PositionService;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
@@ -153,7 +150,6 @@ public class CandidateController {
                             predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("date"), startDate)
                     );
                 }
-
                 if (endDate != null) {
                     // Add filter condition for the end date
                     predicate = criteriaBuilder.and(
@@ -206,6 +202,7 @@ public class CandidateController {
 
         return output;
     }
+
     @GetMapping("/allPositions")
     @ResponseBody
     public List<Position> getAllPosition() {

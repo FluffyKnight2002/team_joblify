@@ -127,6 +127,12 @@ $(document).ready(async function () {
     table = $('table#table').DataTable({
 
         ajax: '/get-all-user',
+        "scrollY": 300,
+        "scrollX": false,
+        "scrollCollapse": false,
+        "fixedHeader": {
+            "header": true,
+        },
         columns: [
             {
                 target: 0,
@@ -209,6 +215,8 @@ $(document).ready(async function () {
         processing: true
         // stateSave: true
     });
+
+    $('.dataTables_scrollBody').css('max-height','210px');
 
 
 

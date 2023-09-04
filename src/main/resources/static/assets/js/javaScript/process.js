@@ -51,6 +51,13 @@ $(document).ready(function () {
         {
             "serverSide": true,
             "processing": true,
+            "stateSave": true,
+            "scrollY": 300,
+            "scrollX": false,
+            "scrollCollapse": false,
+            "fixedHeader": {
+                "header": true,
+            },
             "ajax": {
 
                 url: '/process',
@@ -197,6 +204,8 @@ $(document).ready(function () {
             order: [[0, 'desc']]
 
         });
+
+    $('.dataTables_scrollBody').css('max-height','210px');
 
     // Filter session start
     // Create reset filter button
