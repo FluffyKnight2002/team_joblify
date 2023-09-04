@@ -17,5 +17,5 @@ public interface ReportService {
     LocalDate endDate, String department, String position) throws JRException, IOException;
 
     public ResponseEntity<byte[]> allCandidate(String format, LocalDate startDate, 
-    LocalDate endDate, String position, List<Level> level, String selectionStatus, String interviewStatus) throws JRException, IOException;
+    LocalDate endDate, String position, List<Level> level, Status selectionStatus, Status interviewStatus) throws JRException, IOException;
 }
