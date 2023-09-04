@@ -147,6 +147,7 @@ public class Api {
     @PostMapping("/sendOTP")
     public String sendEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
         emailService.sendForgetPasswordEmail(emailTemplateDto.getTo());
+        
         return "Email sent successfully!";
     }
 
@@ -181,6 +182,7 @@ public class Api {
             offerMailSendedService.setDataInOfferMail(emailTemplateDto);
             candidateService.offer(emailTemplateDto.getCanId());
             SummaryDto summaryDto = candidateService.findByid(emailTemplateDto.getCanId());
+            interService.savefirst(emailTemplateDto.getCanId());
             String message = myuser.getName() + " send Offer Mail to " + emailTemplateDto.getName();
             String link = "/candidate-view-summary?position=" + summaryDto.getApply_position()+"&candidateId="+summaryDto.getId();
             notificationCreator.createNotification(myuser, message, link);

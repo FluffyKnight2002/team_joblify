@@ -30,19 +30,19 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImplement implements EmailService {
-	private final CandidateService candidateService;
+    private final CandidateService candidateService;
     private final UserRepository userRepository;
     private final OtpRepository otpRepository;
     private final JavaMailSender javaMailSender;
     private final ResourceLoader resourceLoader;
     private final InterviewRepository inter;
-
 
     @Override
     public void sendForgetPasswordEmail(String to) {
@@ -51,38 +51,49 @@ public class EmailServiceImplement implements EmailService {
 
         String templateId = "1"; // Your desired template ID
         String templateContent = getEmailTemplateById(templateId);
-        User user = userRepository.findByEmail(to).orElseThrow(()-> new NoSuchElementException("Email Not Found."));
+        User user = userRepository.findByEmail(to).orElseThrow(() -> new NoSuchElementException("Email Not Found."));
 
-            // Replace placeholders with actual data
-            templateContent = templateContent.replace("{Name}", user.getName());
-            templateContent = templateContent.replace("{OTP}", otp);
-            templateContent = templateContent.replace("{Email}", to);
+        // Replace placeholders with actual data
+        templateContent = templateContent.replace("{Name}", user.getName());
+        templateContent = templateContent.replace("{OTP}", otp);
+        templateContent = templateContent.replace("{Email}", to);
 
-            // Now send the email using JavaMail
-            MimeMessage message = javaMailSender.createMimeMessage();
-            try {
-                MimeMessageHelper helper = new MimeMessageHelper(message, true);
-                helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
-                helper.setTo(to);
-                helper.setSubject("OTP for Forget Password");
-                helper.setText(templateContent, true);
+        // Now send the email using JavaMail
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
+            helper.setTo(to);
+            helper.setSubject("OTP for Forget Password");
+            helper.setText(templateContent, true);
 
-                javaMailSender.send(message);
-                LocalDateTime now = LocalDateTime.now().plusMinutes(3);
-                Otp o = Otp.builder()
+            javaMailSender.send(message);
+            LocalDateTime now = LocalDateTime.now().plusMinutes(3);
+            // Otp o = Otp.builder()
+            // .code(otp)
+            // .expiredDate(now)
+            // .user(user)
+            // .build();
+            // otpRepository.save(o);
+
+            Otp o = otpRepository.findById(user.getId()).orElse(null);
+            
+                o = Otp.builder()
                         .code(otp)
                         .expiredDate(now)
                         .user(user)
                         .build();
                 otpRepository.save(o);
 
-            } catch (MessagingException e) {
-                log.error("Error sending email: {}", e.getMessage());
-                // Handle any email sending errors here
-            } catch (UnsupportedEncodingException e) {
-                log.error("Unsupported encoding: {}", e.getMessage());
-            }
+            
+
+        } catch (MessagingException e) {
+            log.error("Error sending email: {}", e.getMessage());
+            // Handle any email sending errors here
+        } catch (UnsupportedEncodingException e) {
+            log.error("Unsupported encoding: {}", e.getMessage());
         }
+    }
 
     @Override
     public boolean sendJobOfferEmail(EmailTemplateDto emailTemplateDto) {
@@ -96,7 +107,7 @@ public class EmailServiceImplement implements EmailService {
         // Now send the email using JavaMail
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            if(emailTemplateDto.getCcmail().length <= 0) {
+            if (emailTemplateDto.getCcmail().length <= 0) {
 
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 helper.setFrom(new InternetAddress("ak4312040@gmail.com", "CZe"));
@@ -106,10 +117,10 @@ public class EmailServiceImplement implements EmailService {
 
                 javaMailSender.send(message);
                 return true;
-            }
-            else if(emailTemplateDto.getDate() == null && emailTemplateDto.getTime()==null && emailTemplateDto.getType()==null && emailTemplateDto.getStatus()==null){
-//                String[] ccmail = emailTemplateDto.getCcmail().split(",");
-                for (String email: emailTemplateDto.getCcmail()){
+            } else if (emailTemplateDto.getDate() == null && emailTemplateDto.getTime() == null
+                    && emailTemplateDto.getType() == null && emailTemplateDto.getStatus() == null) {
+                // String[] ccmail = emailTemplateDto.getCcmail().split(",");
+                for (String email : emailTemplateDto.getCcmail()) {
                     System.err.println(email);
                 }
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -121,10 +132,9 @@ public class EmailServiceImplement implements EmailService {
 
                 javaMailSender.send(message);
                 return true;
-            }
-            else{
-//                String[] ccmail = emailTemplateDto.getCcmail().split(",");
-                for (String email: emailTemplateDto.getCcmail()){
+            } else {
+                // String[] ccmail = emailTemplateDto.getCcmail().split(",");
+                for (String email : emailTemplateDto.getCcmail()) {
                     System.err.println(email);
                 }
 
@@ -139,9 +149,6 @@ public class EmailServiceImplement implements EmailService {
                 return true;
             }
 
-
-
-        
         } catch (MessagingException e) {
             log.error("Error sending email: {}", e.getMessage());
             return false;
@@ -149,7 +156,7 @@ public class EmailServiceImplement implements EmailService {
             log.error("Unsupported encoding: {}", e.getMessage());
             return false;
         }
-      
+
     }
 
     @Override
@@ -180,8 +187,6 @@ public class EmailServiceImplement implements EmailService {
             }
         }
     }
-
-
 
     public String getEmailTemplateById(String templateId) {
         String templateContent = null;
@@ -222,4 +227,3 @@ public class EmailServiceImplement implements EmailService {
         return templateContent;
     }
 }
-
