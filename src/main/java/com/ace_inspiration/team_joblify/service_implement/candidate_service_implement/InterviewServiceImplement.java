@@ -57,7 +57,7 @@ public class InterviewServiceImplement implements InterviewService {
 	public void savefirst(long id){
 		Optional<Candidate> candiDate=candidateRepository.findById(id);
 		LocalDateTime dateTime = LocalDateTime.now();
-
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 		// Create a DateTimeFormatter for formatting just the time
 		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
@@ -70,9 +70,9 @@ public class InterviewServiceImplement implements InterviewService {
 
 		if (candiDate.isPresent()) {
 			Candidate candidate = candiDate.get();
-			Optional<Interview> interview = interviewRepository.findByIdAndInterviewStage(candiDate.get().getId(), InterviewStage.FIRST);
+			Optional<Interview> interview = interviewRepository.findByIdAndInterviewStage(id, InterviewStage.FIRST);
 			if (interview.isEmpty()) {
-
+				System.err.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
 				Interview interview1 = new Interview();
 				interview1.setInterviewStage(InterviewStage.FIRST);
 				interview1.setCandidate(candiDate.get());

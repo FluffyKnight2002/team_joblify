@@ -111,9 +111,9 @@ $(document).ready( async function() {
         {
             "serverSide": true,
             "processing": true,
-            "scrollY": 300,
-            "scrollX": false,
-            "scrollCollapse": false,
+            "scrollY": 600,
+            "scrollX": true,
+            "scrollCollapse": true,
             "fixedHeader": {
                 "header": true,
             },
@@ -250,7 +250,7 @@ $(document).ready( async function() {
             order: [[2, 'desc']]
         });
 
-    $('.dataTables_scrollBody').css('max-height','210px');
+    $('.dataTables_scrollBody').css('max-height','400px');
 
     // Filter session start
     // Create reset filter button
@@ -513,10 +513,17 @@ $(document).ready( async function() {
                 console.log(data.interviewStage)
                 interviewStageSelect.options[0].disabled = true;
                 interviewStageSelect.options[1].disabled = false;
+                interviewStageSelect.options[1].selected=true;
             } else if (value === 'SECOND') {
                 console.log(data.interviewStage)
                 interviewStageSelect.options[1].disabled = true;
-            }else{
+                interviewStageSelect.options[2].selected=true;
+            }else if(value==='THIRD'){
+                interviewStageSelect.options[0].disabled = true;
+                interviewStageSelect.options[1].disabled = true;
+                interviewStageSelect.options[2].selected=true;
+            }
+            else{
                 interviewStageSelect.options[0].disabled = false;
                 interviewStageSelect.options[1].disabled = false;
             }
@@ -918,7 +925,11 @@ $(document).ready( async function() {
     //excel download end
 
     $('.cc').keyup(function(data) {
-        if (data.keyCode === 13) {
+        var inputElement=$(this)
+        var validationIconElement = $(".validationIcon")
+        var icon=$(".icon");
+        if (data.keyCode === 13 && emailPattern($(this).val())) {
+
             var value = $(this).val();
             ccMails.push($(this).val());
             if (value.trim() !== "") {
@@ -935,9 +946,16 @@ $(document).ready( async function() {
                     "</div>";
                 $(".Ccmail").append(CcMail);
                 $(this).val("");
-
+               icon.show();
+                validationIconElement.hide();
+                inputElement.removeClass("is-invalid");// Hide the validation icon
             }
+        }else if(data.keyCode === 13 && (emailPattern($(this).val()))===false){
+            icon.hide();
+            inputElement.addClass("is-invalid");
+            validationIconElement.show(); // Show the validation icon
         }
+
     })
     $(document).on("click", ".remove-skill", function() {
         var count = $(this).data("count");
@@ -957,9 +975,230 @@ $(document).ready( async function() {
     });
 
 
+    $('#table1 tbody').on('click', '.btn-outline-primary', function() {
+        var modalTitle = $(this).data('modal-title');
+        var row = table.row($(this).closest('tr')).data();
 
+        $('#emailModal .modal-title').text(modalTitle);
+        $('#emailModal .candidatEmail').val(row.email);
+        $("#emailModal .userEmail").val(row.email);
+        $("#emailModal #candidate-id").val(row.id);
+        $("#emailModal #userName").val(row.name);
+        $('#offer-Email-Modal #to_1').val(row.email);
+        $('#offer-Email-Modal .vacancy_id').val(row.viId);
+
+        const type=$('#type').val();
+        const update=getofferMail(type,row.name);
+        $('#data_1').summernote('code',update);
+        $('#type').on('change',function(){
+            const type=$(this).val();
+            const content=getofferMail(type,row.name);
+            $('#data_1').summernote('code',content);
+        });
+        const initialType = $('#where').val();
+        const updatedContent = getEmailContent(initialType, row.name,row.id);
+        $('#data').summernote('code', updatedContent);
+        $('#where').on('change', function() {
+            const type = $(this).val();
+            const updatedContent = getEmailContent(type, row.name,row.id);
+            $('#data').summernote('code', updatedContent);
+        });
+
+        $('#add-date').on('click', function() {
+            const edit = '<span style="color:red" class="date-setting">Date</span>'
+            $('#data').summernote('pasteHTML', edit);
+            // edit = '';
+
+        })
+        $('#add-time').on('click', function() {
+            const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
+            $('#data').summernote('pasteHTML', edit);
+            // edit = '';
+
+        })
+
+
+
+        const fetchValueButton = document.getElementById('fetchValueButton');
+        fetchValueButton.addEventListener('click', function() {
+            const hiddenInput = document.getElementById('content');
+            const to = document.getElementById('to');
+            const subject = document.getElementById('subject');
+            const ccmail = document.getElementById('mail');
+            const date1 = document.getElementById('date');
+            const time = document.getElementById('time');
+            const type = document.getElementById('where');
+            const stage = document.getElementById('interview-stage-select');
+            const canid=document.getElementById('candidate-id');
+            const name=document.getElementById('userName');
+            updateCcMails();
+            console.log(to.value)
+            if ($('#data').summernote('isEmpty')) {
+
+
+                $('#message-con').html('' +
+                    '<div class="loader"></div>' +
+                    '<div class="loader-txt">' +
+                    '<h3 class="text-white">Email is Empty</h3>' +
+                    '<div>' +
+                    `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
+                    '</div>');
+            }
+            else if(!to.value || !emailPattern(to.value)){
+                to.classList.add("is-invalid");
+            }else if(!subject.value){
+                subject.classList.add("is-invalid");
+            }else if(!date1.value){
+                date1.classList.add("is-invalid");
+            }
+            else if(!time.value){
+                time.classList.add("is-invalid");
+            }else if(!stage.value){
+                stage.classList.add("is-invalid");
+            }
+            else {
+                to.classList.remove("is-invalid");
+                time.classList.remove("is-invalid");
+                date1.classList.remove("is-invalid");
+                stage.classList.remove("is-invalid");
+                subject.classList.remove("is-invalid");
+                $('#data').summernote('insertText', '');
+                hiddenInput.value = document.querySelector('#data').value;
+                $('#modal-loading').modal('show');
+                $('#emailModal').modal('hide');
+                const data = {
+                    name:name.value,
+                    to: to.value,
+                    ccmail: ccMails,
+                    subject: subject.value,
+                    content: hiddenInput.value,
+                    date: date1.value,
+                    time: time.value,
+                    status: stage.value,
+                    type: type.value,
+                    canId: canid.value,
+                    position: position1
+
+                };
+                try {
+                    fetch('/send-invite-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8',
+                            [csrfHeader]: csrfToken // Include CSRF token as a request header
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data === true) {
+                                console.log('Success send to mail');
+                                $('table#table1').DataTable().ajax.reload(null, false);
+                                $('#message-con').html('' +
+                                    '<div class="loader"></div>' +
+                                    '<div class="loader-txt">' +
+                                    '<h3 class="text-white">Email was sent</h3>' +
+                                    '<div>' +
+                                    `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+                                    '</div>');
+
+                            } else {
+                                $('#message-con').html('' +
+                                    '<div class="loader"></div>' +
+                                    '<div class="loader-txt">' +
+                                    '<h3 class="text-white">Email was not sent</h3>' +
+                                    '<h3 class="text-white">Something have error</h3>'+
+                                    '<div>' +
+                                    `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+                                    '</div>');
+                                console.error('Failed to send email:', response.statusText);
+                            }
+                        });
+
+
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            }
+        });
+        const fetchofferMail=document.getElementById('Send_Offer_Mail');
+        fetchofferMail.addEventListener('click',function (){
+            const hiddenInput = document.getElementById('content_1');
+            const to=document.getElementById('to_1');
+            const subject=document.getElementById('subject_1');
+            const ccmail=document.getElementById('mails_1');
+            const canid = document.getElementById('candidate-id');
+            const viId=document.getElementById('viId');
+            const name=document.getElementById('userName');
+            console.log('<<<<<',viId.value)
+            if ($('#data_1').summernote('isEmpty')) {
+
+
+                $('#message-con').html('' +
+                    '<div class="loader"></div>' +
+                    '<div class="loader-txt">' +
+                    '<h3 class="text-white">Email is Empty</h3>' +
+                    '<div>' +
+                    `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
+                    '</div>');
+            }
+            else if(!to.value || !emailPattern(to.value)){
+                to.classList.add("is-invalid");
+            }
+            else if(!subject.value){
+                subject.classList.add("is-invalid");
+            }
+            else
+            {   to.classList.remove("is-invalid");
+                subject.classList.remove("is-invalid");
+                $('#data_1').summernote('insertText', '');
+                hiddenInput.value = document.querySelector('#data_1').value;
+
+                /*	console.log('>>>>>>',date,'>>>>>>>',time,'<<<<<',row.viId)*/
+                $('#modal-loading').modal('show');
+                $('#offer-Email-Modal').modal('hide');
+                const data={
+                    to:to.value,
+                    subject:subject.value,
+                    ccmail:ccMails,
+                    vacancyId:viId.value,
+                    canId: canid.value,
+                    content:hiddenInput.value,
+                    name:name.value,
+                }
+                fetch('/send-offer-mail',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8',
+                        [csrfHeader]: csrfToken // Include CSRF token as a request header
+                    },
+                    body: JSON.stringify(data)
+                }).then(response =>response.json(data))
+                    .then(data => {
+                        if (data === true) {
+                            console.log('Success send to mail');
+                            $('table#table1').DataTable().ajax.reload(null, false);
+                            $('#message-con').html('' +
+                                '<div class="loader"></div>' +
+                                '<div class="loader-txt">' +
+                                '<h3 class="text-white">Email was sent</h3>' +
+                                '<div>' +
+                                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
+                                '</div>');
+
+                        } else {
+                            console.error('Failed to send email:', response.statusText);
+                        }
+                    });
+
+            }
+
+        })
+
+
+    });
 });
-
+////////////////////////////
 function updateCcMails() {
 
     ccMails.forEach(function() {
@@ -1016,6 +1255,22 @@ function format(d) {
       <div class="col-auto">
       	${reconvertToString(d.lvl)}
       </div>
+    </div> 
+    <div class="row">
+      <div class="col-md-2">
+        Language Skill:
+      </div>
+      <div class="col-auto">
+      	${d.languageSkill}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-2">
+        Tech Skill:
+      </div>
+      <div class="col-auto">
+      	${d.techSkill}
+      </div>
     </div>
   </div>`;
 
@@ -1023,211 +1278,7 @@ function format(d) {
 
 }
 
-$('#table1 tbody').on('click', '.btn-outline-primary', function() {
-    var modalTitle = $(this).data('modal-title');
-    var row = table.row($(this).closest('tr')).data();
 
-    $('#emailModal .modal-title').text(modalTitle);
-    $('#emailModal .candidatEmail').val(row.email);
-    $("#emailModal .userEmail").val(row.email);
-    $("#emailModal #candidate-id").val(row.id);
-    $("#emailModal #userName").val(row.name);
-    $('#offer-Email-Modal #to_1').val(row.email);
-    $('#offer-Email-Modal .vacancy_id').val(row.viId);
-
-
-    $('#type').on('change',function(){
-        const type=$(this).val();
-        const content=getofferMail(type,row.name);
-        $('#data_1').summernote('code',content);
-    });
-
-    $('#where').on('change', function() {
-        const type = $(this).val();
-        const updatedContent = getEmailContent(type, row.name,row.id);
-        $('#data').summernote('code', updatedContent);
-    });
-    $('#add-date').on('click', function() {
-        const edit = '<span style="color:red" class="date-setting">Date</span>'
-        $('#data').summernote('pasteHTML', edit);
-        // edit = '';
-
-    })
-    $('#add-time').on('click', function() {
-        const edit = `<span Style='color:red' class='time-setting'>Start Time</span> to <span Style='color:red' class='end-setting'>End Time</span>`
-        $('#data').summernote('pasteHTML', edit);
-        // edit = '';
-
-    })
-
-    const fetchValueButton = document.getElementById('fetchValueButton');
-    fetchValueButton.addEventListener('click', function() {
-        const hiddenInput = document.getElementById('content');
-        const to = document.getElementById('to');
-        const subject = document.getElementById('subject');
-        const ccmail = document.getElementById('mails');
-        const date1 = document.getElementById('date');
-        const time = document.getElementById('time');
-        const type = document.getElementById('where');
-        const stage = document.getElementById('interview-stage-select');
-        const canid=document.getElementById('candidate-id');
-        const name=document.getElementById('userName');
-        updateCcMails();
-        if ($('#data').summernote('isEmpty')) {
-
-
-            $('#message-con').html('' +
-                '<div class="loader"></div>' +
-                '<div class="loader-txt">' +
-                '<h3 class="text-white">Failed</h3>' +
-                '<p class="text-white text-center">Email was empty</p>'+
-                '<div>' +
-                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
-                '</div>');
-        }
-        else {
-
-            $('#message-con').html(
-                `<div class='container'>
-            <div class='animation'>
-                <div class='i-mail'>
-                    <div class='mail-anim'></div>
-                </div>
-                <div class='line'></div>
-                <div class='i-success'>
-                    <div class='success-anim'></div>
-                </div>
-            </div>
-            <div class='message'>
-                Your message has been sent successfully
-            </div>
-        </div>`);
-
-            $('#data').summernote('insertText', '');
-            hiddenInput.value = document.querySelector('#data').value;
-
-            const data = {
-                name:name.value,
-                to: to.value,
-                ccmail: ccMails,
-                subject: subject.value,
-                content: hiddenInput.value,
-                date: date1.value,
-                time: time.value,
-                status: stage.value,
-                type: type.value,
-                canId: canid.value,
-                position: position1
-
-            };
-            try {
-                fetch('/send-invite-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8',
-                        [csrfHeader]: csrfToken // Include CSRF token as a request header
-                    },
-                    body: JSON.stringify(data)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data === true) {
-                            console.log('Success send to mail');
-                            $('table#table1').DataTable().ajax.reload(null, false);
-                            $('#message-con').html('' +
-                                '<div class="loader"></div>' +
-                                '<div class="loader-txt">' +
-                                '<h3 class="text-white">Email was sent</h3>' +
-                                '<div>' +
-                                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
-                                '</div>');
-
-                        } else {
-                            $('#message-con').html('' +
-                                '<div class="loader"></div>' +
-                                '<div class="loader-txt">' +
-                                '<h3 class="text-white">Email was not sent</h3>' +
-                                '<h3 class="text-white">Something have error</h3>'+
-                                '<div>' +
-                                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
-                                '</div>');
-                            console.error('Failed to send email:', response.statusText);
-                        }
-                    });
-
-
-            } catch (error) {
-                console.error('An error occurred:', error);
-            }
-        }
-    });
-
-    const fetchofferMail=document.getElementById('Send_Offer_Mail');
-    fetchofferMail.addEventListener('click',function (){
-        const hiddenInput = document.getElementById('content_1');
-        const to=document.getElementById('to_1');
-        const subject=document.getElementById('subject_1');
-        const ccmail=document.getElementById('mails_1');
-        const canid = document.getElementById('candidate-id');
-        const viId=document.getElementById('viId');
-        const name=document.getElementById('userName');
-        console.log('<<<<<',viId.value)
-        if ($('#data_1').summernote('isEmpty')) {
-
-
-            $('#message-con').html('' +
-                '<div class="loader"></div>' +
-                '<div class="loader-txt">' +
-                '<h3 class="text-white">Email is Empty</h3>' +
-                '<div>' +
-                `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()">OK</button></div>` +
-                '</div>');
-        }
-        else{
-            $('#data_1').summernote('insertText', '');
-            hiddenInput.value = document.querySelector('#data_1').value;
-
-            /*	console.log('>>>>>>',date,'>>>>>>>',time,'<<<<<',row.viId)*/
-            const data={
-                to:to.value,
-                subject:subject.value,
-                ccmail:ccMails,
-                vacancyId:viId.value,
-                canId: canid.value,
-                content:hiddenInput.value,
-                name:name.value,
-            }
-            fetch('/send-offer-mail',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                    [csrfHeader]: csrfToken // Include CSRF token as a request header
-                },
-                body: JSON.stringify(data)
-            }).then(response =>response.json(data))
-                .then(data => {
-                    if (data === true) {
-                        console.log('Success send to mail');
-                        $('table#table1').DataTable().ajax.reload(null, false);
-                        $('#message-con').html('' +
-                            '<div class="loader"></div>' +
-                            '<div class="loader-txt">' +
-                            '<h3 class="text-white">Email was sent</h3>' +
-                            '<div>' +
-                            `<button class="btn btn-sm btn-light mx-1" onclick="closeModal()" >OK</button></div>` +
-                            '</div>');
-
-                    } else {
-                        console.error('Failed to send email:', response.statusText);
-                    }
-                });
-
-        }
-
-    })
-
-
-});
 $('#date').on('input', function() {
     const inputDate = $(this).val();
     const date = new Date(inputDate);
@@ -1514,4 +1565,25 @@ function changeTimeFormat(time) {
     // Format the date as "Dayth Month Year" (e.g., "27th Jul 2023")
     var formattedDate = day + suffix + " " + monthNames[date.getMonth()] + " " + date.getFullYear();
     return formattedDate;
+}
+function emailPattern(email) {
+    // Simple email pattern for demonstration purposes
+    // Replace with a more robust email validation pattern
+    var regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    return regex.test(email);
+}
+function closeModal() {
+    let modal = $('#modal-loading');
+    let colse = $('#confirmationModal');
+    if (colse.length) {
+        colse.modal('hide');
+        table.ajax.reload();
+    }
+    if (modal.length) {
+        modal.modal('hide');
+    }
+    let modalBackdrop = $('.modal-backdrop');
+    if (modalBackdrop.length) {
+        modalBackdrop.hide();
+    }
 }
