@@ -3,6 +3,7 @@ package com.ace_inspiration.team_joblify.controller.candidate;
 import com.ace_inspiration.team_joblify.dto.JobFilterRequest;
 import com.ace_inspiration.team_joblify.dto.VacancyDto;
 import com.ace_inspiration.team_joblify.entity.*;
+import com.ace_inspiration.team_joblify.repository.VacancyInfoRepository;
 import com.ace_inspiration.team_joblify.repository.VacancyViewRepository;
 import com.ace_inspiration.team_joblify.service.VacancyInfoService;
 import com.ace_inspiration.team_joblify.service_implement.JobFilterServiceImpl;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,12 +36,20 @@ public class FetchVacancyController {
     private final VacancyViewRepository vacancyViewRepository;
     private final JobFilterServiceImpl jobFilterService;
     private final VacancyInfoService vacancyInfoService;
+    private final VacancyInfoRepository vacancyInfoRepository;
+
+    @GetMapping("hired-count")
+    public int getTotalHiredCandidates() {
+        List<VacancyInfo> vacancies = vacancyInfoRepository.findAll();
+        return vacancies.stream().mapToInt(VacancyInfo::getHiredPost).sum();
+    }
+
 
     @GetMapping("/count")
     public ResponseEntity<Integer> getVacancyCount() {
         try {
             // Call a service method to fetch and calculate the vacancy count
-            int vacancyCount = vacancyViewRepository.countBy();
+            int vacancyCount = vacancyInfoRepository.countBy();
             return ResponseEntity.ok(vacancyCount);
         } catch (Exception e) {
             // Handle any exceptions or errors

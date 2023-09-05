@@ -19,5 +19,7 @@ public interface UserRepository extends DataTablesRepository<User, Long> {
    Optional<User> findByEmailAndIdNot(String email, long userId);
     Optional<User> findByPhoneAndIdNot(String phone, long userId);
 
+    int countBy();
+
 }
 

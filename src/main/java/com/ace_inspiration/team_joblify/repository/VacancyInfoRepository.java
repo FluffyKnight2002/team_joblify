@@ -1,15 +1,12 @@
 package com.ace_inspiration.team_joblify.repository;
 
-import com.ace_inspiration.team_joblify.dto.YearlyVacancyCountDto;
 import com.ace_inspiration.team_joblify.entity.VacancyInfo;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -70,6 +67,8 @@ public interface VacancyInfoRepository
         @Param("endDate") String endDate,
         @Param("departmentName") String departmentName
     );
+
+	int countBy();
 
 	// @Query(value = "SELECT\r\n" +
 	// " months.month,\r\n" +

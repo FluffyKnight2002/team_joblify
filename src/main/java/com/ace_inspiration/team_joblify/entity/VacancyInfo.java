@@ -95,4 +95,8 @@ public class VacancyInfo implements Serializable {
 
     @OneToMany(mappedBy="vacanyInfo",cascade= CascadeType.ALL, orphanRemoval = true)
     private List<OfferMailSended> offerMailSended =new ArrayList<>();
+
+    public int getHiredPost() {
+        return hiredPost;
+    }
 }

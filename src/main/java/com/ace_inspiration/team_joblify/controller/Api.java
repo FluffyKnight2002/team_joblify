@@ -9,6 +9,7 @@ import com.ace_inspiration.team_joblify.dto.UserDto;
 import com.ace_inspiration.team_joblify.entity.Department;
 import com.ace_inspiration.team_joblify.entity.Role;
 import com.ace_inspiration.team_joblify.entity.User;
+import com.ace_inspiration.team_joblify.repository.CandidateRepository;
 import com.ace_inspiration.team_joblify.repository.UserRepository;
 import com.ace_inspiration.team_joblify.service.*;
 import com.ace_inspiration.team_joblify.service.candidate_service.CandidateService;
@@ -45,10 +46,35 @@ public class Api {
     private final InterviewService interService;
     private final NotificationCreator notificationCreator;
     private final PasswordEncoder passwordEncoder;
+    private final CandidateRepository candidateRepository;
 
     private FirstDaySpecificationUser firstDaySpecificationUser;
 
     private final OfferMailSendedService offerMailSendedService;
+
+    @GetMapping("applicant-count")
+    public ResponseEntity<Integer> getAllApplicantCount() {
+        try {
+            // Call a service method to fetch and calculate the vacancy count
+            int count = candidateRepository.countBy();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            // Handle any exceptions or errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("user-count")
+    public ResponseEntity<Integer> getAllUserCount() {
+        try {
+            // Call a service method to fetch and calculate the vacancy count
+            int count = userRepository.countBy();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            // Handle any exceptions or errors
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @GetMapping("/get-all-user")
     public DataTablesOutput<User> getAllUsers(@Valid DataTablesInput input) {
