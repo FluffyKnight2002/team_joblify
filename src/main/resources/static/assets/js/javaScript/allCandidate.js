@@ -111,7 +111,7 @@ $(document).ready( async function() {
         {
             "serverSide": true,
             "processing": true,
-            "scrollY": 500,
+            "scrollY": 600,
             "scrollX": true,
             "scrollCollapse": true,
             "fixedHeader": {
@@ -250,7 +250,7 @@ $(document).ready( async function() {
             order: [[2, 'desc']]
         });
 
-    $('.dataTables_scrollBody').css('max-height','210px');
+    $('.dataTables_scrollBody').css('max-height','400px');
 
     // Filter session start
     // Create reset filter button
@@ -1148,13 +1148,9 @@ $(document).ready( async function() {
             else if(!subject.value){
                 subject.classList.add("is-invalid");
             }
-            else if(ccMails.length===0){
-                ccmail.classList.add("is-invalid");
-            }
             else
             {   to.classList.remove("is-invalid");
                 subject.classList.remove("is-invalid");
-                ccmail.classList.remove("is-invalid");
                 $('#data_1').summernote('insertText', '');
                 hiddenInput.value = document.querySelector('#data_1').value;
 
@@ -1259,7 +1255,8 @@ function format(d) {
       <div class="col-auto">
       	${reconvertToString(d.lvl)}
       </div>
-    </div> <div class="row">
+    </div> 
+    <div class="row">
       <div class="col-md-2">
         Language Skill:
       </div>
@@ -1267,6 +1264,7 @@ function format(d) {
       	${d.languageSkill}
       </div>
     </div>
+    <div class="row">
       <div class="col-md-2">
         Tech Skill:
       </div>
