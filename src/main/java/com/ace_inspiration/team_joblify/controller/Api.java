@@ -147,6 +147,7 @@ public class Api {
     @PostMapping("/sendOTP")
     public String sendEmail(@RequestBody EmailTemplateDto emailTemplateDto) {
         emailService.sendForgetPasswordEmail(emailTemplateDto.getTo());
+        
         return "Email sent successfully!";
     }
 
@@ -309,6 +310,17 @@ public class Api {
 
         // Cookie not found, handle accordingly
         return false; // Return the name of the page to display cookie not found message
+    }
+
+    @PostMapping("/contact-us")
+    public boolean sendDirectEmail(@RequestParam("name")String name,
+                                   @RequestParam("email")String email,
+                                   @RequestParam("about")String about,
+                                   @RequestParam("message")String message) {
+        if(emailService.sendDirectMail(name, email, about, message)) {
+            return true;
+        }
+        return false;
     }
 
     // @GetMapping("/filtered-vacancies")

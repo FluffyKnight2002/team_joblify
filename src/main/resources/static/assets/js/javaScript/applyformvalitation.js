@@ -51,16 +51,28 @@ function validateDob() {
     }
 
     let dobDate = new Date(dobValue);
-    let thirteenYearsAgo = new Date();
+    let eighteenYearsAgo = new Date();
+    let hundredYearsAgo = new Date();
 
-    thirteenYearsAgo.setFullYear(thirteenYearsAgo.getFullYear() - 13);
+    eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+    hundredYearsAgo.setFullYear(hundredYearsAgo.getFullYear() - 100);
 
-    if (dobDate > thirteenYearsAgo) {
-        showFeedback(dob, 'Your age must be greater than 13');
+    if (dobDate > eighteenYearsAgo || dobDate < hundredYearsAgo) {
+        showFeedback(dob, 'Your age must be between 18 and 100');
     } else {
         changeFeedback(dob);
     }
 }
+
+$('#phone').on('input', function() {
+    const inputValue = $(this).val();
+
+    // Remove all non-numeric characters using regex
+    const numericValue = inputValue.replace(/\D/g, '');
+
+    // Update the input value with the cleaned numeric value
+    $(this).val(numericValue);
+});
 
 function validatePhone() {
 
@@ -69,7 +81,7 @@ function validatePhone() {
     const myanmarPhonePattern = /^[0-9]{9,11}$/;
 
     if (!myanmarPhonePattern.test(phoneValue)) {
-        showFeedback(phone, 'Please enter a valid Myanmar phone number');
+        showFeedback(phone, 'Please enter a valid phone number');
     } else {
         changeFeedback(phone);
     }
@@ -93,9 +105,9 @@ function validateEmail() {
 
 function validateTechSkills() {
 
-    if(techSkillsInput.size === 0 ) {
+    if (techSkillsInput.length === 0) {
         showFeedback(techSkill, 'One skill must be added');
-    }else {
+    } else {
         changeFeedback(techSkill);
     }
 
@@ -104,7 +116,7 @@ function validateTechSkills() {
 function validateLanguageSkills() {
 
     console.log(languageSkillsInput.size)
-    if(languageSkillsInput.size === 0 ) {
+    if(languageSkillsInput.length === 0 ) {
         showFeedback(languageSkill, 'One skill must be added');
     }else {
         changeFeedback(languageSkill);

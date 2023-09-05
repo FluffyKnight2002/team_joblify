@@ -79,9 +79,12 @@ public class UserController {
 
     @GetMapping("/password-change")
     public String showPasswordChangeForm(@RequestParam("email") String email, Authentication authentication) {
-        
+
         MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-        if(myUserDetails.getEmail() == email) {
+
+        System.out.println(myUserDetails.getEmail() + email);
+
+        if(myUserDetails.getEmail().equals(email)) {
             return "password-change";
 
         }

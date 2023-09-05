@@ -188,7 +188,7 @@ $(document).ready( async function() {
                     targets: 7,
                     data: "email",
                     render: function(data, type, row) {
-                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Send Invite Mail</a>';
+                        return '<a id="stage" data-bs-toggle="modal" data-bs-target="#emailModal" data-modal-title="Interview Invite Mail" class="btn btn-outline-primary btn-sm btn-block">Invite Mail</a>';
                     },
                     sortable: false,
                     visible: false
@@ -223,7 +223,7 @@ $(document).ready( async function() {
                     data: "email",
                     render: function(data, type, row) {
                         return '<a  data-bs-toggle="modal" data-bs-target="#offer-Email-Modal" data-modal-title="Job Offer Mail"' +
-                            'style="font-size: 0.8rem" class="btn btn-outline-primary btn-sm btn-block">Send Offer Mail</a>';
+                            'style="font-size: 0.8rem" class="btn btn-outline-primary btn-sm btn-block">Offer Mail</a>';
                     },
                     sortable: false,
                     visible: false
@@ -249,6 +249,8 @@ $(document).ready( async function() {
             ],
             order: [[2, 'desc']]
         });
+
+    $('.dataTables_scrollBody').css('max-height','210px');
 
     // Filter session start
     // Create reset filter button
@@ -1148,7 +1150,7 @@ $(document).ready( async function() {
             }
             else if(ccMails.length===0){
                 ccmail.classList.add("is-invalid");
-            } 
+            }
             else
             {   to.classList.remove("is-invalid");
                 subject.classList.remove("is-invalid");
