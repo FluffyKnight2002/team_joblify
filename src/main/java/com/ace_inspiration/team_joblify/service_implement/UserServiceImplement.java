@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,7 +35,6 @@ public class UserServiceImplement implements UserService {
     @Value("${app.default.user.password}")
     private String password;
 
-    private final String location = "classpath:/static/assets/images/faces/5.jpg";
 
     @Override
     public User userCreate(UserDto userDto, long userId) throws IOException {
@@ -45,7 +42,7 @@ public class UserServiceImplement implements UserService {
         byte[] imageBytes;
 
         if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getName(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -103,7 +100,7 @@ public class UserServiceImplement implements UserService {
         LocalDateTime currentDate = LocalDateTime.now();
         byte[] imageBytes;
         if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getName(), resourceLoader);
 
         } else {
             imageBytes = userDto.getPhoto().getBytes();
@@ -150,7 +147,7 @@ public class UserServiceImplement implements UserService {
         byte[] imageBytes;
 
         if (userDto.getPhoto() == null || userDto.getPhoto().isEmpty()) {
-            imageBytes = ProfileGenerator.generateAvatar(userDto.getUsername(), resourceLoader);
+            imageBytes = ProfileGenerator.generateAvatar(userDto.getName(), resourceLoader);
         } else {
             imageBytes = userDto.getPhoto().getBytes();
         }
